@@ -11,6 +11,8 @@ import {viewGroupRoute} from './routes/groupRoutes.js'
 import {viewGroupByFilterRoute} from './routes/groupRoutes.js'
 import { addCommentRoute } from './routes/commentRoute.js'
 
+import authRoutes from './routes/authRoutes.js'
+
 const app = express()
 const server = http.createServer(app)
 app.use(cookieParser())
@@ -23,6 +25,9 @@ app.use('/api',addGroupRoute)
 app.use('/api',viewGroupRoute)
 app.use('/api',viewGroupByFilterRoute)
 app.use('/api',addCommentRoute)
+
+app.use('/api/auth',authRoutes)
+
 
 
 
