@@ -1,4 +1,4 @@
-export const responseHandler = (req, res, next) => {
+const responseHandler = (req, res, next) => {
     req.success = (status = 200, data = "OK", message = "Successfull request") => {
         res.status(status).json({ success: true, data, message })
     }
@@ -8,3 +8,4 @@ export const responseHandler = (req, res, next) => {
     next()
 }
 
+export default responseHandler

@@ -1,4 +1,4 @@
-class CustomError extends Error {
+export class CustomError extends Error {
     constructor(status = 500, code = "INTERNAL_ERROR", message = "Something went wrong") {
         super(message)
         this.status = status
@@ -8,4 +8,3 @@ class CustomError extends Error {
     }
 }
 
-export default CustomError

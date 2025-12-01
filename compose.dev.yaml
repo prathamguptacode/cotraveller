@@ -1,0 +1,50 @@
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    image: cotraveller_server:dev
+    container_name: cotraveller_dev_server
+    env_file:
+      - ./server/.env
+    expose:
+      - "3000"
+    volumes:
+      - ./server:/app:ro
+      - ./server/uploads:/app/uploads:rw
+    networks:
+      - cotraveller_dev_net
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    image: cotraveller_client:dev
+    container_name: cotraveller_dev_client
+    expose:
+      - "5173"
+    volumes:
+      - ./client/src:/app/src:ro
+      - ./client/public:/app/public:ro
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - cotraveller_dev_net
+    restart: unless-stopped
+    depends_on:
+      - server
+    
+  nginx:
+    image: nginx:1.29.3
+    container_name: cotraveller_dev_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - /opt/homebrew/etc/nginx/conf.d/cotravellerDev.conf:/etc/nginx/conf.d/cotravellerDev.conf:ro
+    networks:
+      - cotraveller_dev_net
+    restart: unless-stopped
+    depends_on:
+      - client
+    
