@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AuthContext } from '../hooks/useAuth'
 
 const AuthProvider = ({ children }) => {
