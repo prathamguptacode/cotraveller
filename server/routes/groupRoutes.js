@@ -1,10 +1,11 @@
 import express from 'express'
 const router=express.Router()
-import {addGroup} from '../controllers/groupController.mjs'
-import {asyncHandler} from '../utils/asyncHandler.mjs'
-import {viewGroup} from '../controllers/groupController.mjs'
-import {viewGroupByFilter} from '../controllers/groupController.mjs'
+import {addGroup} from '../controllers/groupController.js'
+import {asyncHandler} from '../utils/asyncHandler.js'
+import {viewGroup} from '../controllers/groupController.js'
+import {viewGroupByFilter} from '../controllers/groupController.js'
 
+//should have middleware
 export const addGroupRoute=router.post('/addgroup',asyncHandler(addGroup))
 
 export const viewGroupRoute=router.get('/viewgroup',asyncHandler(viewGroup))

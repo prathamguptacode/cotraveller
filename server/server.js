@@ -1,14 +1,15 @@
 import express from 'express'
 import http from 'http'
-import responseHandler from './utils/responseHandler.mjs'
+import responseHandler from './utils/responseHandler.js'
 import errorMiddleware from './middlewares/errorMiddleware.js'
 import cookieParser from 'cookie-parser'
 import connectDB from './config/mongodb.js'
 import env from './config/env.js'
 import hello from './routes/hello.js'
-import {addGroupRoute} from './routes/groupRoutes.mjs'
-import {viewGroupRoute} from './routes/groupRoutes.mjs'
-import {viewGroupByFilterRoute} from './routes/groupRoutes.mjs'
+import {addGroupRoute} from './routes/groupRoutes.js'
+import {viewGroupRoute} from './routes/groupRoutes.js'
+import {viewGroupByFilterRoute} from './routes/groupRoutes.js'
+import { addCommentRoute } from './routes/commentRoute.js'
 
 const app = express()
 const server = http.createServer(app)
@@ -21,6 +22,7 @@ app.use('/api',hello)
 app.use('/api',addGroupRoute)
 app.use('/api',viewGroupRoute)
 app.use('/api',viewGroupByFilterRoute)
+app.use('/api',addCommentRoute)
 
 
 
