@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser'
 import connectDB from './config/mongodb.js'
 import env from './config/env.js'
 
+import authRoutes from './routes/authRoutes.js'
+
 const app = express()
 const server = http.createServer(app)
 app.use(cookieParser())
@@ -14,6 +16,7 @@ app.use(responseHandler)
 
 //Routes
 
+app.use('/api/auth',authRoutes)
 
 
 
