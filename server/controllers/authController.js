@@ -193,7 +193,7 @@ export const refreshTokenController = async (req, res) => {
         res.clearCookie('refreshToken', env.REFRESH_COOKIE_OPTIONS)
 
         const { code } = error
-        if (code === "ERR_JWT_EXPIRED") return res.fail(401, "TOKEN_EXPIRED", "Refresh token expired")
+        if (code === "ERR_JWT_EXPIRED") return res.fail(401, "REFRESH_TOKEN_EXPIRED", "Refresh token expired")
         if (code === "ERR_SIGNATURE_VERIFICATION_FAILED") return res.fail(401, "INVALID_SIGNATURE", "Token signature has been tampered with")
         throw new CustomError(500, error.code, error.message)
     }
