@@ -2,21 +2,23 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import AntiProtectedRoutes from './AntiProtectedRoutes'
 import Home from '../pages/Home/Home'
+import Auth from '../pages/Auth/Auth'
+import GroupProfile from '../pages/GroupProfile/GroupProfile'
 const AppRouter = () => {
     return (
         <BrowserRouter>
             <Routes>
 
 
-                <Route element={<AntiProtectedRoutes />} >
-                    <Route path='/' element={<Home />} />
-                </Route>
 
+                <Route path='/' element={<Home />} />
+
+                <Route path='/auth' element={<Auth />} />
 
 
 
                 <Route element={<ProtectedRoutes />}>
-
+                    <Route path='/group' element={<GroupProfile />} />
                 </Route>
 
 
