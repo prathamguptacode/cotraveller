@@ -100,6 +100,7 @@ export const addRequest=async (req,res)=>{
     res.success(201,"REQUEST_CREATED",data)
 }
 
+//for homepage hamburger request seeing so that they can accept
 export const viewRequest=async (req,res)=>{
     const userID=xss(req.body?.userID)
     if(!userID){
@@ -154,4 +155,30 @@ export const addMember=async (req,res)=>{
     // })
     const data=await groupSchema.updateOne({_id:groupID},{$pull:{requests: requestID}, $push:{member: requestID} })
     res.success(200,data)
+}
+
+//leaving group
+export const leaveGroup=async (req,res)=>{
+    const userID=xss(req.body?.userID)
+    const groupID=xss(req.body?.groupID)
+    if(!userID){
+        return res.fail(400,"INVALID_INPUT","userID not found")
+    }
+    if(!groupID){
+        return res.fail(400,"INVALID_DATA","groupID not found")
+    }
+
+    const tempUser=await User.findById(userID)
+    const tempGroup=await groupSchema.findById(groupID)
+    if(!tempUser){
+        return res.fail(400,"INPUT_ERROR","No such user")
+    }
+    if(!tempGroup){
+        return res.fail(400,"INPUT_ERROR","No such group")
+    }
+    if(! (tempGroup.member).includes(userID)){
+        return res.fail(400,"INPUT_ERROR","user is not authorizated to do so")
+    }
+    await groupSchema.updateOne({_id:groupID},{$pull:{member:userID}})
+    res.success(204,"USER_DELETED","user leaft the group")
 }
