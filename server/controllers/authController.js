@@ -207,3 +207,8 @@ export const refreshTokenController = async (req, res) => {
     res.success(200, { accessToken, user })
 
 }
+
+export const logoutController = (req, res) => {
+    res.clearCookie('refreshToken', env.REFRESH_COOKIE_OPTIONS)
+    return res.sendStatus(204)
+}
