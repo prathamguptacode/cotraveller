@@ -182,4 +182,3 @@ export const leaveGroup=async (req,res)=>{
     await groupSchema.updateOne({_id:groupID},{$pull:{member:userID}})
     res.success(204,"USER_DELETED","user leaft the group")
 }
-//this is my new git push
