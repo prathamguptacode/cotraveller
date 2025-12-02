@@ -1,54 +1,61 @@
 import mongoose, { Schema } from "mongoose";
 import { type } from "os";
 
-const groupSchema=new mongoose.Schema({
-    title:{
+const groupSchema = new mongoose.Schema({
+    title: {
         type: String,
         required: true
     },
-    content:{
+    content: {
         type: String,
         required: true
     },
-    owner:{
-        // type: Schema.Types.ObjectId,
-        // ref: 'User',
-        type:String,
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
-    memberNumber:{
+    memberNumber: {
         type: Number,
         required: true
     },
-    member:{
+    member: {
         type: [Schema.Types.ObjectId],
-        ref: 'User'
+        ref: 'User',
+        //should be unique
+        //add owner to it at first place
     },
-    vehicleNumber:String,
-    createdAt:{
-        type:Date,
-        required:true,
-        default:Date.now
+    vehicleNumber: String,
+    createdAt: {
+        type: Date,
+        required: true,
+        default: Date.now
     },
-    updateAt:{
-        type:Date,
+    updateAt: {
+        type: Date,
     },
-    mode:{
-        type:String,
-        lowercase:true,
-        required:true
+    mode: {
+        type: String,
+        lowercase: true,
+        required: true
     },
-    travelDate:{
-        type:Date,
-        required:true
+    travelDate: {
+        type: Date,
+        required: true
     },
-    intialLocation:{
-        type:String,
-        tolowercase:true,
-        require:true
+    intialLocation: {
+        type: String,
+        lowercase: true,
+        require: true
+    },
+    requests: {
+        type: [Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
+        //should be unique
     }
     // const toIST = (date) => moment(date).tz("Asia/Kolkata"); for timezone converstion
     // const istDate = moment.tz(req.body.travelDate, "Asia/Kolkata").toDate(); for telling backend it is ist
 })
 
-export default mongoose.model('Group',groupSchema)
+export default mongoose.model('Group', groupSchema)

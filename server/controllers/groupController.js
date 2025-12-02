@@ -1,6 +1,7 @@
 import groupSchema from "../models/groupSchema.js";
 import xss from 'xss'
 import moment from "moment-timezone";
+import User from "../models/User.js";
 
 
 export async function addGroup(req,res) {
@@ -10,7 +11,7 @@ export async function addGroup(req,res) {
     const memberNumber=xss(req.body?.memberNumber);
     const mode=xss(req.body?.mode);
     const travelDate=xss(req.body?.travelDate);
-    const intialLocation=xss(req.body?.travelDate);
+    const intialLocation=xss(req.body?.intialLocation);
 
     if(!title) res.fail(400,"INPUT_ERROR","title not found")
     if(!content) res.fail(400,"INPUT_ERROR","content not found")
@@ -23,7 +24,7 @@ export async function addGroup(req,res) {
     //telling mongo that date formate is ist
     const istDate = moment.tz(travelDate, "Asia/Kolkata").toDate();
 
-    const group=new groupSchema({title,content,owner,memberNumber,mode,travelDate:istDate,intialLocation})
+    const group=new groupSchema({title,content,owner,memberNumber,mode,travelDate:istDate,intialLocation,member:[owner]})
     const data=await group.save()
     res.success(201,"GROUP_CREATER",data)
 }
@@ -67,4 +68,90 @@ export async function viewGroupByFilter(req,res){
         }
     ])
     res.success(200,"FILTER",data)
+}
+
+export const addRequest=async (req,res)=>{
+    const userID=xss(req.body?.userID)
+    const groupID=xss(req.body?.groupID)
+    if(!userID){
+        return res.fail(400,"INPUT_ERROR","userID not found")
+    }
+    if(!groupID){
+        return res.fail(400,"INPUT_ERROR","groupID not found")
+    }
+    const tempUser=await User.findById(userID)
+    const tempGroup=await groupSchema.findById(groupID)
+    if(!tempUser){
+        return res.fail(400,"INPUT_ERROR","No such user")
+    }
+    if(!tempGroup){
+        return res.fail(400,"INPUT_ERROR","No such group")
+    }
+    const requestArr=tempGroup.requests
+    if(requestArr.includes(userID)){
+        return res.fail(400,"INPUT_ERROR","user has already send a request")
+    }
+    const owner=tempGroup.owner
+    if(owner.equals(userID)){
+        return res.fail(400,"INPUT_ERROR","owner cannot send the request")
+    }
+    requestArr.push(userID)
+    const data=await groupSchema.updateOne({_id:groupID},{requests:requestArr})
+    res.success(201,"REQUEST_CREATED",data)
+}
+
+export const viewRequest=async (req,res)=>{
+    const userID=xss(req.body?.userID)
+    if(!userID){
+        return res.fail(400,"INPUT_ERROR","userID not found")
+    }
+    const tempUser=await User.findById(userID)
+    if(!tempUser){
+        return res.fail(400,"INPUT_ERROR","No such user")
+    }
+    const tempGroup=await groupSchema.find({member: userID})
+    res.success(200,tempGroup)
+}
+
+export const addMember=async (req,res)=>{
+    const userID=xss(req.body?.userID)
+    if(!userID){
+        return res.fail(400,"INPUT_ERROR","userID not found")
+    }
+    const tempUser=await User.findById(userID)
+    if(!tempUser){
+        return res.fail(400,"INPUT_ERROR","No such user")
+    }
+    const requestID=xss(req.body?.requestID)
+    if(!requestID){
+        return res.fail(400,"INPUT_ERROR","requestID not found")
+    }
+    const requserUser=await User.findById(requestID)
+    if(!requserUser){
+        return res.fail(400,"INPUT_ERROR","No such user")
+    }
+    const groupID=xss(req.body?.groupID)
+    if(!groupID){
+        return res.fail(400,"INPUT_ERROR","groupID not found")
+    }
+    const tempGroup=await groupSchema.findById(groupID)
+    if(!tempGroup){
+        return res.fail(400,"INPUT_ERROR","No such group")
+    }
+    const tempmember=tempGroup.member
+    const temprequest=tempGroup.requests
+    if(! tempmember.includes(userID)){
+        return res.fail(400,"INPUT_ERROR","You do not have permission")
+    }
+    if(! temprequest.includes(requestID)){
+        return res.fail(400,"INPUT_ERROR","userReq do not have permission")
+    }
+    // tempmember.push(requestID)
+    // const newreq=temprequest.map((e)=>{
+    //     if(e!=requestID){
+    //         return e
+    //     }
+    // })
+    const data=await groupSchema.updateOne({_id:groupID},{$pull:{requests: requestID}, $push:{member: requestID} })
+    res.success(200,data)
 }

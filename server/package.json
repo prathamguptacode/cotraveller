@@ -30,6 +30,10 @@
     "nodemailer": "^7.0.11",
     "socket.io": "^4.8.1",
     "unique-username-generator": "^1.5.1",
+<<<<<<< HEAD
+    "uuidv4": "^6.2.13",
+=======
+>>>>>>> main
     "xss": "^1.0.15",
     "uuidv4": "^6.2.13",
     "zod": "^4.1.13"
