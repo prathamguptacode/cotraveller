@@ -6,10 +6,11 @@ export const zodXssValidator = (schema) => {
         const result = schema.safeParse(req.body)
         if (!result.success) return res.fail(400, "INVALID_BODY", "Request body was invalid")
 
-        for (const key in result) {
-            if (typeof result[key] === "string") result[key] = xss(result[key])
+        const { data } = result
+        for (const key in data) {
+            if (typeof data[key] === "string") data[key] = xss(data[key])
         }
-        req.body = result
+        req.body = data
         next()
     }
 }

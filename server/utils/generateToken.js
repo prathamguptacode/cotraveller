@@ -10,7 +10,6 @@ export const generateAccessToken = async (email) => {
             .setProtectedHeader({ alg: "HS256" })
             .setExpirationTime("2h")
             .sign(generateUni8Array(env.ACCESS_TOKEN_SECRET))
-            console.log(generateUni8Array(env.ACCESS_TOKEN_SECRET))
         return jwt
     } catch (error) {
         throw error
@@ -24,7 +23,6 @@ export const generateRefreshToken = (email) => {
             .setProtectedHeader({ alg: "HS256" })
             .setExpirationTime("7d")
             .sign(generateUni8Array(env.REFRESH_TOKEN_SECRET))
-            console.log(generateUni8Array(env.REFRESH_TOKEN_SECRET))
         return jwt
     } catch (error) {
         throw error

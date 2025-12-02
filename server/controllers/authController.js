@@ -71,7 +71,7 @@ export const otpVerificationController = async (req, res) => {
 
     //Extracting tempToken data and verifying otp
     const { otpHash, email, fullName, passwordHash, username } = token
-    if (! await argon2.verify(otpHash, enteredOtp.toString())) return res.fail(400, "INVALID_OTP", "OTP did not match")
+    if (!await argon2.verify(otpHash, enteredOtp.toString())) return res.fail(400, "INVALID_OTP", "OTP did not match")
 
     //Creating new user
     var user
@@ -86,8 +86,32 @@ export const otpVerificationController = async (req, res) => {
     const accessToken = generateAccessToken(email)
     const refreshToken = generateRefreshToken(email)
     res.cookie('refreshToken', refreshToken, env.REFRESH_COOKIE_OPTIONS)
-
-    res.success(201, { user, accessToken }, "Signup successful")
+    
+    //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
+    res.success(201, { user, accessToken }, "Signup Successful")
 
 }
+
+
+export const loginController = async (req, res) => {
+    const { email, password } = req.body
+
+    //Check if user exists
+    const user = await User.findOne({ email }).select('+passwordHash')
+    if (!user) return res.fail(400, "USER_NOT_FOUND", "User does not exist")
+
+    //Check if password mathces
+    const { passwordHash } = user
+    if (!await argon2.verify(passwordHash, password)) return res.fail(400,"INVALID_PASSWORD","Password was invalid!")
+
+    //Generating tokens, sending cookie and auth data
+    const accessToken=await generateAccessToken(email)
+    const refreshToken= await generateRefreshToken(email)
+    res.cookie('refreshToken',refreshToken,env.REFRESH_COOKIE_OPTIONS)
+
+    //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
+    res.success(200,{accessToken,user},"Login Successful")
+
+}
+
 
