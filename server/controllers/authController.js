@@ -3,10 +3,11 @@ import { resolveMx } from "dns/promises"
 import * as argon2 from 'argon2'
 import { uuid } from 'uuidv4'
 import env from '../config/env.js'
-import TempToken from '../models/TempToken.js'
+import OtpSession from '../models/OtpSession.js'
 import { sendOtp } from '../services/nodemailer.js'
 import { generateAccessToken, generateRefreshToken } from '../utils/generateToken.js'
 import { CustomError } from '../utils/CustomError.js'
+import OtpRequestLimit from '../models/OtpRequestLimit.js'
 
 export const signupController = async (req, res) => {
     const { username, password, fullName } = req.body
@@ -40,10 +41,19 @@ export const signupController = async (req, res) => {
         parallelism: 1,
     })
     const otpUUID = uuid()
-    const otpExpiresAt = Date.now() + 5 * 60 * 1000
 
-    //Creating tempToken
-    await TempToken.create({ email, passwordHash, fullName, username, otpHash, otpUUID, otpExpiresAt })
+    //Checking OtpRequestLimit
+    const emailSession = await OtpRequestLimit.findOne({ email })
+    if (emailSession) {
+        if (emailSession.requests > 3) return res.fail(429, "EMAIL_SESSION_LIMIT", "Otp request limit reached for email, please try after 10min")
+        await OtpRequestLimit.updateOne({ email }, { $inc: { requests: 1 } })
+    }
+    else {
+        await OtpRequestLimit.create({ email })
+    }
+
+    //Creating OtpSession
+    await OtpSession.create({ email, passwordHash, fullName, username, otpHash, otpUUID })
 
     //Sending otp using nodemailer via email
     sendOtp(email, otp)
@@ -53,7 +63,7 @@ export const signupController = async (req, res) => {
         sameSite: "lax",
         secure: env.COOKIE_IS_SECURE,
         httpOnly: true,
-        maxAge: 20 * 60 * 1000,
+        maxAge: 5 * 60 * 1000,
     })
 
     res.success(200, "OK", "Registeration process initiated, otp sent via email")
@@ -65,17 +75,25 @@ export const otpVerificationController = async (req, res) => {
     if (!enteredOtp) return res.fail(400, "INVALID_OTP_FORMAT", "Entered otp had an invalid format")
 
     const otpUUID = req.cookies?.otpUUID
-    if (!otpUUID) return res.fail(400, "INVALID_COOKIE", "Otp uuid cookie was invalid")
+    if (!otpUUID) return res.fail(410, "SESSION_EXPIRED", "Otp session expired, please re-signup")
 
-    const token = await TempToken.findOne({ otpUUID })
-    if (!token) return res.fail(410, "SESSION_EXPIRED", "Otp session expired, please re-signup")
+    const token = await OtpSession.findOne({ otpUUID })
 
-    //Extracting tempToken data and checking for otp expiry
-    const { otpHash, email, fullName, passwordHash, username, otpExpiresAt } = token
-    if (Date.now() > otpExpiresAt) return res.fail(410, "OTP_EXPIRED", "Otp has expired, please request a new one")
+    //Extracting OtpSession data
+    const { otpHash, email, fullName, passwordHash, username, attempts } = token
+
+    //Current attempt
+    const attemptNumber = attempts + 1
+    if (attemptNumber > 3) return res.fail(429, "OTP_SESSION_LIMIT", "You have excceded the no of attempts to enter otp, please request a new one")
+
+
 
     //Verifying otp (Expensive)
-    if (!await argon2.verify(otpHash, enteredOtp.toString())) return res.fail(400, "INVALID_OTP", "OTP did not match")
+    const isValid = await argon2.verify(otpHash, enteredOtp.toString())
+
+    //Updating attempts now so that, only updated if hash veification doesnt throw
+    await OtpSession.updateOne({ otpUUID }, { $inc: { attempts: 1 } })
+    if (!isValid) return res.fail(400, "INVALID_OTP", "OTP did not match, please retry")
 
     //Creating new user
     var user
@@ -87,15 +105,22 @@ export const otpVerificationController = async (req, res) => {
     }
 
     //Generating tokens, sending cookie and auth data
-    const accessToken = generateAccessToken(email)
-    const refreshToken = generateRefreshToken(email)
+    const accessToken = await generateAccessToken(email)
+    const refreshToken = await generateRefreshToken(email)
     res.cookie('refreshToken', refreshToken, env.REFRESH_COOKIE_OPTIONS)
 
-    //Deleting tempToken (More efficent > auto delete)
-    await TempToken.deleteOne({ otpUUID })
+    //Deleting OtpSession (More efficent > auto delete), but no need to await since, if it throws ttl is backup and otherwise it will be deleted in bg
+    await OtpSession.deleteOne({ otpUUID })
+    await OtpRequestLimit.deleteOne({ email })
+    res.clearCookie('otpUUID', {
+        sameSite: "lax",
+        secure: env.COOKIE_IS_SECURE,
+        httpOnly: true,
+        maxAge: 5 * 60 * 1000,
+    })
 
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(201, { user, accessToken }, "Signup Successful")
+    res.success(201, { user: { fullName, username, email }, accessToken }, "Signup Successful")
 
 }
 
@@ -122,3 +147,33 @@ export const loginController = async (req, res) => {
 }
 
 
+export const refreshOtpController = async (req, res) => {
+    const otpUUID = req.cookies?.otpUUID
+    if (!otpUUID) return res.fail(410, "SESSION_EXPIRED", "Otp session expired, please re-signup")
+
+    //Checking no. of attempts for the email session
+    const { email } = await OtpSession.findOne({ otpUUID })
+    console.log(email)
+    const { requests } = await OtpRequestLimit.findOne({ email })
+
+    const requestNumber = requests + 1
+    if (requestNumber > 4) return res.fail(429, "EMAIL_SESSION_LIMIT", "Otp request limit reached for email, please try after 10min")
+
+    await OtpRequestLimit.updateOne({ email }, { $inc: { requests: 1 } })
+
+    //Creating and sending a new otp
+    const otp = Math.floor((Math.random() * (1e6 - 1e5)) + 1e5)
+    const otpHash = await argon2.hash(otp.toString(), {
+        type: argon2.argon2id,
+        memoryCost: 64 * 1024,
+        timeCost: 3,
+        parallelism: 1,
+    })
+
+    sendOtp(email, otp)
+
+    //Updating OtpSession data
+    await OtpSession.updateOne({ otpUUID }, { $set: { attempts: 0, otpHash } })
+
+    return res.success(200, "OK", "Otp resent")
+}

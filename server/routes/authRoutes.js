@@ -3,6 +3,7 @@ import { signupController, otpVerificationController, loginController } from '..
 import { asyncHandler } from '../utils/asyncHandler.js'
 import { zodXssValidator } from '../middlewares/validate.js'
 import { LoginSchema, SignupSchema } from '../validators/userValidator.js'
+import { refreshOtpController } from '../controllers/authController.js'
 
 
 
@@ -12,6 +13,9 @@ router.post('/signup', zodXssValidator(SignupSchema), asyncHandler(signupControl
 
 router.post('/signup/verify', asyncHandler(otpVerificationController))
 
+router.post('/signup/refresh', asyncHandler(refreshOtpController))
+
 router.post('/login', zodXssValidator(LoginSchema), asyncHandler(loginController))
+
 
 export default router
