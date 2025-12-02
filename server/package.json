@@ -32,7 +32,6 @@
     "unique-username-generator": "^1.5.1",
     "uuidv4": "^6.2.13",
     "xss": "^1.0.15",
-    "uuidv4": "^6.2.13",
     "zod": "^4.1.13"
   },
   "type": "module",
