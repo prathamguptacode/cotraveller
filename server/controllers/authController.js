@@ -40,9 +40,10 @@ export const signupController = async (req, res) => {
         parallelism: 1,
     })
     const otpUUID = uuid()
+    const otpExpiresAt = Date.now() + 5 * 60 * 1000
 
     //Creating tempToken
-    await TempToken.create({ email, passwordHash, fullName, username, otpHash, otpUUID })
+    await TempToken.create({ email, passwordHash, fullName, username, otpHash, otpUUID, otpExpiresAt })
 
     //Sending otp using nodemailer via email
     sendOtp(email, otp)
@@ -69,8 +70,11 @@ export const otpVerificationController = async (req, res) => {
     const token = await TempToken.findOne({ otpUUID })
     if (!token) return res.fail(410, "SESSION_EXPIRED", "Otp session expired, please re-signup")
 
-    //Extracting tempToken data and verifying otp
-    const { otpHash, email, fullName, passwordHash, username } = token
+    //Extracting tempToken data and checking for otp expiry
+    const { otpHash, email, fullName, passwordHash, username, otpExpiresAt } = token
+    if (Date.now() > otpExpiresAt) return res.fail(410, "OTP_EXPIRED", "Otp has expired, please request a new one")
+
+    //Verifying otp (Expensive)
     if (!await argon2.verify(otpHash, enteredOtp.toString())) return res.fail(400, "INVALID_OTP", "OTP did not match")
 
     //Creating new user
@@ -86,7 +90,10 @@ export const otpVerificationController = async (req, res) => {
     const accessToken = generateAccessToken(email)
     const refreshToken = generateRefreshToken(email)
     res.cookie('refreshToken', refreshToken, env.REFRESH_COOKIE_OPTIONS)
-    
+
+    //Deleting tempToken (More efficent > auto delete)
+    await TempToken.deleteOne({ otpUUID })
+
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
     res.success(201, { user, accessToken }, "Signup Successful")
 
@@ -102,15 +109,15 @@ export const loginController = async (req, res) => {
 
     //Check if password mathces
     const { passwordHash } = user
-    if (!await argon2.verify(passwordHash, password)) return res.fail(400,"INVALID_PASSWORD","Password was invalid!")
+    if (!await argon2.verify(passwordHash, password)) return res.fail(400, "INVALID_PASSWORD", "Password was invalid!")
 
     //Generating tokens, sending cookie and auth data
-    const accessToken=await generateAccessToken(email)
-    const refreshToken= await generateRefreshToken(email)
-    res.cookie('refreshToken',refreshToken,env.REFRESH_COOKIE_OPTIONS)
+    const accessToken = await generateAccessToken(email)
+    const refreshToken = await generateRefreshToken(email)
+    res.cookie('refreshToken', refreshToken, env.REFRESH_COOKIE_OPTIONS)
 
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(200,{accessToken,user},"Login Successful")
+    res.success(200, { accessToken, user }, "Login Successful")
 
 }
 

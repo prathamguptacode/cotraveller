@@ -12,6 +12,10 @@ const tempTokenSchema = new mongoose.Schema({
         //not unique:intentional and thoughtful
         //otpuuid is unique and that removes the need and makes it better if otp is not unique
     },
+    otpExpiresAt:{
+        type:Date,
+        required:true,
+    },
 
 
     email: {
