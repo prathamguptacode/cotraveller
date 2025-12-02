@@ -5,9 +5,11 @@ import { uuid } from 'uuidv4'
 import env from '../config/env.js'
 import OtpSession from '../models/OtpSession.js'
 import { sendOtp } from '../services/nodemailer.js'
-import { generateAccessToken, generateRefreshToken } from '../utils/generateToken.js'
+import { generateAccessToken, generateRefreshToken, generateUni8Array } from '../utils/generateToken.js'
 import { CustomError } from '../utils/CustomError.js'
 import OtpRequestLimit from '../models/OtpRequestLimit.js'
+import * as jose from 'jose'
+
 
 export const signupController = async (req, res) => {
     const { username, password, fullName } = req.body
@@ -176,4 +178,32 @@ export const refreshOtpController = async (req, res) => {
     await OtpSession.updateOne({ otpUUID }, { $set: { attempts: 0, otpHash } })
 
     return res.success(200, "OK", "Otp resent")
+}
+
+
+export const refreshTokenController = async (req, res) => {
+    const refreshToken = req.cookies?.refreshToken
+    if (!refreshToken) throw new CustomError(401, "TOKEN_NOT_FOUND", "Refresh token was missing")
+
+    //Extracting data
+    var decoded
+    try {
+        decoded = await jose.jwtVerify(refreshToken, generateUni8Array(env.REFRESH_TOKEN_SECRET))
+    } catch (error) {
+        res.clearCookie('refreshToken', env.REFRESH_COOKIE_OPTIONS)
+
+        const { code } = error
+        if (code === "ERR_JWT_EXPIRED") return res.fail(401, "TOKEN_EXPIRED", "Refresh token expired")
+        if (code === "ERR_SIGNATURE_VERIFICATION_FAILED") return res.fail(401, "INVALID_SIGNATURE", "Token signature has been tampered with")
+        throw new CustomError(500, error.code, error.message)
+    }
+
+    const { payload: { email } } = decoded
+
+    //Creating new accessToken and fetching auth data
+    const accessToken = await generateAccessToken(email)
+    const user = await User.findOne({ email })
+
+    res.success(200, { accessToken, user })
+
 }

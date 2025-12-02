@@ -4,6 +4,7 @@ import { asyncHandler } from '../utils/asyncHandler.js'
 import { zodXssValidator } from '../middlewares/validate.js'
 import { LoginSchema, SignupSchema } from '../validators/userValidator.js'
 import { refreshOtpController } from '../controllers/authController.js'
+import { refreshTokenController } from '../controllers/authController.js'
 
 
 
@@ -17,5 +18,6 @@ router.post('/signup/refresh', asyncHandler(refreshOtpController))
 
 router.post('/login', zodXssValidator(LoginSchema), asyncHandler(loginController))
 
+router.post('/refresh',asyncHandler(refreshTokenController))
 
 export default router
