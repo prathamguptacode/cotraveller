@@ -1,0 +1,23 @@
+{
+  "name": "cotraveller",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":"docker compose -f compose.dev.yaml up --build --force-recreate -d",
+    "stopDev":"docker compose -f compose.dev.yaml down"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prathamguptacode/cotraveller.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/prathamguptacode/cotraveller/issues"
+  },
+  "homepage": "https://github.com/prathamguptacode/cotraveller#readme"
+}
