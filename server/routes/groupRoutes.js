@@ -1,6 +1,6 @@
 import express from 'express'
 const router=express.Router()
-import {addGroup, addMember, viewRequest} from '../controllers/groupController.js'
+import {addGroup, addMember, leaveGroup, viewRequest} from '../controllers/groupController.js'
 import {asyncHandler} from '../utils/asyncHandler.js'
 import {viewGroup} from '../controllers/groupController.js'
 import {viewGroupByFilter} from '../controllers/groupController.js'
@@ -23,5 +23,6 @@ router.get('/viewgroupbyfilter',asyncHandler(viewGroupByFilter))
 router.post('/addrequest',addRequest)
 router.get('/viewrequest',viewRequest)
 router.post('/addmember',addMember)
+router.delete('/leavegroup',leaveGroup)
 
 export default router
