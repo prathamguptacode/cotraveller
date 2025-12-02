@@ -26,6 +26,7 @@ export async function addGroup(req,res) {
 
     const group=new groupSchema({title,content,owner,memberNumber,mode,travelDate:istDate,intialLocation,member:[owner]})
     const data=await group.save()
+    await User.updateOne({_id:owner},{$push:{memberGroup:data._id}})
     res.success(201,"GROUP_CREATER",data)
 }
 
@@ -95,8 +96,8 @@ export const addRequest=async (req,res)=>{
     if(owner.equals(userID)){
         return res.fail(400,"INPUT_ERROR","owner cannot send the request")
     }
-    requestArr.push(userID)
-    const data=await groupSchema.updateOne({_id:groupID},{requests:requestArr})
+    const data=await groupSchema.updateOne({_id:groupID},{$push:{requests:userID}})
+    await User.updateOne({_id:userID},{$push:{requests:groupID}})
     res.success(201,"REQUEST_CREATED",data)
 }
 
@@ -114,7 +115,8 @@ export const viewRequest=async (req,res)=>{
     res.success(200,tempGroup)
 }
 
-export const addMember=async (req,res)=>{
+//adding to db requests acctually
+export const addDBrequests=async (req,res)=>{
     const userID=xss(req.body?.userID)
     if(!userID){
         return res.fail(400,"INPUT_ERROR","userID not found")
@@ -147,14 +149,39 @@ export const addMember=async (req,res)=>{
     if(! temprequest.includes(requestID)){
         return res.fail(400,"INPUT_ERROR","userReq do not have permission")
     }
-    // tempmember.push(requestID)
-    // const newreq=temprequest.map((e)=>{
-    //     if(e!=requestID){
-    //         return e
-    //     }
-    // })
-    const data=await groupSchema.updateOne({_id:groupID},{$pull:{requests: requestID}, $push:{member: requestID} })
+
+    const data=await groupSchema.updateOne({_id:groupID},{$pull:{requests: requestID}, $push:{dbrequests: requestID} })
+    await User.updateOne({_id:requestID},{$push:{dbrequests:groupID}, $pull:{requests:groupID}})
     res.success(200,data)
+}
+
+export const addMember=async (req,res)=>{
+    const userID=xss(req.body?.userID)
+    if(!userID){
+        return res.fail(400,"INPUT_ERROR","userID not found")
+    }
+    const tempUser=await User.findById(userID)
+    if(!tempUser){
+        return res.fail(400,"INPUT_ERROR","No such user")
+    }
+    const groupID=xss(req.body?.groupID)
+    if(!groupID){
+        return res.fail(400,"INPUT_ERROR","groupID not found")
+    }
+    const tempGroup=await groupSchema.findById(groupID)
+    if(!tempGroup){
+        return res.fail(400,"INPUT_ERROR","No such group")
+    }
+    if(! (tempGroup.dbrequests).includes(userID)){
+        return res.fail(403,"NOT_PERMITTED");
+    }
+
+    const data = await groupSchema.updateOne(
+        { _id: groupID },
+        { $push: { member: userID }, $pull: { dbrequests: userID } }
+    );
+    await User.updateOne({_id:userID},{$push:{memberGroup:groupID},$pull:{dbrequests:groupID}})
+    res.success(201,data)
 }
 
 //leaving group
