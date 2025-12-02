@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const tempTokenSchema = new mongoose.Schema({
+const otpSessionSchema = new mongoose.Schema({
     otpUUID: {
         type: String,
         required: true,
@@ -12,7 +12,11 @@ const tempTokenSchema = new mongoose.Schema({
         //not unique:intentional and thoughtful
         //otpuuid is unique and that removes the need and makes it better if otp is not unique
     },
-
+    attempts: {
+        type: Number,
+        default: 0,
+        required: true,
+    },
 
     email: {
         type: String,
@@ -38,6 +42,6 @@ const tempTokenSchema = new mongoose.Schema({
     }
 
 })
-tempTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 20 * 60 })
+otpSessionSchema.index({ createdAt: 1 }, { expireAfterSeconds: 5 * 60 })
 
-export default mongoose.model('TempToken', tempTokenSchema)
+export default mongoose.model("OtpSession", otpSessionSchema,'otp_sessions')

@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     },
     passwordHash: {
         type: String,
-        select: false,
+        select:false,
     },
     fullName: {
         type: String,
