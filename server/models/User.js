@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     },
     passwordHash: {
         type: String,
-        select:false,
+        select: false,
     },
     fullName: {
         type: String,
@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
         type: Number,
         select: false,
     },
+    oAuthProviders: [{
+        type: String
+    }],
+
     memberGroup:{
         type: [Schema.Types.ObjectId],
         ref: 'Group',

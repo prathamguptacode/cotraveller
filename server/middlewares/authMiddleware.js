@@ -2,6 +2,8 @@ import * as jose from 'jose'
 import { generateUni8Array } from '../utils/generateToken.js'
 import env from '../config/env.js'
 import User from '../models/User.js'
+import * as cookies from '../libs/cookies.js'
+
 
 export const verifyAccessToken = async (req, res, next) => {
     const authHeader = req.headers?.Authorization
@@ -15,7 +17,7 @@ export const verifyAccessToken = async (req, res, next) => {
         const { code } = error
         if (code === "ERR_JWT_EXPIRED") return res.fail(401, "ACCESS_TOKEN_EXPIRED", "Access token expired, request a new one")
 
-        res.clearCookie('refreshToken', env.REFRESH_COOKIE_OPTIONS)
+        res.clearCookie('refreshToken', cookies.REFRESH_COOKIE_OPTIONS)
         return res.fail(500, "INVALID_TOKEN")
     }
 
@@ -24,7 +26,7 @@ export const verifyAccessToken = async (req, res, next) => {
 
     //Incase user was deleted by admin or devs or blacklisted, or anything like that, we logout the user
     if (!user) {
-        res.clearCookie('refreshToken', env.REFRESH_COOKIE_OPTIONS)
+        res.clearCookie('refreshToken', cookies.REFRESH_COOKIE_OPTIONS)
         return res.fail(401,"USER_NOT_FOUND","Associated user could not be found, logging out")
     }
 
