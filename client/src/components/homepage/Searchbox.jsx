@@ -1,27 +1,36 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import mystyle from './homepage.module.css'
 import clsx from 'clsx'
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPaperPlane } from "react-icons/fa";
 import { IoMdSearch } from "react-icons/io";
-import LocationDrop from './locationDrop';
+import LocationDrop from './dropDown/locationDrop';
+import ModeDrop from './dropDown/modeDrop';
 
 function Searchbox() {
 
-    const [location,setLocation]=useState('Where from?')
-    const [mode,setMode]=useState('Transport?')
-    const [date,setDate]=useState('Date?')
-    const [month,setMonth]=useState('Month?')
-    const [year,setYear]=useState('Year?')
+    const modeSvg=useRef()
 
-    const [locationDropDis,setLocationDropDis]=useState(0)
-    const [modeDropDis,setModeDropDis]=useState(0)
+    const [location, setLocation] = useState('Where from?')
+    const [mode, setMode] = useState('Transport?')
+    const [date, setDate] = useState('Date?')
+    const [month, setMonth] = useState('Month?')
+    const [year, setYear] = useState('Year?')
 
-    function showL(){
+    const [locationDropDis, setLocationDropDis] = useState(0)
+    const [modeDropDis, setModeDropDis] = useState(0)
+
+    function showL() {
         setLocationDropDis(prev => (prev === 0 ? 1 : 0))
     }
-    function hidL(){
+    function hidL() {
         setLocationDropDis(0)
+    }
+    function showT() {
+        setModeDropDis(prev => (prev === 0 ? 1 : 0))
+    }
+    function hidT() {
+        setModeDropDis(0)
     }
     return (
         <div>
@@ -29,11 +38,12 @@ function Searchbox() {
                 <div className={clsx(mystyle.location, mystyle.inhover)} tabIndex="0" onClick={showL} onBlur={hidL}>
                     <FaLocationDot />
                     {location}
-                    {locationDropDis? <LocationDrop setLocation={setLocation} />: null}
+                    {locationDropDis ? <LocationDrop setLocation={setLocation} /> : null}
                 </div>
-                <div className={clsx(mystyle.mode, mystyle.inhover)} tabIndex="0">
+                <div className={clsx(mystyle.mode, mystyle.inhover)} tabIndex="0" onClick={showT} onBlur={hidT}>
                     <FaPaperPlane />
                     {mode}
+                    {modeDropDis ? <ModeDrop setMode={setMode} /> : null}
                 </div>
                 <div className={clsx(mystyle.date, mystyle.inhover)} tabIndex="0">{date}</div>
                 <div className={clsx(mystyle.month, mystyle.inhover)} tabIndex="0">{month}</div>
@@ -43,7 +53,7 @@ function Searchbox() {
                 <button className={mystyle.searchbtn}>
                     <IoMdSearch size="20px" />
                     Find groups
-                    </button>
+                </button>
             </div>
         </div>
     )

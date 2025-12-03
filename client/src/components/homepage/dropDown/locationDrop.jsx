@@ -1,5 +1,5 @@
 import React from 'react'
-import mystyle from './homepage.module.css'
+import mystyle from '../homepage.module.css'
 import { BsBuildingsFill } from "react-icons/bs";
 
 function LocationDrop({setLocation}) {

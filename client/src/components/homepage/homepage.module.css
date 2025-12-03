@@ -113,7 +113,7 @@
 .navbtn:hover{
     background-color: var(--brighter-primary);
 }
-.locationDrop{
+.locationDrop, .modeDrop{
     position: absolute;
     top: -2px;
     left: -2px;
