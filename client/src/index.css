@@ -1,8 +1,25 @@
+#root {
+    margin: auto;
+    /* ###REMOVE LATER */
+    min-height: 100vh;
+}
+
+body {
+    max-width: 1920px;
+    margin: auto;
+    background-color: var(--clr-bg);
+    color: var(--clr-font);
+    font-family: Roboto, sans-serif;
+
+
+
+}
+
 :root {
     --clr-border: hsl(0, 0%, 30%);
     --clr-bg-hover: hsl(0, 0%, 90%);
     --clr-bg: hsl(0, 0%, 95%);
-
+    --clr-bg-200: hsl(0, 0%, 90%);
 
     --clr-font: hsl(0, 0%, 5%);
 }
@@ -10,14 +27,8 @@
 :root.dark {
     --clr-border: hsl(0, 0%, 70%);
     --clr-bg-hover: hsl(0, 0%, 15%);
-    --clr-bg: hsl(0, 0%, 5%);
-
+    --clr-bg: #080808;
+    --clr-bg-200: hsl(0, 0%, 5%);
 
     --clr-font: hsl(0, 0%, 95%);
-}
-
-body {
-    background-color: var(--clr-bg);
-    color: var(--clr-font);
-    font-family: Mulish;
 }

@@ -2,8 +2,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import AntiProtectedRoutes from './AntiProtectedRoutes'
 import Home from '../pages/Home/Home'
-import Auth from '../pages/Auth/Auth'
 import GroupProfile from '../pages/GroupProfile/GroupProfile'
+import AuthLayout from '../layouts/Auth/AuthLayout'
+import Signup from '../pages/Auth/Signup'
+import Login from '../pages/Auth/Login'
 const AppRouter = () => {
     return (
         <BrowserRouter>
@@ -15,7 +17,10 @@ const AppRouter = () => {
 
 
                 <Route element={<AntiProtectedRoutes />} >
-                    <Route path='/auth' element={<Auth />} />
+                    <Route element={<AuthLayout />} >
+                        <Route path='/signup' element={<Signup/>} />
+                        <Route path='/login' element={<Login/>} />
+                    </Route>
                 </Route>
 
 
