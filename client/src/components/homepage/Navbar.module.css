@@ -1,3 +1,19 @@
-/* .navbarWrapper{
-    background-color: var(--backgroud);
-} */
+.navbar{
+    max-width: 1920px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+}
+.dummybx{
+    margin-left: auto;
+}
+.logo{
+    padding: 0 12px;
+    font-size: var(--logoFont);
+    border: 2px solid red;
+    cursor: pointer;
+}
+.login{
+    cursor: pointer;
+}

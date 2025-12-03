@@ -5,6 +5,8 @@
 
 
     --clr-font: hsl(0, 0%, 5%);
+
+    --logoFont: 42px;
 }
 
 :root.dark {
@@ -14,9 +16,12 @@
 
 
     --clr-font: hsl(0, 0%, 95%);
+
+    --logoFont: 42px;
 }
 
 body {
     background-color: var(--clr-bg);
     color: var(--clr-font);
+    font-family: "Mulish";
 }
