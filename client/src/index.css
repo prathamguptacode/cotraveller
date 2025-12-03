@@ -1,32 +1,29 @@
 :root {
-    --clr-border: hsl(0, 0%, 30%);
-    --clr-bg-hover: hsl(0, 0%, 90%);
-    --clr-bg: hsl(0, 0%, 95%);
 
+    --clr-border: hsl(0, 0%, 70%);
+    --clr-bg-hover: hsl(0, 0%, 15%);
+    --clr-bg: hsl(0, 29%, 83%);
+    --clr-font: hsl(0, 0%, 95%);
 
-    --clr-font: hsl(0, 0%, 5%);
-
-    --logoFont: 36px;
-    --primary: hsl(355, 78%, 56%);
-
-    --secondary: #b8b8b8;
-    --primaryHover: hsl(355, 57%, 54%);
 }
 
 :root.dark {
-    --clr-border: hsl(0, 0%, 70%);
-    --clr-bg-hover: hsl(0, 0%, 15%);
-    --clr-bg: hsl(0, 0%, 5%);
-    
-    
-    --primary: hsl(355, 78%, 60%);
-    --secondary: #474747;
-    --clr-font: hsl(0, 0%, 95%);
-    --primaryHover: hsl(355, 57%, 52%);
 
-    --logoFont: 36px;
+    --clr-border: #80868b99;
+    --in-border: hsla(207, 5%, 77%, 0.6);
+    /* google flights border color */
+    --clr-bg-hover: #303134;
+    --clr-bg: #202124;
+    /* google flights background color */
+    --secondary-bg: #303133;
+    --primary: #8AB4F8;
+    --brighter-primary: #9DC0FA;
+    --link-color: #8ab4f8;
+    --seconday: #465062;
+    --clr-font: #e8eaed;
+    --secondaryFont:rgb(32,33,36);
+    --opt-hover:#5E5F62;
 
-    --banner: hsl(0, 0%, 12%);
 }
 
 body {

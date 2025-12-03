@@ -1,16 +1,15 @@
 import React from 'react'
-import Navbar from '../../components/homepage/Navbar'
+import ThemeButton from '../../components/Buttons/ThemeButton'
+import Navbar from '../../components/homepage/navbar'
 import Banner from '../../components/homepage/Banner'
-import Searchbar from '../../components/homepage/Searchbar'
-
+import Searchbox from '../../components/homepage/Searchbox'
 
 const Home = () => {
   return (
     <div>
-      <Navbar></Navbar>
-      <Banner></Banner>
-      <Searchbar></Searchbar>
-      This is home, i love it hello ji namaste
+      <Navbar />
+      <Banner />
+      <Searchbox />
     </div>
   )
 }
