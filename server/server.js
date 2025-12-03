@@ -1,5 +1,6 @@
 import express from 'express'
 import http from 'http'
+import cors from 'cors'
 import responseHandler from './utils/responseHandler.js'
 import errorMiddleware from './middlewares/errorMiddleware.js'
 import cookieParser from 'cookie-parser'
@@ -16,6 +17,10 @@ const server = http.createServer(app)
 app.use(cookieParser())
 app.use(express.json())
 app.use(responseHandler)
+app.use(cors({
+    origin: env.CLIENT_URL,
+    credentials: true
+}))
 
 //Routes
 app.use('/api', hello)
