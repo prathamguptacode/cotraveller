@@ -7,8 +7,9 @@ import connectDB from './config/mongodb.js'
 import env from './config/env.js'
 import hello from './routes/hello.js'
 import groupRoutes from './routes/groupRoutes.js'
-
 import authRoutes from './routes/authRoutes.js'
+import oauthRoutes from './routes/oauthRoutes.js'
+
 
 const app = express()
 const server = http.createServer(app)
@@ -17,10 +18,11 @@ app.use(express.json())
 app.use(responseHandler)
 
 //Routes
-app.use('/api',hello)
-app.use('/api/group',groupRoutes)
+app.use('/api', hello)
+app.use('/api/group', groupRoutes)
 
-app.use('/api/auth',authRoutes)
+app.use('/api/auth', authRoutes)
+app.use('/api/oauth', oauthRoutes)
 
 
 
