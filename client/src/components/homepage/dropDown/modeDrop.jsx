@@ -3,7 +3,6 @@ import React from 'react'
 import { IoMdAirplane } from "react-icons/io";
 import { FaTrainSubway } from "react-icons/fa6";
 import { FaTaxi } from "react-icons/fa";
-import { BsBuildingsFill } from "react-icons/bs";
 
 function ModeDrop({ setMode }) {
 

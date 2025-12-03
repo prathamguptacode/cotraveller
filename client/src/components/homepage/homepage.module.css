@@ -126,6 +126,21 @@ box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2
     border-radius: 5px;
     overflow: hidden;
 }
+.dateDrop, .monthDrop, .yearDrop{
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    display: flex;
+    flex-direction: column;
+    width: 105%;
+box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    background-color: var(--secondary-bg);
+    z-index: 2;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 400px;
+    overflow-y: auto;
+}
 .options{
     padding: 16px;
     display: flex;
