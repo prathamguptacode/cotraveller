@@ -5,10 +5,9 @@ import { GiHamburgerMenu } from "react-icons/gi";
 function Navbar() {
   return (
     <div className={mystyle.navbarWrapper}>
-      <div className={mystyle.navabar}>
-        <div className="hamburgerbox">
-            <GiHamburgerMenu style={{color: 'white',size: '22px'}}/>
-        </div>
+      <div className={mystyle.navbar}>
+        <GiHamburgerMenu size='36px' color='black'></GiHamburgerMenu>
+        <div className={mystyle.login}></div>
       </div>
     </div>
   )
