@@ -6,6 +6,9 @@ const Auth = () => {
       <button onClick={()=>{
         window.location.href="/api/oauth/google"
       }}>LETS GO</button>
+      <button onClick={()=>{
+        window.location.href='/api/oauth/github'
+      }}>git baby</button>
     </div>
   )
 }

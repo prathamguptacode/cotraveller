@@ -1,10 +1,13 @@
 import { generateCodeVerifier, generateState, OAuth2RequestError, } from "arctic"
-import { google } from "../libs/oauth.js"
+import { github, google } from "../libs/oauth.js"
 import env from "../config/env.js"
 import * as jose from 'jose'
 import { generateRefreshToken } from "../utils/generateToken.js"
 import User from "../models/User.js"
 import { generateFromEmail } from 'unique-username-generator'
+import * as cookies from '../libs/cookies.js'
+import axios from 'axios'
+
 
 export const redirectToGoogleOAuth = (req, res) => {
     const state = generateState()
@@ -13,8 +16,8 @@ export const redirectToGoogleOAuth = (req, res) => {
 
     const url = google.createAuthorizationURL(state, codeVerifier, scopes)
 
-    res.cookie('googleState', state, env.OAUTH_COOKIE_OPTIONS)
-    res.cookie('googleCodeVerifier', codeVerifier, env.OAUTH_COOKIE_OPTIONS)
+    res.cookie('googleState', state, cookies.OAUTH_COOKIE_OPTIONS)
+    res.cookie('googleCodeVerifier', codeVerifier, cookies.OAUTH_COOKIE_OPTIONS)
 
     res.redirect(url)
 }
@@ -26,8 +29,8 @@ export const googleOAuthCallback = async (req, res) => {
     const code = req.query?.code
 
     const clearCookies = () => {
-        res.clearCookie('googleState', env.OAUTH_COOKIE_OPTIONS)
-        res.clearCookie('googleCodeVerifier', env.OAUTH_COOKIE_OPTIONS)
+        res.clearCookie('googleState', cookies.OAUTH_COOKIE_OPTIONS)
+        res.clearCookie('googleCodeVerifier', cookies.OAUTH_COOKIE_OPTIONS)
     }
 
     //###LATER FIX , handle error in a better way 
@@ -68,16 +71,86 @@ export const googleOAuthCallback = async (req, res) => {
 
     //User basic auth
     const refreshToken = await generateRefreshToken(email)
-    res.cookie('refreshToken', refreshToken, env.REFRESH_COOKIE_OPTIONS)
+    res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
 
     if (await User.exists({ email })) {
         await User.updateOne({ email }, { $addToSet: { oAuthProviders: "google" } })
     }
     else {
-        const username = generateFromEmail(email, { randomDigits: 3, leadingFallback: traveller })
+        const username = generateFromEmail(email, { randomDigits: 3, leadingFallback: "traveller" })
         await User.create({ email, fullName, username })
     }
 
     res.redirect('/group')
 }
 
+
+export const redirectToGithubOAuth = (req, res) => {
+    const state = generateState()
+    const scopes = ["user:email", 'read:user']
+
+    const url = github.createAuthorizationURL(state, scopes)
+    res.cookie('githubState', state, cookies.OAUTH_COOKIE_OPTIONS)
+
+    res.redirect(url)
+}
+
+export const githubOAuthCallback = async (req, res) => {
+    const state = req.query?.state
+    const code = req.query?.code
+    const githubState = req.cookies?.githubState
+
+    const clearCookies = () => {
+        res.clearCookie('githubState', cookies.OAUTH_COOKIE_OPTIONS)
+    }
+
+    if (!state || !githubState || !code) return res.fail(400, "BAD_REQUEST", "Github oauth cookies or queries were missing")
+
+    if (state !== githubState) return res.fail(401, "OAUTH_INVALID_STATE", "Github oauth state was invalid")
+
+    var tokens
+    try {
+        tokens = await github.validateAuthorizationCode(code)
+    } catch (error) {
+        if (error instanceof OAuth2RequestError) {
+            clearCookies()
+            return res.fail(401, "OAUTH_UNAUTHRORIZED", "Github oauth authorization code was invalid")
+        }
+        throw error
+    }
+
+    const githubAccessToken = tokens.accessToken()
+
+    const { data: { login: githubUsername, name } } = await axios.get('https://api.github.com/user', {
+        headers: { Authorization: `Bearer ${githubAccessToken}` }
+    })
+    const { data: emails } = await axios.get('https://api.github.com/user/emails', {
+        headers: { Authorization: `Bearer ${githubAccessToken}` }
+    })
+
+    const { email } = emails.find(obj => obj.primary)
+
+
+
+    if (await User.exists({ email })) {
+        await User.updateOne({ email }, { $addToSet: { oAuthProviders: "github" } })
+    }
+    else {
+
+        let username
+        if (await User.exists({ username: githubUsername })) {
+            username = generateFromEmail(email, { randomDigits: 3, leadingFallback: "traveller" })
+        }
+        else {
+            username = githubUsername
+        }
+
+        await User.create({ email, fullName: name, username, oAuthProviders: ["github"] })
+    }
+
+
+    const refreshToken = await generateRefreshToken(email)
+    res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
+    clearCookies()
+    res.redirect('/group')
+}

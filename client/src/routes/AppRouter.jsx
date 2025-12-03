@@ -13,7 +13,11 @@ const AppRouter = () => {
 
                 <Route path='/' element={<Home />} />
 
-                <Route path='/auth' element={<Auth />} />
+
+                <Route element={<AntiProtectedRoutes />} >
+                    <Route path='/auth' element={<Auth />} />
+                </Route>
+
 
 
 

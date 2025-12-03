@@ -8,6 +8,7 @@ import { sendOtp } from '../services/nodemailer.js'
 import { generateAccessToken, generateRefreshToken, generateUni8Array } from '../utils/generateToken.js'
 import { CustomError } from '../utils/CustomError.js'
 import OtpRequestLimit from '../models/OtpRequestLimit.js'
+import * as cookies from '../libs/cookies.js'
 import * as jose from 'jose'
 
 
@@ -109,7 +110,7 @@ export const otpVerificationController = async (req, res) => {
     //Generating tokens, sending cookie and auth data
     const accessToken = await generateAccessToken(email)
     const refreshToken = await generateRefreshToken(email)
-    res.cookie('refreshToken', refreshToken, env.REFRESH_COOKIE_OPTIONS)
+    res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
 
     //Deleting OtpSession (More efficent > auto delete), but no need to await since, if it throws ttl is backup and otherwise it will be deleted in bg
     await OtpSession.deleteOne({ otpUUID })
@@ -141,7 +142,7 @@ export const loginController = async (req, res) => {
     //Generating tokens, sending cookie and auth data
     const accessToken = await generateAccessToken(email)
     const refreshToken = await generateRefreshToken(email)
-    res.cookie('refreshToken', refreshToken, env.REFRESH_COOKIE_OPTIONS)
+    res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
 
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
     res.success(200, { accessToken, user }, "Login Successful")
@@ -190,7 +191,7 @@ export const refreshTokenController = async (req, res) => {
     try {
         decoded = await jose.jwtVerify(refreshToken, generateUni8Array(env.REFRESH_TOKEN_SECRET))
     } catch (error) {
-        res.clearCookie('refreshToken', env.REFRESH_COOKIE_OPTIONS)
+        res.clearCookie('refreshToken', cookies.REFRESH_COOKIE_OPTIONS)
 
         const { code } = error
         if (code === "ERR_JWT_EXPIRED") return res.fail(401, "REFRESH_TOKEN_EXPIRED", "Refresh token expired")
@@ -209,6 +210,6 @@ export const refreshTokenController = async (req, res) => {
 }
 
 export const logoutController = (req, res) => {
-    res.clearCookie('refreshToken', env.REFRESH_COOKIE_OPTIONS)
+    res.clearCookie('refreshToken', cookies.REFRESH_COOKIE_OPTIONS)
     return res.sendStatus(204)
 }
