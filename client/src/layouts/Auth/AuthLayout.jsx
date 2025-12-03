@@ -4,6 +4,8 @@ import styles from './auth.module.css'
 import Footer from '../../components/Footer/Footer'
 import GoogleButton from '../../components/OAuthButtons/GoogleButton'
 import GithubButton from '../../components/OAuthButtons/GithubButton'
+import ThemeButton from '../../components/Buttons/ThemeButton'
+import AppleButton from '../../components/OAuthButtons/AppleButton'
 const AuthLayout = () => {
     return (
         <>
@@ -14,8 +16,25 @@ const AuthLayout = () => {
 
                     <div className={styles.heroRight}>
                         <div className={styles.formWrapper}>
-                            <GoogleButton />
-                            <GithubButton />
+
+
+                            <div className={styles.formInnerWrapper}>
+                                <div className={styles.oAuthButtons}>
+                                    <GoogleButton />
+                                    <AppleButton />
+                                    <GithubButton />
+                                </div>
+                                <div className={styles.lineBreakers}>
+                                    <div className={styles.lineBreaker}></div>
+                                    OR
+                                    <div className={styles.lineBreaker}></div>
+                                </div>
+                                <Outlet />
+                            </div>
+
+                            <div className={styles.themeBtnWrapper}>
+                                <ThemeButton />
+                            </div>
                         </div>
                     </div>
 
