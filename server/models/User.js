@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -30,8 +30,23 @@ const userSchema = new mongoose.Schema({
     },
     oAuthProviders: [{
         type: String
-    }]
+    }],
 
+    memberGroup:{
+        type: [Schema.Types.ObjectId],
+        ref: 'Group',
+        default: []
+    },
+    requests:{
+        type: [Schema.Types.ObjectId],
+        ref: 'Group',
+        default: []
+    },
+    dbrequests:{
+        type: [Schema.Types.ObjectId],
+        ref: 'Group',
+        default: []
+    }
 })
 
 export default mongoose.model("User", userSchema)

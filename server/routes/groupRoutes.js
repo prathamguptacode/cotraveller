@@ -1,6 +1,6 @@
 import express from 'express'
 const router=express.Router()
-import {addGroup, addMember, leaveGroup, viewRequest} from '../controllers/groupController.js'
+import {addGroup, addDBrequests, leaveGroup, viewRequest, addMember} from '../controllers/groupController.js'
 import {asyncHandler} from '../utils/asyncHandler.js'
 import {viewGroup} from '../controllers/groupController.js'
 import {viewGroupByFilter} from '../controllers/groupController.js'
@@ -21,9 +21,10 @@ router.get('/viewgroupbyfilter',asyncHandler(viewGroupByFilter))//no middleware 
 //then group people can talk from socket io
 
 //should have middle ware
-router.post('/addrequest',verifyAccessToken,addRequest)
-router.get('/viewrequest',verifyAccessToken,viewRequest)// this is for member to see request
-router.post('/addmember',verifyAccessToken,addMember)
-router.delete('/leavegroup',verifyAccessToken,leaveGroup)
+router.post('/addrequest',verifyAccessToken,asyncHandler(addRequest))
+router.get('/viewrequest',verifyAccessToken,asyncHandler(viewRequest))// this is for member to see request
+router.post('/adddbrequest',verifyAccessToken,asyncHandler(addDBrequests))
+router.post('/addmember',verifyAccessToken,asyncHandler(addMember))
+router.delete('/leavegroup',verifyAccessToken,asyncHandler(leaveGroup))
 
 export default router

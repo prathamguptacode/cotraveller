@@ -53,6 +53,11 @@ const groupSchema = new mongoose.Schema({
         ref: 'User',
         default: []
         //should be unique
+    },
+    dbrequests:{
+        type: [Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
     }
     // const toIST = (date) => moment(date).tz("Asia/Kolkata"); for timezone converstion
     // const istDate = moment.tz(req.body.travelDate, "Asia/Kolkata").toDate(); for telling backend it is ist
