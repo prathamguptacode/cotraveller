@@ -1,0 +1,23 @@
+.banner{
+    background-color: var(--banner);
+    max-width: 1920px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+
+}
+.airplanesvg{
+    width: 210px;
+    margin-right: auto;
+    flex-shrink: 0;
+}
+.trainsvg{
+    width: 300px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+.tagline{
+    font-size: 54px;
+    font-weight: 700;
+}
