@@ -11,7 +11,6 @@ const ThemeProvider = ({ children }) => {
 
                 //Setting class is the real game changer for actual base css
                 document.documentElement.classList.toggle('dark')
-                console.log(prev)
                 return prev === 'light' ? 'dark' : 'light'
 
             })
