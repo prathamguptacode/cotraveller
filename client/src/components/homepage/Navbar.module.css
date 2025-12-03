@@ -9,11 +9,48 @@
     margin-left: auto;
 }
 .logo{
-    padding: 0 12px;
+    padding: 0 4px;
     font-size: var(--logoFont);
-    border: 2px solid red;
+    font-weight: 800;
     cursor: pointer;
+    color: var(--primary);
+    flex-shrink: 0;
 }
 .login{
     cursor: pointer;
+    flex-shrink: 0;
+}
+.svgpointter{
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.notificationbx{
+    padding: 8px;
+    border-radius: 60px;
+    flex-shrink: 0;
+}
+.notificationbx:hover{
+    background-color: var(--clr-bg-hover);
+}
+.createBtn{
+    background-color: var(--primary);
+    padding: 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.signup, .login{
+    border-radius: 4px;
+    padding: 8px 16px;
+    background-color: var(--secondary);
+    transition: all 0.3s ease-in-out;
+    flex-shrink: 0;
+}
+.signup:hover{
+    background-color: var(--primaryHover);
+}
+.login:hover{
+    background-color: var(--primaryHover);
+}
+.createBtn:hover{
+    background-color: var(--primaryHover);
 }

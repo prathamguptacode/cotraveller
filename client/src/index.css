@@ -6,18 +6,27 @@
 
     --clr-font: hsl(0, 0%, 5%);
 
-    --logoFont: 42px;
+    --logoFont: 36px;
+    --primary: hsl(355, 78%, 56%);
+
+    --secondary: #b8b8b8;
+    --primaryHover: hsl(355, 57%, 54%);
 }
 
 :root.dark {
     --clr-border: hsl(0, 0%, 70%);
     --clr-bg-hover: hsl(0, 0%, 15%);
     --clr-bg: hsl(0, 0%, 5%);
-
-
+    
+    
+    --primary: hsl(355, 78%, 60%);
+    --secondary: #474747;
     --clr-font: hsl(0, 0%, 95%);
+    --primaryHover: hsl(355, 57%, 52%);
 
-    --logoFont: 42px;
+    --logoFont: 36px;
+
+    --banner: hsl(0, 0%, 12%);
 }
 
 body {
