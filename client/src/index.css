@@ -1,0 +1,22 @@
+:root {
+    --clr-border: hsl(0, 0%, 30%);
+    --clr-bg-hover: hsl(0, 0%, 90%);
+    --clr-bg: hsl(0, 0%, 95%);
+
+
+    --clr-font: hsl(0, 0%, 5%);
+}
+
+:root.dark {
+    --clr-border: hsl(0, 0%, 70%);
+    --clr-bg-hover: hsl(0, 0%, 15%);
+    --clr-bg: hsl(0, 0%, 5%);
+
+
+    --clr-font: hsl(0, 0%, 95%);
+}
+
+body {
+    background-color: var(--clr-bg);
+    color: var(--clr-font);
+}

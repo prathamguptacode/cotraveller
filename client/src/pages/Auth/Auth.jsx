@@ -1,14 +1,14 @@
 import React from 'react'
+import GoogleButton from '../../components/OAuthButtons/GoogleButton'
+import GithubButton from '../../components/OAuthButtons/GithubButton'
+import ThemeButton from '../../components/Buttons/ThemeButton'
 
 const Auth = () => {
   return (
     <div>
-      <button onClick={()=>{
-        window.location.href="/api/oauth/google"
-      }}>LETS GO</button>
-      <button onClick={()=>{
-        window.location.href='/api/oauth/github'
-      }}>git baby</button>
+      <GoogleButton />
+      <GithubButton />
+      <ThemeButton/>
     </div>
   )
 }
