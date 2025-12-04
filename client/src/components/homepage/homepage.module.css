@@ -80,13 +80,13 @@
 
 .searchbox {
     background-color: var(--secondary-bg);
-    max-width: fit-content;
+    max-width: 1140px;
     margin: auto;
     padding: 20px 16px;
     display: flex;
     align-items: center;
     gap: 12px;
-    justify-content: space-between;
+    justify-content: center;
     border-radius: 4px;
     padding-bottom: 44px;
 }
@@ -190,4 +190,8 @@
 
 .options:hover {
     background-color: var(--opt-hover);
+}
+.toast{
+    padding: 0 40px;
+    background-color: rebeccapurple;
 }

@@ -5,7 +5,7 @@ import { BsBuildingsFill } from "react-icons/bs";
 function LocationDrop({setLocation}) {
 
     function handleClick0(){
-        setLocation('IIT Rorkie')
+        setLocation('IIT Roorkie')
     }
     function handleClick1(){
         setLocation('IIT Delhi')
@@ -21,7 +21,7 @@ function LocationDrop({setLocation}) {
     <div className={mystyle.locationDrop}>
       <div className={mystyle.options} onClick={handleClick0}>
         <BsBuildingsFill size="22px" />
-        IIT Rorkie
+        IIT Roorkie
         </div>
       <div className={mystyle.options} onClick={handleClick1}>
         <BsBuildingsFill size="22px" />

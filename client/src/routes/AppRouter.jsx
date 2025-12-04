@@ -3,6 +3,7 @@ import ProtectedRoutes from './ProtectedRoutes'
 import AntiProtectedRoutes from './AntiProtectedRoutes'
 import Home from '../pages/Home/Home'
 import GroupProfile from '../pages/GroupProfile/GroupProfile'
+import ViewGroup from '../pages/Group/ViewGroup'
 import AuthLayout from '../layouts/Auth/AuthLayout'
 import Signup from '../pages/Auth/Signup'
 import Login from '../pages/Auth/Login'
@@ -18,10 +19,15 @@ const AppRouter = () => {
 
 
 
+
                 <Route path='/' element={<Home />} >
                     <Route path='groups' element={<Groups />} />
                     <Route path='inbox' element={<Inbox />} />
                 </Route>
+
+
+                <Route path='/viewgroup' element={<ViewGroup />} />
+
 
 
                 <Route element={<AntiProtectedRoutes />} >

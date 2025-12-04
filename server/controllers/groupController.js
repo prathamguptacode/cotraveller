@@ -68,7 +68,7 @@ export async function viewGroupByFilter(req,res){
             }
         }
     ])
-    res.success(200,"FILTER",data)
+    res.success(200,data,"FILTER")
 }
 
 export const addRequest=async (req,res)=>{
@@ -208,4 +208,13 @@ export const leaveGroup=async (req,res)=>{
     }
     await groupSchema.updateOne({_id:groupID},{$pull:{member:userID}})
     res.success(204,"USER_DELETED","user leaft the group")
+}
+
+//to get member info i need this route
+export const memberInfo=async (req,res)=>{
+    const id=req.query?.q;
+    if(!id) res.fail(400,"INVALID_INPUT")
+    const user=await User.findById(id)
+    if(!user) res.fail(400,"INVALID_USER")
+    res.success(200,user.fullName)
 }

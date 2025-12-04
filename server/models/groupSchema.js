@@ -36,7 +36,6 @@ const groupSchema = new mongoose.Schema({
     },
     mode: {
         type: String,
-        lowercase: true,
         required: true
     },
     travelDate: {
@@ -45,7 +44,6 @@ const groupSchema = new mongoose.Schema({
     },
     intialLocation: {
         type: String,
-        lowercase: true,
         require: true
     },
     requests: {

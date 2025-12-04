@@ -10,15 +10,15 @@ function DateDrop({setDate}) {
 
   return (
     <div className={mystyle.dateDrop}>
-      <div className={mystyle.options}  onClick={handle} >1</div>
-      <div className={mystyle.options}  onClick={handle} >2</div>
-      <div className={mystyle.options}  onClick={handle} >3</div>
-      <div className={mystyle.options}  onClick={handle} >4</div>
-      <div className={mystyle.options}  onClick={handle} >5</div>
-      <div className={mystyle.options}  onClick={handle} >6</div>
-      <div className={mystyle.options}   onClick={handle} >7</div>
-      <div className={mystyle.options}  onClick={handle} >8</div>
-      <div className={mystyle.options}  onClick={handle} >9</div>
+      <div className={mystyle.options}  onClick={handle} >01</div>
+      <div className={mystyle.options}  onClick={handle} >02</div>
+      <div className={mystyle.options}  onClick={handle} >03</div>
+      <div className={mystyle.options}  onClick={handle} >04</div>
+      <div className={mystyle.options}  onClick={handle} >05</div>
+      <div className={mystyle.options}  onClick={handle} >06</div>
+      <div className={mystyle.options}   onClick={handle} >07</div>
+      <div className={mystyle.options}  onClick={handle} >08</div>
+      <div className={mystyle.options}  onClick={handle} >09</div>
       <div className={mystyle.options}   onClick={handle} >10</div>
       <div className={mystyle.options}  onClick={handle} >11</div>
       <div className={mystyle.options}  onClick={handle} >12</div>

@@ -1,0 +1,71 @@
+.groupwrapper:hover{
+    background-color: var(--group-hover);
+}
+.groupwrapper{
+    margin: 10px auto;
+    max-width: 900px;
+    padding: 28px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+.memberbx{
+    display: flex;
+    gap: 8px;
+}
+.members{
+    color: var(--dull-font);
+    font-size: 14px;
+}
+.group{
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+}
+.title{
+    font-size: 22px;
+    font-weight: 600;
+        cursor: pointer;
+}
+.content{
+    max-width: 540px;
+      display: -webkit-box;
+  -webkit-line-clamp: 2;     /* number of lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+      cursor: pointer;
+}
+.time{
+    padding: 4px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: hsl(216, 12%, 87%);
+        cursor: pointer;
+}
+.comments{
+        color: var(--dull-font);
+    font-size: 14px;
+        cursor: pointer;
+}
+.btnbox{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.groupbtn{
+    background-color: var(--primary);
+    color: var(--secondaryFont);
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: 500;
+    text-align: center;
+        cursor: pointer;
+}
+.groupbtn:hover{
+    background-color: var(--brighter-primary);
+}
+.line{
+    margin: auto;
+    max-width: 900px;
+    border: 1px solid var(--clr-border);
+}
