@@ -82,7 +82,7 @@ export const googleOAuthCallback = async (req, res) => {
         await User.create({ email, fullName, username })
     }
 
-    res.redirect('/group')
+    res.redirect('/')
 }
 
 
@@ -153,5 +153,5 @@ export const githubOAuthCallback = async (req, res) => {
     const refreshToken = await generateRefreshToken(email)
     res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
     clearCookies()
-    res.redirect('/group')
+    res.redirect('/')
 }

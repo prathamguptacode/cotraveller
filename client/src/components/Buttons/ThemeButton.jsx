@@ -7,9 +7,9 @@ const ThemeButton = () => {
     return (
         <button onClick={toggleTheme} className={styles.themeButton}>
             {theme === 'dark' ?
-                <Moon />
+                <Moon  />
                 :
-                <Sun />
+                <Sun size={28} />
             }
         </button>
     )

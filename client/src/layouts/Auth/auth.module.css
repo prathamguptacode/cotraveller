@@ -52,8 +52,9 @@ h1 {
 
 .oAuthButtons {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     gap: 2rem;
+    
 }
 
 

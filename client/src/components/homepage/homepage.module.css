@@ -1,20 +1,33 @@
-.navbar{
+.navbar {
     display: flex;
     gap: 16px;
     border-bottom: 1px solid var(--clr-border);
     align-items: center;
     padding: 8px 16px;
+
+
+    position: fixed;
+    z-index: 5;
+    left: 0;
+    right: 0;
+    top: 0;
+    background-color: var(--clr-bg);
 }
-.hamburger{
+
+.hamburger {
     flex-shrink: 0;
     border-radius: 24px;
     cursor: pointer;
     padding: 12px;
+
+    position: relative;
 }
-.hamburger:hover{
+
+.hamburger:hover {
     background-color: var(--clr-bg-hover);
 }
-.logo{
+
+.logo {
     /* border: 2px solid red; */
     color: var(--clr-font);
     font-size: 30px;
@@ -22,22 +35,27 @@
     cursor: pointer;
     flex-shrink: 0;
 }
-.nobox{
+
+.nobox {
     margin-left: auto;
 }
-.themebtn{
+
+.themebtn {
     flex-shrink: 0;
 }
-.mail{
+
+.mail {
     border-radius: 30px;
     cursor: pointer;
     padding: 10px;
     flex-shrink: 0;
 }
-.mail:hover{
+
+.mail:hover {
     background-color: var(--clr-bg-hover);
 }
-.navbtn{
+
+.navbtn {
     background-color: var(--primary);
     padding: 8px 16px;
     border-radius: 5px;
@@ -45,11 +63,13 @@
     font-weight: 500;
     flex-shrink: 0;
 }
-.banner{
+
+.banner {
     max-width: 1920px;
     padding-bottom: 44px;
 }
-.title{
+
+.title {
     text-align: center;
     margin-top: -100px;
     font-size: 48px;
@@ -57,7 +77,8 @@
     position: relative;
     z-index: 1;
 }
-.searchbox{
+
+.searchbox {
     background-color: var(--secondary-bg);
     max-width: fit-content;
     margin: auto;
@@ -69,7 +90,12 @@
     border-radius: 4px;
     padding-bottom: 44px;
 }
-.location, .mode, .date, .month, .year{
+
+.location,
+.mode,
+.date,
+.month,
+.year {
     padding: 16px 60px;
     border: 1px solid var(--clr-border);
     border-radius: 4px;
@@ -78,19 +104,24 @@
     flex-shrink: 0;
     position: relative;
 }
-.location, .mode{
+
+.location,
+.mode {
     padding: 16px 80px;
     display: flex;
     gap: 4px;
     align-items: center;
 }
-.mode{
-   gap: 6px; 
+
+.mode {
+    gap: 6px;
 }
-.inhover:hover{
-   border: 1px solid var(--in-border); 
+
+.inhover:hover {
+    border: 1px solid var(--in-border);
 }
-.searchbtn{
+
+.searchbtn {
     padding: 12px 28px;
     background-color: var(--primary);
     border-radius: 24px;
@@ -102,38 +133,46 @@
     align-items: center;
     gap: 8px;
 }
-.btnbox{
+
+.btnbox {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.searchbtn:hover{
+
+.searchbtn:hover {
     background-color: var(--brighter-primary);
 }
-.navbtn:hover{
+
+.navbtn:hover {
     background-color: var(--brighter-primary);
 }
-.locationDrop, .modeDrop{
+
+.locationDrop,
+.modeDrop {
     position: absolute;
     top: -2px;
     left: -2px;
     display: flex;
     flex-direction: column;
     width: 400px;
-box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
     background-color: var(--secondary-bg);
     z-index: 2;
     border-radius: 5px;
     overflow: hidden;
 }
-.dateDrop, .monthDrop, .yearDrop{
+
+.dateDrop,
+.monthDrop,
+.yearDrop {
     position: absolute;
     top: -2px;
     left: -2px;
     display: flex;
     flex-direction: column;
     width: 105%;
-box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
     background-color: var(--secondary-bg);
     z-index: 2;
     border-radius: 5px;
@@ -141,12 +180,14 @@ box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2
     height: 400px;
     overflow-y: auto;
 }
-.options{
+
+.options {
     padding: 16px;
     display: flex;
     gap: 12px;
     align-items: center;
 }
-.options:hover{
+
+.options:hover {
     background-color: var(--opt-hover);
 }

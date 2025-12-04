@@ -7,6 +7,10 @@ import AuthLayout from '../layouts/Auth/AuthLayout'
 import Signup from '../pages/Auth/Signup'
 import Login from '../pages/Auth/Login'
 import VerifyOtp from '../pages/Auth/VerifyOtp'
+import Groups from '../components/homepage/Sidebar/Groups'
+import Inbox from '../components/homepage/Sidebar/Inbox'
+
+
 const AppRouter = () => {
     return (
         <BrowserRouter>
@@ -14,14 +18,17 @@ const AppRouter = () => {
 
 
 
-                <Route path='/' element={<Home />} />
+                <Route path='/' element={<Home />} >
+                    <Route path='groups' element={<Groups />} />
+                    <Route path='inbox' element={<Inbox />} />
+                </Route>
 
 
                 <Route element={<AntiProtectedRoutes />} >
                     <Route element={<AuthLayout />} >
-                        <Route path='/signup' element={<Signup/>} />
-                        <Route path='/login' element={<Login/>} />
-                        <Route path='/signup/verify' element={<VerifyOtp/>} />
+                        <Route path='/signup' element={<Signup />} />
+                        <Route path='/login' element={<Login />} />
+                        <Route path='/signup/verify' element={<VerifyOtp />} />
                     </Route>
                 </Route>
 

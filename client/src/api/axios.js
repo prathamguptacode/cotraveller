@@ -53,7 +53,7 @@ api.interceptors.response.use(res => res,
     }
 )
 
-export const callAuthApi = async (method, route, data) => {
+export const callAuthApi = async (method, route, data='') => {
     try {
         const response = await api[method](route, data)
         return response
