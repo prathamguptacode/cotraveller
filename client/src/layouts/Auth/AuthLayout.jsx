@@ -4,7 +4,6 @@ import styles from './auth.module.css'
 import Footer from '../../components/Footer/Footer'
 import GoogleButton from '../../components/OAuthButtons/GoogleButton'
 import GithubButton from '../../components/OAuthButtons/GithubButton'
-import ThemeButton from '../../components/Buttons/ThemeButton'
 import AppleButton from '../../components/OAuthButtons/AppleButton'
 const AuthLayout = () => {
     return (
@@ -29,9 +28,6 @@ const AuthLayout = () => {
                             <Outlet />
                         </div>
 
-                        <div className={styles.themeBtnWrapper}>
-                            <ThemeButton />
-                        </div>
                     </div>
 
 

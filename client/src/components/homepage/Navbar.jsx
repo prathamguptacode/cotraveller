@@ -1,23 +1,33 @@
-import React from 'react'
 import { GiHamburgerMenu } from "react-icons/gi";
 import mystyle from './homepage.module.css'
 import ThemeButton from '../Buttons/ThemeButton';
 import { IoIosMail } from "react-icons/io";
+import Sidebar from './Sidebar/Sidebar';
 import { Link } from 'react-router-dom';
+import { useState } from "react";
 
 function Navbar() {
+    const [isHidden, setisHidden] = useState(true)
+
+    const closeSidebar = () => {
+        setisHidden(true)
+    }
+
     return (
         <div className={mystyle.navbar}>
-            <div className={mystyle.hamburger}>
-                <GiHamburgerMenu size='20px'/>
-            </div>
-            <div className={mystyle.logo}><Link to='/'>Cotraveller</Link></div>
+            <Link to={'/groups'} onClick={() => setisHidden(prev => !prev)} className={mystyle.hamburger}>
+                <GiHamburgerMenu size='20px' />
+            </Link>
+            <Sidebar isHidden={isHidden} closeSidebar={closeSidebar} />
+            <div className={mystyle.logo}>Cotraveller</div>
             <div className={mystyle.nobox}></div>
             <div className={mystyle.themebtn}><ThemeButton /></div>
-            <div className={mystyle.mail}><IoIosMail size='28px' /></div>
-            <button className={mystyle.navbtn}>Sign up</button>
-            <button className={mystyle.navbtn}>Log in</button>
-            <button className={mystyle.navbtn}>Create group</button>
+            <Link onClick={() => {
+                setisHidden(false)
+            }} to={'/inbox'} className={mystyle.mail}><IoIosMail size={28} /> </Link>
+            <Link to={'/signup'} className={mystyle.navbtn}>Sign up</Link>
+            <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
+            <Link className={mystyle.navbtn}>Create group</Link>
         </div>
     )
 }

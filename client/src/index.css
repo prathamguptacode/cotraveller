@@ -9,9 +9,9 @@ body {
     margin: auto;
     background-color: var(--clr-bg);
     color: var(--clr-font);
-    font-family: Roboto, sans-serif;
+    font-family:Mulish, Roboto, sans-serif;
 
-
+    
 
 }
 
@@ -19,8 +19,8 @@ body {
 
     --clr-border: hsl(0, 0%, 70%);
     --clr-bg-hover: hsl(0, 0%, 15%);
-    --clr-bg: hsl(0, 29%, 83%);
-    --clr-font: hsl(0, 0%, 95%);
+    --clr-bg: hsl(0, 0%, 90%);
+    --clr-font: hsl(0, 0%, 5%);
 
 }
 
@@ -50,10 +50,12 @@ body {
     /* auth page color */
     --secondary-bg-darker:hsl(220, 3%, 9%);
 
+    /*homepage sidebar */
+    --sidebar-bg:#303133;
+    --sidebar-bg-hover:#3C4043;
+    --sidebar-anchor-active: #609af6;
+    --sidebar-button-hover:hsl(225, 4%, 20%);
+
+
 }
 
-body {
-    background-color: var(--clr-bg);
-    color: var(--clr-font);
-    font-family: Mulish;
-}
