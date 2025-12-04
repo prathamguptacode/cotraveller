@@ -13,12 +13,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: .3rem;
-    background-color:hsl(0,0%,10%);
+    gap: .5rem;
+    background-color: hsl(0, 0%, 10%);
     border: 1px solid hsl(0, 0%, 70%);
     border-radius: 8px;
     padding-right: .6rem;
-height: 48px;
+    height: 48px;
 
 
 }
@@ -29,7 +29,7 @@ height: 48px;
 
 .placeholder {
     position: absolute;
-    color:hsl(0, 0%, 95%);
+    color: hsl(0, 0%, 95%);
     left: 1rem;
     top: 50%;
     transform: translate(0, -50%);
@@ -41,7 +41,7 @@ height: 48px;
 
 .textField {
     box-sizing: border-box;
-    font-size: 12px;
+    font-size: 14px;
     color: white;
     padding: 1rem 0 .4rem 1rem;
     width: 100%;
@@ -69,25 +69,43 @@ height: 48px;
 .error {
     color: hsl(0, 77%, 49%);
     margin-bottom: .2rem;
-    font-size: 10px;
+    font-size: 12px;
     padding-left: 1rem;
 }
 
-.errorLogo {
-    flex-shrink: 0;
 
-}
 
-.eye {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: hsl(0, 0%, 70%);
-    transition: all .15s linear;
-    margin-right: .2rem;
+.helperWrapper {
+    cursor: pointer;
+    position: relative;
 
     &:hover {
-        color: white;
+        .helper {
+            display: flex;
+        }
     }
+}
+
+.helper {
+    list-style-position: inside;
+    list-style-type: none;
+
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    translate: 0 -50%;
+    flex-direction: column;
+    width: max-content;
+    padding: .5em 1.5em;
+    border-radius: 8px;
+
+    font-size: 14px;
+    background-color: hsl(from var(--secondary-bg) h s l / .5);
+    backdrop-filter: blur(5px);
+
+    display: none;
+
+}
+svg{
+    cursor: pointer;
 }

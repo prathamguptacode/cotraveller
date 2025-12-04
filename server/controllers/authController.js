@@ -18,8 +18,14 @@ export const signupController = async (req, res) => {
 
     //MX lookup for checking valid email dns
     const domain = email.split("@")[1]
-    const mxRecords = await resolveMx(domain)
-    if (!mxRecords) return res.fail(400, "INVALID_DOMAIN", "Email address domain cannot receive mails,check if '@example.com' is valid")
+
+    try {
+        const mxRecords = await resolveMx(domain)
+        if (!mxRecords) return res.fail(400, "INVALID_EMAIL", "Must be an email")
+    } catch (error) {
+        if (error.code == "ENODATA" || error.code == "ENOTFOUND") return res.fail(400, "INVALID_EMAIL", "Must be an email")
+        throw new CustomError(500, "MX_RECORDS")
+    }
 
     //Check if email already exists
     if (await User.exists({ email })) return res.fail(409, "EMAIL_TAKEN", "Email is already registered")
@@ -133,11 +139,13 @@ export const loginController = async (req, res) => {
 
     //Check if user exists
     const user = await User.findOne({ email }).select('+passwordHash')
-    if (!user) return res.fail(400, "USER_NOT_FOUND", "User does not exist")
+    if (!user) return res.fail(400, "USER_NOT_FOUND", "Email not registered")
 
     //Check if password mathces
     const { passwordHash } = user
-    if (!await argon2.verify(passwordHash, password)) return res.fail(400, "INVALID_PASSWORD", "Password was invalid!")
+    if (!passwordHash) return res.fail(400, "PASSWORD_NOT_FOUND", "You do not have a password set, please login using other methods or use 'Forgot Password' to make a new one")
+
+    if (!await argon2.verify(passwordHash, password)) return res.fail(400, "INVALID_PASSWORD", "Password is invalid")
 
     //Generating tokens, sending cookie and auth data
     const accessToken = await generateAccessToken(email)
@@ -150,7 +158,7 @@ export const loginController = async (req, res) => {
 }
 
 
-export const refreshOtpController = async (req, res) => {
+export const resendOtpController = async (req, res) => {
     const otpUUID = req.cookies?.otpUUID
     if (!otpUUID) return res.fail(410, "SESSION_EXPIRED", "Otp session expired, please re-signup")
 

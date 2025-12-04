@@ -9,7 +9,7 @@ const AppleButton = () => {
             {theme == 'dark' ?
                 <img  src="/apple-light.svg" alt="apple-light-icon" />
                 :
-                <im src="/apple-dark.svg" alt="apple-dark-icon" />
+                <img src="/apple-dark.svg" alt="apple-dark-icon" />
             }
         </button>
     )

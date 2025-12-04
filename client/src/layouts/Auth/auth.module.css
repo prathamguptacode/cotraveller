@@ -1,32 +1,27 @@
 .wrapper {
-
+    background-color: var(--secondary-bg-darker);
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    /* ###REMOVE LATER */
     min-height: 100vh;
+
+   
 
 }
 
 .hero {
     display: flex;
     flex: 1;
-}
-
-.heroLeft {
-    flex-basis: 550px;
-}
-
-.heroRight {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+     justify-content: center;
     align-items: center;
 }
 
+
+
 .formWrapper {
+    background-color:var(--clr-bg);
     border-radius: 8px;
-    border: 1px solid hsl(0, 0%, 60%);
+    border: 1px solid var(--clr-border);
 
     flex-basis: 550px;
     padding-block: 5rem;
@@ -75,4 +70,3 @@ h1 {
     flex: 1;
     background-color: hsl(0, 0%, 80%);
 }
-

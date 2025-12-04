@@ -11,32 +11,29 @@ const AuthLayout = () => {
         <>
             <div className={styles.wrapper}>
                 <div className={styles.hero}>
-                    <div className={styles.heroLeft}></div>
+
+                    <div className={styles.formWrapper}>
 
 
-                    <div className={styles.heroRight}>
-                        <div className={styles.formWrapper}>
-
-
-                            <div className={styles.formInnerWrapper}>
-                                <div className={styles.oAuthButtons}>
-                                    <GoogleButton />
-                                    <AppleButton />
-                                    <GithubButton />
-                                </div>
-                                <div className={styles.lineBreakers}>
-                                    <div className={styles.lineBreaker}></div>
-                                    OR
-                                    <div className={styles.lineBreaker}></div>
-                                </div>
-                                <Outlet />
+                        <div className={styles.formInnerWrapper}>
+                            <div className={styles.oAuthButtons}>
+                                <GoogleButton />
+                                <AppleButton />
+                                <GithubButton />
                             </div>
-
-                            <div className={styles.themeBtnWrapper}>
-                                <ThemeButton />
+                            <div className={styles.lineBreakers}>
+                                <div className={styles.lineBreaker}></div>
+                                OR
+                                <div className={styles.lineBreaker}></div>
                             </div>
+                            <Outlet />
+                        </div>
+
+                        <div className={styles.themeBtnWrapper}>
+                            <ThemeButton />
                         </div>
                     </div>
+
 
 
                 </div>

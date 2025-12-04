@@ -6,6 +6,7 @@ import GroupProfile from '../pages/GroupProfile/GroupProfile'
 import AuthLayout from '../layouts/Auth/AuthLayout'
 import Signup from '../pages/Auth/Signup'
 import Login from '../pages/Auth/Login'
+import VerifyOtp from '../pages/Auth/VerifyOtp'
 const AppRouter = () => {
     return (
         <BrowserRouter>
@@ -20,6 +21,7 @@ const AppRouter = () => {
                     <Route element={<AuthLayout />} >
                         <Route path='/signup' element={<Signup/>} />
                         <Route path='/login' element={<Login/>} />
+                        <Route path='/signup/verify' element={<VerifyOtp/>} />
                     </Route>
                 </Route>
 
