@@ -77,3 +77,21 @@ a {
 }
 
 
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus-within,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: white;
+    caret-color: white;
+
+
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    /* Optional: Removes any default margin */
+}

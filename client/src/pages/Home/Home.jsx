@@ -1,6 +1,6 @@
 import React from 'react'
 import ThemeButton from '../../components/Buttons/ThemeButton'
-import Navbar from '../../components/homepage/navbar'
+import Navbar from '../../components/homepage/Navbar'
 import Banner from '../../components/homepage/Banner'
 import Searchbox from '../../components/homepage/Searchbox'
 

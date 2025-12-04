@@ -1,0 +1,72 @@
+.wrapper {
+    background-color: var(--secondary-bg-darker);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 100vh;
+
+   
+
+}
+
+.hero {
+    display: flex;
+    flex: 1;
+     justify-content: center;
+    align-items: center;
+}
+
+
+
+.formWrapper {
+    background-color:var(--clr-bg);
+    border-radius: 8px;
+    border: 1px solid var(--clr-border);
+
+    flex-basis: 550px;
+    padding-block: 5rem;
+
+    box-shadow: -5px -5px 32px 1px hsl(0, 0%, 15%), 5px 5px 32px 1px hsl(0, 0%, 5%);
+    position: relative;
+
+}
+
+.formInnerWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: auto;
+    width: 350px;
+}
+
+
+h1 {
+    text-align: center;
+}
+
+.themeBtnWrapper {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+}
+
+.oAuthButtons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+
+
+.lineBreakers {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-block: .5rem;
+}
+
+.lineBreaker {
+    height: .2px;
+    flex: 1;
+    background-color: hsl(0, 0%, 80%);
+}

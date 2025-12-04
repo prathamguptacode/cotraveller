@@ -1,3 +1,20 @@
+#root {
+    margin: auto;
+    /* ###REMOVE LATER */
+    min-height: 100vh;
+}
+
+body {
+    max-width: 1920px;
+    margin: auto;
+    background-color: var(--clr-bg);
+    color: var(--clr-font);
+    font-family: Roboto, sans-serif;
+
+
+
+}
+
 :root {
 
     --clr-border: hsl(0, 0%, 70%);
@@ -23,6 +40,9 @@
     --clr-font: #e8eaed;
     --secondaryFont:rgb(32,33,36);
     --opt-hover:#5E5F62;
+
+    /* auth page color */
+    --secondary-bg-darker:hsl(220, 3%, 9%);
 
 }
 
