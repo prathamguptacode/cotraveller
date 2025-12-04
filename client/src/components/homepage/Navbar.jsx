@@ -3,6 +3,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import mystyle from './homepage.module.css'
 import ThemeButton from '../Buttons/ThemeButton';
 import { IoIosMail } from "react-icons/io";
+import { Link } from 'react-router-dom';
 
 function Navbar() {
     return (
@@ -10,7 +11,7 @@ function Navbar() {
             <div className={mystyle.hamburger}>
                 <GiHamburgerMenu size='20px'/>
             </div>
-            <div className={mystyle.logo}>Cotraveller</div>
+            <div className={mystyle.logo}><Link to='/'>Cotraveller</Link></div>
             <div className={mystyle.nobox}></div>
             <div className={mystyle.themebtn}><ThemeButton /></div>
             <div className={mystyle.mail}><IoIosMail size='28px' /></div>

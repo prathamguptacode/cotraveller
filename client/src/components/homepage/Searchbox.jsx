@@ -12,16 +12,20 @@ import YearDrop from './dropDown/yearDrop';
 import { IoMdAirplane } from "react-icons/io";
 import { FaTrainSubway } from "react-icons/fa6";
 import { FaTaxi } from "react-icons/fa";
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
+import { api } from '../../api/axios';
 
-function Searchbox() {
+function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='Year?'}) {
 
-    const modeSvg=useRef()
+    const navigate = useNavigate()
 
-    const [location, setLocation] = useState('Where from?')
-    const [mode, setMode] = useState('Transport?')
-    const [date, setDate] = useState('Date?')
-    const [month, setMonth] = useState('Month?')
-    const [year, setYear] = useState('Year?')
+    const [location, setLocation] = useState(l)
+    const [mode, setMode] = useState(md)
+    const [date, setDate] = useState(d)
+    const [month, setMonth] = useState(m)
+    const [year, setYear] = useState(y)
+    //###fix date issue
 
     const [locationDropDis, setLocationDropDis] = useState(0)
     const [modeDropDis, setModeDropDis] = useState(0)
@@ -60,40 +64,122 @@ function Searchbox() {
     function hidY() {
         setYearDropDis(0)
     }
-    return (
-        <div>
-            <div className={mystyle.searchbox}>
-                <div className={clsx(mystyle.location, mystyle.inhover)} tabIndex="0" onClick={showL} onBlur={hidL}>
-                    <FaLocationDot />
-                    {location}
-                    {locationDropDis ? <LocationDrop setLocation={setLocation} /> : null}
-                </div>
-                <div className={clsx(mystyle.mode, mystyle.inhover)} tabIndex="0" onClick={showT} onBlur={hidT}>
-                    {(mode=="Transport?")? <FaPaperPlane /> : null }
-                    {(mode=="Airlane")? <IoMdAirplane /> : null }
-                    {(mode=="Railway")? <FaTrainSubway /> : null }
-                    {(mode=="Taxi")? <FaTaxi /> : null }
-                    {mode}
-                    {modeDropDis ? <ModeDrop setMode={setMode} /> : null}
-                </div>
-                <div className={clsx(mystyle.date, mystyle.inhover)} tabIndex="0" onClick={showD} onBlur={hidD}>{date}
-                    {dateDropDis ? <DateDrop setDate={setDate} /> : null}
-                </div>
-                <div className={clsx(mystyle.month, mystyle.inhover)} tabIndex="0" onClick={showM} onBlur={hidM}>{month}
-                    {monthDropDis ? <MonthDrop setMonth={setMonth} />: null}
-                </div>
-                <div className={clsx(mystyle.year, mystyle.inhover)} tabIndex="0" onClick={showY} onBlur={hidY}>{year}
-                    {yearDropDis? <YearDrop setYear={setYear} />: null}
-                </div>
+
+    async function search() {
+        if (location == "Where from?") {
+            toast.error('please enter Location!', {
+                style: {
+                    borderRadius: '10px',
+                    background: "#303133",
+                    color: '#fff',
+                    padding: "  6px 40px"
+                },
+            }
+            );
+            return
+        }
+        if (mode == "Transport?") {
+            toast.error('please enter the Transport!', {
+                style: {
+                    borderRadius: '10px',
+                    background: "#303133",
+                    color: '#fff',
+                    padding: "  6px 40px",
+                },
+            }
+            );
+            return
+        }
+        if (date == "Date?") {
+            toast.error('please enter the Date!', {
+                style: {
+                    borderRadius: '10px',
+                    background: "#303133",
+                    color: '#fff',
+                    padding: "  6px 40px"
+                },
+            }
+            );
+            return
+        }
+        if (month == "Month?") {
+            toast.error('please enter the Month!', {
+                style: {
+                    borderRadius: '10px',
+                    background: "#303133",
+                    color: '#fff',
+                    padding: "  6px 40px"
+                },
+            }
+            );
+            return
+        }
+        if (year == "Year?") {
+            toast.error('please enter the Year!', {
+                style: {
+                    borderRadius: '10px',
+                    background: "#303133",
+                    color: '#fff',
+                    padding: "  6px 40px"
+                },
+            }
+            );
+            return
+        }
+        let monthNum=0;
+        if(month == "January") monthNum=1
+        if(month == "Febuary") monthNum=2
+        if(month == "March") monthNum=3
+        if(month == "April") monthNum=4
+        if(month == "May") monthNum=5
+        if(month == "June") monthNum=6
+        if(month == "July") monthNum=7
+        if(month == "August") monthNum=8
+        if(month == "September") monthNum=9
+        if(month == "October") monthNum=10
+        if(month == "November") monthNum=11
+        if(month == "December") monthNum=12
+        const lowerTime= `${year}-${monthNum}-${date}T00:00`
+        const upperTime= `${year}-${monthNum}-${date}T23:59`
+        navigate(`/viewgroup?q=${location}&mode=${mode}&lowerT=${lowerTime}&upperT=${upperTime}&d=${date}&m=${month}&y=${year}`)
+    }
+
+
+return (
+    <div>
+        <div className={mystyle.searchbox}>
+            <div className={clsx(mystyle.location, mystyle.inhover)} tabIndex="0" onClick={showL} onBlur={hidL}>
+                <FaLocationDot />
+                {location}
+                {locationDropDis ? <LocationDrop setLocation={setLocation} /> : null}
             </div>
-            <div className={mystyle.btnbox}>
-                <button className={mystyle.searchbtn}>
-                    <IoMdSearch size="20px" />
-                    Find groups
-                </button>
+            <div className={clsx(mystyle.mode, mystyle.inhover)} tabIndex="0" onClick={showT} onBlur={hidT}>
+                {(mode == "Transport?") ? <FaPaperPlane /> : null}
+                {(mode == "Airlane") ? <IoMdAirplane /> : null}
+                {(mode == "Railway") ? <FaTrainSubway /> : null}
+                {(mode == "Taxi") ? <FaTaxi /> : null}
+                {mode}
+                {modeDropDis ? <ModeDrop setMode={setMode} /> : null}
+            </div>
+            <div className={clsx(mystyle.date, mystyle.inhover)} tabIndex="0" onClick={showD} onBlur={hidD}>{date}
+                {dateDropDis ? <DateDrop setDate={setDate} /> : null}
+            </div>
+            <div className={clsx(mystyle.month, mystyle.inhover)} tabIndex="0" onClick={showM} onBlur={hidM}>{month}
+                {monthDropDis ? <MonthDrop setMonth={setMonth} /> : null}
+            </div>
+            <div className={clsx(mystyle.year, mystyle.inhover)} tabIndex="0" onClick={showY} onBlur={hidY}>{year}
+                {yearDropDis ? <YearDrop setYear={setYear} /> : null}
             </div>
         </div>
-    )
+        <div className={mystyle.btnbox}>
+            <button className={mystyle.searchbtn} onClick={search}>
+                <IoMdSearch size="20px" />
+                Find groups
+            </button>
+            <Toaster />
+        </div>
+    </div>
+)
 }
 
 export default Searchbox

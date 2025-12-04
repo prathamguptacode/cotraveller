@@ -68,7 +68,7 @@ export async function viewGroupByFilter(req,res){
             }
         }
     ])
-    res.success(200,"FILTER",data)
+    res.success(200,data,"FILTER")
 }
 
 export const addRequest=async (req,res)=>{

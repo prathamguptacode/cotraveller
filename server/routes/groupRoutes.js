@@ -12,7 +12,7 @@ router.post('/addgroup',verifyAccessToken,asyncHandler(addGroup))
 
 router.get('/viewgroup',asyncHandler(viewGroup))//we never have to use this route
 
-router.get('/viewgroupbyfilter',asyncHandler(viewGroupByFilter))//no middleware required
+router.post('/viewgroupbyfilter',asyncHandler(viewGroupByFilter))//no middleware required
 
 //adding people to group logic
 //so the logic goes (like) first sees the post and (like) one so they request to join group
