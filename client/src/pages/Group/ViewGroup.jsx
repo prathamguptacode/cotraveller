@@ -1,11 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../../components/homepage/navbar'
 import Searchbox from '../../components/homepage/Searchbox'
 import mystyle from './ViewGroup.module.css'
 import { useSearchParams } from 'react-router-dom'
 import { api } from '../../api/axios'
+import Group from '../../components/viewgroup/Group'
 
 function ViewGroup() {
+
+    const [groupData,setGroupData]=useState([])
+    console.log(groupData)
 
     const [query] = useSearchParams()
     const location = query.get("q");
@@ -26,19 +30,24 @@ function ViewGroup() {
                 upperTime: upperT,
                 intialLocation: location
             }
-            const res = await api.post("/group/viewgroupbyfilter", body)
-            console.log(res)
-            console.log(body)
+            try {
+                const res = await api.post("/group/viewgroupbyfilter", body)
+                setGroupData(res.data.data)
+            } catch (error) {
+                //something went wrong page
+            }
         })()
-
     }, [query])
 
     return (
         <div>
             <Navbar />
-            <Searchbox l={location} md={mode} d={d} m={m} y={y} />
-            <div className={mystyle.groupwrapper}>
-                hello world
+            <Searchbox l={location} md={mode} d={d} m={m} y={y} w="1920px" />
+            <div className={mystyle.groupSection}>
+                {groupData.map(element => {
+                    console.log(element)
+                    return <Group element={element} />
+                })}
             </div>
         </div>
     )

@@ -16,7 +16,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { api } from '../../api/axios';
 
-function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='Year?'}) {
+function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='Year?', w=""}) {
 
     const navigate = useNavigate()
 
@@ -147,7 +147,7 @@ function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='
 
 return (
     <div>
-        <div className={mystyle.searchbox}>
+        <div className={mystyle.searchbox} style={{maxWidth: w}}>
             <div className={clsx(mystyle.location, mystyle.inhover)} tabIndex="0" onClick={showL} onBlur={hidL}>
                 <FaLocationDot />
                 {location}
@@ -155,7 +155,7 @@ return (
             </div>
             <div className={clsx(mystyle.mode, mystyle.inhover)} tabIndex="0" onClick={showT} onBlur={hidT}>
                 {(mode == "Transport?") ? <FaPaperPlane /> : null}
-                {(mode == "Airlane") ? <IoMdAirplane /> : null}
+                {(mode == "Airplane") ? <IoMdAirplane size="22px" /> : null}
                 {(mode == "Railway") ? <FaTrainSubway /> : null}
                 {(mode == "Taxi") ? <FaTaxi /> : null}
                 {mode}
