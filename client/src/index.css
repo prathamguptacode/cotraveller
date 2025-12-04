@@ -30,6 +30,9 @@ body {
     --in-border: hsla(207, 5%, 77%, 0.6);
     /* google flights border color */
     --clr-bg-hover: #303134;
+    
+    --group-hover: hsl(225, 6%, 18%);
+
     --clr-bg: #202124;
     /* google flights background color */
     --secondary-bg: #303133;
@@ -38,6 +41,9 @@ body {
     --link-color: #8ab4f8;
     --seconday: #465062;
     --clr-font: #e8eaed;
+
+    --dull-font: hsl(216, 12%, 52%);
+
     --secondaryFont:rgb(32,33,36);
     --opt-hover:#5E5F62;
 

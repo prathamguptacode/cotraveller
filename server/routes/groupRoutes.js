@@ -1,6 +1,6 @@
 import express from 'express'
 const router=express.Router()
-import {addGroup, addDBrequests, leaveGroup, viewRequest, addMember} from '../controllers/groupController.js'
+import {addGroup, addDBrequests, leaveGroup, viewRequest, addMember, memberInfo} from '../controllers/groupController.js'
 import {asyncHandler} from '../utils/asyncHandler.js'
 import {viewGroup} from '../controllers/groupController.js'
 import {viewGroupByFilter} from '../controllers/groupController.js'
@@ -8,7 +8,8 @@ import { addRequest } from '../controllers/groupController.js'
 import { verifyAccessToken } from '../middlewares/authMiddleware.js'
 
 //should have middleware
-router.post('/addgroup',verifyAccessToken,asyncHandler(addGroup))
+// router.post('/addgroup',verifyAccessToken,asyncHandler(addGroup))
+router.post('/addgroup',asyncHandler(addGroup))
 
 router.get('/viewgroup',asyncHandler(viewGroup))//we never have to use this route
 
@@ -26,5 +27,8 @@ router.get('/viewrequest',verifyAccessToken,asyncHandler(viewRequest))// this is
 router.post('/adddbrequest',verifyAccessToken,asyncHandler(addDBrequests))
 router.post('/addmember',verifyAccessToken,asyncHandler(addMember))
 router.delete('/leavegroup',verifyAccessToken,asyncHandler(leaveGroup))
+
+//to get member info i need this route
+router.get('/getname', memberInfo )
 
 export default router
