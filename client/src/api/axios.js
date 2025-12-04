@@ -37,14 +37,28 @@ api.interceptors.response.use(res => res,
                 updateAccessToken(accessToken)
                 originalRequest.headers.Authorization = `Bearer ${accessToken}`
                 return api(originalRequest)
-                
+
             } catch (error) {
                 console.warn("Failed to refresh token")
             }
         }
-        else {
-            console.warn("UNAUTHORIZED, logging out")
+        else if (err.status === 401) {
+            console.warn("ERROR:401:UNAUTHORIZED, Logging out")
             return unAuthApi.post('/auth/logout')
         }
+        else if (err.status === 500) {
+            console.error("ERROR:500:Something went wrong!")
+        }
+        return Promise.reject(err)
     }
 )
+
+export const callAuthApi = async (method, route, data) => {
+    try {
+        const response = await api[method](route, data)
+        return response
+    } catch (error) {
+        console.error(error)
+        return error.response
+    }
+}
