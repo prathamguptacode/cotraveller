@@ -42,7 +42,7 @@ function ViewGroup() {
     return (
         <div>
             <Navbar />
-            <Searchbox l={location} md={mode} d={d} m={m} y={y} w="1920px" />
+            <Searchbox l={location} md={mode} d={d} m={m} y={y} w="1920px" tempMargin='64px' />
             <div className={mystyle.groupSection}>
                 {groupData.map(element => {
                     console.log(element)

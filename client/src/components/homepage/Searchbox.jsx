@@ -16,7 +16,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { api } from '../../api/axios';
 
-function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='Year?', w=""}) {
+function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='Year?', w="" ,tempMargin=""}) {
 
     const navigate = useNavigate()
 
@@ -147,7 +147,7 @@ function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='
 
 return (
     <div>
-        <div className={mystyle.searchbox} style={{maxWidth: w}}>
+        <div className={mystyle.searchbox} style={{maxWidth: w, marginTop: tempMargin}}>
             <div className={clsx(mystyle.location, mystyle.inhover)} tabIndex="0" onClick={showL} onBlur={hidL}>
                 <FaLocationDot />
                 {location}

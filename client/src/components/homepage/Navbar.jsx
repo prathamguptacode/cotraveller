@@ -13,13 +13,15 @@ function Navbar() {
         setisHidden(true)
     }
 
+    // $$$please include profile picture feature
+
     return (
         <div className={mystyle.navbar}>
             <Link to={'/groups'} onClick={() => setisHidden(prev => !prev)} className={mystyle.hamburger}>
                 <GiHamburgerMenu size='20px' />
             </Link>
             <Sidebar isHidden={isHidden} closeSidebar={closeSidebar} />
-            <div className={mystyle.logo}>Cotraveller</div>
+            <div className={mystyle.logo}><Link to='/'>Cotraveller</Link></div>
             <div className={mystyle.nobox}></div>
             <div className={mystyle.themebtn}><ThemeButton /></div>
             <Link onClick={() => {
@@ -27,7 +29,7 @@ function Navbar() {
             }} to={'/inbox'} className={mystyle.mail}><IoIosMail size={28} /> </Link>
             <Link to={'/signup'} className={mystyle.navbtn}>Sign up</Link>
             <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
-            <Link className={mystyle.navbtn}>Create group</Link>
+            <Link to={'/creategroup'} className={mystyle.navbtn}>Create group</Link>
         </div>
     )
 }

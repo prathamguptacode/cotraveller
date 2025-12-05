@@ -1,0 +1,110 @@
+.titleTile{
+    margin: auto;
+    margin-top: 80px;
+
+    max-width: 900px;
+    border-radius: 5px;
+    overflow: hidden;
+
+    background-color: var(--secondary-bg);
+    padding: 20px;
+    position: relative;
+}
+.strip{
+    position: absolute;
+    z-index: 2;
+    top: 0px;
+    left: 0px;
+    height: 10px;
+    background-color: var(--primary);
+    width: 1000px;
+}
+.title{
+    font-size: 28px;
+    font-weight: 700;
+    padding: 16px 0;
+}
+.con{
+    font-size: 16px;
+    padding: 0 0 4px 0;
+}
+.questionTitle{
+    max-width: 900px;
+    border-radius: 5px;
+    background-color: var(--secondary-bg);
+    padding: 22px 20px;
+    position: relative;
+    margin: 28px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.ques{
+    font-size: 20px;
+    font-weight: 500;
+}
+.inbx {
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid hsl(225, 6%, 48%);
+  padding: 8px 4px;
+  outline: none;
+  background: transparent;
+  transition: 0.2s ease;
+}
+
+.inbx:focus {
+  border-bottom-color: var(--primary);
+}
+
+.dropmenu{
+    padding: 8px 0;
+    max-width: 350px;
+    position: relative;
+}
+
+.datebox{
+    display: flex;
+    gap: 16px;
+    padding: 8px 0;
+}
+
+.inDrop:hover{
+    border: 1px solid var(--primary);
+}
+
+.memberDrop{
+    padding: 16px 60px;
+    border: 1px solid var(--clr-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.1s all ease-in-out;
+    max-width: 200px;
+    text-align: center;
+    position: relative;
+}
+.memberDrop:hover{
+    border: 1px solid var(--primary);
+}
+
+.timeBox{
+    display: flex;
+    gap: 16px;
+    padding: 8px 0;
+    align-items: center;
+}
+.semi{
+    font-size: 28px;
+}
+.hour{
+    padding: 16px 60px;
+    border: 1px solid var(--clr-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.1s all ease-in-out;
+    flex-shrink: 0;
+    position: relative;
+}
+.hour:hover{
+    border: 1px solid var(--primary);
+}
