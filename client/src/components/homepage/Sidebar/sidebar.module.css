@@ -64,12 +64,8 @@
     padding: 1rem;
     padding-right: 0;
     font-size: 14px;
-
-
-
-
-
 }
+
 
 .listItem:hover {
     background-color: var(--sidebar-bg-hover);

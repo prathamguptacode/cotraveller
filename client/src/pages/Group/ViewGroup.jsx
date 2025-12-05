@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Searchbox from '../../components/homepage/Searchbox'
 import mystyle from './ViewGroup.module.css'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { api } from '../../api/axios'
 import Group from '../../components/viewgroup/Group'
 
@@ -18,6 +18,7 @@ function ViewGroup() {
     const y = query.get("y");
 
     useEffect(() => {
+
         const location = query.get("q");
         const mode = query.get("mode");
         const lowerT = query.get("lowerT");
@@ -29,11 +30,13 @@ function ViewGroup() {
                 upperTime: upperT,
                 intialLocation: location
             }
+
             try {
                 const res = await api.post("/group/viewgroupbyfilter", body)
                 setGroupData(res.data.data)
             } catch (error) {
                 //something went wrong page
+                console.error(error)
             }
         })()
     }, [query])
