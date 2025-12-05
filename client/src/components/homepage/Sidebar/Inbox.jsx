@@ -23,7 +23,7 @@ const Inbox = () => {
       {
         groups.map(group => {
           return (
-            <Link className={styles.listItem}>
+            <Link key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
                 <img src="apple-light.svg" alt="avatar" />
               </div>

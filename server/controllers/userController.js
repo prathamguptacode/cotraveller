@@ -132,3 +132,38 @@ export const fetchIncomingRequestsController = async (req, res) => {
     res.success(200, { groups: inbox[0].groups })
 
 }
+
+
+export const fetchOutgoingRequestsController = async (req, res) => {
+    const user = req.user
+    const outbox = await User.aggregate([
+        {
+            $match: { _id: user._id }
+        },
+        {
+            $project: {
+                requests: 1
+            }
+        },
+        {
+            $lookup: {
+                from: 'groups',
+                let: { requests: '$requests' },
+                pipeline: [
+                    {
+                        $match: { $expr: { $in: ['$_id', '$$requests'] } }
+                    },
+                    {
+                        $project: {
+                            title: 1,
+                            memberNumber: 1,
+                        }
+                    }
+                ],
+                as: 'groups'
+            }
+        }
+    ])
+
+    res.success(200, { groups: outbox[0].groups })
+}
