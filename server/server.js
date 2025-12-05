@@ -11,6 +11,8 @@ import groupRoutes from './routes/groupRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import oauthRoutes from './routes/oauthRoutes.js'
 import fieldValidationRoutes from './routes/fieldValidationRoutes.js'
+import userRoutes from './routes/userRoutes.js'
+
 
 const app = express()
 const server = http.createServer(app)
@@ -29,7 +31,7 @@ app.use('/api/group', groupRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/oauth', oauthRoutes)
 app.use('/api/validateField',fieldValidationRoutes)
-
+app.use('/api/user',)
 
 
 

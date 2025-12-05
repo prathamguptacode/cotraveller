@@ -1,14 +1,12 @@
-import React from 'react'
 import styles from './sidebar.module.css'
 import { Link } from 'react-router-dom'
 import { Check, X } from 'lucide-react'
 
 const Inbox = () => {
-  console.log('wow')
 
   return (
     <div className={styles.list}>
-      <Link to={''} className={styles.listItem}>
+      <Link className={styles.listItem}>
         <div className={styles.avatarWrapper} >
           <img src="apple-light.svg" alt="avatar" />
         </div>
