@@ -33,7 +33,7 @@
     gap: 1rem;
 }
 
-.header>a {
+.header>* {
     border: 1px solid var(--clr-border);
     border-radius: 20px;
     padding: .2rem .6rem;
