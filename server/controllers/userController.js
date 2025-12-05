@@ -95,3 +95,40 @@ export const fetchJoinedGroupsController = async (req, res) => {
     ])
     res.success(200, { groups }, "GREAT SHIT NGL!")
 }
+
+export const fetchIncomingRequestsController = async (req, res) => {
+    const user = req.user
+    const inbox = await User.aggregate([
+        {
+            $match: { _id: user._id }
+        },
+
+        {
+            $project: {
+                dbrequests: 1,
+            }
+        },
+        {
+            $lookup: {
+                from: 'groups',
+                let: { dbrequests: '$dbrequests' },
+                pipeline: [
+                    {
+                        $match: { $expr: { $in: ['$_id', '$$dbrequests'] } }
+                    },
+                    {
+                        $project: {
+                            title: 1,
+                            memberNumber: 1,
+                        }
+                    }
+                ],
+                as: 'groups'
+            }
+        },
+
+
+    ])
+    res.success(200, { groups: inbox[0].groups })
+
+}

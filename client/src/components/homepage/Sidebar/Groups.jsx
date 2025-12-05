@@ -19,7 +19,7 @@ const Groups = () => {
   return (
     <div className={styles.list}>
       {
-        groups && groups.map(group => {
+        groups.map(group => {
           return (
             <Link key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
