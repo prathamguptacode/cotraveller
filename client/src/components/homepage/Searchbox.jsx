@@ -127,18 +127,18 @@ function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='
             return
         }
         let monthNum=0;
-        if(month == "January") monthNum=1
-        if(month == "Febuary") monthNum=2
-        if(month == "March") monthNum=3
-        if(month == "April") monthNum=4
-        if(month == "May") monthNum=5
-        if(month == "June") monthNum=6
-        if(month == "July") monthNum=7
-        if(month == "August") monthNum=8
-        if(month == "September") monthNum=9
-        if(month == "October") monthNum=10
-        if(month == "November") monthNum=11
-        if(month == "December") monthNum=12
+        if(month == "January") monthNum='01'
+        if(month == "Febuary") monthNum='02'
+        if(month == "March") monthNum='03'
+        if(month == "April") monthNum='04'
+        if(month == "May") monthNum='05'
+        if(month == "June") monthNum='06'
+        if(month == "July") monthNum='07'
+        if(month == "August") monthNum='08'
+        if(month == "September") monthNum='09'
+        if(month == "October") monthNum='10'
+        if(month == "November") monthNum='11'
+        if(month == "December") monthNum='12'
         const lowerTime= `${year}-${monthNum}-${date}T00:00`
         const upperTime= `${year}-${monthNum}-${date}T23:59`
         navigate(`/viewgroup?q=${location}&mode=${mode}&lowerT=${lowerTime}&upperT=${upperTime}&d=${date}&m=${month}&y=${year}`)

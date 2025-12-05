@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import mystyle from './CreateGroup.module.css'
 import { IoMdAirplane } from "react-icons/io";
 import { FaTrainSubway } from "react-icons/fa6";
@@ -17,14 +17,22 @@ import btnstyle from '../../pages/CreateGroup/CreateGroup.module.css'
 import MemberDrop from './dropDown/memberDrop';
 import HourDrop from './dropDown/hourDrop';
 import MinDrop from './dropDown/minDrop';
+import toast, { Toaster } from 'react-hot-toast'
+import { api } from '../../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 function QuestionTile() {
+
+    const navigate=useNavigate()
 
     const [location, setLocation] = useState("Location?")
     const [mode, setMode] = useState('Transport?')
     const [date, setDate] = useState("Date?")
     const [month, setMonth] = useState("Month?")
     const [year, setYear] = useState("Year?")
+
+    const title = useRef()
+    const content = useRef()
 
     const [member, setMember] = useState("2")
     const [hour, setHour] = useState("00")
@@ -39,8 +47,105 @@ function QuestionTile() {
     const [hourDropDis, setHourDropDis] = useState(0)
     const [minDropDis, setMinDropDis] = useState(0)
 
-    function handleSubmit() {
-        console.log('huray')
+    async function handleSubmit() {
+        const titleVal = title.current.value;
+        const contentVal = content.current.value;
+        if (!titleVal) return toast.error("please enter the Name", {
+            style: {
+                borderRadius: '10px',
+                background: 'var(--toast-bg)',
+                color: '#fff',
+                padding: '6px 20px'
+            }
+        })
+        if (!contentVal) return toast.error("please enter the Description", {
+            style: {
+                borderRadius: '10px',
+                background: 'var(--toast-bg)',
+                color: '#fff',
+                padding: '6px 20px'
+            }
+        })
+        if (titleVal.length < 5) return toast.error("Name cannot be less then 4 characters", {
+            style: {
+                borderRadius: '10px',
+                background: 'var(--toast-bg)',
+                color: '#fff',
+            }
+        })
+        if (contentVal.length < 13) return toast.error("Description cannot be less then 12 characters", {
+            style: {
+                borderRadius: '10px',
+                background: 'var(--toast-bg)',
+                color: '#fff',
+            }
+        })
+
+        if ((date == 'Date?') || (month == 'Month?') || (year == 'Year?')) return toast.error("Please select your Travel Dates", {
+            style: {
+                borderRadius: '10px',
+                background: 'var(--toast-bg)',
+                color: '#fff',
+            }
+        })
+
+        if (mode == 'Transport?') return toast.error("Please select your Transport", {
+            style: {
+                borderRadius: '10px',
+                background: 'var(--toast-bg)',
+                color: '#fff',
+            }
+        })
+
+        if (location == 'Location?') return toast.error("Please select your College", {
+            style: {
+                borderRadius: '10px',
+                background: 'var(--toast-bg)',
+                color: '#fff',
+            }
+        })
+
+        let monthNum = 0;
+        if (month == "January") monthNum = '01'
+        if (month == "Febuary") monthNum = '02'
+        if (month == "March") monthNum = '03'
+        if (month == "April") monthNum = '04'
+        if (month == "May") monthNum = '05'
+        if (month == "June") monthNum = '06'
+        if (month == "July") monthNum = '07'
+        if (month == "August") monthNum = '08'
+        if (month == "September") monthNum = '09'
+        if (month == "October") monthNum = '10'
+        if (month == "November") monthNum = '11'
+        if (month == "December") monthNum = '12'
+
+        const indTime= `${year}-${monthNum}-${date}T${hour}:${min}`
+        const zobj=new Date(indTime)
+        const time=zobj.toISOString()
+
+        const body = {
+            title: titleVal,
+            content: contentVal,
+            mode: mode,
+            intialLocation: location,
+            memberNumber: member,
+            travelDate: time
+        }
+        try {
+            const res = await api.post('/group/addgroup', body)
+            if(res.status){
+                navigate('/success', { state: {click: true}})
+            }
+        } catch (error) {
+            toast.error("Something went wrong", {
+                style: {
+                    borderRadius: '10px',
+                    background: 'var(--toast-bg)',
+                    color: '#fff',
+                }
+            })
+        }
+
     }
 
 
@@ -100,11 +205,11 @@ function QuestionTile() {
             <div className={mystyle.quesWrapper}>
                 <div className={mystyle.questionTitle}>
                     <div className={mystyle.ques}>Name of your Travel Group?</div>
-                    <input type="text" placeholder='My first Manali Trip' className={mystyle.inbx} />
+                    <input type="text" placeholder='My first Manali Trip' className={mystyle.inbx} ref={title} />
                 </div>
                 <div className={mystyle.questionTitle}>
                     <div className={mystyle.ques}>Description of your Travel Group?</div>
-                    <input type="text" placeholder='Going on 24Feb, 2026 by train no. 1243' className={mystyle.inbx} />
+                    <input type="text" placeholder='Going on 24Feb, 2026 by train no. 1243' className={mystyle.inbx} ref={content} />
                 </div>
 
                 <div className={mystyle.questionTitle}>
@@ -182,6 +287,8 @@ function QuestionTile() {
             </div>
 
             <button className={btnstyle.submitbtn} onClick={handleSubmit} >Create Group</button>
+
+            <Toaster />
         </>
     )
 }
