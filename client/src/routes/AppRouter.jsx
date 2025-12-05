@@ -10,6 +10,7 @@ import Login from '../pages/Auth/Login'
 import VerifyOtp from '../pages/Auth/VerifyOtp'
 import Groups from '../components/homepage/Sidebar/Groups'
 import Inbox from '../components/homepage/Sidebar/Inbox'
+import CreateGroup from '../pages/CreateGroup/CreateGroup'
 import MainLayout from '../layouts/Main/MainLayout'
 
 
@@ -42,6 +43,7 @@ const AppRouter = () => {
 
                 <Route element={<ProtectedRoutes />}>
                     <Route path='/group' element={<GroupProfile />} />
+                    <Route path='/creategroup' element={<CreateGroup />} />c
                 </Route>
 
 

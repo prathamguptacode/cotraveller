@@ -2,7 +2,6 @@ import axios from 'axios'
 import { useToken } from '../hooks/useToken'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL + "/api"
-console.log(baseURL)
 
 export const api = axios.create({
     baseURL,
@@ -17,7 +16,7 @@ export const unAuthApi = axios.create({
 
 api.interceptors.request.use(config => {
     const { accessToken } = useToken()
-    config.headers.Authorization = `Bearer ${accessToken}`
+    config.headers['authorization'] = `Bearer ${accessToken}`
     return config
 })
 
@@ -36,7 +35,7 @@ api.interceptors.response.use(res => res,
                 if (!accessToken) return console.warn("New access token was not received")
 
                 updateAccessToken(accessToken)
-                originalRequest.headers.Authorization = `Bearer ${accessToken}`
+                originalRequest.headers['authorization'] = `Bearer ${accessToken}`
                 return api(originalRequest)
 
             } catch (error) {
@@ -54,7 +53,7 @@ api.interceptors.response.use(res => res,
     }
 )
 
-export const callAuthApi = async (method, route, data='') => {
+export const callAuthApi = async (method, route, data = '') => {
     try {
         const response = await api[method](route, data)
         return response

@@ -1,10 +1,10 @@
 import express from 'express'
+import { postMessageController } from '../controllers/messageController.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
-import { fetchJoinedGroupsController } from '../controllers/userController.js'
 import { verifyAccessToken } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
-router.get('/groups', verifyAccessToken, asyncHandler(fetchJoinedGroupsController))
+router.post('/', verifyAccessToken, asyncHandler(postMessageController))
 
 export default router

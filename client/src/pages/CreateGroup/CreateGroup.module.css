@@ -1,0 +1,15 @@
+
+.submitbtn{
+    display: block;
+    padding: 16px 48px;
+    background-color: var(--primary);
+    border-radius: 5px;
+    color: var(--secondaryFont);
+    font-size: 18px;
+    font-weight: 500;
+    margin: 44px auto;
+    margin-bottom: 80px;
+}
+.submitbtn:hover{
+    background-color: var(--brighter-primary);
+}
