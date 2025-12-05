@@ -1,18 +1,17 @@
-import React from 'react'
 import styles from './sidebar.module.css'
 import clsx from 'clsx'
-import { NavLink, Link, Outlet } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Cog, Info, LogOut } from 'lucide-react'
 import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
 
-const Sidebar = ({ isHidden, closeSidebar }) => {
+const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }) => {
 
     const { user } = useAuth()
 
     const handleLogout = async () => {
 
-        const { status, data } = await callAuthApi('post', '/auth/logout')
+        const { status } = await callAuthApi('post', '/auth/logout')
 
         if (status == 204) window.location.href = '/'
         else console.error('SOMETHING WENT WRONG')
@@ -22,18 +21,15 @@ const Sidebar = ({ isHidden, closeSidebar }) => {
 
 
     return (
-        <div className={clsx(styles.wrapper, !isHidden && styles.showSidebar)}>
+        //Stopped event bubbling to prevent trigger of isHidden Toggle due to onClick on Hamburger
+        <div onClick={(e) => e.stopPropagation()} className={clsx(styles.wrapper, !isHidden && styles.showSidebar)}>
             <div className={styles.header}>
-                <NavLink to={'/groups'} className={({ isActive }) =>
-                    isActive ? styles.activeTab : ''
-                }>Groups</NavLink>
-                <NavLink to={'/inbox'} className={({ isActive }) =>
-                    isActive ? styles.activeTab : ''
-                }>Inbox</NavLink>
+                <button className={currentTab === "Groups" ? styles.activeTab : ""} onClick={() => setCurrentTab('Groups')}>Groups</button>
+                <button className={currentTab === "Inbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Inbox')}>Inbox</button>
 
             </div>
 
-            <Outlet context={{ closeSidebar }} />
+            {slot}
 
             <div className={clsx(styles.list, styles.footerList)}>
                 <Link to={''} className={styles.listItem}>

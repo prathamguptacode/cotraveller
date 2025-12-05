@@ -11,6 +11,7 @@ import VerifyOtp from '../pages/Auth/VerifyOtp'
 import Groups from '../components/homepage/Sidebar/Groups'
 import Inbox from '../components/homepage/Sidebar/Inbox'
 import CreateGroup from '../pages/CreateGroup/CreateGroup'
+import MainLayout from '../layouts/Main/MainLayout'
 
 
 const AppRouter = () => {
@@ -20,14 +21,12 @@ const AppRouter = () => {
 
 
 
-
-                <Route path='/' element={<Home />} >
-                    <Route path='groups' element={<Groups />} />
-                    <Route path='inbox' element={<Inbox />} />
+                <Route path='/' element={<MainLayout />}>
+                    <Route index element={<Home />} />
+                    <Route path='viewgroup' element={<ViewGroup />} />
                 </Route>
 
 
-                <Route path='/viewgroup' element={<ViewGroup />} />
 
 
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Check, X } from 'lucide-react'
 
 const Inbox = () => {
-  //  const {{closeSidebar}}= useOutletContext()
+  console.log('wow')
 
   return (
     <div className={styles.list}>

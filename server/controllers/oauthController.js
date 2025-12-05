@@ -55,15 +55,18 @@ export const googleOAuthCallback = async (req, res) => {
 
     const idToken = tokens.idToken()
 
-    const rsaPublicKey = await jose.importJWK({
-        kty: "RSA",
-        e: "AQAB",
-        n: "lS1jk0KK-dNV-znvOtWcgkiY52Wdfs7RN3117id4c1cmJ3gR0bgRbKo_G6MeY6pAdgWjoGl114tkEAbhKv-4uONGXizTMtqEj10vXzDaZhFeAYX-7VthR-kyuCKFDwU6KHYunV7G-kcKIlCM9p6nnpky7JxBYh9eDzshRbrF6qhxemidcsoL0OGclfslbzgkcUbG2uP21X-fGpX2NmoT5CWcSBoFoo3oesggZuU7goQ_mXdsndPtOEwspmwRpwC_sssdMhDhkG8ehuSSYrbGMCUF3yAOkZfmFRKf6cjtOBeBifmzarhk5XCD5-NIMUBBoD5pdQrsrZuQrImIIPoqwQ",
-    }, "RS256")
+
+    const openid_config = await axios.get("https://accounts.google.com/.well-known/openid-configuration", {}, {
+        headers: { "User-Agent": "MyAppServer/1.0 (+https://your.app)" }
+    })
+
+    const jwks_uri = openid_config.jwks_uri || 'https://www.googleapis.com/oauth2/v3/certs'
 
 
-    const decoded = await jose.jwtVerify(idToken, rsaPublicKey, {
-        issuer: "https://accounts.google.com",
+    const JWKresolver = jose.createRemoteJWKSet(new URL(jwks_uri))
+
+    const decoded = await jose.jwtVerify(idToken, JWKresolver, {
+        issuer: ["https://accounts.google.com", "accounts.google.com"],
         audience: env.GOOGLE_CLIENT_ID,
     })
 
