@@ -1,23 +1,41 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import styles from './sidebar.module.css'
-import { Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { callAuthApi } from '../../../api/axios'
 
 const Groups = () => {
- console.log('noooo')
-return (
-  <div className={styles.list}>
-    <Link to={''} className={styles.listItem}>
-      <div className={styles.avatarWrapper} >
-        <img src="apple-light.svg" alt="avatar" />
-      </div>
-      <div className={styles.detailsWrapper}>
-        <p className={styles.groupName}>The HitchHikers</p>
-        <p className={styles.lastMessage}>You: Great!</p>
-      </div>
-    </Link>
-  </div>
+  const [groups, setGroups] = useState([])
+  useEffect(() => {
+    (async () => {
+      const { status, data } = await callAuthApi('get', '/user/groups')
+      if (status == 200) setGroups(data.data.groups)
+      else console.error(data.message)
+    })()
 
-)
+
+  }, [])
+
+  return (
+    <div className={styles.list}>
+      {
+        groups.map(group => {
+          return (
+            <Link key={group._id} className={styles.listItem}>
+              <div className={styles.avatarWrapper} >
+                <img src="apple-light.svg" alt="avatar" />
+              </div>
+              <div className={styles.detailsWrapper}>
+                <p className={styles.groupName}>{group.title}</p>
+                <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>
+              </div>
+            </Link>
+          )
+        })
+      }
+
+    </div>
+
+  )
 }
 
 export default Groups

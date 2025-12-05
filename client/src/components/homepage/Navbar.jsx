@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useRef, useState } from "react";
 import Groups from "./Sidebar/Groups";
 import Inbox from "./Sidebar/Inbox";
+import Outbox from "./Sidebar/Outbox";
 
 function Navbar() {
     const [isHidden, setisHidden] = useState(true)
@@ -33,9 +34,11 @@ function Navbar() {
             }} className={mystyle.hamburger}>
                 <GiHamburgerMenu size='20px' />
 
-             <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} closeSidebar={closeSidebar} />
+                <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : currentTab === "Outbox" ? <Outbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} closeSidebar={closeSidebar} />
             </div>
-						<div className={mystyle.logo}><Link to='/'>Cotraveller</Link></div>
+
+
+            <div className={mystyle.logo}><Link to='/'>Cotraveller</Link></div>
 
             <div className={mystyle.nobox}></div>
             <div className={mystyle.themebtn}><ThemeButton /></div>

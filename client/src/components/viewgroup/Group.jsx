@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import mystyle from './Group.module.css'
-import { api } from '../../api/axios';
+import { api, callAuthApi } from '../../api/axios';
+import { useAuth } from '../../hooks/useAuth';
+import clsx from 'clsx'
 
 function Group({ element }) {
     const title = element.title;
@@ -16,23 +18,29 @@ function Group({ element }) {
         hour12: true
     })
 
+
+    const { user } = useAuth()
+    const [hasRequested, setHasRequested] = useState(element.requests.includes(user?._id))
     
-    // useEffect(()=>{
-    //     members.forEach(element => {
-    //         const val=getname(element)
-    //         setMembername((prev)=> [...prev,val])
-    //     });
-    // },[])
+    const sendRequest = async () => {
+        const { status, data } = await callAuthApi('post', '/group/addRequest', { groupID: element._id })
+        if (status == 201) setHasRequested(true)
+        else setHasRequested(false)
+    }
+
+
+
 
     return (
         <div className={mystyle.linewrapper}>
             <div className={mystyle.groupwrapper}>
                 <div className={mystyle.group}>
                     <div className={mystyle.memberbx}>
-                        {/* {membername.map(e => {
-                                return <div className={mystyle.members}>{e}</div>
-                        })} */}
+
+         
+
                             <div className={mystyle.members}>{members}</div>
+
                     </div>
                     <div className={mystyle.title}>{title}</div>
                     <div className={mystyle.content}>{content}</div>
@@ -40,7 +48,7 @@ function Group({ element }) {
                     <div className={mystyle.comments}>{commentNum} comments</div>
                 </div>
                 <div className={mystyle.btnbox}>
-                    <button className={mystyle.groupbtn}>Send Request</button>
+                    <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>Send Request</button>
                     <button className={mystyle.groupbtn}>More info</button>
                 </div>
             </div>
