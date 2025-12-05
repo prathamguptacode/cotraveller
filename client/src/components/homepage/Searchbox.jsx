@@ -14,7 +14,6 @@ import { FaTrainSubway } from "react-icons/fa6";
 import { FaTaxi } from "react-icons/fa";
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
-import { api } from '../../api/axios';
 
 function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='Year?', w="" ,tempMargin=""}) {
 

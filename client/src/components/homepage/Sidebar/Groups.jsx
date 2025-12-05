@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react'
 import styles from './sidebar.module.css'
 import { Link } from 'react-router-dom'
 import { callAuthApi } from '../../../api/axios'
+import { useAuth } from '../../../hooks/useAuth'
 
 const Groups = () => {
+  const { user } = useAuth()
+
   const [groups, setGroups] = useState([])
   useEffect(() => {
+    if (!user) return
+    
     (async () => {
       const { status, data } = await callAuthApi('get', '/user/groups')
       if (status == 200) setGroups(data.data.groups)
