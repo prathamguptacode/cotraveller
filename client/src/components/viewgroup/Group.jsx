@@ -5,7 +5,7 @@ import { api } from '../../api/axios';
 function Group({ element }) {
     const title = element.title;
     const content = element.content;
-    const members = element.member;
+    const members = element.ownerPop.fullName;
     const time = (element.travelDate);
     const commentNum = 0;
     const timeZ = new Date(time)
@@ -16,28 +16,23 @@ function Group({ element }) {
         hour12: true
     })
 
-    const [membername,setMembername]=useState([]);
-
-    const getname=async (id) => {
-        const res=await api.get(`group/getname?q=${id}`)
-        return (res.data.data)
-    }
     
-    useEffect(()=>{
-        members.forEach(element => {
-            const val=getname(element)
-            setMembername((prev)=> [...prev,val])
-        });
-    },[])
+    // useEffect(()=>{
+    //     members.forEach(element => {
+    //         const val=getname(element)
+    //         setMembername((prev)=> [...prev,val])
+    //     });
+    // },[])
 
     return (
         <div className={mystyle.linewrapper}>
             <div className={mystyle.groupwrapper}>
                 <div className={mystyle.group}>
                     <div className={mystyle.memberbx}>
-                        {membername.map(e => {
+                        {/* {membername.map(e => {
                                 return <div className={mystyle.members}>{e}</div>
-                        })}
+                        })} */}
+                            <div className={mystyle.members}>{members}</div>
                     </div>
                     <div className={mystyle.title}>{title}</div>
                     <div className={mystyle.content}>{content}</div>

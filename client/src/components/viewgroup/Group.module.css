@@ -25,7 +25,10 @@
 .title{
     font-size: 22px;
     font-weight: 600;
-        cursor: pointer;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .content{
     max-width: 540px;

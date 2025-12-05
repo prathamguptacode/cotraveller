@@ -7,7 +7,7 @@ import User from "../models/User.js";
 export async function addGroup(req,res) {
     const title=xss(req.body?.title);
     const content=xss(req.body?.content);
-    const owner=xss(req.body?.owner);
+    const owner=req.user._id;
     const memberNumber=xss(req.body?.memberNumber);
     const mode=xss(req.body?.mode);
     const travelDate=xss(req.body?.travelDate);
@@ -66,7 +66,29 @@ export async function viewGroupByFilter(req,res){
                 intialLocation:intialLocation,
                 travelDate: {$gte: utcLowerTime, $lte: utcUpperTime}
             }
+        },
+        {
+            $lookup:{
+                from: 'users',
+                localField: 'owner',
+                foreignField: '_id',
+                as: "ownerPop"
+            }
+        },
+        {
+            $unwind:"$ownerPop"
+        },
+        {
+            $project:{
+                ownerPop:{
+                    fullName:1
+                },
+                title:1,
+                content:1,
+                travelDate: 1
+            }
         }
+
     ])
     res.success(200,data,"FILTER")
 }
