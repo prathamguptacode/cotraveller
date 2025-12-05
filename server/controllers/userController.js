@@ -1,3 +1,4 @@
+import Group from "../models/groupSchema.js"
 import User from "../models/User.js"
 
 export const fetchJoinedGroupsController = async (req, res) => {
@@ -133,7 +134,6 @@ export const fetchIncomingRequestsController = async (req, res) => {
 
 }
 
-
 export const fetchOutgoingRequestsController = async (req, res) => {
     const user = req.user
     const outbox = await User.aggregate([
@@ -166,4 +166,18 @@ export const fetchOutgoingRequestsController = async (req, res) => {
     ])
 
     res.success(200, { groups: outbox[0].groups })
+}
+
+export const deleteOutgoingRequestController = async (req, res) => {
+    const user = req.user
+    const requestId = req.params?.requestId
+    if (!requestId) return res.fail(400, "BAD_REQUEST", "Request id was missing")
+
+    if (!await User.findOne({ _id: user._id, requests: requestId })) return res.fail('400', "REQUEST_NOT_FOUND", "The request does not exist")
+
+    await User.updateOne({ _id: user._id }, { $pull: { requests: requestId } })
+
+    await Group.updateOne({ _id: requestId }, { $pull: { requests: user._id } })
+
+    res.sendStatus(204)
 }

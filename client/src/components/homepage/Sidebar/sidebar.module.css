@@ -10,7 +10,7 @@
 
     /* ###CHANGE LATER */
     height: calc(100vh - 65px);
-    width: 350px;
+    width: 380px;
 
     display: flex;
     flex-direction: column;

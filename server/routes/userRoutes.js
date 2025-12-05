@@ -1,14 +1,18 @@
 import express from 'express'
 import { asyncHandler } from '../utils/asyncHandler.js'
-import { fetchIncomingRequestsController, fetchJoinedGroupsController, fetchOutgoingRequestsController } from '../controllers/userController.js'
+import { deleteOutgoingRequestController, fetchIncomingRequestsController, fetchJoinedGroupsController, fetchOutgoingRequestsController } from '../controllers/userController.js'
 import { verifyAccessToken } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
-router.get('/groups', verifyAccessToken, asyncHandler(fetchJoinedGroupsController))
+router.use(verifyAccessToken)
 
-router.get('/inbox',verifyAccessToken,asyncHandler(fetchIncomingRequestsController))
+router.get('/groups', asyncHandler(fetchJoinedGroupsController))
 
-router.get('/outbox',verifyAccessToken,asyncHandler(fetchOutgoingRequestsController))
+router.get('/inbox', asyncHandler(fetchIncomingRequestsController))
+
+router.get('/outbox', asyncHandler(fetchOutgoingRequestsController))
+
+router.delete('/requests/:requestId', asyncHandler(deleteOutgoingRequestController))
 
 export default router

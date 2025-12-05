@@ -7,16 +7,23 @@ import { callAuthApi } from '../../../api/axios'
 
 const Outbox = () => {
     const [groups, setGroups] = useState([])
+    const [changed, setChanged] = useState(false)
 
     useEffect(() => {
+        console.log('WHAT THE HELL');
+            (async () => {
+                const { status, data } = await callAuthApi('get', '/user/outbox')
+                if (status === 200) setGroups(data.data.groups)
+                else console.error(data.message)
+            })()
 
-        (async () => {
-            const { status, data } = await callAuthApi('get', '/user/outbox')
-            if (status === 200) setGroups(data.data.groups)
-            else console.error(data.message)
-        })()
+    }, [changed])
 
-    }, [])
+    const deleteOutgoingRequest = async (requestId) => {
+        const { status, data } = await callAuthApi('delete', `/user/requests/${requestId}`)
+        if (status === 204) setChanged(prev => !prev)
+        else console.error(data.message)
+    }
 
     return (
         <div className={styles.list}>
@@ -31,7 +38,7 @@ const Outbox = () => {
                             <p className={styles.lastMessage}>Members: {group.memberNumber} </p>
                         </div>
                         <div className={styles.choicesWrapper}>
-                            <button> <X color='#EE2D3E' /></button>
+                            <button onClick={() => deleteOutgoingRequest(group._id)}> <X color='#EE2D3E' /></button>
                         </div>
                     </Link>)
                 })
