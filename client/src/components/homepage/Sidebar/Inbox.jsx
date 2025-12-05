@@ -8,15 +8,29 @@ import { callAuthApi } from '../../../api/axios'
 const Inbox = () => {
 
   const [groups, setGroups] = useState([])
+  const [changed, setChanged] = useState(false)
+
   useEffect(() => {
 
-    (async (params) => {
+    (async () => {
       const { status, data } = await callAuthApi('get', '/user/inbox')
       if (status === 200) setGroups(data.data.groups)
       else console.error(data.message)
     })()
 
-  }, [])
+  }, [changed])
+
+  const acceptIncomingRequest = async (dbrequestId) => {
+    const { status, data } = await callAuthApi('delete', `/user/dbrequests/${dbrequestId}`)
+    if (status === 200) setChanged(prev => !prev)
+    else console.error(data.message)
+  }
+  const deleteIncomingRequest = async (dbrequestId) => {
+    const { status, data } = await callAuthApi('post', `/user/dbrequests/${dbrequestId}`)
+    if (status === 204) setChanged(prev => !prev)
+    else console.error(data.message)
+  }
+
 
   return (
     <div className={styles.list}>
@@ -32,8 +46,14 @@ const Inbox = () => {
                 <p className={styles.lastMessage}>Members: {group.memberNumber} </p>
               </div>
               <div className={styles.choicesWrapper}>
-                <button> <Check color='#2A903B' /></button>
-                <button> <X color='#EE2D3E' /></button>
+                <button onClick={(e) => {
+                  e.stopPropagation()
+                  acceptIncomingRequest(group._id)
+                }}> <Check color='#2A903B' /></button>
+                <button onClick={(e) => {
+                  e.stopPropagation()
+                  deleteIncomingRequest(group._id)
+                }}> <X color='#EE2D3E' /></button>
               </div>
             </Link>
           )

@@ -134,6 +134,7 @@ export const fetchIncomingRequestsController = async (req, res) => {
 
 }
 
+// ###CHANGE all necessary shit to ACID instead of one by one
 export const fetchOutgoingRequestsController = async (req, res) => {
     const user = req.user
     const outbox = await User.aggregate([
@@ -173,11 +174,37 @@ export const deleteOutgoingRequestController = async (req, res) => {
     const requestId = req.params?.requestId
     if (!requestId) return res.fail(400, "BAD_REQUEST", "Request id was missing")
 
-    if (!await User.findOne({ _id: user._id, requests: requestId })) return res.fail('400', "REQUEST_NOT_FOUND", "The request does not exist")
+    if (!await User.findOne({ _id: user._id, requests: requestId })) return res.fail(400, "REQUEST_NOT_FOUND", "The request does not exist")
 
     await User.updateOne({ _id: user._id }, { $pull: { requests: requestId } })
-
     await Group.updateOne({ _id: requestId }, { $pull: { requests: user._id } })
 
     res.sendStatus(204)
+}
+
+
+export const deleteIncomingRequestController = async (req, res) => {
+    const user = req.user
+    const dbrequestId = req.params?.dbrequestId
+    if (!dbrequestId) return res.fail(400, "BAD_REQUEST", "Dbrequest id was missing")
+
+    if (!await User.findOne({ _id: user._id, dbrequests: dbrequestId })) return res.fail(400, "DBREQUEST_NOT_FOUND", "The dbrequest does not exist")
+
+    await User.updateOne({ _id: user._id }, { $pull: { dbrequests: dbrequestId } })
+    await Group.updateOne({ _id: dbrequestId }, { $pull: { dbrequests: user._id } })
+
+    res.sendStatus(204)
+}
+
+export const acceptIncomingRequestController = async (req, res) => {
+    const user = req.user
+    const dbrequestId = req.params?.dbrequestId
+    if (!dbrequestId) return res.fail(400, "BAD_REQUEST", "Dbrequest id was missing")
+
+    if (!await User.findOne({ _id: user._id, dbrequests: dbrequestId })) return res.fail(400, "DBREQUEST_NOT_FOUND", "The dbrequest does not exist")
+
+    await User.updateOne({ _id: user._id }, { $pull: { dbrequests: dbrequestId }, $push: { memberGroup: dbrequestId } })
+    await Group.updateOne({ _id: dbrequestId }, { $pull: { dbrequests: user._id }, $push: { member: user._id }, $inc: { memberNumber: 1 } })
+
+    res.success()
 }

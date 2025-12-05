@@ -10,7 +10,6 @@ const Outbox = () => {
     const [changed, setChanged] = useState(false)
 
     useEffect(() => {
-        console.log('WHAT THE HELL');
             (async () => {
                 const { status, data } = await callAuthApi('get', '/user/outbox')
                 if (status === 200) setGroups(data.data.groups)

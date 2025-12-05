@@ -6,8 +6,7 @@ import { callAuthApi } from '../../../api/axios'
 const Groups = () => {
   const [groups, setGroups] = useState([])
   useEffect(() => {
-
-    (async (params) => {
+    (async () => {
       const { status, data } = await callAuthApi('get', '/user/groups')
       if (status == 200) setGroups(data.data.groups)
       else console.error(data.message)
