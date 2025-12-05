@@ -16,7 +16,7 @@ export const unAuthApi = axios.create({
 
 api.interceptors.request.use(config => {
     const { accessToken } = useToken()
-    config.headers['authorization'] = `Bearer ${accessToken}`
+    config.headers["authorization"] = `Bearer ${accessToken}`
     return config
 })
 

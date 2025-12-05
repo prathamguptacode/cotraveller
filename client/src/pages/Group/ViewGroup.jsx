@@ -45,7 +45,7 @@ function ViewGroup() {
             <Searchbox l={location} md={mode} d={d} m={m} y={y} w="1920px" />
             <div className={mystyle.groupSection}>
                 {groupData.map(element => {
-                    return <Group  element={element} />
+                    return <Group element={element} />
                 })}
             </div>
 

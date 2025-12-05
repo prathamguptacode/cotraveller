@@ -6,7 +6,7 @@ import * as cookies from '../libs/cookies.js'
 import { CustomError } from '../utils/CustomError.js'
 
 export const verifyAccessToken = async (req, res, next) => {
-    const authHeader = req.headers['authorization']
+    const authHeader = req.headers["authorization"]
     const accessToken = authHeader && authHeader.split(' ')[1]
     if (!accessToken) return res.fail(401, "TOKEN_NOT_FOUND", "Acesss token could not be found")
 
