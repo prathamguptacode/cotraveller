@@ -1,9 +1,9 @@
 import React from 'react'
 import styles from './sidebar.module.css'
-import { Link, useOutletContext } from 'react-router-dom'
+import { Link} from 'react-router-dom'
 
 const Groups = () => {
-  // const {{ closeSidebar }} = useOutletContext()
+ console.log('noooo')
 return (
   <div className={styles.list}>
     <Link to={''} className={styles.listItem}>

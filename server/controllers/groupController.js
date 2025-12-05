@@ -212,9 +212,9 @@ export const leaveGroup=async (req,res)=>{
 
 //to get member info i need this route
 export const memberInfo=async (req,res)=>{
-    const id=req.query?.q;
-    if(!id) res.fail(400,"INVALID_INPUT")
-    const user=await User.findById(id)
-    if(!user) res.fail(400,"INVALID_USER")
-    res.success(200,user.fullName)
+    // const id=req.query?.q;
+    // if(!id) res.fail(400,"INVALID_INPUT")
+    // const user=await User.findById(id)
+    // if(!user) res.fail(400,"INVALID_USER")
+    res.success(200,"God ")
 }
