@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Searchbox from '../../components/homepage/Searchbox'
 import mystyle from './ViewGroup.module.css'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { api } from '../../api/axios'
 import Group from '../../components/viewgroup/Group'
 
 function ViewGroup() {
 
     const [groupData, setGroupData] = useState([])
-    console.log(groupData)
 
     const [query] = useSearchParams()
     const location = query.get("q");
@@ -46,8 +45,7 @@ function ViewGroup() {
             <Searchbox l={location} md={mode} d={d} m={m} y={y} w="1920px" />
             <div className={mystyle.groupSection}>
                 {groupData.map(element => {
-                    console.log(element)
-                    return <Group element={element} />
+                    return <Group  element={element} />
                 })}
             </div>
 
