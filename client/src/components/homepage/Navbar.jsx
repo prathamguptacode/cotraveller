@@ -17,6 +17,8 @@ function Navbar() {
     }
     const [currentTab, setCurrentTab] = useState('')
 
+    // $$$please include profile picture feature
+
     return (
         <div className={mystyle.navbar}>
             <div ref={menuRef} role="button" tabIndex={0} onClick={() => {
@@ -30,10 +32,11 @@ function Navbar() {
                 setisHidden(true)
             }} className={mystyle.hamburger}>
                 <GiHamburgerMenu size='20px' />
-                <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} closeSidebar={closeSidebar} />
-            </div>
 
-            <div className={mystyle.logo}>Cotraveller</div>
+             <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} closeSidebar={closeSidebar} />
+            </div>
+						<div className={mystyle.logo}><Link to='/'>Cotraveller</Link></div>
+
             <div className={mystyle.nobox}></div>
             <div className={mystyle.themebtn}><ThemeButton /></div>
             <button onClick={() => {
@@ -45,7 +48,7 @@ function Navbar() {
             }} className={mystyle.mail}><IoIosMail size={28} /> </button>
             <Link to={'/signup'} className={mystyle.navbtn}>Sign up</Link>
             <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
-            <Link className={mystyle.navbtn}>Create group</Link>
+            <Link to={'/creategroup'} className={mystyle.navbtn}>Create group</Link>
         </div>
     )
 }

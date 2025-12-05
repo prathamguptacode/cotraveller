@@ -8,8 +8,7 @@ import { addRequest } from '../controllers/groupController.js'
 import { verifyAccessToken } from '../middlewares/authMiddleware.js'
 
 //should have middleware
-// router.post('/addgroup',verifyAccessToken,asyncHandler(addGroup))
-router.post('/addgroup',asyncHandler(addGroup))
+router.post('/addgroup',verifyAccessToken,asyncHandler(addGroup))
 
 router.get('/viewgroup',asyncHandler(viewGroup))//we never have to use this route
 
