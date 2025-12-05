@@ -20,7 +20,7 @@ function Group({ element }) {
 
 
     const { user } = useAuth()
-    const [hasRequested, setHasRequested] = useState(element.requests.includes(user?._id))
+    const [hasRequested, setHasRequested] = useState(element?.requests?.includes(user?._id))
     
     const sendRequest = async () => {
         const { status, data } = await callAuthApi('post', '/group/addRequest', { groupID: element._id })
