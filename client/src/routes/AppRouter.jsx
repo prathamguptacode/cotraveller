@@ -10,6 +10,7 @@ import VerifyOtp from '../pages/Auth/VerifyOtp'
 import CreateGroup from '../pages/CreateGroup/CreateGroup'
 import MainLayout from '../layouts/Main/MainLayout'
 import SuccessPage from '../pages/success/SuccessPage'
+import MoreInfo from '../pages/moreinfo/moreinfo'
 import SecondaryLayout from '../layouts/Secondary/SecondaryLayout'
 import Chats from '../pages/Group/Chats/Chats'
 
@@ -26,6 +27,7 @@ const AppRouter = () => {
                     <Route path='viewgroup' element={<ViewGroup />} />
                 </Route>
 
+                <Route path='/moreinfo' element={<MoreInfo />} />
                 <Route path='/groups/:groupId/' element={<SecondaryLayout />} >
                     <Route path='chats' element={<Chats />} />
                 </Route>

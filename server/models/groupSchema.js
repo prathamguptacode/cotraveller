@@ -62,6 +62,11 @@ const groupSchema = new mongoose.Schema({
         ref:"Message",
         default:[]
     },
+    comments:{
+        type:[Schema.Types.ObjectId],
+        ref:"Comment",
+        default: []
+    }
     // const toIST = (date) => moment(date).tz("Asia/Kolkata"); for timezone converstion
     // const istDate = moment.tz(req.body.travelDate, "Asia/Kolkata").toDate(); for telling backend it is ist
 })

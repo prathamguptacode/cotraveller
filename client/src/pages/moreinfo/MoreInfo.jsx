@@ -1,0 +1,174 @@
+import React, { useRef, useState } from 'react'
+import mystyle from './MoreInfo.module.css'
+import Navbar from '../../components/homepage/Navbar'
+import { FaUser } from "react-icons/fa6";
+import { api } from '../../api/axios';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
+import { useAuth } from '../../hooks/useAuth';
+import { useEffect } from 'react';
+
+
+function MoreInfo() {
+
+    const [val, setVal] = useState({})
+    const [member, setMember] = useState([])
+    const [comment, setComment] = useState([])
+    const [time, setTime] = useState([])
+    console.log(comment)
+    const { user } = useAuth()
+    const navigate = useNavigate()
+
+    const [q] = useSearchParams()
+    useState(() => {
+        (async () => {
+            const id = q.get("q")
+            const res = await api.get(`/group/viewgroup?q=${id}`)
+            const data = res.data.data[0];
+            setVal(data)
+            setMember(data.member)
+            setComment(data.comments)
+
+        })()
+    }, [])
+
+    useEffect(() => {
+        if (! Object.values(val).length == 0 ) {
+            const timeZ = new Date(val.travelDate)
+            const intime=timeZ.toLocaleTimeString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            })
+            setTime(intime)
+        }
+    }, [val])
+
+
+    const incomment = useRef()
+
+    function focus() {
+        incomment.current.focus()
+    }
+
+    async function commentPost() {
+        if (user == null) {
+            navigate('/login')
+            return
+        }
+        const comment = incomment.current.value;
+        const targetGroup = val._id;
+
+        if (!comment) {
+            return toast.error("please enter the comment", {
+                style: {
+                    borderRadius: '10px',
+                    background: '#303133',
+                    color: '#fff',
+                }
+            })
+        }
+        const body = {
+            comment,
+            targetGroup
+        }
+        const temp = {
+            comment,
+            author: user.fullName
+        }
+        setComment((prev) => [temp, ...prev])
+        const res = await api.post('comments/comment', body)
+        if (res.status == 201) {
+            toast.success("commented successfully", {
+                style: {
+                    borderRadius: '10px',
+                    background: '#303133',
+                    color: '#fff',
+                }
+            })
+            incomment.current.value = ""
+        }
+        else {
+            toast.error("something went wrong", {
+                style: {
+                    borderRadius: '10px',
+                    background: '#303133',
+                    color: '#fff',
+                }
+            })
+            setComment((prev) => {
+                let copy = [...prev]
+                copy.shift()
+                return copy
+            })
+        }
+    }
+
+    return (
+        <div>
+            <Navbar />
+            <div className={mystyle.wrap}>
+                <div className={mystyle.profile}>
+                    <FaUser size="220px" />
+                </div>
+                <div className={mystyle.infoWrapper}>
+                    <div className={mystyle.parent}>
+                        <div className={mystyle.can}>
+                            <div className={mystyle.title}>
+                                {val.title}
+                            </div>
+                            <div className={mystyle.content}>{val.content}</div>
+                            <div className={mystyle.college}>Time: {time}</div>
+                            <div className={mystyle.college}>College: {val.intialLocation}</div>
+                        </div>
+                        <div className={mystyle.memberbx}>
+                            <div className={mystyle.memtitle}>Members</div>
+                            {
+                                member.map((e) => {
+                                    return (
+                                        <div className={mystyle.member}>
+                                            <FaUser size="24px" />
+                                            <div className={mystyle.name}>{e.fullName}</div>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </div>
+                    <div className={mystyle.btnbox}>
+                        <button className={mystyle.moreinfo} onClick={focus}>Add comment</button>
+                        <button className={mystyle.moreinfo}>Send Request</button>
+                    </div>
+                </div>
+            </div>
+            <div className={mystyle.line}></div>
+            <div className={mystyle.commentbx}>
+                <div className={mystyle.commentTitle}>Comments:</div>
+                <div className={mystyle.input}>
+                    <div className={mystyle.questionTitle}>
+                        <input type="text" placeholder='Add a comment' className={mystyle.inbx} ref={incomment} />
+                        <button onClick={commentPost} className={mystyle.addbtn} >Post</button>
+                    </div>
+                </div>
+                {
+                    comment.map((e) => {
+                        return (
+                            <div className={mystyle.comments}>
+                                <FaUser size="24px" />
+                                <div className={mystyle.commentcan}>
+                                    <div className={mystyle.userComment}>{e.author}</div>
+                                    <div className={mystyle.conComment}>{e.comment}</div>
+                                </div>
+                            </div>
+                        )
+                    }
+                    )
+                }
+            </div>
+            <Toaster />
+        </div>
+    )
+}
+
+export default MoreInfo

@@ -2,6 +2,7 @@ import groupSchema from "../models/groupSchema.js";
 import xss from 'xss'
 import moment from "moment-timezone";
 import User from "../models/User.js";
+import mongoose from "mongoose";
 
 
 export async function addGroup(req, res) {
@@ -31,8 +32,17 @@ export async function addGroup(req, res) {
 }
 
 export async function viewGroup(req, res) {
-    const data = await groupSchema.find()
-    res.success(200, "GROUPS", data)
+    const id=xss(req.query?.q);
+    if(!id){
+        res.fail(400,"INVALID_INPUT")
+    }
+    try {
+    const val=new mongoose.Types.ObjectId(id)
+    const data = await groupSchema.where('_id').equals(val).populate({path: 'member', select: 'fullName'}).populate({path: 'comments', select: 'author comment' })
+    res.success(200, data) 
+    } catch (error) {
+        res.fail(400,"INVALID_ID")
+    }
 }
 
 export async function viewGroupByFilter(req, res) {
@@ -84,6 +94,7 @@ export async function viewGroupByFilter(req, res) {
                     fullName: 1
                 },
                 title: 1,
+                _id:1,
                 content: 1,
                 travelDate: 1,
                 requests: 1,

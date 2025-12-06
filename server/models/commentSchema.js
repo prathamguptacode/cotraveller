@@ -4,16 +4,14 @@ const commentSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    aurthor:{
-        type: String,
-        // type:Schema.Types.ObjectId,
-        // ref: 'User',
-        require:true
+    author:{
+        type:String,
+        required:true
     },
     targetGroup:{
         type:Schema.Types.ObjectId,
         ref: 'Group',
-        require:true        
+        required:true        
     }
 })
 export default mongoose.model('Comment',commentSchema)
