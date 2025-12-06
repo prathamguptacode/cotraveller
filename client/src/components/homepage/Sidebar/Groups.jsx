@@ -23,9 +23,10 @@ const Groups = () => {
   return (
     <div className={styles.list}>
       {
+
         groups.map(group => {
           return (
-            <Link key={group._id} className={styles.listItem}>
+            <Link to={`/groups/${group._id}/chats`} key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
                 <img src="/apple-light.svg" alt="avatar" />
               </div>

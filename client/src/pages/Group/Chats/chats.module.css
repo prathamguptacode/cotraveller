@@ -164,6 +164,16 @@
         font-weight: 600;
     }
 
+    p {
+        display: flex;
+        gap: 1ch;
+
+        >span:not(:last-child)::after {
+            content: ',';
+        }
+    }
+
+
 }
 
 .groupOptions {
