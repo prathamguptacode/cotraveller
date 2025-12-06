@@ -42,3 +42,32 @@
 .homebtn:hover{
     background-color: var(--brighter-primary);
 }
+
+.wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 12px;
+}
+.conbx{
+    max-width: 500px;
+}
+.ntitle{
+    font-size: 36px;
+    font-weight: 800;
+    text-align: center;
+}
+.ncon{
+    font-size: 18px;
+    text-align: center;    
+}
+.nogroup{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+}
+.nimg{
+    flex-shrink: 0;
+}
