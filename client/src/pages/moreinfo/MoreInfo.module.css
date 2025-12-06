@@ -200,3 +200,12 @@
 .groupbtn:hover {
     background-color: var(--brighter-primary);
 }
+
+.defComment{
+    display: flex;
+    padding: 28px 0;
+    font-size: 18px;
+    gap: 12px;
+    align-self: center;
+    justify-content: center;
+}
