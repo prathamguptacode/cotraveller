@@ -3,7 +3,8 @@ import mystyle from './Group.module.css'
 import { api, callAuthApi } from '../../api/axios';
 import { useAuth } from '../../hooks/useAuth';
 import clsx from 'clsx'
-import { data } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 function Group({ element }) {
     const title = element.title;
@@ -18,7 +19,9 @@ function Group({ element }) {
         minute: "2-digit",
         hour12: true
     })
+    const id=element._id;
 
+    const navigate=useNavigate()
 
     const { user } = useAuth()
     const [hasRequested, setHasRequested] = useState(element?.requests?.includes(user?._id))
@@ -30,6 +33,9 @@ function Group({ element }) {
         else setHasRequested(false)
     }
 
+    function nav(){
+        navigate(`/moreinfo?q=${id}`)
+    }
 
 
 
@@ -49,7 +55,7 @@ function Group({ element }) {
                 </div>
                 <div className={mystyle.btnbox}>
                     <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>Send Request</button>
-                    <button className={mystyle.groupbtn}>More info</button>
+                    <button className={mystyle.groupbtn} onClick={nav}>More info</button>
                 </div>
             </div>
             <div className={mystyle.line}></div>

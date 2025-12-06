@@ -41,6 +41,7 @@ body {
     --clr-font: #e8eaed;
 
     --dull-font: hsl(216, 12%, 52%);
+    --comment-font: hsl(216, 12%, 72%);
 
     --secondaryFont:rgb(32,33,36);
     --opt-hover:#5E5F62;

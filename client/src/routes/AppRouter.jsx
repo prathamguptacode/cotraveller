@@ -13,6 +13,7 @@ import Inbox from '../components/homepage/Sidebar/Inbox'
 import CreateGroup from '../pages/CreateGroup/CreateGroup'
 import MainLayout from '../layouts/Main/MainLayout'
 import SuccessPage from '../pages/success/SuccessPage'
+import MoreInfo from '../pages/moreinfo/moreinfo'
 
 
 const AppRouter = () => {
@@ -27,9 +28,7 @@ const AppRouter = () => {
                     <Route path='viewgroup' element={<ViewGroup />} />
                 </Route>
 
-
-
-
+                <Route path='/moreinfo' element={<MoreInfo />} />
 
                 <Route element={<AntiProtectedRoutes />} >
                     <Route element={<AuthLayout />} >

@@ -13,6 +13,7 @@ import oauthRoutes from './routes/oauthRoutes.js'
 import fieldValidationRoutes from './routes/fieldValidationRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import messageRoutes from './routes/messageRoutes.js'
+import commentRoute from './routes/commentRoute.js'
 
 const app = express()
 const server = http.createServer(app)
@@ -27,6 +28,7 @@ app.use(cors({
 //Routes
 app.use('/api', hello)
 app.use('/api/group', groupRoutes)
+app.use('/api/comments',commentRoute)
 
 app.use('/api/auth', authRoutes)
 app.use('/api/oauth', oauthRoutes)

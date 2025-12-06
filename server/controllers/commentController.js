@@ -1,14 +1,16 @@
 import commentSchema from "../models/commentSchema.js";
 import xss from "xss";
+import groupSchema from "../models/groupSchema.js";
+
 export async function addComment(req,res) {
     const comment=xss(req.body?.comment);
-    const aurthor=xss(req.body?.aurthor);
+    const author=req.user.fullName;
     const targetGroup=xss(req.body?.targetGroup);
     if(!comment){
         return res.fail(400,"INPUT_ERROR","comment not found")
     }
-    if(!aurthor){
-        return res.fail(400,"INPUT_ERROR","aurthor not found")
+    if(!author){
+        return res.fail(400,"INPUT_ERROR","author not found")
     }
     if(!targetGroup){
         return res.fail(400,"INPUT_ERROR","comtargetGroupment not found")
@@ -16,11 +18,11 @@ export async function addComment(req,res) {
 
     const commentDB = new commentSchema({
         comment,
-        aurthor,
+        author,
         targetGroup
     })
-
     const data=await commentDB.save()
+    await groupSchema.updateOne({"_id": targetGroup},{$push:{"comments": data._id}})
     res.success(201,"COMMENT",data)
 }
 
