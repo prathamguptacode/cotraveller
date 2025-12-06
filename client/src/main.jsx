@@ -4,10 +4,10 @@ import AuthProvider from './context/AuthProvider.jsx'
 import ThemeProvider from './context/ThemeProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
-    <AuthProvider>
-        <ThemeProvider>
+    <ThemeProvider>
+        <AuthProvider>
             <App />
-        </ThemeProvider>
-    </AuthProvider>
+        </AuthProvider>
+    </ThemeProvider>
 
 )
