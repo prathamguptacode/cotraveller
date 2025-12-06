@@ -28,6 +28,7 @@ const AppRouter = () => {
                 </Route>
 
                 <Route path='/moreinfo' element={<MoreInfo />} />
+                
                 <Route path='/groups/:groupId/' element={<SecondaryLayout />} >
                     <Route path='chats' element={<Chats />} />
                 </Route>

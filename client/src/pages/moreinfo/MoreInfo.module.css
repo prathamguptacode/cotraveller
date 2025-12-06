@@ -19,14 +19,16 @@
 }
 
 .content {
-    font-size: 20px;
-    padding: 12px 0;
+    font-size: 18px;
+    padding: 8px 0;
 }
-.college{
+.college, .time{
     font-size: 18px;
     font-weight: 500;
 }
-
+.college{
+    padding: 8px 0;
+}
 .parent {
     display: flex;
     align-items: center;
@@ -179,4 +181,22 @@
     gap: 12px;
     align-items: center;
     padding: 1rem 0;
+}
+.requested {
+    background-color: grey !important;
+    pointer-events: none;
+}
+.groupbtn {
+    background-color: var(--primary);
+    color: var(--secondaryFont);
+    text-align: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: var(--secondaryFont);
+    font-weight: 500;
+}
+
+.groupbtn:hover {
+    background-color: var(--brighter-primary);
 }

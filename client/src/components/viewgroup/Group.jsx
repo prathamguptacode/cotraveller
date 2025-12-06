@@ -11,7 +11,8 @@ function Group({ element }) {
     const content = element.content;
     const members = element.ownerPop.fullName;
     const time = (element.travelDate);
-    const commentNum = 0;
+    const commentNum = element.comments?.length;
+    console.log(commentNum)
     const timeZ = new Date(time)
     const timeInd = timeZ.toLocaleTimeString("en-IN", {
         timeZone: "Asia/Kolkata",
@@ -28,7 +29,9 @@ function Group({ element }) {
 
     
     const sendRequest = async () => {
-        if (!user) return //###CHANGE LATER for redirection
+        if (!user){
+            return navigate('/login')
+        }
         const { status, data } = await callAuthApi('post', '/group/addRequest', { groupID: element._id })
         if (status == 201) setHasRequested(true)
         else {
@@ -55,11 +58,11 @@ function Group({ element }) {
                     <div className={mystyle.title}>{title}</div>
                     <div className={mystyle.content}>{content}</div>
                     <div className={mystyle.time}>Time: {timeInd}</div>
-                    <div className={mystyle.comments}>{commentNum} comments</div>
+                    <div className={mystyle.comments}>{commentNum} {commentNum == 1? 'comment':'comments'}</div>
                 </div>
                 <div className={mystyle.btnbox}>
                     <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
-                    <button className={mystyle.groupbtn}>More info</button>
+                    <button className={mystyle.groupbtn} onClick={nav}>More info</button>
                 </div>
             </div>
             <div className={mystyle.line}></div>

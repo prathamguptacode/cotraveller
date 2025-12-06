@@ -2,12 +2,12 @@ import React, { useRef, useState } from 'react'
 import mystyle from './MoreInfo.module.css'
 import Navbar from '../../components/homepage/Navbar'
 import { FaUser } from "react-icons/fa6";
-import { api } from '../../api/axios';
+import { api, callAuthApi } from '../../api/axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
-
+import clsx from 'clsx';
 
 function MoreInfo() {
 
@@ -15,8 +15,9 @@ function MoreInfo() {
     const [member, setMember] = useState([])
     const [comment, setComment] = useState([])
     const [time, setTime] = useState([])
-    console.log(comment)
     const { user } = useAuth()
+    const [hasRequested, setHasRequested] = useState(val?.requests?.includes(user?._id))
+    console.log(hasRequested)
     const navigate = useNavigate()
 
     const [q] = useSearchParams()
@@ -25,17 +26,17 @@ function MoreInfo() {
             const id = q.get("q")
             const res = await api.get(`/group/viewgroup?q=${id}`)
             const data = res.data.data[0];
+            setHasRequested(data?.requests?.includes(user?._id))
             setVal(data)
             setMember(data.member)
             setComment(data.comments)
-
         })()
     }, [])
 
     useEffect(() => {
-        if (! Object.values(val).length == 0 ) {
+        if (!Object.values(val).length == 0) {
             const timeZ = new Date(val.travelDate)
-            const intime=timeZ.toLocaleTimeString("en-IN", {
+            const intime = timeZ.toLocaleTimeString("en-IN", {
                 timeZone: "Asia/Kolkata",
                 hour: "2-digit",
                 minute: "2-digit",
@@ -44,6 +45,21 @@ function MoreInfo() {
             setTime(intime)
         }
     }, [val])
+
+    
+    const sendRequest = async () => {
+        if (!user) {
+            return navigate('/login')
+        }
+        const { status, data } = await callAuthApi('post', '/group/addRequest', { groupID: val._id })
+        if (status == 201) setHasRequested(true)
+        else {
+            setHasRequested(false)
+            console.error(data.message)
+        }
+    }
+
+
 
 
     const incomment = useRef()
@@ -119,7 +135,7 @@ function MoreInfo() {
                                 {val.title}
                             </div>
                             <div className={mystyle.content}>{val.content}</div>
-                            <div className={mystyle.college}>Time: {time}</div>
+                            <div className={mystyle.time}>Time: {time}</div>
                             <div className={mystyle.college}>College: {val.intialLocation}</div>
                         </div>
                         <div className={mystyle.memberbx}>
@@ -138,7 +154,7 @@ function MoreInfo() {
                     </div>
                     <div className={mystyle.btnbox}>
                         <button className={mystyle.moreinfo} onClick={focus}>Add comment</button>
-                        <button className={mystyle.moreinfo}>Send Request</button>
+                    <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
                     </div>
                 </div>
             </div>
