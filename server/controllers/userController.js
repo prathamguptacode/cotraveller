@@ -75,7 +75,10 @@ export const fetchJoinedGroupsController = async (req, res) => {
             }
         },
         {
-            $unwind: '$lastMessage'
+            $unwind: {
+                path:'$lastMessage',
+                preserveNullAndEmptyArrays:true
+            }
         },
         {
             $replaceRoot: { newRoot: { $mergeObjects: ['$memberGroup', '$$ROOT'] } }

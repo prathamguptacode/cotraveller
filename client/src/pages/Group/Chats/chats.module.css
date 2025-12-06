@@ -4,9 +4,9 @@
     height: calc(100vh - 65px);
 }
 
-svg {
+/* svg {
     color: var(--primary);
-}
+} */
 
 .sidebarWrapper {
     padding: .5rem 1rem;

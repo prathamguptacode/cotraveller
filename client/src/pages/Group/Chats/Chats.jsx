@@ -6,7 +6,13 @@ import Groups from '../../../components/homepage/Sidebar/Groups'
 import Inbox from '../../../components/homepage/Sidebar/Inbox'
 import Outbox from '../../../components/homepage/Sidebar/Outbox'
 
+
+
+
+
 const Chats = () => {
+
+    
 
     return (
         <div className={styles.wrapper}>
@@ -88,11 +94,6 @@ const Chats = () => {
                 </div>
 
                 <div className={styles.messages}>
-                    {/* 
-                    <div className={clsx(styles.message, styles.myMessage)}>
-                        
-
-                    </div> */}
 
                     <div className={styles.message}>
                         <div className={styles.messageAuthor}>

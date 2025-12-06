@@ -10,7 +10,7 @@ const Groups = () => {
   const [groups, setGroups] = useState([])
   useEffect(() => {
     if (!user) return
-    
+
     (async () => {
       const { status, data } = await callAuthApi('get', '/user/groups')
       if (status == 200) setGroups(data.data.groups)
@@ -31,7 +31,7 @@ const Groups = () => {
               </div>
               <div className={styles.detailsWrapper}>
                 <p className={styles.groupName}>{group.title}</p>
-                <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>
+                {group.lastMessage && <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>}
               </div>
             </Link>
           )
