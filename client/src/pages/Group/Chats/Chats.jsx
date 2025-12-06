@@ -8,6 +8,7 @@ import Outbox from '../../../components/homepage/Sidebar/Outbox'
 import { useParams } from 'react-router-dom'
 import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
+import { useSocket } from '../../../hooks/useSocket'
 
 
 
@@ -19,12 +20,19 @@ const Chats = () => {
     const [loading, setLoading] = useState(true)
     const { user } = useAuth()
 
+    const socket = useSocket()
+    const [text, setText] = useState('')
+    const [messages, setMessages] = useState([])
+
     useEffect(() => {
 
         (async () => {
+            setLoading(true)
             const { status, data } = await callAuthApi('get', `/message/${groupId}`)
             if (status === 200) {
-                setGroup(data.data.group)
+                const { group } = data.data
+                setGroup(group)
+                setMessages(group.messages)
                 setLoading(false)
             }
             else console.error(data.message)
@@ -32,6 +40,33 @@ const Chats = () => {
 
 
     }, [groupId])
+
+    useEffect(() => {
+        if (loading) return
+        socket.emit('JOIN_ROOM', { roomId: groupId, userId: user._id }, (res) => {
+            if (!res.success) console.error('Error connecting to chatRoon')
+            else console.log('Connected to ChatRoom')
+        })
+        socket.on('RECEIVE_MESSAGE_ON_CLIENT', (data) => {
+            setMessages(prev => [...prev, data.message])
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading])
+
+
+    const sendMessage = () => {
+        socket.emit('SEND_MESSAGE_TO_SERVER', { text, roomId: groupId, userId: user._id }, (res) => {
+            if (!res.success) return console.error(res.message)
+            setMessages(prev => [...prev, res.message])
+    
+        })
+        setText('')
+
+    }
+
+
+
+
 
 
 
@@ -123,8 +158,8 @@ const Chats = () => {
 
 
 
-                        {group.messages.map(message => {
-                            const isMyMessage = message.author._id == user._id
+                        {messages.map(message => {
+                            const isMyMessage = message.author == user._id
                             return (
                                 <div key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
                                     {!isMyMessage && <div className={styles.messageAuthor}>
@@ -153,7 +188,10 @@ const Chats = () => {
 
                     <div className={styles.inputAreaWrapper}>
                         <div className={styles.inputWrapper}>
-                            <input type="text" />
+                            <input onKeyDown={(e) => {
+                                if (e.key !== "Enter" || !text) return
+                                sendMessage()
+                            }} onChange={(e) => setText(e.target.value)} value={text} type="text" />
                             <button>
                                 <Smile size={20} />
                             </button>
