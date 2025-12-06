@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import Searchbox from '../../components/homepage/Searchbox'
 import mystyle from './ViewGroup.module.css'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { api } from '../../api/axios'
 import Group from '../../components/viewgroup/Group'
+import NoGroup from '../success/NoGroup'
 
 function ViewGroup() {
 
     const [groupData, setGroupData] = useState([])
+    console.log(groupData)
+    const [localLoader,setLocalLoader]=useState(true)
 
     const [query] = useSearchParams()
     const location = query.get("q");
@@ -17,22 +20,22 @@ function ViewGroup() {
     const y = query.get("y");
 
     useEffect(() => {
-
         const location = query.get("q");
         const mode = query.get("mode");
         const lowerT = query.get("lowerT");
         const upperT = query.get("upperT");
         (async () => {
+            setLocalLoader(true)
             const body = {
                 mode: mode,
                 lowerTime: lowerT,
                 upperTime: upperT,
                 intialLocation: location
             }
-
             try {
                 const res = await api.post("/group/viewgroupbyfilter", body)
                 setGroupData(res.data.data)
+                setLocalLoader(false)
             } catch (error) {
                 //something went wrong page
                 console.error(error)
@@ -44,7 +47,8 @@ function ViewGroup() {
         <>
             <Searchbox l={location} md={mode} d={d} m={m} y={y} w="1920px" />
             <div className={mystyle.groupSection}>
-                {groupData.map(element => {
+                {localLoader? <div className={mystyle.loader} /> : groupData.length==0? <NoGroup /> : groupData.map(element => {
+                    console.log(element)
                     return <Group element={element} />
                 })}
             </div>

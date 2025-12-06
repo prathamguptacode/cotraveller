@@ -3,6 +3,7 @@ import mystyle from './Group.module.css'
 import { api, callAuthApi } from '../../api/axios';
 import { useAuth } from '../../hooks/useAuth';
 import clsx from 'clsx'
+import { data } from 'react-router-dom';
 
 function Group({ element }) {
     const title = element.title;
@@ -20,9 +21,10 @@ function Group({ element }) {
 
 
     const { user } = useAuth()
-    const [hasRequested, setHasRequested] = useState(element.requests.includes(user?._id))
-    
+    const [hasRequested, setHasRequested] = useState(element?.requests?.includes(user?._id))
+
     const sendRequest = async () => {
+
         const { status, data } = await callAuthApi('post', '/group/addRequest', { groupID: element._id })
         if (status == 201) setHasRequested(true)
         else setHasRequested(false)
@@ -37,9 +39,7 @@ function Group({ element }) {
                 <div className={mystyle.group}>
                     <div className={mystyle.memberbx}>
 
-         
-
-                            <div className={mystyle.members}>{members}</div>
+                        <div className={mystyle.members}>{members}</div>
 
                     </div>
                     <div className={mystyle.title}>{title}</div>
