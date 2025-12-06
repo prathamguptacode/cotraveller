@@ -4,23 +4,23 @@ import moment from "moment-timezone";
 import User from "../models/User.js";
 
 
-export async function addGroup(req,res) {
-    const title=xss(req.body?.title);
-    const content=xss(req.body?.content);
-    const owner=req.user._id;
-    const memberNumber=xss(req.body?.memberNumber);
-    const mode=xss(req.body?.mode);
-    const travelDate=xss(req.body?.travelDate);
-    const intialLocation=xss(req.body?.intialLocation);
-
-    if(!title) res.fail(400,"INPUT_ERROR","title not found")
-    if(!content) res.fail(400,"INPUT_ERROR","content not found")
-    if(!owner) res.fail(400,"INPUT_ERROR","owner not found")
-    if(!memberNumber) res.fail(400,"INPUT_ERROR","memberNumber not found")
-    if(!mode) res.fail(400,"INPUT_ERROR","mode not found")
-    if(!travelDate) res.fail(400,"INPUT_ERROR","travelDate not found")
-    if(!intialLocation) res.fail(400,"INPUT_ERROR","intialLocation not found")
+export async function addGroup(req, res) {
+    const title = xss(req.body?.title);
+    const content = xss(req.body?.content);
+    const owner = req.user._id;
+    const memberNumber = xss(req.body?.memberNumber);
+    const mode = xss(req.body?.mode);
+    const travelDate = xss(req.body?.travelDate);
+    const intialLocation = xss(req.body?.intialLocation);
     
+    if (!title) res.fail(400, "INPUT_ERROR", "title not found")
+    if (!content) res.fail(400, "INPUT_ERROR", "content not found")
+    if (!owner) res.fail(400, "INPUT_ERROR", "owner not found")
+    if (!memberNumber) res.fail(400, "INPUT_ERROR", "memberNumber not found")
+    if (!mode) res.fail(400, "INPUT_ERROR", "mode not found")
+    if (!travelDate) res.fail(400, "INPUT_ERROR", "travelDate not found")
+    if (!intialLocation) res.fail(400, "INPUT_ERROR", "intialLocation not found")
+
     //telling mongo that date formate is ist
     const istDate = moment.tz(travelDate, "Asia/Kolkata").toDate();
 
@@ -68,7 +68,7 @@ export async function viewGroupByFilter(req, res) {
             }
         },
         {
-            $lookup:{
+            $lookup: {
                 from: 'users',
                 localField: 'owner',
                 foreignField: '_id',
@@ -76,16 +76,17 @@ export async function viewGroupByFilter(req, res) {
             }
         },
         {
-            $unwind:"$ownerPop"
+            $unwind: "$ownerPop"
         },
         {
-            $project:{
-                ownerPop:{
-                    fullName:1
+            $project: {
+                ownerPop: {
+                    fullName: 1
                 },
-                title:1,
-                content:1,
-                travelDate: 1
+                title: 1,
+                content: 1,
+                travelDate: 1,
+                requests: 1,
             }
         }
 

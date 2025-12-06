@@ -4,17 +4,20 @@ import { X } from 'lucide-react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { callAuthApi } from '../../../api/axios'
+import { useAuth } from '../../../hooks/useAuth'
 
 const Outbox = () => {
+    const { user } = useAuth()
     const [groups, setGroups] = useState([])
     const [changed, setChanged] = useState(false)
 
     useEffect(() => {
-            (async () => {
-                const { status, data } = await callAuthApi('get', '/user/outbox')
-                if (status === 200) setGroups(data.data.groups)
-                else console.error(data.message)
-            })()
+        if (!user) return
+        (async () => {
+            const { status, data } = await callAuthApi('get', '/user/outbox')
+            if (status === 200) setGroups(data.data.groups)
+            else console.error(data.message)
+        })()
 
     }, [changed])
 

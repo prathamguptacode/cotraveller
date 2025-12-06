@@ -7,7 +7,7 @@ body {
     margin: auto;
     background-color: var(--clr-bg);
     color: var(--clr-font);
-    font-family:Mulish, Roboto, sans-serif;
+    font-family: Mulish, Roboto, sans-serif;
 
 
 
@@ -24,11 +24,11 @@ body {
 
 :root.dark {
 
-    --clr-border: #80868b99; 
+    --clr-border: #80868b99;
     --in-border: hsla(207, 5%, 77%, 0.6);
     /* google flights border color */
     --clr-bg-hover: #303134;
-    
+
     --group-hover: hsl(225, 6%, 18%);
 
     --clr-bg: #202124;
@@ -42,19 +42,20 @@ body {
 
     --dull-font: hsl(216, 12%, 52%);
 
-    --secondaryFont:rgb(32,33,36);
-    --opt-hover:#5E5F62;
+    --secondaryFont: rgb(32, 33, 36);
+    --opt-hover: #5E5F62;
 
     /* auth page color */
-    --secondary-bg-darker:hsl(220, 3%, 9%);
-
-    /*homepage sidebar */
-    --sidebar-bg:#303133;
-    --sidebar-bg-hover:#3C4043;
+    --primary-darker:#186ef8;
+    --secondary-bg-lighter: hsl(220, 3%, 75%);
+    --secondary-bg-darker: hsl(220, 3%, 9%);
+    --secondary-bg-darkest: hsl(220, 3%, 6%);
+        /*homepage sidebar */
+        --sidebar-bg:#303133;
+    --sidebar-bg-hover: #3C4043;
     --sidebar-anchor-active: #609af6;
-    --sidebar-button-hover:hsl(225, 4%, 20%);
+    --sidebar-button-hover: hsl(225, 4%, 20%);
 
-    --toast-bg:#303133;
+    --toast-bg: #303133;
 
 }
-
