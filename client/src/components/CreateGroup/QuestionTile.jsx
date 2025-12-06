@@ -54,7 +54,7 @@ function QuestionTile() {
             style: {
                 borderRadius: '10px',
                 background: 'var(--toast-bg)',
-                color: '#fff',
+                color: 'var(--toast-color)',
                 padding: '6px 20px'
             }
         })
@@ -62,7 +62,7 @@ function QuestionTile() {
             style: {
                 borderRadius: '10px',
                 background: 'var(--toast-bg)',
-                color: '#fff',
+                color: 'var(--toast-color)',
                 padding: '6px 20px'
             }
         })
@@ -70,14 +70,14 @@ function QuestionTile() {
             style: {
                 borderRadius: '10px',
                 background: 'var(--toast-bg)',
-                color: '#fff',
+                color: 'var(--toast-color)',
             }
         })
         if (contentVal.length < 13) return toast.error("Description cannot be less then 12 characters", {
             style: {
                 borderRadius: '10px',
                 background: 'var(--toast-bg)',
-                color: '#fff',
+                color: 'var(--toast-color)',
             }
         })
 
@@ -85,7 +85,7 @@ function QuestionTile() {
             style: {
                 borderRadius: '10px',
                 background: 'var(--toast-bg)',
-                color: '#fff',
+                color: 'var(--toast-color)',
             }
         })
 
@@ -93,7 +93,7 @@ function QuestionTile() {
             style: {
                 borderRadius: '10px',
                 background: 'var(--toast-bg)',
-                color: '#fff',
+                color: 'var(--toast-color)',
             }
         })
 
@@ -101,7 +101,7 @@ function QuestionTile() {
             style: {
                 borderRadius: '10px',
                 background: 'var(--toast-bg)',
-                color: '#fff',
+                color: 'var(--toast-color)',
             }
         })
 
@@ -141,7 +141,7 @@ function QuestionTile() {
                 style: {
                     borderRadius: '10px',
                     background: 'var(--toast-bg)',
-                    color: '#fff',
+                    color: 'var(--toast-color)',
                 }
             })
         }
