@@ -15,7 +15,7 @@
         var(--_g) 100% 50%;
     background-size: calc(100%/3) 50%;
 
-    animation: l3 1s infinite linear;
+    animation: l3 0.9s infinite linear;
  
     /* ask someone is this the correct way */
     position: absolute;

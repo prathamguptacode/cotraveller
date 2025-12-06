@@ -8,6 +8,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
 import clsx from 'clsx';
+import LoadingPage from '../Extras/LoadingPage';
+import { FaHeartCrack } from "react-icons/fa6";
 
 function MoreInfo() {
 
@@ -15,6 +17,7 @@ function MoreInfo() {
     const [member, setMember] = useState([])
     const [comment, setComment] = useState([])
     const [time, setTime] = useState([])
+    const [loadind, setLoading] = useState(true);
     const { user } = useAuth()
     const [hasRequested, setHasRequested] = useState(val?.requests?.includes(user?._id))
     console.log(hasRequested)
@@ -30,6 +33,7 @@ function MoreInfo() {
             setVal(data)
             setMember(data.member)
             setComment(data.comments)
+            setLoading(false)
         })()
     }, [])
 
@@ -46,7 +50,7 @@ function MoreInfo() {
         }
     }, [val])
 
-    
+
     const sendRequest = async () => {
         if (!user) {
             return navigate('/login')
@@ -124,65 +128,74 @@ function MoreInfo() {
     return (
         <div>
             <Navbar />
-            <div className={mystyle.wrap}>
-                <div className={mystyle.profile}>
-                    <FaUser size="220px" />
-                </div>
-                <div className={mystyle.infoWrapper}>
-                    <div className={mystyle.parent}>
-                        <div className={mystyle.can}>
-                            <div className={mystyle.title}>
-                                {val.title}
+            {
+                loadind ? <LoadingPage /> :
+                    <div>
+                        <div className={mystyle.wrap}>
+                            <div className={mystyle.profile}>
+                                <FaUser size="220px" />
                             </div>
-                            <div className={mystyle.content}>{val.content}</div>
-                            <div className={mystyle.time}>Time: {time}</div>
-                            <div className={mystyle.college}>College: {val.intialLocation}</div>
-                        </div>
-                        <div className={mystyle.memberbx}>
-                            <div className={mystyle.memtitle}>Members</div>
-                            {
-                                member.map((e) => {
-                                    return (
-                                        <div className={mystyle.member}>
-                                            <FaUser size="24px" />
-                                            <div className={mystyle.name}>{e.fullName}</div>
+                            <div className={mystyle.infoWrapper}>
+                                <div className={mystyle.parent}>
+                                    <div className={mystyle.can}>
+                                        <div className={mystyle.title}>
+                                            {val.title}
                                         </div>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div>
-                    <div className={mystyle.btnbox}>
-                        <button className={mystyle.moreinfo} onClick={focus}>Add comment</button>
-                    <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
-                    </div>
-                </div>
-            </div>
-            <div className={mystyle.line}></div>
-            <div className={mystyle.commentbx}>
-                <div className={mystyle.commentTitle}>Comments:</div>
-                <div className={mystyle.input}>
-                    <div className={mystyle.questionTitle}>
-                        <input type="text" placeholder='Add a comment' className={mystyle.inbx} ref={incomment} />
-                        <button onClick={commentPost} className={mystyle.addbtn} >Post</button>
-                    </div>
-                </div>
-                {
-                    comment.map((e) => {
-                        return (
-                            <div className={mystyle.comments}>
-                                <FaUser size="24px" />
-                                <div className={mystyle.commentcan}>
-                                    <div className={mystyle.userComment}>{e.author}</div>
-                                    <div className={mystyle.conComment}>{e.comment}</div>
+                                        <div className={mystyle.content}>{val.content}</div>
+                                        <div className={mystyle.time}>Time: {time}</div>
+                                        <div className={mystyle.college}>College: {val.intialLocation}</div>
+                                    </div>
+                                    <div className={mystyle.memberbx}>
+                                        <div className={mystyle.memtitle}>Members</div>
+                                        {
+                                            member.map((e) => {
+                                                return (
+                                                    <div className={mystyle.member}>
+                                                        <FaUser size="24px" />
+                                                        <div className={mystyle.name}>{e.fullName}</div>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                </div>
+                                <div className={mystyle.btnbox}>
+                                    <button className={mystyle.moreinfo} onClick={focus}>Add comment</button>
+                                    <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
                                 </div>
                             </div>
-                        )
-                    }
-                    )
-                }
-            </div>
-            <Toaster />
+                        </div>
+                        <div className={mystyle.line}></div>
+                        <div className={mystyle.commentbx}>
+                            <div className={mystyle.commentTitle}>Comments:</div>
+                            <div className={mystyle.input}>
+                                <div className={mystyle.questionTitle}>
+                                    <input type="text" placeholder='Add a comment' className={mystyle.inbx} ref={incomment} />
+                                    <button onClick={commentPost} className={mystyle.addbtn} >Post</button>
+                                </div>
+                            </div>
+                            {
+                                comment.length == 0? <div className={mystyle.defComment}>
+                                    <FaHeartCrack size="22px" />
+                                    No comments yet — be the first to share your thoughts!
+                                </div>:
+                                comment.map((e) => {
+                                    return (
+                                        <div className={mystyle.comments}>
+                                            <FaUser size="24px" />
+                                            <div className={mystyle.commentcan}>
+                                                <div className={mystyle.userComment}>{e.author}</div>
+                                                <div className={mystyle.conComment}>{e.comment}</div>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                                )
+                            }
+                        </div>
+                        <Toaster />
+                    </div>
+            }
         </div>
     )
 }

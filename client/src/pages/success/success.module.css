@@ -31,7 +31,7 @@
     margin-top: 20px;
     padding: 12px;
     background-color: var(--primary);
-    color: hsl(219, 17%, 23%);
+    color: var(--secondaryFont);
     border-radius: 5px;
     align-self: center;
     width: 200px;

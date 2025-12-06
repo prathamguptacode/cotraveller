@@ -4,7 +4,7 @@ import styles from './extras.module.css'
 const LoadingPage = () => {
     return (
         <h1 className={styles.loadingPage}>
-            Loading lol!!!
+            <div className={styles.loader} />
         </h1>
     )
 }
