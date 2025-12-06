@@ -13,7 +13,7 @@ export async function addGroup(req, res) {
     const mode = xss(req.body?.mode);
     const travelDate = xss(req.body?.travelDate);
     const intialLocation = xss(req.body?.intialLocation);
-    
+
     if (!title) res.fail(400, "INPUT_ERROR", "title not found")
     if (!content) res.fail(400, "INPUT_ERROR", "content not found")
     if (!owner) res.fail(400, "INPUT_ERROR", "owner not found")
@@ -32,16 +32,16 @@ export async function addGroup(req, res) {
 }
 
 export async function viewGroup(req, res) {
-    const id=xss(req.query?.q);
-    if(!id){
-        res.fail(400,"INVALID_INPUT")
+    const id = xss(req.query?.q);
+    if (!id) {
+        res.fail(400, "INVALID_INPUT")
     }
     try {
-    const val=new mongoose.Types.ObjectId(id)
-    const data = await groupSchema.where('_id').equals(val).populate({path: 'member', select: 'fullName'}).populate({path: 'comments', select: 'author comment' })
-    res.success(200, data) 
+        const val = new mongoose.Types.ObjectId(id)
+        const data = await groupSchema.where('_id').equals(val).populate({ path: 'member', select: 'fullName' }).populate({ path: 'comments', select: 'author comment' })
+        res.success(200, data)
     } catch (error) {
-        res.fail(400,"INVALID_ID")
+        res.fail(400, "INVALID_ID")
     }
 }
 
@@ -74,7 +74,16 @@ export async function viewGroupByFilter(req, res) {
             $match: {
                 mode: mode,
                 intialLocation: intialLocation,
-                travelDate: { $gte: utcLowerTime, $lte: utcUpperTime }
+                travelDate: { $gte: utcLowerTime, $lte: utcUpperTime },
+                
+                //if membernumber is reached
+                $expr: {
+                    $lt: [
+                        { $size: "$member" },
+                        "$memberNumber"
+                    ]
+                }
+
             }
         },
         {
@@ -94,7 +103,7 @@ export async function viewGroupByFilter(req, res) {
                     fullName: 1
                 },
                 title: 1,
-                _id:1,
+                _id: 1,
                 content: 1,
                 travelDate: 1,
                 requests: 1,

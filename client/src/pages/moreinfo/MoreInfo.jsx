@@ -15,8 +15,9 @@ function MoreInfo() {
     const [member, setMember] = useState([])
     const [comment, setComment] = useState([])
     const [time, setTime] = useState([])
-    console.log(comment)
     const { user } = useAuth()
+    const [hasRequested, setHasRequested] = useState(val?.requests?.includes(user?._id))
+    console.log(hasRequested)
     const navigate = useNavigate()
 
     const [q] = useSearchParams()
@@ -25,10 +26,10 @@ function MoreInfo() {
             const id = q.get("q")
             const res = await api.get(`/group/viewgroup?q=${id}`)
             const data = res.data.data[0];
+            setHasRequested(data?.requests?.includes(user?._id))
             setVal(data)
             setMember(data.member)
             setComment(data.comments)
-
         })()
     }, [])
 
@@ -45,7 +46,7 @@ function MoreInfo() {
         }
     }, [val])
 
-    const [hasRequested, setHasRequested] = useState(val?.requests?.includes(user?._id))
+    
     const sendRequest = async () => {
         if (!user) {
             return navigate('/login')
