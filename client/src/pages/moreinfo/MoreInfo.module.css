@@ -89,7 +89,7 @@
 .commentTitle {
     font-size: 22px;
     font-weight: 700;
-    color: hsl(216, 12%, 92%);
+    color: var(--commentSP);
     cursor: pointer;
 }
 
@@ -106,7 +106,7 @@
 .userComment {
     font-size: 16px;
     font-weight: 500;
-    color: hsl(216, 12%, 92%);
+    color: var(--commentSP);
 }
 
 .commentbx {
@@ -149,7 +149,7 @@
     border-radius: 5px;
     transition: all 0.2s ease;
     flex: 1;
-    background-color: #303134;
+    background-color: var(--commentbg);
     display: flex;
     align-items: center;
     gap: 20px;

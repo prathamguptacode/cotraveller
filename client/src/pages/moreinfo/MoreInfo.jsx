@@ -80,8 +80,8 @@ function MoreInfo() {
             return toast.error("please enter the comment", {
                 style: {
                     borderRadius: '10px',
-                    background: '#303133',
-                    color: '#fff',
+                    background: 'var(--toast-bg)',
+                    color: 'var(--toast-color)',
                 }
             })
         }
@@ -99,8 +99,8 @@ function MoreInfo() {
             toast.success("commented successfully", {
                 style: {
                     borderRadius: '10px',
-                    background: '#303133',
-                    color: '#fff',
+                    background: 'var(--toast-bg)',
+                    color: 'var(--toast-color)',
                 }
             })
             incomment.current.value = ""
@@ -109,8 +109,8 @@ function MoreInfo() {
             toast.error("something went wrong", {
                 style: {
                     borderRadius: '10px',
-                    background: '#303133',
-                    color: '#fff',
+                    background: 'var(--toast-bg)',
+                    color: 'var(--toast-color)',
                 }
             })
             setComment((prev) => {

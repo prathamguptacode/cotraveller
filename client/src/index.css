@@ -16,10 +16,25 @@ body {
 :root {
 
     --clr-border: hsl(0, 0%, 70%);
-    --clr-bg-hover: hsl(0, 0%, 15%);
-    --clr-bg: hsl(0, 0%, 90%);
-    --clr-font: hsl(0, 0%, 5%);
-
+    --clr-bg: hsl(0, 0%, 100%);
+    
+    
+    --clr-font: #202124;
+    --in-border: hsla(207, 5%, 33%, 0.9);
+    --clr-bg-hover: hsl(225, 4%, 92%);
+    --group-hover: hsl(225, 6%, 95%);
+    --secondary-bg: hsl(220, 3%, 97%);
+    --primary: #1A73E7;
+    --brighter-primary: #1E66C8;
+    --link-color: rgb(97, 129, 181);
+    --commentbg: hsl(225, 4%, 93%);
+    --dull-font: hsl(216, 12%, 20%);
+    --comment-font: hsl(216, 12%, 32%);
+    --secondaryFont: hsl(0, 0%, 99%);
+    --opt-hover: hsl(225, 2%, 90%);
+    --toast-bg:hsl(220, 3%, 95%);
+    --toast-color:#202124;
+    --commentSP:hsl(216, 12%, 28%);
 }
 
 :root.dark {
@@ -37,7 +52,7 @@ body {
     --primary: #8AB4F8;
     --brighter-primary: #9DC0FA;
     --link-color: #8ab4f8;
-    --seconday: #465062;
+    --commentbg: hsl(225, 4%, 20%);
     --clr-font: #e8eaed;
 
     --dull-font: hsl(216, 12%, 52%);
@@ -46,6 +61,12 @@ body {
     --secondaryFont: rgb(32, 33, 36);
     --opt-hover: #5E5F62;
 
+    --toast-bg: #303133;
+    --toast-color:hsl(0, 0%, 100%);
+
+    --commentSP:hsl(216, 12%, 92%);
+
+    /* pratham did not fix these colors */
     /* auth page color */
     --primary-darker:#186ef8;
     --secondary-bg-lighter: hsl(220, 3%, 75%);
@@ -56,7 +77,5 @@ body {
     --sidebar-bg-hover: #3C4043;
     --sidebar-anchor-active: #609af6;
     --sidebar-button-hover: hsl(225, 4%, 20%);
-
-    --toast-bg: #303133;
 
 }
