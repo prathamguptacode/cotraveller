@@ -26,11 +26,15 @@ function Group({ element }) {
     const { user } = useAuth()
     const [hasRequested, setHasRequested] = useState(element?.requests?.includes(user?._id))
 
+    
     const sendRequest = async () => {
-
+        if (!user) return //###CHANGE LATER for redirection
         const { status, data } = await callAuthApi('post', '/group/addRequest', { groupID: element._id })
         if (status == 201) setHasRequested(true)
-        else setHasRequested(false)
+        else {
+            setHasRequested(false)
+            console.error(data.message)
+        }
     }
 
     function nav(){
@@ -54,8 +58,8 @@ function Group({ element }) {
                     <div className={mystyle.comments}>{commentNum} comments</div>
                 </div>
                 <div className={mystyle.btnbox}>
-                    <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>Send Request</button>
-                    <button className={mystyle.groupbtn} onClick={nav}>More info</button>
+                    <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
+                    <button className={mystyle.groupbtn}>More info</button>
                 </div>
             </div>
             <div className={mystyle.line}></div>

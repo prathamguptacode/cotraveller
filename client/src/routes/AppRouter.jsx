@@ -2,18 +2,17 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './ProtectedRoutes'
 import AntiProtectedRoutes from './AntiProtectedRoutes'
 import Home from '../pages/Home/Home'
-import GroupProfile from '../pages/GroupProfile/GroupProfile'
 import ViewGroup from '../pages/Group/ViewGroup'
 import AuthLayout from '../layouts/Auth/AuthLayout'
 import Signup from '../pages/Auth/Signup'
 import Login from '../pages/Auth/Login'
 import VerifyOtp from '../pages/Auth/VerifyOtp'
-import Groups from '../components/homepage/Sidebar/Groups'
-import Inbox from '../components/homepage/Sidebar/Inbox'
 import CreateGroup from '../pages/CreateGroup/CreateGroup'
 import MainLayout from '../layouts/Main/MainLayout'
 import SuccessPage from '../pages/success/SuccessPage'
 import MoreInfo from '../pages/moreinfo/moreinfo'
+import SecondaryLayout from '../layouts/Secondary/SecondaryLayout'
+import Chats from '../pages/Group/Chats/Chats'
 
 
 const AppRouter = () => {
@@ -29,6 +28,12 @@ const AppRouter = () => {
                 </Route>
 
                 <Route path='/moreinfo' element={<MoreInfo />} />
+                <Route path='/groups/:groupId/' element={<SecondaryLayout />} >
+                    <Route path='chats' element={<Chats />} />
+                </Route>
+
+
+
 
                 <Route element={<AntiProtectedRoutes />} >
                     <Route element={<AuthLayout />} >
@@ -42,7 +47,6 @@ const AppRouter = () => {
 
 
                 <Route element={<ProtectedRoutes />}>
-                    <Route path='/group' element={<GroupProfile />} />
                     <Route path='/creategroup' element={<CreateGroup />} />
                     <Route path='/success' element={<SuccessPage />} />
                 </Route>
