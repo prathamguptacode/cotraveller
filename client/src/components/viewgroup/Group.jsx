@@ -20,7 +20,8 @@ function Group({ element }) {
 
 
     const { user } = useAuth()
-    const [hasRequested, setHasRequested] = useState(element.requests.includes(user?._id))
+    const [hasRequested, setHasRequested] = useState(element?.requests?.includes(user?._id))
+
     
     const sendRequest = async () => {
         if (!user) return //###CHANGE LATER for redirection

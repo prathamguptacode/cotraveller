@@ -5,7 +5,8 @@
     align-items: center;
     padding: 8px 16px;
 
-
+    height: 65px;
+    
     position: fixed;
     z-index: 5;
     left: 0;
@@ -45,7 +46,7 @@
 }
 
 .mail {
-    border-radius: 30px;
+    border-radius: 10px;
     cursor: pointer;
     padding: 10px;
     flex-shrink: 0;
@@ -191,7 +192,8 @@
 .options:hover {
     background-color: var(--opt-hover);
 }
-.toast{
+
+.toast {
     padding: 0 40px;
     background-color: rebeccapurple;
 }

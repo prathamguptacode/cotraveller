@@ -27,7 +27,7 @@ const Groups = () => {
           return (
             <Link key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
-                <img src="apple-light.svg" alt="avatar" />
+                <img src="/apple-light.svg" alt="avatar" />
               </div>
               <div className={styles.detailsWrapper}>
                 <p className={styles.groupName}>{group.title}</p>
