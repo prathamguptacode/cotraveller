@@ -75,7 +75,7 @@ export const fetchGroupChatController = async (req, res) => {
                         $match: { $expr: { $in: ['$_id', '$$ids'] } }
                     },
                     {
-                        $sort: { createdAt: -1 }
+                        $sort: { createdAt: 1 }
                     },
                     {
                         $lookup: {
@@ -99,17 +99,19 @@ export const fetchGroupChatController = async (req, res) => {
                     },
                     {
                         $project: {
-                            roomId: 0,
-                            __v: 0
+                            author: '$author._id',
+                            text:1,
+                            createdAt:1,
                         }
-                    }
+                    },
+                
                 ],
                 as: 'messages'
             }
         },
         {
-            $project:{
-                member:0
+            $project: {
+                member: 0
             }
         }
 
