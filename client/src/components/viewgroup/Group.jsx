@@ -3,6 +3,7 @@ import mystyle from './Group.module.css'
 import { api, callAuthApi } from '../../api/axios';
 import { useAuth } from '../../hooks/useAuth';
 import clsx from 'clsx'
+import { data } from 'react-router-dom';
 
 function Group({ element }) {
     const title = element.title;
@@ -42,9 +43,7 @@ function Group({ element }) {
                 <div className={mystyle.group}>
                     <div className={mystyle.memberbx}>
 
-         
-
-                            <div className={mystyle.members}>{members}</div>
+                        <div className={mystyle.members}>{members}</div>
 
                     </div>
                     <div className={mystyle.title}>{title}</div>
