@@ -98,6 +98,7 @@ export async function viewGroupByFilter(req, res) {
                 content: 1,
                 travelDate: 1,
                 requests: 1,
+                comments: 1,
             }
         }
 
