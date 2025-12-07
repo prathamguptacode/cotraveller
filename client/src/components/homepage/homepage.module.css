@@ -6,7 +6,7 @@
     padding: 8px 16px;
 
     height: 65px;
-    
+
     position: fixed;
     z-index: 5;
     left: 0;
@@ -196,4 +196,24 @@
 .toast {
     padding: 0 40px;
     background-color: rebeccapurple;
+}
+
+
+@media (width < 1000px) {
+    .searchbox {
+        max-width: 900px;
+    }
+
+    .location,
+    .mode,
+    .date,
+    .month,
+    .year {
+        padding: 16px 40px ;
+    }
+
+    .location,
+    .mode{
+        padding: 16px 44px;
+    }
 }

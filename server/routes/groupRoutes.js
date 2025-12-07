@@ -1,6 +1,6 @@
 import express from 'express'
 const router=express.Router()
-import {addGroup, addDBrequests, leaveGroup, viewRequest, addMember, memberInfo} from '../controllers/groupController.js'
+import {addGroup, leaveGroup, viewRequest, addMember, memberInfo} from '../controllers/groupController.js'
 import {asyncHandler} from '../utils/asyncHandler.js'
 import {viewGroup} from '../controllers/groupController.js'
 import {viewGroupByFilter} from '../controllers/groupController.js'
@@ -23,7 +23,6 @@ router.post('/viewgroupbyfilter',asyncHandler(viewGroupByFilter))//no middleware
 //should have middle ware
 router.post('/addrequest',verifyAccessToken,asyncHandler(addRequest))
 router.get('/viewrequest',verifyAccessToken,asyncHandler(viewRequest))// this is for member to see request
-router.post('/adddbrequest',verifyAccessToken,asyncHandler(addDBrequests))
 router.post('/addmember',verifyAccessToken,asyncHandler(addMember))
 router.delete('/leavegroup',verifyAccessToken,asyncHandler(leaveGroup))
 
