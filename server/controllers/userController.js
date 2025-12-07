@@ -61,8 +61,9 @@ export const fetchJoinedGroupsController = async (req, res) => {
                     },
                     {
                         $project: {
-                            author: '$author.username',
+                            author: '$author.fullName',
                             text: 1,
+                            createdAt: 1,
                             _id: 0
                         }
                     },
@@ -89,6 +90,9 @@ export const fetchJoinedGroupsController = async (req, res) => {
                 messages: 0,
             }
         },
+        {
+            $sort: { 'lastMessage.createdAt': -1 }
+        }
 
 
 
@@ -152,9 +156,9 @@ export const fetchIncomingRequestsController = async (req, res) => {
                         $sort: { _id: 1, createdAt: -1 }
                     },
                     {
-                        $project:{
-                            createdAt:0,
-                            requests:0,
+                        $project: {
+                            createdAt: 0,
+                            requests: 0,
                         }
                     }
                 ],
