@@ -12,7 +12,6 @@ function Group({ element }) {
     const members = element.ownerPop.fullName;
     const time = (element.travelDate);
     const commentNum = element.comments?.length;
-    console.log(commentNum)
     const timeZ = new Date(time)
     const timeInd = timeZ.toLocaleTimeString("en-IN", {
         timeZone: "Asia/Kolkata",
@@ -58,7 +57,7 @@ function Group({ element }) {
                     <div className={mystyle.title}>{title}</div>
                     <div className={mystyle.content}>{content}</div>
                     <div className={mystyle.time}>Time: {timeInd}</div>
-                    <div className={mystyle.comments}>{commentNum} {commentNum == 1? 'comment':'comments'}</div>
+                    <div className={mystyle.comments}>{commentNum?commentNum:"0"} {commentNum == 1? 'comment':'comments'}</div>
                 </div>
                 <div className={mystyle.btnbox}>
                     <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>

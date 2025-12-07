@@ -69,8 +69,8 @@ function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='
             toast.error('please enter Location!', {
                 style: {
                     borderRadius: '10px',
-                    background: "#303133",
-                    color: '#fff',
+                    background: 'var(--toast-bg)',
+                    color: 'var(--toast-color)',
                     padding: "  6px 40px"
                 },
             }
@@ -81,8 +81,8 @@ function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='
             toast.error('please enter the Transport!', {
                 style: {
                     borderRadius: '10px',
-                    background: "#303133",
-                    color: '#fff',
+                    background: 'var(--toast-bg)',
+                    color: 'var(--toast-color)',
                     padding: "  6px 40px",
                 },
             }
@@ -93,8 +93,8 @@ function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='
             toast.error('please enter the Date!', {
                 style: {
                     borderRadius: '10px',
-                    background: "#303133",
-                    color: '#fff',
+                    background: 'var(--toast-bg)',
+                    color: 'var(--toast-color)',
                     padding: "  6px 40px"
                 },
             }
@@ -105,8 +105,8 @@ function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='
             toast.error('please enter the Month!', {
                 style: {
                     borderRadius: '10px',
-                    background: "#303133",
-                    color: '#fff',
+                    background: 'var(--toast-bg)',
+                    color: 'var(--toast-color)',
                     padding: "  6px 40px"
                 },
             }
@@ -117,8 +117,8 @@ function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='
             toast.error('please enter the Year!', {
                 style: {
                     borderRadius: '10px',
-                    background: "#303133",
-                    color: '#fff',
+                    background: 'var(--toast-bg)',
+                    color: 'var(--toast-color)',
                     padding: "  6px 40px"
                 },
             }
