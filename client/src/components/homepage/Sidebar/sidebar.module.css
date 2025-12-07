@@ -114,6 +114,7 @@
 .footerList {
     margin-top: auto;
     border-top: 1px solid var(--clr-border);
+    flex-shrink: 0;
 
     button {
         width: 100%;

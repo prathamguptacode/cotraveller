@@ -44,31 +44,38 @@ const Chats = () => {
     useEffect(() => {
         if (loading) return
         socket.emit('JOIN_ROOM', { roomId: groupId, userId: user._id }, (res) => {
-            if (!res.success) console.error('Error connecting to chatRoon')
-            else console.log('Connected to ChatRoom')
+            if (!res.success) console.error('Error connecting to chatRoom')
+            else console.log('Connected to ChatRoom:', res.message, res.id)
         })
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loading])
+
+    useEffect(() => {
         socket.on('RECEIVE_MESSAGE_ON_CLIENT', (data) => {
             setMessages(prev => [...prev, data.message])
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loading])
+    }, [socket])
+
 
 
     const sendMessage = () => {
         socket.emit('SEND_MESSAGE_TO_SERVER', { text, roomId: groupId, userId: user._id }, (res) => {
             if (!res.success) return console.error(res.message)
             setMessages(prev => [...prev, res.message])
-    
+
         })
         setText('')
 
     }
 
 
+    const handleLogout = async () => {
+        const { status } = await callAuthApi('post', '/auth/logout')
 
-
-
-
+        if (status == 204) window.location.href = '/'
+        else console.error('SOMETHING WENT WRONG')
+    }
 
     return (
         <>
@@ -100,7 +107,7 @@ const Chats = () => {
                             <HelpCircle size={26} />
                             <ToolTip text={'Help'} />
                         </button>
-                        <button className={styles.listItem}>
+                        <button onClick={handleLogout} className={styles.listItem}>
                             <LogOut size={26} />
                             <ToolTip text={'Logout'} />
                         </button>
@@ -159,11 +166,11 @@ const Chats = () => {
 
 
                         {messages.map(message => {
-                            const isMyMessage = message.author == user._id
+                            const isMyMessage = message.author._id == user._id
                             return (
                                 <div key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
                                     {!isMyMessage && <div className={styles.messageAuthor}>
-                                        Shubham Panjiyara
+                                        {message.author.fullName}
                                     </div>}
                                     <div className={styles.messageDetails}>
                                         <div className={styles.messageText}>

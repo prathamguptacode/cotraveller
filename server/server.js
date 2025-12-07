@@ -25,23 +25,32 @@ const io = new Server(server)
 io.on('connection', (socket) => {
     console.log(`Connected to socket: ${socket.id}, total clients = ${io.engine.clientsCount}`)
 
+    socket.onAny((event, ...args) => {
+        console.log(`Got event ${event}`)
+    })
+    socket.onAnyOutgoing(event => {
+        console.log(`Sent event ${event}`)
+    })
+
     socket.on('JOIN_ROOM', (data, cb) => {
+        socket.join(data.roomId)
         console.log(`User ${data.userId}, has connected to room ${data.roomId} on socket ${socket.id}`)
-        cb({ success: true, message: "LOL" })
+        cb({ success: true, message: data.roomId, id: socket.id })
     })
 
     socket.on('SEND_MESSAGE_TO_SERVER', async (data, cb) => {
         const { roomId, text, userId } = data
+
         try {
-            const message = await Message.create({ author: userId, text, roomId })
-            await Group.updateOne({ _id: roomId }, { $push: { messages: message } })
+            const baseMessage = await Message.create({ author: userId, text, roomId })
+            const message = await baseMessage.populate({ path: 'author', select: 'fullName _id' })
+            await Group.updateOne({ _id: roomId }, { $push: { messages: baseMessage._id } })
 
             cb({ success: true, message })
             socket.to(roomId).emit('RECEIVE_MESSAGE_ON_CLIENT', { message })
-
         } catch (error) {
             console.error(error)
-            cb({ success: false, code: "DB_ERROR", message:'Something went wrong' })
+            cb({ success: false, code: "DB_ERROR", message: 'Something went wrong' })
         }
 
 
