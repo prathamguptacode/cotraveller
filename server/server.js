@@ -25,13 +25,6 @@ const io = new Server(server)
 io.on('connection', (socket) => {
     console.log(`Connected to socket: ${socket.id}, total clients = ${io.engine.clientsCount}`)
 
-    socket.onAny((event, ...args) => {
-        console.log(`Got event ${event}`)
-    })
-    socket.onAnyOutgoing(event => {
-        console.log(`Sent event ${event}`)
-    })
-
     socket.on('JOIN_ROOM', (data, cb) => {
         socket.join(data.roomId)
         console.log(`User ${data.userId}, has connected to room ${data.roomId} on socket ${socket.id}`)
@@ -58,7 +51,6 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`Disconnected socket: ${socket.id}, total clients = ${io.engine.clientsCount}`)
-        console.log(io.engine.clientsCount)
     })
 })
 

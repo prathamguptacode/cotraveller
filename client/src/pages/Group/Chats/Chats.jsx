@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './chats.module.css'
 import { Mail, MessagesSquare, SendHorizontal, Cog, LogOut, HelpCircle, ChevronsLeft, Ellipsis, Smile, CheckCheck } from 'lucide-react'
 import clsx from 'clsx'
@@ -24,6 +24,49 @@ const Chats = () => {
     const [text, setText] = useState('')
     const [messages, setMessages] = useState([])
 
+
+
+
+
+
+
+
+
+
+
+    const messagesRef = useRef()
+    const lastMessageRef = useRef()
+    const [lastMessage, setLastMessage] = useState('')
+
+
+    // For initial instant scroll to bottom
+    useEffect(() => {
+        if (!lastMessage) return
+
+        const div = messagesRef.current
+        div.scrollTop = div.scrollHeight
+
+        //Now we add smoothScroll class for further auto-scroll
+        div.style['scroll-behavior'] = 'smooth'
+
+    }, [lastMessage])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     useEffect(() => {
 
         (async () => {
@@ -32,7 +75,8 @@ const Chats = () => {
             if (status === 200) {
                 const { group } = data.data
                 setGroup(group)
-                setMessages(group.messages)
+                setMessages([...group.messages])
+                setLastMessage(group.messages.pop())
                 setLoading(false)
             }
             else console.error(data.message)
@@ -54,6 +98,7 @@ const Chats = () => {
     useEffect(() => {
         socket.on('RECEIVE_MESSAGE_ON_CLIENT', (data) => {
             setMessages(prev => [...prev, data.message])
+            setLastMessage(data.message)
         })
     }, [socket])
 
@@ -63,6 +108,7 @@ const Chats = () => {
         socket.emit('SEND_MESSAGE_TO_SERVER', { text, roomId: groupId, userId: user._id }, (res) => {
             if (!res.success) return console.error(res.message)
             setMessages(prev => [...prev, res.message])
+            setLastMessage(res.message)
 
         })
         setText('')
@@ -161,14 +207,14 @@ const Chats = () => {
 
                     </div>
 
-                    <div className={styles.messages}>
+                    <div ref={messagesRef} className={styles.messages}>
 
 
 
-                        {messages.map(message => {
+                        {messages.map((message, i, arr) => {
                             const isMyMessage = message.author._id == user._id
                             return (
-                                <div key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
+                                <div ref={i === arr.length - 1 ? lastMessageRef : null} key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
                                     {!isMyMessage && <div className={styles.messageAuthor}>
                                         {message.author.fullName}
                                     </div>}
