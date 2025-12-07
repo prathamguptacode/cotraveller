@@ -25,13 +25,14 @@ const Outbox = () => {
         const { status, data } = await callAuthApi('delete', `/user/requests/${requestId}`)
         if (status === 204) setChanged(prev => !prev)
         else console.error(data.message)
+    
     }
 
     return (
         <div className={styles.list}>
             {
                 groups.map(group => {
-                    return (<Link key={group._id} className={styles.listItem}>
+                    return (<Link to={`/moreinfo?q=${group._id}`} key={group._id} className={styles.listItem}>
                         <div className={styles.avatarWrapper} >
                             <img src="apple-light.svg" alt="avatar" />
                         </div>
@@ -40,7 +41,11 @@ const Outbox = () => {
                             <p className={styles.lastMessage}>Members: {group.memberNumber} </p>
                         </div>
                         <div className={styles.choicesWrapper}>
-                            <button onClick={() => deleteOutgoingRequest(group._id)}> <X color='#EE2D3E' /></button>
+                            <button onClickCapture={(e) => {
+                                e.stopPropagation()
+                                e.preventDefault()
+                                deleteOutgoingRequest(group._id)
+                            }}> <X color='#EE2D3E' /></button>
                         </div>
                     </Link>)
                 })

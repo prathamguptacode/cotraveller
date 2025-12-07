@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import Groups from '../../../components/homepage/Sidebar/Groups'
 import Inbox from '../../../components/homepage/Sidebar/Inbox'
 import Outbox from '../../../components/homepage/Sidebar/Outbox'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
 import { useSocket } from '../../../hooks/useSocket'
@@ -24,10 +24,6 @@ const Chats = () => {
     const [text, setText] = useState('')
     const [messages, setMessages] = useState([])
 
-
-    useEffect(() => {
-
-    }, [groupId])
 
 
 
@@ -242,20 +238,26 @@ const Chats = () => {
                 <div className={styles.chatAreaWrapper}>
                     <div className={styles.chatAreaHeader}>
 
-                        <div className={styles.avatarWrapper}>
+                        <Link to={`/moreinfo?q=${groupId}`} className={styles.avatarWrapper}>
                             <img src="/apple-light.svg" alt="avatar" />
-                        </div>
+                        </Link>
 
-                        {/* ###LATER add feature to go view group details by pressing on groupDetails contents */}
+
                         <div className={styles.groupDetails}>
                             <h3>
-                                {group.title}
+                                <Link to={`/moreinfo?q=${groupId}`}>{group.title}</Link>
                             </h3>
-                            <p>{group.members?.map(member => {
-                                return (
-                                    <span key={member._id}>{member.fullName}</span>
-                                )
-                            })}</p>
+
+
+                            <Link className={styles.members} to={`/moreinfo?q=${groupId}`}>
+                                {
+                                    group.members?.map(member => {
+                                        return (
+                                            <span key={member._id}>{member.fullName}</span>
+                                        )
+                                    })}
+                            </Link>
+
                         </div>
 
                         <button className={clsx(styles.groupOptions, styles.listItem)}>
