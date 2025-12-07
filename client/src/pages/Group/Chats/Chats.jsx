@@ -122,7 +122,6 @@ const Chats = () => {
                 const { group } = data.data
                 setGroup(group)
                 setMessages([...group.messages])
-                // setLastMessage(group.messages?.pop())
                 setLoading(false)
             }
             else console.error(data.message)
@@ -168,6 +167,18 @@ const Chats = () => {
         if (status == 204) window.location.href = '/'
         else console.error('SOMETHING WENT WRONG')
     }
+
+    const getFormattedTime = (time) => {
+        const timeZ = new Date(time)
+        return timeZ.toLocaleTimeString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+        })
+    }
+
+
 
     return (
         <>
@@ -261,7 +272,7 @@ const Chats = () => {
                             const isMyMessage = message.author._id == user._id
                             const timeDiff = i > 0 && new Date(arr[i - 1].createdAt).getTime() - new Date(message.createdAt).getTime()
                             const hideName = i > 0 ? (arr[i - 1].author._id == message.author._id && Math.abs(timeDiff) < 60 * 1000) : false
-                
+
 
                             return (
                                 <div ref={i === arr.length - 1 ? lastMessageRef : null} key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
@@ -273,8 +284,7 @@ const Chats = () => {
                                             {message.text}
                                         </div>
                                         <div className={styles.messageTime}>
-                                            5:40 AM
-                                            {/* message.time has the createdAt thingy */}
+                                            {getFormattedTime(message.createdAt)}
                                         </div>
                                         {/* {isMyMessage && <div className={styles.messageSeenState}>
                                             <CheckCheck color='#09eb42ff' size={18} />
