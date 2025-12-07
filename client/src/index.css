@@ -17,8 +17,8 @@ body {
 
     --clr-border: hsl(0, 0%, 70%);
     --clr-bg: hsl(0, 0%, 100%);
-    
-    
+
+
     --clr-font: #202124;
     --in-border: hsla(207, 5%, 33%, 0.9);
     --clr-bg-hover: hsl(225, 4%, 92%);
@@ -32,9 +32,22 @@ body {
     --comment-font: hsl(216, 12%, 32%);
     --secondaryFont: hsl(0, 0%, 99%);
     --opt-hover: hsl(225, 2%, 90%);
-    --toast-bg:hsl(220, 3%, 95%);
-    --toast-color:#202124;
-    --commentSP:hsl(216, 12%, 28%);
+    --toast-bg: hsl(220, 3%, 95%);
+    --toast-color: #202124;
+    --commentSP: hsl(216, 12%, 28%);
+
+
+    --primary-darker: #1A73E7;
+    --secondary-bg-darker: hsl(220, 3%, 95%);
+    --secondary-bg-darkest: hsl(220, 3%, 90%);
+    --clr-non-complementary-font: hsl(216, 3%, 95%);
+    --clr-complementary-bg-400: hsl(216, 3%, 15%);
+    --clr-non-complementary-bg-800: hsl(0, 0%, 90%);
+    --sidebar-bg: hsl(0, 6%, 95%);
+    --sidebar-bg-hover: hsl(206, 6%, 75%);
+    --sidebar-anchor-active: hsl(214, 81%, 50%);
+    --sidebar-button-hover: hsl(225, 4%, 20%);
+
 }
 
 :root.dark {
@@ -62,18 +75,23 @@ body {
     --opt-hover: #5E5F62;
 
     --toast-bg: #303133;
-    --toast-color:hsl(0, 0%, 100%);
+    --toast-color: hsl(0, 0%, 100%);
 
-    --commentSP:hsl(216, 12%, 92%);
+    --commentSP: hsl(216, 12%, 92%);
 
     /* pratham did not fix these colors */
     /* auth page color */
-    --primary-darker:#186ef8;
+    --primary-darker: #186ef8;
     --secondary-bg-lighter: hsl(220, 3%, 75%);
+    --expansion-bg: hsl(220, 3%, 9%);
     --secondary-bg-darker: hsl(220, 3%, 9%);
     --secondary-bg-darkest: hsl(220, 3%, 6%);
-        /*homepage sidebar */
-        --sidebar-bg:#303133;
+    --clr-non-complementary-font: #202124;
+    --clr-non-complementary-bg-800: hsl(0, 0%, 10%);
+    --clr-complementary-bg-400: hsl(216, 3%, 85%);
+
+    /*homepage sidebar */
+    --sidebar-bg: #303133;
     --sidebar-bg-hover: #3C4043;
     --sidebar-anchor-active: #609af6;
     --sidebar-button-hover: hsl(225, 4%, 20%);

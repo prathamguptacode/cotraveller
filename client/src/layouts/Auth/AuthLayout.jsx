@@ -1,10 +1,11 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import styles from './auth.module.css'
 import Footer from '../../components/Footer/Footer'
 import GoogleButton from '../../components/OAuthButtons/GoogleButton'
 import GithubButton from '../../components/OAuthButtons/GithubButton'
 import AppleButton from '../../components/OAuthButtons/AppleButton'
+import { MoveLeft } from 'lucide-react'
 const AuthLayout = () => {
     return (
         <>
@@ -13,7 +14,9 @@ const AuthLayout = () => {
 
                     <div className={styles.formWrapper}>
 
-
+                        <Link to={'/'} className={styles.backBtnWrapper}>
+                            <MoveLeft />
+                        </Link >
                         <div className={styles.formInnerWrapper}>
                             <div className={styles.oAuthButtons}>
                                 <GoogleButton />
@@ -33,7 +36,6 @@ const AuthLayout = () => {
 
 
                 </div>
-                <Footer />
             </div>
         </>
 

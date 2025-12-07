@@ -33,7 +33,7 @@
     padding: .5rem;
 
     &:hover {
-        background-color: var(--secondary-bg);
+        background-color: var(--clr-bg-hover);
     }
 }
 
@@ -218,11 +218,11 @@
     .date,
     .month,
     .year {
-        padding: 16px 40px ;
+        padding: 16px 40px;
     }
 
     .location,
-    .mode{
+    .mode {
         padding: 16px 44px;
     }
 }

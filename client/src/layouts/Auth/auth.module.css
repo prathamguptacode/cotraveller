@@ -44,10 +44,20 @@ h1 {
     text-align: center;
 }
 
-.themeBtnWrapper {
+.backBtnWrapper {
     position: absolute;
     left: 1rem;
     top: 1rem;
+    border-radius: 10px;
+    padding: .5rem;
+
+    &:hover {
+        background-color: var(--clr-bg-hover);
+    }
+
+    &:active {
+        scale: .9;
+    }
 }
 
 .oAuthButtons {
