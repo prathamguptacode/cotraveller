@@ -206,3 +206,23 @@
     padding: 0 40px;
     background-color: rebeccapurple;
 }
+
+
+@media (width < 1000px) {
+    .searchbox {
+        max-width: 900px;
+    }
+
+    .location,
+    .mode,
+    .date,
+    .month,
+    .year {
+        padding: 16px 40px ;
+    }
+
+    .location,
+    .mode{
+        padding: 16px 44px;
+    }
+}

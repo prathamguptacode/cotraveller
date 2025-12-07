@@ -3,6 +3,8 @@ import xss from 'xss'
 import moment from "moment-timezone";
 import User from "../models/User.js";
 import mongoose from "mongoose";
+import nodemailer from 'nodemailer'
+import { accecptedNotification, sendRequestNotification } from "../services/nodemailer.js";
 
 
 export async function addGroup(req, res) {
@@ -75,7 +77,7 @@ export async function viewGroupByFilter(req, res) {
                 mode: mode,
                 intialLocation: intialLocation,
                 travelDate: { $gte: utcLowerTime, $lte: utcUpperTime },
-                
+
                 //if membernumber is reached
                 $expr: {
                     $lt: [
@@ -118,12 +120,16 @@ export async function viewGroupByFilter(req, res) {
 export const addRequest = async (req, res) => {
     const user = req.user
     const userID = user._id
+    if (!userID) {
+        return res.fail(400, "INPUT_ERROR", "userID not found")
+    }
     const groupID = xss(req.body?.groupID)
     if (!groupID) {
         return res.fail(400, "INPUT_ERROR", "groupID not found")
     }
     const tempUser = await User.findById(userID)
-    const tempGroup = await groupSchema.findById(groupID)
+    const Populatedgroup = await groupSchema.where('_id').equals(groupID).populate({ path: 'member', select: 'fullName email' })
+    const tempGroup = Populatedgroup[0]
     if (!tempUser) {
         return res.fail(400, "INPUT_ERROR", "No such user")
     }
@@ -134,12 +140,18 @@ export const addRequest = async (req, res) => {
     if (requestArr.includes(userID)) {
         return res.fail(400, "INPUT_ERROR", "user has already send a request")
     }
-    const owner = tempGroup.owner
-    if (owner.equals(userID)) {
-        return res.fail(400, "INPUT_ERROR", "owner cannot send the request")
+    const member = tempGroup.member
+    const memberId = member.map((e) => {
+        return e._id.toString()
+    })
+    if (memberId.includes(userID.toString())) {
+        return res.fail(400, "INPUT_ERROR", "member cannot send the request")
     }
     const data = await groupSchema.updateOne({ _id: groupID }, { $push: { requests: userID } })
     await User.updateOne({ _id: userID }, { $push: { requests: groupID } })
+    member.forEach((e) => {
+        sendRequestNotification(e.email, tempUser.fullName, tempGroup.title)
+    })
     res.success(201, "REQUEST_CREATED", data)
 }
 
@@ -158,47 +170,51 @@ export const viewRequest = async (req, res) => {
 }
 
 //adding to db requests acctually
-export const addDBrequests = async (req, res) => {
-    const userID = xss(req.body?.userID)
-    if (!userID) {
-        return res.fail(400, "INPUT_ERROR", "userID not found")
-    }
-    const tempUser = await User.findById(userID)
-    if (!tempUser) {
-        return res.fail(400, "INPUT_ERROR", "No such user")
-    }
-    const requestID = xss(req.body?.requestID)
-    if (!requestID) {
-        return res.fail(400, "INPUT_ERROR", "requestID not found")
-    }
-    const requserUser = await User.findById(requestID)
-    if (!requserUser) {
-        return res.fail(400, "INPUT_ERROR", "No such user")
-    }
-    const groupID = xss(req.body?.groupID)
-    if (!groupID) {
-        return res.fail(400, "INPUT_ERROR", "groupID not found")
-    }
-    const tempGroup = await groupSchema.findById(groupID)
-    if (!tempGroup) {
-        return res.fail(400, "INPUT_ERROR", "No such group")
-    }
-    const tempmember = tempGroup.member
-    const temprequest = tempGroup.requests
-    if (!tempmember.includes(userID)) {
-        return res.fail(400, "INPUT_ERROR", "You do not have permission")
-    }
-    if (!temprequest.includes(requestID)) {
-        return res.fail(400, "INPUT_ERROR", "userReq do not have permission")
-    }
+// export const addDBrequests = async (req, res) => {
+//     const userID = xss(req.body?.userID)
+//     if (!userID) {
+//         return res.fail(400, "INPUT_ERROR", "userID not found")
+//     }
+//     const tempUser = await User.findById(userID)
+//     if (!tempUser) {
+//         return res.fail(400, "INPUT_ERROR", "No such user")
+//     }
+//     const requestID = xss(req.body?.requestID)
+//     if (!requestID) {
+//         return res.fail(400, "INPUT_ERROR", "requestID not found")
+//     }
+//     const requserUser = await User.findById(requestID)
+//     if (!requserUser) {
+//         return res.fail(400, "INPUT_ERROR", "No such user")
+//     }
+//     const groupID = xss(req.body?.groupID)
+//     if (!groupID) {
+//         return res.fail(400, "INPUT_ERROR", "groupID not found")
+//     }
+//     const tempGroup = await groupSchema.findById(groupID)
+//     if (!tempGroup) {
+//         return res.fail(400, "INPUT_ERROR", "No such group")
+//     }
+//     const tempmember = tempGroup.member
+//     const temprequest = tempGroup.requests
+//     if (!tempmember.includes(userID)) {
+//         return res.fail(400, "INPUT_ERROR", "You do not have permission")
+//     }
+//     if (!temprequest.includes(requestID)) {
+//         return res.fail(400, "INPUT_ERROR", "userReq do not have permission")
+//     }
 
-    const data = await groupSchema.updateOne({ _id: groupID }, { $pull: { requests: requestID }, $push: { dbrequests: requestID } })
-    await User.updateOne({ _id: requestID }, { $push: { dbrequests: groupID }, $pull: { requests: groupID } })
-    res.success(200, data)
-}
+//     const data = await groupSchema.updateOne({ _id: groupID }, { $pull: { requests: requestID }, $push: { dbrequests: requestID } })
+//     await User.updateOne({ _id: requestID }, { $push: { dbrequests: groupID }, $pull: { requests: groupID } })
+//     res.success(200, data)
+// }
 
 export const addMember = async (req, res) => {
+    const ownerMember = req.user?._id;
     const userID = xss(req.body?.userID)
+    if (!ownerMember) {
+        return res.fail(400, "INPUT_ERROR", "member id not found")
+    }
     if (!userID) {
         return res.fail(400, "INPUT_ERROR", "userID not found")
     }
@@ -214,15 +230,19 @@ export const addMember = async (req, res) => {
     if (!tempGroup) {
         return res.fail(400, "INPUT_ERROR", "No such group")
     }
-    if (!(tempGroup.dbrequests).includes(userID)) {
+    if (!tempGroup.member.includes(ownerMember)) {
+        return res.fail(404, "NOT ALLOWED")
+    }
+    if (tempGroup.member.includes(userID)) {
         return res.fail(403, "NOT_PERMITTED");
     }
 
     const data = await groupSchema.updateOne(
         { _id: groupID },
-        { $push: { member: userID }, $pull: { dbrequests: userID } }
+        { $push: { member: userID }, $pull: { requests: userID } }
     );
-    await User.updateOne({ _id: userID }, { $push: { memberGroup: groupID }, $pull: { dbrequests: groupID } })
+    await User.updateOne({ _id: userID }, { $push: { memberGroup: groupID }, $pull: { requests: groupID } })
+    accecptedNotification(tempUser.email, tempUser.fullName, tempGroup.title)
     res.success(201, data)
 }
 

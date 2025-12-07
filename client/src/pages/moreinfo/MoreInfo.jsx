@@ -42,6 +42,9 @@ function MoreInfo() {
             const timeZ = new Date(val.travelDate)
             const intime = timeZ.toLocaleTimeString("en-IN", {
                 timeZone: "Asia/Kolkata",
+                day: "2-digit",
+                year: "numeric",
+                month: "short",
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: true
@@ -142,8 +145,11 @@ function MoreInfo() {
                                             {val.title}
                                         </div>
                                         <div className={mystyle.content}>{val.content}</div>
-                                        <div className={mystyle.time}>Time: {time}</div>
+                                        <div className={mystyle.detail}>
+                                        <div className={mystyle.time}>Date & Time: {time}</div>
+                                        <div className={mystyle.transport}>Transport: {val.mode}</div>
                                         <div className={mystyle.college}>College: {val.intialLocation}</div>
+                                        </div>
                                     </div>
                                     <div className={mystyle.memberbx}>
                                         <div className={mystyle.memtitle}>Members</div>
@@ -175,22 +181,22 @@ function MoreInfo() {
                                 </div>
                             </div>
                             {
-                                comment.length == 0? <div className={mystyle.defComment}>
+                                comment.length == 0 ? <div className={mystyle.defComment}>
                                     <FaHeartCrack size="22px" />
                                     No comments yet — be the first to share your thoughts!
-                                </div>:
-                                comment.map((e) => {
-                                    return (
-                                        <div className={mystyle.comments}>
-                                            <FaUser size="24px" />
-                                            <div className={mystyle.commentcan}>
-                                                <div className={mystyle.userComment}>{e.author}</div>
-                                                <div className={mystyle.conComment}>{e.comment}</div>
+                                </div> :
+                                    comment.map((e) => {
+                                        return (
+                                            <div className={mystyle.comments}>
+                                                <FaUser size="24px" />
+                                                <div className={mystyle.commentcan}>
+                                                    <div className={mystyle.userComment}>{e.author}</div>
+                                                    <div className={mystyle.conComment}>{e.comment}</div>
+                                                </div>
                                             </div>
-                                        </div>
+                                        )
+                                    }
                                     )
-                                }
-                                )
                             }
                         </div>
                         <Toaster />
