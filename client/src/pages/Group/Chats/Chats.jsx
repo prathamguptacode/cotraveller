@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './chats.module.css'
 import { Mail, MessagesSquare, SendHorizontal, Cog, LogOut, HelpCircle, ChevronsLeft, Ellipsis, Smile, CheckCheck, ChevronDown } from 'lucide-react'
 import clsx from 'clsx'
@@ -9,7 +9,7 @@ import { Link, useParams } from 'react-router-dom'
 import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
 import { useSocket } from '../../../hooks/useSocket'
-
+import { Howl } from 'howler'
 
 
 
@@ -23,6 +23,14 @@ const Chats = () => {
     const socket = useSocket()
     const [text, setText] = useState('')
     const [messages, setMessages] = useState([])
+
+    var ping = new Howl({
+        src: ['/sounds/notify.mp3'],
+        // html5:true,
+        volume: 0.25,
+        preload:true,
+    })
+    
 
 
 
@@ -80,7 +88,10 @@ const Chats = () => {
         //Run for every non-first(i.e. exclude initial render) message
         if (!lastMessage) return
 
-        if (lastMessage.author._id != user._id && !isIntersecting) setUnreadCount(count => count + 1)
+        if (lastMessage.author._id != user._id && !isIntersecting) {
+            setUnreadCount(count => count + 1)
+            ping.play()
+        }
 
         else scrollToBottom()
 

@@ -22,15 +22,15 @@ const Inbox = () => {
 
   }, [changed])
 
-  const acceptIncomingRequest = async (dbrequestId) => {
-    const { status, data } = await callAuthApi('delete', `/user/dbrequests/${dbrequestId}`)
-    if (status === 200) setChanged(prev => !prev)
-    else console.error(data.message)
+  const acceptIncomingRequest = async (groupId, requestId) => {
+    const { status, data } = await callAuthApi('post', `/group/${groupId}/requests/${requestId}`)
+    if (status != 200) console.error(data.message)
+    setChanged(prev => !prev)
   }
-  const deleteIncomingRequest = async (dbrequestId) => {
-    const { status, data } = await callAuthApi('post', `/user/dbrequests/${dbrequestId}`)
-    if (status === 204) setChanged(prev => !prev)
-    else console.error(data.message)
+  const rejectIncomingRequest = async (groupId, requestId) => {
+    const { status, data } = await callAuthApi('delete', `/group/${groupId}/requests/${requestId}`)
+    if (status != 204) console.error(data.message)
+    setChanged(prev => !prev)
   }
 
 
@@ -39,29 +39,34 @@ const Inbox = () => {
       {
         groups.map(group => {
           return (
-            <Link key={group._id} className={styles.listItem}>
+            <Link to={`/moreinfo?q=${group._id}`} key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
                 <img src="apple-light.svg" alt="avatar" />
               </div>
               <div className={styles.detailsWrapper}>
                 <p className={styles.groupName}>{group.title}</p>
-                <p className={styles.lastMessage}>Members: {group.memberNumber} </p>
+                <p className={styles.lastMessage}>{group.requestee.fullName} </p>
               </div>
               <div className={styles.choicesWrapper}>
-                <button onClick={(e) => {
+                <button onClickCapture={(e) => {
                   e.stopPropagation()
-                  acceptIncomingRequest(group._id)
-                }}> <Check color='#2A903B' /></button>
-                <button onClick={(e) => {
+                  e.preventDefault()
+                  acceptIncomingRequest(group._id, group.requestee._id)
+                }}>
+                  <Check color='#2A903B' />
+                </button>
+                <button onClickCapture={(e) => {
                   e.stopPropagation()
-                  deleteIncomingRequest(group._id)
-                }}> <X color='#EE2D3E' /></button>
+                  e.preventDefault()
+                  rejectIncomingRequest(group._id, group.requestee._id,)
+                }}>
+                  <X color='#EE2D3E' />
+                </button>
               </div>
             </Link>
           )
         })
       }
-
 
     </div>
   )

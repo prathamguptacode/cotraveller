@@ -4,7 +4,7 @@ import moment from "moment-timezone";
 import User from "../models/User.js";
 import mongoose from "mongoose";
 import nodemailer from 'nodemailer'
-import { accecptedNotification, sendRequestNotification } from "../services/nodemailer.js";
+import { accecptedNotification, newMemberJoinedNotification, rejectedNotification, sendRequestNotification } from "../services/nodemailer.js";
 
 
 export async function addGroup(req, res) {
@@ -269,7 +269,8 @@ export const leaveGroup = async (req, res) => {
         return res.fail(400, "INPUT_ERROR", "user is not authorizated to do so")
     }
     await groupSchema.updateOne({ _id: groupID }, { $pull: { member: userID } })
-    res.success(204, "USER_DELETED", "user leaft the group")
+    //204 status code cannot have anything with e.g. body or message
+    res.sendStatus(204)
 }
 
 //to get member info i need this route
@@ -280,4 +281,49 @@ export const memberInfo = async (req, res) => {
     // if(!user) res.fail(400,"INVALID_USER")
     // res.success(200,user.fullName)
     res.success(200, "df")
+}
+
+
+
+export const acceptIncomingRequestController = async (req, res) => {
+    const requestId = req.params.requestId
+    const groupId = req.params.groupId
+
+    const group = await groupSchema.findOne({ _id: groupId, requests: requestId }).populate({ path: 'member', select: 'email' }).select('member title')
+    if (!group) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
+
+
+    //Checking if member limit is available
+    if (group.memberNumber === group.member.length) return res.fail(403, 'MEMBER_LIMIT', 'Group already has maximum possible members')
+
+    await groupSchema.updateOne({ _id: groupId }, { $pull: { requests: requestId }, $push: { member: requestId } })
+    const user = await User.findOneAndUpdate({ _id: requestId }, { $pull: { requests: groupId }, $push: { memberGroup: groupId } }, { returnDocument: 'after' })
+
+    //Send notification to all members of the group about acceptance as well as to the user being accepted
+    const previousMemberEmails = group.member.map(obj => obj.email)
+
+    accecptedNotification(user.email, user.fullName, group.title)
+    newMemberJoinedNotification(previousMemberEmails, user.fullName, group.title)
+
+    res.success()
+
+
+}
+
+export const declineIncomingRequestController = async (req, res) => {
+    const requestId = req.params.requestId
+    const groupId = req.params.groupId
+
+    const group = await groupSchema.findOne({ _id: groupId, requests: requestId })
+    if (!group) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
+
+
+    //Updating db for removed request
+    await groupSchema.updateOne({ _id: groupId }, { $pull: { requests: requestId } })
+    const user = await User.findOneAndUpdate({ _id: requestId }, { $pull: { requests: groupId } }, { returnDocument: 'after' })
+
+    //Sending notification to requestee about declining
+    rejectedNotification(user.email, user.fullName, group.title)
+
+    res.sendStatus(204)
 }

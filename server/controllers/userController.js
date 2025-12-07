@@ -61,8 +61,9 @@ export const fetchJoinedGroupsController = async (req, res) => {
                     },
                     {
                         $project: {
-                            author: '$author.username',
+                            author: '$author.fullName',
                             text: 1,
+                            createdAt: 1,
                             _id: 0
                         }
                     },
@@ -76,8 +77,8 @@ export const fetchJoinedGroupsController = async (req, res) => {
         },
         {
             $unwind: {
-                path:'$lastMessage',
-                preserveNullAndEmptyArrays:true
+                path: '$lastMessage',
+                preserveNullAndEmptyArrays: true
             }
         },
         {
@@ -89,6 +90,9 @@ export const fetchJoinedGroupsController = async (req, res) => {
                 messages: 0,
             }
         },
+        {
+            $sort: { 'lastMessage.createdAt': -1 }
+        }
 
 
 
@@ -109,27 +113,66 @@ export const fetchIncomingRequestsController = async (req, res) => {
 
         {
             $project: {
-                dbrequests: 1,
+                _id: 0,
+                memberGroup: 1,
             }
         },
         {
             $lookup: {
                 from: 'groups',
-                let: { dbrequests: '$dbrequests' },
+                let: { ids: '$memberGroup' },
                 pipeline: [
                     {
-                        $match: { $expr: { $in: ['$_id', '$$dbrequests'] } }
+                        $match: { $expr: { $in: ['$_id', '$$ids'] } }
                     },
                     {
                         $project: {
                             title: 1,
-                            memberNumber: 1,
+                            requests: 1,
+                            createdAt: 1,
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            let: { ids: '$requests' },
+                            pipeline: [
+                                {
+                                    $match: { $expr: { $in: ['$_id', '$$ids'] } }
+                                },
+                                {
+                                    $project: {
+                                        fullName: 1,
+                                    }
+                                }
+                            ],
+                            as: 'requestee'
+                        }
+                    },
+                    {
+                        $unwind: '$requestee'
+                    },
+                    {
+                        $sort: { _id: 1, createdAt: -1 }
+                    },
+                    {
+                        $project: {
+                            createdAt: 0,
+                            requests: 0,
                         }
                     }
                 ],
                 as: 'groups'
             }
         },
+        {
+            $project: {
+                groups: 1,
+            }
+        }
+
+
+
 
 
     ])
@@ -186,30 +229,5 @@ export const deleteOutgoingRequestController = async (req, res) => {
 }
 
 
-export const deleteIncomingRequestController = async (req, res) => {
-    const user = req.user
-    const dbrequestId = req.params?.dbrequestId
-    if (!dbrequestId) return res.fail(400, "BAD_REQUEST", "Dbrequest id was missing")
-
-    if (!await User.findOne({ _id: user._id, dbrequests: dbrequestId })) return res.fail(400, "DBREQUEST_NOT_FOUND", "The dbrequest does not exist")
-
-    await User.updateOne({ _id: user._id }, { $pull: { dbrequests: dbrequestId } })
-    await Group.updateOne({ _id: dbrequestId }, { $pull: { dbrequests: user._id } })
-
-    res.sendStatus(204)
-}
-
-export const acceptIncomingRequestController = async (req, res) => {
-    const user = req.user
-    const dbrequestId = req.params?.dbrequestId
-    if (!dbrequestId) return res.fail(400, "BAD_REQUEST", "Dbrequest id was missing")
-
-    if (!await User.findOne({ _id: user._id, dbrequests: dbrequestId })) return res.fail(400, "DBREQUEST_NOT_FOUND", "The dbrequest does not exist")
-
-    await User.updateOne({ _id: user._id }, { $pull: { dbrequests: dbrequestId }, $push: { memberGroup: dbrequestId } })
-    await Group.updateOne({ _id: dbrequestId }, { $pull: { dbrequests: user._id }, $push: { member: user._id }, $inc: { memberNumber: 1 } })
-
-    res.success()
-}
 
 
