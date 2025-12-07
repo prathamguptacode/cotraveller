@@ -20,7 +20,12 @@ import Group from './models/groupSchema.js'
 
 const app = express()
 const server = http.createServer(app)
-const io = new Server(server)
+const io = new Server(server, {
+    cors: {
+        credentials: true,
+        origin: env.CLIENT_URL
+    }
+})
 
 io.on('connection', (socket) => {
     console.log(`Connected to socket: ${socket.id}, total clients = ${io.engine.clientsCount}`)

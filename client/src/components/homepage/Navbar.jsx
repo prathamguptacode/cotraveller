@@ -38,7 +38,7 @@ function Navbar({ pageIsWide }) {
                     <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : currentTab === "Outbox" ? <Outbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} closeSidebar={closeSidebar} />
                 </div>
             }
-            <Link to={'/'}>
+            <Link className={mystyle.homeBtn} to={'/'}>
                 <Birdhouse strokeWidth={1.4} size={26} />
             </Link>
             <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
