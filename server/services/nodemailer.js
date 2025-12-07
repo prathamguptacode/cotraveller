@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import env from '../config/env.js';
+import { CustomError } from '../utils/CustomError.js';
 
 export const sendOtp = async (email, otp) => {
   const transporter = nodemailer.createTransport({
@@ -7,7 +8,7 @@ export const sendOtp = async (email, otp) => {
     auth: { user: env.EMAIL_ID, pass: env.EMAIL_PASS }
   });
   transporter.sendMail({
-    from: `"Cotraveller" <${env.EMAIL_ID}>`,
+    from: `"Cotraveller" ${env.EMAIL_ID}`,
     to: email,
     subject: `OTP:${otp}`,
     text: `Your verificaton code is ${otp}`,
@@ -81,9 +82,9 @@ export function sendRequestNotification(email, requester, groupName) {
     }
   });
   let mailOption = {
-    from: env.EMAIL_ID,
+    from: `"Cotraveller" ${env.EMAIL_ID}`,
     to: email,
-    subject: 'New Join Request for Your Co traveller Group',
+    subject: 'New Join Request for Your Cotraveller Group',
     text,
     html
   };
@@ -93,7 +94,7 @@ export function sendRequestNotification(email, requester, groupName) {
 }
 
 export function accecptedNotification(email, requester, groupName) {
-const html = `
+  const html = `
   <div style="font-family: Arial, sans-serif; background:#f7f9fc; padding:20px;">
     <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
       
@@ -141,7 +142,7 @@ const html = `
     }
   });
   let mailOption = {
-    from: env.EMAIL_ID,
+    from: `"Cotraveller" ${env.EMAIL_ID}`,
     to: email,
     subject: `Your Request to Join ${groupName} Is Approved`,
     text,
@@ -150,4 +151,127 @@ const html = `
   transport.sendMail(mailOption, function (error, value) {
     if (error) console.log(error)
   })
+}
+
+export function newMemberJoinedNotification(emails, newMemberName, groupName) {
+  const html = `
+  <div style="font-family: Arial, sans-serif; background:#f7f9fc; padding:20px;">
+    <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      
+      <h2 style="color:#1E66C8; margin-top:0; text-align:center;">
+        A New Member Joined Your Group 👥
+      </h2>
+
+      <p style="font-size:16px; color:#333;">
+        Hello,
+      </p>
+
+      <p style="font-size:16px; color:#333; line-height:1.5;">
+        Great news! <strong style="color:#1E66C8;">${newMemberName}</strong> has just joined your 
+        <strong style="color:#1E66C8;">${groupName}</strong> group.
+      </p>
+
+      <p style="font-size:16px; color:#333; line-height:1.5;">
+        You can now begin planning your journey together, share tips, chat, and coordinate plans with the new member.
+      </p>
+
+      <div style="text-align:center; margin-top:25px;">
+        <a 
+          href="https://cotraveller.app" 
+          style="padding:12px 22px; background:#1E66C8; color:white; text-decoration:none; border-radius:6px; font-weight:bold;">
+          Open Group
+        </a>
+      </div>
+
+      <p style="font-size:14px; color:#777; margin-top:30px; text-align:center;">
+        Safe travels,<br/>The Cotraveller Team
+      </p>
+
+    </div>
+  </div>
+  `;
+
+  const text = `Great news!\n\n${newMemberName} has joined your "${groupName}" group.\nYou can now chat and plan your trip together.\n\nSafe travels,\nThe Cotraveller Team`;
+
+  const transport = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: env.EMAIL_ID,
+      pass: env.EMAIL_PASS
+    }
+  });
+
+  let mailOption = {
+    from: `"Cotraveller" ${env.EMAIL_ID}`,
+    to: emails,
+    subject: `A New Member Joined ${groupName}`,
+    text,
+    html
+  };
+
+  transport.sendMail(mailOption, function (error, value) {
+    if (error) console.log(error);
+  });
+}
+
+
+export function rejectedNotification(email, requester, groupName) {
+  const html = `
+  <div style="font-family: Arial, sans-serif; background:#f7f9fc; padding:20px;">
+    <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      
+      <h2 style="color:#D64545; margin-top:0; text-align:center;">
+        Your Request Was Declined ❗
+      </h2>
+
+      <p style="font-size:16px; color:#333;">
+        Hi ${requester},
+      </p>
+
+      <p style="font-size:16px; color:#333; line-height:1.5;">
+        Unfortunately, your request to join the 
+        <strong style="color:#1E66C8;">${groupName}</strong> group was not approved.
+      </p>
+
+      <p style="font-size:16px; color:#333; line-height:1.5;">
+        Don't worry — you can always explore other cotravellers or create your own group to start a journey.
+      </p>
+
+      <div style="text-align:center; margin-top:25px;">
+        <a 
+          href="https://cotraveller.app" 
+          style="padding:12px 22px; background:#1E66C8; color:white; text-decoration:none; border-radius:6px; font-weight:bold;">
+          Explore Groups
+        </a>
+      </div>
+
+      <p style="font-size:14px; color:#777; margin-top:30px; text-align:center;">
+        Safe travels,<br/>The Cotraveller Team
+      </p>
+
+    </div>
+  </div>
+  `;
+
+  const text = `Hi ${requester},\n\nYour request to join the group "${groupName}" was not approved.\nYou can explore other groups or create your own on Cotraveller.\n\nSafe travels,\nThe Cotraveller Team`;
+
+  const transport = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: env.EMAIL_ID,
+      pass: env.EMAIL_PASS
+    }
+  });
+
+  let mailOption = {
+    from: `"Cotraveller" ${env.EMAIL_ID}`,
+    to: email,
+    subject: `Your Request to Join ${groupName} Was Declined`,
+    text,
+    html
+  };
+
+  transport.sendMail(mailOption, function (error, value) {
+    if (error) console.log(error, value)
+  });
 }

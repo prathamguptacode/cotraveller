@@ -22,11 +22,15 @@ const Inbox = () => {
 
   }, [changed])
 
-  const acceptIncomingRequest = async (requesteeId) => {
-    
+  const acceptIncomingRequest = async (groupId, requestId) => {
+    const { status, data } = await callAuthApi('post', `/group/${groupId}/requests/${requestId}`)
+    if (status != 200) console.error(data.message)
+    setChanged(prev => !prev)
   }
-  const rejectIncomingRequest = async (requesteeId) => {
-
+  const rejectIncomingRequest = async (groupId, requestId) => {
+    const { status, data } = await callAuthApi('delete', `/group/${groupId}/requests/${requestId}`)
+    if (status != 204) console.error(data.message)
+    setChanged(prev => !prev)
   }
 
 
@@ -47,19 +51,22 @@ const Inbox = () => {
                 <button onClickCapture={(e) => {
                   e.stopPropagation()
                   e.preventDefault()
-                  acceptIncomingRequest(group.requestee._id)
-                }}> <Check color='#2A903B' /></button>
+                  acceptIncomingRequest(group._id, group.requestee._id)
+                }}>
+                  <Check color='#2A903B' />
+                </button>
                 <button onClickCapture={(e) => {
                   e.stopPropagation()
                   e.preventDefault()
-                  rejectIncomingRequest(group.requestee._id)
-                }}> <X color='#EE2D3E' /></button>
+                  rejectIncomingRequest(group._id, group.requestee._id,)
+                }}>
+                  <X color='#EE2D3E' />
+                </button>
               </div>
             </Link>
           )
         })
       }
-
 
     </div>
   )
