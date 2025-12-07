@@ -62,6 +62,15 @@ function MoreInfo() {
         if (status == 201) setHasRequested(true)
         else {
             setHasRequested(false)
+            if (data.message == 'member cannot send the request') {
+                return toast.error('you are a member of this group', {
+                    style: {
+                        borderRadius: '10px',
+                        background: 'var(--toast-bg)',
+                        color: 'var(--toast-color)',
+                    }
+                })
+            }
             console.error(data.message)
         }
     }

@@ -5,6 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 import clsx from 'clsx'
 import { data, useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 function Group({ element }) {
     const title = element.title;
@@ -19,27 +20,36 @@ function Group({ element }) {
         minute: "2-digit",
         hour12: true
     })
-    const id=element._id;
+    const id = element._id;
 
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
     const { user } = useAuth()
     const [hasRequested, setHasRequested] = useState(element?.requests?.includes(user?._id))
 
-    
+
     const sendRequest = async () => {
-        if (!user){
+        if (!user) {
             return navigate('/login')
         }
         const { status, data } = await callAuthApi('post', '/group/addRequest', { groupID: element._id })
         if (status == 201) setHasRequested(true)
         else {
             setHasRequested(false)
-            console.error(data.message)
+            if (data.message == 'member cannot send the request') {
+                return toast.error('you are a member of this group', {
+                    style: {
+                        borderRadius: '10px',
+                        background: 'var(--toast-bg)',
+                        color: 'var(--toast-color)',
+                    }
+                })
+            }
+            console.log(data.message)
         }
     }
 
-    function nav(){
+    function nav() {
         navigate(`/moreinfo?q=${id}`)
     }
 
@@ -57,7 +67,7 @@ function Group({ element }) {
                     <div className={mystyle.title}>{title}</div>
                     <div className={mystyle.content}>{content}</div>
                     <div className={mystyle.time}>Time: {timeInd}</div>
-                    <div className={mystyle.comments}>{commentNum?commentNum:"0"} {commentNum == 1? 'comment':'comments'}</div>
+                    <div className={mystyle.comments}>{commentNum ? commentNum : "0"} {commentNum == 1 ? 'comment' : 'comments'}</div>
                 </div>
                 <div className={mystyle.btnbox}>
                     <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
@@ -65,6 +75,7 @@ function Group({ element }) {
                 </div>
             </div>
             <div className={mystyle.line}></div>
+            <Toaster />
         </div>
     )
 }
