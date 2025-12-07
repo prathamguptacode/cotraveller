@@ -76,8 +76,8 @@ export const fetchJoinedGroupsController = async (req, res) => {
         },
         {
             $unwind: {
-                path:'$lastMessage',
-                preserveNullAndEmptyArrays:true
+                path: '$lastMessage',
+                preserveNullAndEmptyArrays: true
             }
         },
         {
@@ -109,27 +109,66 @@ export const fetchIncomingRequestsController = async (req, res) => {
 
         {
             $project: {
-                dbrequests: 1,
+                _id: 0,
+                memberGroup: 1,
             }
         },
         {
             $lookup: {
                 from: 'groups',
-                let: { dbrequests: '$dbrequests' },
+                let: { ids: '$memberGroup' },
                 pipeline: [
                     {
-                        $match: { $expr: { $in: ['$_id', '$$dbrequests'] } }
+                        $match: { $expr: { $in: ['$_id', '$$ids'] } }
                     },
                     {
                         $project: {
                             title: 1,
-                            memberNumber: 1,
+                            requests: 1,
+                            createdAt: 1,
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            let: { ids: '$requests' },
+                            pipeline: [
+                                {
+                                    $match: { $expr: { $in: ['$_id', '$$ids'] } }
+                                },
+                                {
+                                    $project: {
+                                        fullName: 1,
+                                    }
+                                }
+                            ],
+                            as: 'requestee'
+                        }
+                    },
+                    {
+                        $unwind: '$requestee'
+                    },
+                    {
+                        $sort: { _id: 1, createdAt: -1 }
+                    },
+                    {
+                        $project:{
+                            createdAt:0,
+                            requests:0,
                         }
                     }
                 ],
                 as: 'groups'
             }
         },
+        {
+            $project: {
+                groups: 1,
+            }
+        }
+
+
+
 
 
     ])

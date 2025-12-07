@@ -22,15 +22,11 @@ const Inbox = () => {
 
   }, [changed])
 
-  const acceptIncomingRequest = async (dbrequestId) => {
-    const { status, data } = await callAuthApi('delete', `/user/dbrequests/${dbrequestId}`)
-    if (status === 200) setChanged(prev => !prev)
-    else console.error(data.message)
+  const acceptIncomingRequest = async (requesteeId) => {
+    
   }
-  const deleteIncomingRequest = async (dbrequestId) => {
-    const { status, data } = await callAuthApi('post', `/user/dbrequests/${dbrequestId}`)
-    if (status === 204) setChanged(prev => !prev)
-    else console.error(data.message)
+  const rejectIncomingRequest = async (requesteeId) => {
+
   }
 
 
@@ -39,22 +35,24 @@ const Inbox = () => {
       {
         groups.map(group => {
           return (
-            <Link key={group._id} className={styles.listItem}>
+            <Link to={`/moreinfo?q=${group._id}`} key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
                 <img src="apple-light.svg" alt="avatar" />
               </div>
               <div className={styles.detailsWrapper}>
                 <p className={styles.groupName}>{group.title}</p>
-                <p className={styles.lastMessage}>Members: {group.memberNumber} </p>
+                <p className={styles.lastMessage}>{group.requestee.fullName} </p>
               </div>
               <div className={styles.choicesWrapper}>
-                <button onClick={(e) => {
+                <button onClickCapture={(e) => {
                   e.stopPropagation()
-                  acceptIncomingRequest(group._id)
+                  e.preventDefault()
+                  acceptIncomingRequest(group.requestee._id)
                 }}> <Check color='#2A903B' /></button>
-                <button onClick={(e) => {
+                <button onClickCapture={(e) => {
                   e.stopPropagation()
-                  deleteIncomingRequest(group._id)
+                  e.preventDefault()
+                  rejectIncomingRequest(group.requestee._id)
                 }}> <X color='#EE2D3E' /></button>
               </div>
             </Link>

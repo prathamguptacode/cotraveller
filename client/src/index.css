@@ -46,7 +46,7 @@ body {
     --sidebar-bg: hsl(0, 6%, 95%);
     --sidebar-bg-hover: hsl(206, 6%, 75%);
     --sidebar-anchor-active: hsl(214, 81%, 50%);
-    --sidebar-button-hover: hsl(225, 4%, 20%);
+    --sidebar-button-hover: hsl(225, 4%, 60%);
 
 }
 
