@@ -6,6 +6,7 @@ import GoogleButton from '../../components/OAuthButtons/GoogleButton'
 import GithubButton from '../../components/OAuthButtons/GithubButton'
 import AppleButton from '../../components/OAuthButtons/AppleButton'
 import { MoveLeft } from 'lucide-react'
+import { IoMdArrowRoundBack } from "react-icons/io";
 const AuthLayout = () => {
     return (
         <>
@@ -15,7 +16,8 @@ const AuthLayout = () => {
                     <div className={styles.formWrapper}>
 
                         <Link to={'/'} className={styles.backBtnWrapper}>
-                            <MoveLeft />
+                            {/* <MoveLeft /> */}
+                            {/* <IoMdArrowRoundBack size={26} /> */}
                         </Link >
                         <div className={styles.formInnerWrapper}>
                             <div className={styles.oAuthButtons}>
