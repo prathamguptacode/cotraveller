@@ -5,17 +5,18 @@ import { Cog, Info, LogOut } from 'lucide-react'
 import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
 
+
 const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }) => {
 
     const { user } = useAuth()
 
     const handleLogout = async () => {
-
         const { status } = await callAuthApi('post', '/auth/logout')
 
         if (status == 204) window.location.href = '/'
         else console.error('SOMETHING WENT WRONG')
     }
+
 
 
 

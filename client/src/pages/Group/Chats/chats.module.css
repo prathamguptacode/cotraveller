@@ -203,6 +203,8 @@
     display: flex;
     flex-direction: column;
     gap: .15rem;
+
+    max-width: 95%;
 }
 
 .myMessage {
@@ -214,7 +216,8 @@
     }
 
     .messageSeenState {
-        display: block;
+        display: flex;
+
     }
 }
 
@@ -227,9 +230,11 @@
     display: flex;
     gap: .4rem;
 
+
+
     >* {
         display: flex;
-        align-items: flex-end;
+        align-items: end;
     }
 
 
@@ -237,15 +242,17 @@
 
 .messageText {
     margin-right: .5rem;
+    text-align: justify;
 }
 
 .messageTime {
+    flex-shrink: 0;
     font-size: .8em;
-
     color: var(--secondary-bg-lighter);
 }
 
 .messageSeenState {
+    flex-shrink: 0;
     display: none;
 }
 
@@ -291,4 +298,67 @@
             filter: brightness(2);
         }
     }
+}
+
+.scrollBtn {
+    position: absolute;
+    right: 15px;
+    bottom: 100%;
+    border-radius: 50%;
+    width: 35px;
+    aspect-ratio: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: hsl(from var(--secondary-bg-darkest) h s l / .9);
+    backdrop-filter: blur(15px);
+    transition: all .15s linear;
+
+    pointer-events: none;
+    opacity: 0;
+
+
+    &:hover {
+        background-color: hsl(from var(--secondary-bg) h s l);
+
+        .unreadCounter {
+            background-color: hsl(from #055a24 h s 28%);
+        }
+    }
+
+    &:active {
+        transition: none;
+        scale: .9;
+    }
+
+
+}
+
+.showScrollBtn {
+    transition: bottom .05s linear, opacity .05s linear, pointer-events .05s linear;
+    bottom: 120%;
+    pointer-events: all;
+    opacity: 1;
+}
+
+.unreadCounter {
+    position: absolute;
+    top: -25%;
+    right: 0;
+    z-index: 2;
+
+    border-radius: 50%;
+    width: 50%;
+    height: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #055a24;
+    transition: all .15s linear;
+
+
 }

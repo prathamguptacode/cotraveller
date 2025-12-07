@@ -99,7 +99,7 @@ export const fetchGroupChatController = async (req, res) => {
                     },
                     {
                         $project: {
-                            author: '$author._id',
+                            author:1,
                             text:1,
                             createdAt:1,
                         }

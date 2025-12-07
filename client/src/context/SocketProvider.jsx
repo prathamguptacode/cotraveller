@@ -4,7 +4,7 @@ import { io } from "socket.io-client"
 import { useState } from 'react'
 
 const SocketProvider = ({ children }) => {
-    const [socket, setSocket] = useState(io.connect())
+    const [socket, setSocket] = useState(io.connect(import.meta.env.VITE_API_BASE_URL))
 
     useEffect(() => {
         return () => {

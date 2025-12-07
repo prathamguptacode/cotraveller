@@ -6,7 +6,7 @@
     padding: 8px 16px;
 
     height: 65px;
-    
+
     position: fixed;
     z-index: 5;
     left: 0;
@@ -17,7 +17,7 @@
 
 .hamburger {
     flex-shrink: 0;
-    border-radius: 24px;
+    border-radius: 10px;
     cursor: pointer;
     padding: 12px;
 
@@ -26,6 +26,15 @@
 
 .hamburger:hover {
     background-color: var(--clr-bg-hover);
+}
+
+.homeBtn {
+    border-radius: 10px;
+    padding: .5rem;
+
+    &:hover {
+        background-color: var(--secondary-bg);
+    }
 }
 
 .logo {
