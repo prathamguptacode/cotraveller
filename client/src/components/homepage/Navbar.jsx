@@ -8,6 +8,7 @@ import Groups from "./Sidebar/Groups";
 import Inbox from "./Sidebar/Inbox";
 import Outbox from "./Sidebar/Outbox";
 import { Birdhouse, Mail } from "lucide-react";
+import { AiFillHome } from "react-icons/ai";
 
 function Navbar({ pageIsWide }) {
     const [isHidden, setisHidden] = useState(true)
@@ -40,6 +41,7 @@ function Navbar({ pageIsWide }) {
             }
             <Link className={mystyle.homeBtn} to={'/'}>
                 <Birdhouse strokeWidth={1.4} size={26} />
+                {/* <AiFillHome size="24px" /> */}
             </Link>
             <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
 

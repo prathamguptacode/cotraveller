@@ -207,6 +207,10 @@
     background-color: rebeccapurple;
 }
 
+.trustbox{
+    max-width: fit-content;
+    margin: 30px auto;
+}
 
 @media (width < 1000px) {
     .searchbox {
