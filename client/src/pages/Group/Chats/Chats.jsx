@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './chats.module.css'
-import { Mail, MessagesSquare, SendHorizontal, Cog, LogOut, HelpCircle, ChevronsLeft, Ellipsis, Smile, CheckCheck } from 'lucide-react'
+import { Mail, MessagesSquare, SendHorizontal, Cog, LogOut, HelpCircle, ChevronsLeft, Ellipsis, Smile, CheckCheck, ChevronDown } from 'lucide-react'
 import clsx from 'clsx'
 import Groups from '../../../components/homepage/Sidebar/Groups'
 import Inbox from '../../../components/homepage/Sidebar/Inbox'
@@ -25,6 +25,9 @@ const Chats = () => {
     const [messages, setMessages] = useState([])
 
 
+    useEffect(() => {
+
+    }, [groupId])
 
 
 
@@ -37,20 +40,63 @@ const Chats = () => {
     const messagesRef = useRef()
     const lastMessageRef = useRef()
     const [lastMessage, setLastMessage] = useState('')
+    const [isMounted, setIsMounted] = useState(false)
 
 
-    // For initial instant scroll to bottom
+    // // For initial instant scroll to bottom
     useEffect(() => {
-        if (!lastMessage) return
+        if (isMounted || messages.length == 0) return
 
         const div = messagesRef.current
-        div.scrollTop = div.scrollHeight
-
+        scrollToBottom()
         //Now we add smoothScroll class for further auto-scroll
         div.style['scroll-behavior'] = 'smooth'
+        setIsMounted(true)
+    }, [messages])
+
+
+
+    //For further auto-scroll:
+    //Case-1: Last message is in view : Auto scroll 
+    //Case-2: If not in view then: start showing scroll to bottom and :
+    //Case-2a: If message is sent by current user then : auto scroll
+    //Case-2b: If message is sent by any other user just show total count of unread messages on scroll to bottom button
+
+
+    const [unreadCount, setUnreadCount] = useState(0)
+    const [isIntersecting, setIsIntersecting] = useState(true)
+
+    const observer = new IntersectionObserver(entries => {
+        if (!entries[0].isIntersecting) setIsIntersecting(false)
+        else {
+            setIsIntersecting(true)
+            setUnreadCount(0)
+        }
+    }, { threshold: 0 })
+
+    useEffect(() => {
+        if (messages.length == 0) return
+        observer.observe(lastMessageRef.current)
+
+    }, [messages])
+
+    useEffect(() => {
+        //Run for every non-first(i.e. exclude initial render) message
+        if (!lastMessage) return
+
+        if (lastMessage.author._id != user._id && !isIntersecting) setUnreadCount(count => count + 1)
+
+        else scrollToBottom()
+
+
 
     }, [lastMessage])
 
+
+
+    const scrollToBottom = () => {
+        messagesRef.current.scrollTop = messagesRef.current.scrollHeight
+    }
 
 
 
@@ -76,7 +122,7 @@ const Chats = () => {
                 const { group } = data.data
                 setGroup(group)
                 setMessages([...group.messages])
-                setLastMessage(group.messages.pop())
+                // setLastMessage(group.messages?.pop())
                 setLoading(false)
             }
             else console.error(data.message)
@@ -182,7 +228,7 @@ const Chats = () => {
 
 
 
-                {!loading && <div className={styles.chatAreaWrapper}>
+                <div className={styles.chatAreaWrapper}>
                     <div className={styles.chatAreaHeader}>
 
                         <div className={styles.avatarWrapper}>
@@ -194,7 +240,7 @@ const Chats = () => {
                             <h3>
                                 {group.title}
                             </h3>
-                            <p>{group.members.map(member => {
+                            <p>{group.members?.map(member => {
                                 return (
                                     <span key={member._id}>{member.fullName}</span>
                                 )
@@ -211,11 +257,15 @@ const Chats = () => {
 
 
 
-                        {messages.map((message, i, arr) => {
+                        {messages.length != 0 && messages.map((message, i, arr) => {
                             const isMyMessage = message.author._id == user._id
+                            const timeDiff = i > 0 && new Date(arr[i - 1].createdAt).getTime() - new Date(message.createdAt).getTime()
+                            const hideName = i > 0 ? (arr[i - 1].author._id == message.author._id && Math.abs(timeDiff) < 60 * 1000) : false
+                
+
                             return (
                                 <div ref={i === arr.length - 1 ? lastMessageRef : null} key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
-                                    {!isMyMessage && <div className={styles.messageAuthor}>
+                                    {(!isMyMessage && !hideName) && <div className={styles.messageAuthor}>
                                         {message.author.fullName}
                                     </div>}
                                     <div className={styles.messageDetails}>
@@ -226,9 +276,9 @@ const Chats = () => {
                                             5:40 AM
                                             {/* message.time has the createdAt thingy */}
                                         </div>
-                                        {isMyMessage && <div className={styles.messageSeenState}>
+                                        {/* {isMyMessage && <div className={styles.messageSeenState}>
                                             <CheckCheck color='#09eb42ff' size={18} />
-                                        </div>}
+                                        </div>} */}
                                     </div>
                                 </div>
                             )
@@ -250,9 +300,13 @@ const Chats = () => {
                             </button>
 
                         </div>
+                        <button onClick={scrollToBottom} className={clsx(styles.scrollBtn, !isIntersecting && styles.showScrollBtn)}>
+                            {unreadCount > 0 && <div className={styles.unreadCounter}>{unreadCount}</div>}
+                            <ChevronDown size={26} strokeWidth={1.4} />
+                        </button>
                     </div>
 
-                </div>}
+                </div>
 
 
             </div >

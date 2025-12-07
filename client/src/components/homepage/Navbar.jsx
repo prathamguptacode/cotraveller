@@ -7,7 +7,7 @@ import { useRef, useState } from "react";
 import Groups from "./Sidebar/Groups";
 import Inbox from "./Sidebar/Inbox";
 import Outbox from "./Sidebar/Outbox";
-import { Mail } from "lucide-react";
+import { Birdhouse, Mail } from "lucide-react";
 
 function Navbar({ pageIsWide }) {
     const [isHidden, setisHidden] = useState(true)
@@ -38,8 +38,10 @@ function Navbar({ pageIsWide }) {
                     <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : currentTab === "Outbox" ? <Outbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} closeSidebar={closeSidebar} />
                 </div>
             }
-
-            <div className={mystyle.logo}><Link to='/'>Cotraveller</Link></div>
+            <Link to={'/'}>
+                <Birdhouse strokeWidth={1.4} size={26} />
+            </Link>
+            <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
 
             <div className={mystyle.nobox}></div>
             <div className={mystyle.themebtn}><ThemeButton /></div>
