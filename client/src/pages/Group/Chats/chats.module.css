@@ -141,6 +141,9 @@
     overflow: hidden;
     flex-shrink: 0;
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
     img {
         object-fit: cover;
         width: 100%;
