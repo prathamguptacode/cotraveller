@@ -10,6 +10,7 @@ import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
 import { useSocket } from '../../../hooks/useSocket'
 import { Howl } from 'howler'
+import { FaPeopleGroup } from 'react-icons/fa6'
 
 
 
@@ -28,9 +29,9 @@ const Chats = () => {
         src: ['/sounds/notify.mp3'],
         // html5:true,
         volume: 0.25,
-        preload:true,
+        preload: true,
     })
-    
+
 
 
 
@@ -250,7 +251,7 @@ const Chats = () => {
                     <div className={styles.chatAreaHeader}>
 
                         <Link to={`/moreinfo?q=${groupId}`} className={styles.avatarWrapper}>
-                            <img src="/apple-light.svg" alt="avatar" />
+                            <FaPeopleGroup />
                         </Link>
 
 

@@ -16,6 +16,8 @@ services:
     networks:
       - cotraveller_net
     restart: unless-stopped
+    env_file:
+      - ./server/.env.production
     volumes:
       - ./nginx/client.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
