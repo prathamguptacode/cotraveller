@@ -1,5 +1,5 @@
 import React from 'react'
-import mystyle from './Homepage.module.css'
+import mystyle from './homepage.module.css'
 
 function TrustCan() {
     return (

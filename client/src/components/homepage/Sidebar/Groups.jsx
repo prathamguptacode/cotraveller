@@ -3,6 +3,8 @@ import styles from './sidebar.module.css'
 import { Link } from 'react-router-dom'
 import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
+import { FaPeopleGroup } from "react-icons/fa6";
+
 
 const Groups = () => {
   const { user } = useAuth()
@@ -28,7 +30,7 @@ const Groups = () => {
           return (
             <Link to={`/groups/${group._id}/chats`} key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
-                <img src="/apple-light.svg" alt="avatar" />
+                <FaPeopleGroup />
               </div>
               <div className={styles.detailsWrapper}>
                 <p className={styles.groupName}>{group.title}</p>
