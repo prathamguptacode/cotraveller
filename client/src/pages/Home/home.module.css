@@ -1,4 +1,24 @@
-.wrapper{
-   
+.wrapper {
+    max-width: 1108px;
+    margin: auto;
+}
 
+@media (max-width:1108px) {
+    .wrapper {
+        max-width: 768px;
+    }
+}
+
+@media (max-width:768px) {
+    .wrapper {
+        max-width: 100%;
+    }
+    .bottomWrapper{
+        margin:.5rem ;
+    }
+}
+@media (max-width:640px) {
+    .wrapper{
+        margin: .5rem;
+    }
 }

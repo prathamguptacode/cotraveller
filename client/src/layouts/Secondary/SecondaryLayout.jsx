@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom'
 const SecondaryLayout = () => {
     return (
         <div style={{ marginTop: "65px" }}>
-            <Navbar pageIsWide={true} />
+            <Navbar />
             <Outlet />
         </div>
     )

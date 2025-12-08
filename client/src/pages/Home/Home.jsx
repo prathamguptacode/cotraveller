@@ -11,9 +11,14 @@ const Home = () => {
   return (
     <>
       <Banner />
-      <Searchbox />
-      <DiscoverBox />
-      < LiveGroups />
+      <div className={styles.wrapper}>
+        <Searchbox />
+        <div className={styles.bottomWrapper}>
+          <DiscoverBox />
+          <LiveGroups />
+        </div>
+      </div>
+
     </>
 
 

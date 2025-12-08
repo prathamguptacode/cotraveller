@@ -25,9 +25,11 @@
     animation: l3 0.9s infinite linear;
  
     /* ask someone is this the correct way */
-    position: absolute;
+    /* Pretty sure not lol!, commenting that fixed issue */
+    /* position: absolute;
     top: 50vh;
-    left: 48vw;
+    left: 48vw; */
+    
 }
 
 @keyframes l3 {
