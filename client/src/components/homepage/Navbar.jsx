@@ -3,21 +3,29 @@ import mystyle from './homepage.module.css'
 import ThemeButton from '../Buttons/ThemeButton';
 import Sidebar from './Sidebar/Sidebar';
 import { Link } from 'react-router-dom';
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Groups from "./Sidebar/Groups";
 import Inbox from "./Sidebar/Inbox";
 import Outbox from "./Sidebar/Outbox";
 import { Birdhouse, Mail } from "lucide-react";
 import { AiFillHome } from "react-icons/ai";
+import { useAuth } from "../../hooks/useAuth";
 
 function Navbar({ pageIsWide }) {
     const [isHidden, setisHidden] = useState(true)
+    const [logged, setLogged] = useState(false)
     const menuRef = useRef()
     const inboxRef = useRef()
     const closeSidebar = () => {
         setisHidden(true)
     }
     const [currentTab, setCurrentTab] = useState('')
+    const { user } = useAuth()
+    useEffect(() => {
+        if (user) {
+            return setLogged(true)
+        }
+    }, [])
 
     // $$$please include profile picture feature
 
@@ -54,8 +62,12 @@ function Navbar({ pageIsWide }) {
                 if (menuRef.current.contains(e.relatedTarget)) return
                 setisHidden(true)
             }} className={mystyle.mail}><Mail strokeWidth={1.4} size={26} /> </button>}
-            <Link to={'/signup'} className={mystyle.navbtn}>Sign up</Link>
-            <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
+            {
+                logged ? null : <Link to={'/signup'} className={mystyle.navbtn}>Sign up</Link>
+            }
+            {
+                logged ? null : <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
+            }
             <Link to={'/creategroup'} className={mystyle.navbtn}>Create group</Link>
         </div>
     )
