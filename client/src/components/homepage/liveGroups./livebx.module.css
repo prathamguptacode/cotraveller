@@ -1,0 +1,19 @@
+.box{
+    font-size: 20px;
+    font-weight: 400;
+    border: 1px solid var(--clr-border);
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 28px;
+    flex-grow: 1;
+    border-radius: 10px;
+}
+.content{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.box:hover{
+    border: 1px solid var(--in-border);
+}

@@ -227,7 +227,7 @@
     padding: 12px;
 }
 .discoverTitle{
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500;
 }
 .discoverContent{
@@ -240,9 +240,47 @@
     border-radius: 48px;
     color: var(--primary);
     background-color: var(--clr-bg);
-    font-size: 16px;
+    font-size: 15px;
     transition: all 0.2s ease;
 }
+
+.livebx{
+    max-width: 1140px;
+    margin: 24px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.livetitle{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.livebtn{
+    padding: 6px 16px;
+    border: 1px solid var(--clr-border);
+    border-radius: 24px;
+}
+
+.livebtn:hover{
+    background-color: var(--discoverbg);
+    color: var(--primary);
+}
+
+.livebtnbx{
+    display: flex;
+    gap: 12px;
+}
+
+.livegrp{
+    display: flex;
+    gap: 12px;
+align-items: center;
+padding: 8px 0;
+}
+
+
 
 @media (width < 1000px) {
     .searchbox {
