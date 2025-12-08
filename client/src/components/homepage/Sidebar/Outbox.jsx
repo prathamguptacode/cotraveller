@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
+import { FaPeopleGroup } from 'react-icons/fa6'
 
 const Outbox = () => {
     const { user } = useAuth()
@@ -25,7 +26,7 @@ const Outbox = () => {
         const { status, data } = await callAuthApi('delete', `/user/requests/${requestId}`)
         if (status === 204) setChanged(prev => !prev)
         else console.error(data.message)
-    
+
     }
 
     return (
@@ -34,7 +35,7 @@ const Outbox = () => {
                 groups.map(group => {
                     return (<Link to={`/moreinfo?q=${group._id}`} key={group._id} className={styles.listItem}>
                         <div className={styles.avatarWrapper} >
-                            <img src="apple-light.svg" alt="avatar" />
+                            <FaPeopleGroup />
                         </div>
                         <div className={styles.detailsWrapper}>
                             <p className={styles.groupName}>{group.title}</p>

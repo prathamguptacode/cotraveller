@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
+import { FaPeopleGroup } from 'react-icons/fa6'
+
 
 const Inbox = () => {
   const { user } = useAuth()
@@ -41,7 +43,7 @@ const Inbox = () => {
           return (
             <Link to={`/moreinfo?q=${group._id}`} key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
-                <img src="apple-light.svg" alt="avatar" />
+                <FaPeopleGroup />
               </div>
               <div className={styles.detailsWrapper}>
                 <p className={styles.groupName}>{group.title}</p>
