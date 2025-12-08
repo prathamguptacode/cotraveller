@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import { addGroup, leaveGroup, viewRequest, addMember, memberInfo, acceptIncomingRequestController, declineIncomingRequestController } from '../controllers/groupController.js'
+import { addGroup, leaveGroup, viewRequest, addMember, memberInfo, acceptIncomingRequestController, declineIncomingRequestController, groupnumber } from '../controllers/groupController.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
 import { viewGroup } from '../controllers/groupController.js'
 import { viewGroupByFilter } from '../controllers/groupController.js'
@@ -23,6 +23,7 @@ router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middlewar
 //to get member info i need this route
 router.get('/getname', memberInfo)
 
+router.get('/getnumbers',groupnumber)
 
 //should have middle ware
 router.use(verifyAccessToken)
