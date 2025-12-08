@@ -25,14 +25,15 @@ const Chats = () => {
     const [text, setText] = useState('')
     const [messages, setMessages] = useState([])
 
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
-    var ping = new Howl({
+    const ping = useMemo(() => new Howl({
         src: ['/sounds/notify.mp3'],
         // html5:true,
         volume: 0.25,
         preload: true,
-    })
+    }), [])
+
 
 
 
@@ -178,7 +179,7 @@ const Chats = () => {
         else console.error('SOMETHING WENT WRONG')
     }
 
-    function handleFeedback(){
+    function handleFeedback() {
         navigate('/feedback')
     }
 
