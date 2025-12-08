@@ -21,7 +21,8 @@ function NoGroup() {
             </div>
             <div className={mystyle.conbx}>
                 <div className={mystyle.ntitle}>No Groups Found… But You Can Start One</div>
-                <div className={mystyle.ncon}>We’re sorry — we couldn’t find any groups for this trip.<br />How about creating your own and letting others join you?</div>
+                <p className={mystyle.ncon}>We’re sorry — we couldn’t find any groups for this trip.</p>
+                <p className={mystyle.ncon}>How about creating your own and letting others join you?</p>
             </div>
             <button className={clsx(mystyle.homebtn, mystyle.createbtn)} onClick={handleClick}>Create Group</button>
         </div>

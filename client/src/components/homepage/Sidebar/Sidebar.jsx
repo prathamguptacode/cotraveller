@@ -23,7 +23,10 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }) => {
 
     return (
         //Stopped event bubbling to prevent trigger of isHidden Toggle due to onClick on Hamburger
-        <div onClick={(e) => e.stopPropagation()} className={clsx(styles.wrapper, !isHidden && styles.showSidebar)}>
+        <div onScroll={(e)=>{
+            e.stopPropagation()
+            e.preventDefault()
+        }} onClick={(e) => e.stopPropagation()} className={clsx(styles.wrapper, !isHidden && styles.showSidebar)}>
             <div className={styles.header}>
                 <button className={currentTab === "Groups" ? styles.activeTab : ""} onClick={() => setCurrentTab('Groups')}>Groups</button>
                 <button className={currentTab === "Inbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Inbox')}>Inbox</button>
