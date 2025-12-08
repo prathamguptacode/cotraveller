@@ -8,6 +8,7 @@ import Groups from "./Sidebar/Groups";
 import Inbox from "./Sidebar/Inbox";
 import Outbox from "./Sidebar/Outbox";
 import { Mail } from "lucide-react";
+import { useAuth } from "../../hooks/useAuth";
 
 function Navbar() {
     const [isHidden, setisHidden] = useState(true)
@@ -17,6 +18,8 @@ function Navbar() {
         setisHidden(true)
     }
     const [currentTab, setCurrentTab] = useState('')
+    const { user } = useAuth()
+
 
     // $$$please include profile picture feature
 
@@ -37,10 +40,6 @@ function Navbar() {
 
                 <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : currentTab === "Outbox" ? <Outbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} closeSidebar={closeSidebar} />
             </div>
-
-            {/* <Link className={mystyle.homeBtn} to={'/'}>
-                <Birdhouse strokeWidth={1.4} size={26} />
-            </Link> */}
             <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
 
             <div className={mystyle.themebtn}><ThemeButton /></div>
@@ -50,9 +49,10 @@ function Navbar() {
             }} onBlur={(e) => {
                 if (menuRef.current.contains(e.relatedTarget)) return
                 setisHidden(true)
-            }} className={mystyle.mail}><Mail strokeWidth={1.4} size={26} /> </button>
-            {/* <Link to={'/signup'} className={mystyle.navbtn}>Sign up</Link> */}
-            <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
+            }} className={mystyle.mail}><Mail strokeWidth={1.4} size={26} /></button>
+            {
+                !user && <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
+            }
             <Link to={'/creategroup'} className={mystyle.navbtn}>Create group</Link>
         </div>
     )
