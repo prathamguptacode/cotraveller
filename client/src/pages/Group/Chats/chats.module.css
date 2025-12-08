@@ -1,6 +1,7 @@
 .wrapper {
     display: flex;
     /* ###LATER add dvh for phone support everywhere */
+    height: calc(100dvh - 65px);
     height: calc(100vh - 65px);
 }
 
@@ -12,6 +13,7 @@
     padding: .5rem 1rem;
     width: 80px;
     border-right: .5px solid var(--clr-border);
+    flex-shrink: 0;
 
 
     display: flex;
@@ -90,6 +92,8 @@
     flex-direction: column;
     border-right: .5px solid var(--clr-border);
 
+
+
 }
 
 
@@ -99,6 +103,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 51.4px;
 
 
     h2 {
@@ -108,13 +113,13 @@
 
     button {
         padding: .2rem;
+
+        &:active {
+            scale: .9;
+        }
     }
 }
 
-.expansionList {
-    display: flex;
-    flex-direction: column;
-}
 
 .chatAreaWrapper {
     flex: 1;
@@ -130,7 +135,6 @@
     padding: .5rem 1rem;
     height: 51.4px;
     border-bottom: .5px solid var(--clr-border);
-
 }
 
 .avatarWrapper {
@@ -144,6 +148,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
     img {
         object-fit: cover;
         width: 100%;
@@ -153,16 +158,12 @@
 
 
 .groupDetails {
-
     font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    overflow: hidden;
 
-    * {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
 
     h3>a {
         font-size: 1rem;
@@ -173,7 +174,12 @@
         display: flex;
         gap: 1ch;
 
-        >span:not(:last-child)::after {
+
+        >div {
+            text-wrap: nowrap;
+        }
+
+        >div:not(:last-child)::after {
             content: ',';
         }
     }
@@ -309,6 +315,10 @@
     }
 }
 
+.sendBtn {
+    display: none;
+}
+
 .scrollBtn {
     position: absolute;
     right: 15px;
@@ -370,4 +380,34 @@
     transition: all .15s linear;
 
 
+}
+
+
+@media (max-width:1280px) {
+    .sidebarExpansionWrapper {
+        width: 250px;
+    }
+}
+
+@media (max-width:960px) {
+    .sidebarExpansionWrapper {
+        display: none;
+    }
+
+    .inputWrapper {
+        gap: .5rem;
+    }
+
+    .sendBtn {
+        display: block;
+    }
+}
+
+@media (max-width:768px) {
+    .groupDetails {
+        max-width: 200px;
+    }
+    .sidebarWrapper{
+        display: none;
+    }
 }

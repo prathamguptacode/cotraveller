@@ -27,7 +27,7 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }) => {
             <div className={styles.header}>
                 <button className={currentTab === "Groups" ? styles.activeTab : ""} onClick={() => setCurrentTab('Groups')}>Groups</button>
                 <button className={currentTab === "Inbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Inbox')}>Inbox</button>
-                <button className={currentTab === "Outbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Outbox')}>Outbox</button>
+                <button className={currentTab === "Outbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Outbox')}>Sent</button>
 
             </div>
 

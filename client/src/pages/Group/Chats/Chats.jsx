@@ -25,13 +25,12 @@ const Chats = () => {
     const [text, setText] = useState('')
     const [messages, setMessages] = useState([])
 
-    var ping = new Howl({
+    const ping = useMemo(() => new Howl({
         src: ['/sounds/notify.mp3'],
         // html5:true,
         volume: 0.25,
         preload: true,
-    })
-
+    }), [])
 
 
 
@@ -58,6 +57,8 @@ const Chats = () => {
         div.style['scroll-behavior'] = 'smooth'
         setIsMounted(true)
     }, [messages])
+
+
 
 
 
@@ -188,22 +189,24 @@ const Chats = () => {
 
 
 
+    const [currentTab, setCurrentTab] = useState('Chats')
+
     return (
         <>
             <div className={styles.wrapper}>
                 <div className={styles.sidebarWrapper}>
 
                     <div className={styles.list}>
-                        <button className={styles.listItem}>
+                        <button onClick={() => setCurrentTab('Chats')} className={styles.listItem}>
                             <MessagesSquare size={28} />
                             <ToolTip text={'Chats'} />
                         </button>
-                        <button className={styles.listItem}>
+                        <button onClick={() => setCurrentTab('Inbox')} className={styles.listItem}>
                             <Mail size={26} />
                             <ToolTip text={'Inbox'} />
 
                         </button>
-                        <button className={styles.listItem}>
+                        <button onClick={() => setCurrentTab('Sent')} className={styles.listItem}>
                             <SendHorizontal size={26} />
                             <ToolTip text={'Sent'} />
                         </button>
@@ -229,23 +232,21 @@ const Chats = () => {
                 <div className={styles.sidebarExpansionWrapper}>
 
                     <div className={styles.expansionHeader}>
-                        <h2>Chats</h2>
-                        <button className={styles.listItem}>
+                        <h2>{currentTab}</h2>
+                        {/* <button onClick={hideExpansion} className={styles.listItem}>
                             <ChevronsLeft size={28} strokeWidth={1.4} />
                             <ToolTip text={'Hide'} />
-                        </button>
+                        </button> */}
                     </div>
 
                     {/* <div className={styles.searchAreaWrapper}>
                // ###ADD LATER if needed , maybe to search for something, idk
                 </div> */}
+                    {/* <div className={styles.expansionList}> */}
+                    {currentTab === "Chats" ? <Groups /> : currentTab === "Inbox" ? <Inbox /> : <Outbox />}
+                    {/* </div> */}
 
-                    <Groups />
-                    {/* <Inbox /> */}
-                    {/* <Outbox /> */}
                 </div>
-
-
 
                 <div className={styles.chatAreaWrapper}>
                     <div className={styles.chatAreaHeader}>
@@ -265,9 +266,11 @@ const Chats = () => {
                                 {
                                     group.members?.map(member => {
                                         return (
-                                            <span key={member._id}>{member.fullName}</span>
+                                            <div> {member.fullName}</div>
                                         )
-                                    })}
+                                    })
+                                }
+                               
                             </Link>
 
                         </div>
@@ -319,6 +322,9 @@ const Chats = () => {
                                 if (e.key !== "Enter" || !text) return
                                 sendMessage()
                             }} onChange={(e) => setText(e.target.value)} value={text} type="text" />
+                            <button className={styles.sendBtn}>
+                                <SendHorizontal size={20} />
+                            </button>
                             <button>
                                 <Smile size={20} />
                             </button>

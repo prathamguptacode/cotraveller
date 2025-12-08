@@ -8,7 +8,7 @@
     height: 65px;
 
     position: fixed;
-    z-index: 5;
+    z-index: 20;
     left: 0;
     right: 0;
     top: 0;
@@ -31,6 +31,7 @@
 .homeBtn {
     border-radius: 10px;
     padding: .5rem;
+    flex-shrink: 0;
 
     &:hover {
         background-color: var(--clr-bg-hover);
@@ -44,13 +45,11 @@
     font-weight: 700;
     cursor: pointer;
     flex-shrink: 0;
-}
-
-.nobox {
-    margin-left: auto;
+    padding: .5rem;
 }
 
 .themebtn {
+    margin-left: auto;
     flex-shrink: 0;
 }
 
@@ -67,7 +66,7 @@
 
 .navbtn {
     background-color: var(--primary);
-    padding: 8px 16px;
+    padding: .5em 1em;
     border-radius: 5px;
     color: var(--secondaryFont);
     font-weight: 500;
@@ -209,7 +208,7 @@
 
 
 
-.discoverbx{
+.discoverbx {
     display: flex;
     gap: 12px;
     margin: 28px auto;
@@ -220,21 +219,25 @@
     align-items: center;
     border-radius: 5px;
 }
-.can{
+
+.can {
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 12px;
 }
-.discoverTitle{
+
+.discoverTitle {
     font-size: 18px;
     font-weight: 500;
 }
-.discoverContent{
+
+.discoverContent {
     font-size: 16px;
     color: var(--dull-font);
 }
-.discoverBtn{
+
+.discoverBtn {
     padding: 8px 28px;
     border: 1px solid var(--clr-border);
     border-radius: 48px;
@@ -244,7 +247,7 @@
     transition: all 0.2s ease;
 }
 
-.livebx{
+.livebx {
     max-width: 1140px;
     margin: 24px auto;
     display: flex;
@@ -252,32 +255,32 @@
     gap: 12px;
 }
 
-.livetitle{
+.livetitle {
     font-size: 20px;
     font-weight: 600;
 }
 
-.livebtn{
+.livebtn {
     padding: 6px 16px;
     border: 1px solid var(--clr-border);
     border-radius: 24px;
 }
 
-.livebtn:hover{
+.livebtn:hover {
     background-color: var(--discoverbg);
     color: var(--primary);
 }
 
-.livebtnbx{
+.livebtnbx {
     display: flex;
     gap: 12px;
 }
 
-.livegrp{
+.livegrp {
     display: flex;
     gap: 12px;
-align-items: center;
-padding: 8px 0;
+    align-items: center;
+    padding: 8px 0;
 }
 
 
@@ -299,4 +302,33 @@ padding: 8px 0;
     .mode {
         padding: 16px 44px;
     }
+}
+
+@media (max-width:800px) {
+    .logo {
+        font-size: 1.6rem;
+    }
+
+
+
+    .navbtn {
+        font-size: 14px;
+    }
+
+
+}
+@media (max-width:640px) {
+    .navbtn:last-child{
+        display: none;
+    }
+}
+@media (max-width:480px) {
+    .navbar{
+        gap: .3rem;
+    }
+
+    .mail{
+        display: none;
+    }
+
 }
