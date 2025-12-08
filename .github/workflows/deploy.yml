@@ -24,7 +24,7 @@ jobs:
 
             - name: Build client image
               run: |
-                  docker build -t ghcr.io/${GTIHUB_REPOSITORY,,}-client:${{ github.sha }} \
+                  docker build -t ghcr.io/${GITHUB_REPOSITORY,,}-client:${{ github.sha }} \
                   -f client/Dockerfile.prod client
 
             - name: Push server image to ghcr
