@@ -10,7 +10,7 @@ import VerifyOtp from '../pages/Auth/VerifyOtp'
 import CreateGroup from '../pages/CreateGroup/CreateGroup'
 import MainLayout from '../layouts/Main/MainLayout'
 import SuccessPage from '../pages/success/SuccessPage'
-import MoreInfo from '../pages/moreinfo/Moreinfo'
+import MoreInfo from '../pages/moreinfo/MoreInfo'
 import SecondaryLayout from '../layouts/Secondary/SecondaryLayout'
 import Chats from '../pages/Group/Chats/Chats'
 
