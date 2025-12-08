@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import mystyle from './Group.module.css'
-import { api, callAuthApi } from '../../api/axios';
+import { callAuthApi } from '../../api/axios';
 import { useAuth } from '../../hooks/useAuth';
 import clsx from 'clsx'
-import { data, useNavigate } from 'react-router-dom';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 
 function Group({ element }) {

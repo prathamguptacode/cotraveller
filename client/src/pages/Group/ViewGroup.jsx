@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Searchbox from '../../components/homepage/Searchbox'
 import mystyle from './ViewGroup.module.css'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { api } from '../../api/axios'
 import Group from '../../components/viewgroup/Group'
 import NoGroup from '../success/NoGroup'
@@ -10,7 +10,7 @@ function ViewGroup() {
 
     const [groupData, setGroupData] = useState([])
     console.log(groupData)
-    const [localLoader,setLocalLoader]=useState(true)
+    const [localLoader, setLocalLoader] = useState(true)
 
     const [query] = useSearchParams()
     const location = query.get("q");
@@ -44,16 +44,16 @@ function ViewGroup() {
     }, [query])
 
     return (
-        <>
+        <div className={mystyle.wrapper}>
             <Searchbox l={location} md={mode} d={d} m={m} y={y} w="1920px" />
-            <div className={mystyle.groupSection}>
-                {localLoader? <div className={mystyle.loader} /> : groupData.length==0? <NoGroup /> : groupData.map(element => {
+            <div className={mystyle.groupSection} >
+                {localLoader ? <div className={mystyle.loader} /> : groupData.length == 0 ? <NoGroup /> : groupData.map(element => {
                     console.log(element)
                     return <Group element={element} />
                 })}
             </div>
 
-        </>
+        </div>
 
     )
 }
