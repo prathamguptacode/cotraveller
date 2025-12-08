@@ -207,9 +207,41 @@
     background-color: rebeccapurple;
 }
 
-.trustbox{
-    max-width: fit-content;
-    margin: 30px auto;
+
+
+.discoverbx{
+    display: flex;
+    gap: 12px;
+    margin: 28px auto;
+    padding: 16px;
+    max-width: 1140px;
+    background-color: var(--discoverbg);
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+}
+.can{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+}
+.discoverTitle{
+    font-size: 20px;
+    font-weight: 500;
+}
+.discoverContent{
+    font-size: 16px;
+    color: var(--dull-font);
+}
+.discoverBtn{
+    padding: 8px 28px;
+    border: 1px solid var(--clr-border);
+    border-radius: 48px;
+    color: var(--primary);
+    background-color: var(--clr-bg);
+    font-size: 16px;
+    transition: all 0.2s ease;
 }
 
 @media (width < 1000px) {
