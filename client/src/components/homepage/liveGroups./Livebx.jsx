@@ -1,4 +1,3 @@
-import React from 'react'
 import mystyle from './livebx.module.css'
 import { MdGroups } from "react-icons/md";
 
