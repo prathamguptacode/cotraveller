@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import mystyle from './CreateGroup.module.css'
+import mystyle from './creategroup.module.css'
 import { IoMdAirplane } from "react-icons/io";
 import { FaTrainSubway } from "react-icons/fa6";
 import { FaTaxi } from "react-icons/fa";
