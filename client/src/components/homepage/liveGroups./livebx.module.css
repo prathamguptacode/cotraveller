@@ -6,8 +6,8 @@
     display: flex;
     justify-content: space-between;
     padding: 24px 28px;
-    flex-grow: 1;
     border-radius: 10px;
+    flex: 1;
 }
 .content{
     display: flex;
@@ -17,3 +17,10 @@
 .box:hover{
     border: 1px solid var(--in-border);
 }
+
+.num{
+    align-self: center;
+}
+
+
+

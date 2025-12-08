@@ -76,6 +76,7 @@
 .banner {
     max-width: 1920px;
     padding-bottom: 44px;
+    min-height: 150px;
 }
 
 .title {
@@ -92,12 +93,12 @@
     max-width: 1140px;
     margin: auto;
     padding: 20px 16px;
+    border-radius: 4px;
+    padding-bottom: 44px;
+
     display: flex;
     align-items: center;
     gap: 12px;
-    justify-content: center;
-    border-radius: 4px;
-    padding-bottom: 44px;
 }
 
 .location,
@@ -105,18 +106,22 @@
 .date,
 .month,
 .year {
-    padding: 16px 60px;
+    padding-block: 16px;
     border: 1px solid var(--clr-border);
     border-radius: 4px;
     cursor: pointer;
     transition: 0.1s all ease-in-out;
     flex-shrink: 0;
     position: relative;
+
+    display: flex;
+    flex: 1;
+    justify-content: center;
+
 }
 
 .location,
 .mode {
-    padding: 16px 80px;
     display: flex;
     gap: 4px;
     align-items: center;
@@ -283,6 +288,26 @@
     padding: 8px 0;
 }
 
+@media (max-width:1108px) {
+    .searchbox {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas:
+            "from from from mode mode mode"
+            "date date month month year year"
+        ;
+    }
+
+    .livegrp {
+        flex-direction: column;
+        align-items: stretch;
+
+
+    }
+}
+
+
 
 
 @media (width < 1000px) {
@@ -290,18 +315,8 @@
         max-width: 900px;
     }
 
-    .location,
-    .mode,
-    .date,
-    .month,
-    .year {
-        padding: 16px 40px;
-    }
 
-    .location,
-    .mode {
-        padding: 16px 44px;
-    }
+
 }
 
 @media (max-width:800px) {
@@ -317,18 +332,55 @@
 
 
 }
+
+@media (max-width:768px) {
+    .discoverbx {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .discoverBtn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .banner {
+        padding: 0;
+        position: relative;
+    }
+
+    .searchbox,
+    .searchbtn {
+        position: relative;
+    }
+
+    .title {
+        font-size: 32px;
+        position: absolute;
+        bottom: 1rem;
+        left: 50%;
+        translate: -50% 0;
+        width: 100%;
+    }
+}
+
 @media (max-width:640px) {
-    .navbtn:last-child{
+    .navbtn:last-child {
         display: none;
     }
 }
+
 @media (max-width:480px) {
-    .navbar{
+    .navbar {
         gap: .3rem;
     }
 
-    .mail{
+    .mail {
         display: none;
+    }
+
+    .title{
+        font-size: 24px;
     }
 
 }

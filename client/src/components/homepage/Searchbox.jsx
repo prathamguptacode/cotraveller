@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import mystyle from './homepage.module.css'
 import clsx from 'clsx'
 import { FaLocationDot } from "react-icons/fa6";
@@ -15,7 +15,7 @@ import { FaTaxi } from "react-icons/fa";
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 
-function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='Year?', w="" ,tempMargin=""}) {
+function Searchbox({ l = 'Where from ?', md = 'Transport ?', d = 'Date ?', m = 'Month ?', y = 'Year ?', w = "", tempMargin = "" }) {
 
     const navigate = useNavigate()
 
@@ -125,60 +125,64 @@ function Searchbox({l='Where from?', md='Transport?', d='Date?', m='Month?', y='
             );
             return
         }
-        let monthNum=0;
-        if(month == "January") monthNum='01'
-        if(month == "Febuary") monthNum='02'
-        if(month == "March") monthNum='03'
-        if(month == "April") monthNum='04'
-        if(month == "May") monthNum='05'
-        if(month == "June") monthNum='06'
-        if(month == "July") monthNum='07'
-        if(month == "August") monthNum='08'
-        if(month == "September") monthNum='09'
-        if(month == "October") monthNum='10'
-        if(month == "November") monthNum='11'
-        if(month == "December") monthNum='12'
-        const lowerTime= `${year}-${monthNum}-${date}T00:00`
-        const upperTime= `${year}-${monthNum}-${date}T23:59`
+        let monthNum = 0;
+        if (month == "January") monthNum = '01'
+        if (month == "Febuary") monthNum = '02'
+        if (month == "March") monthNum = '03'
+        if (month == "April") monthNum = '04'
+        if (month == "May") monthNum = '05'
+        if (month == "June") monthNum = '06'
+        if (month == "July") monthNum = '07'
+        if (month == "August") monthNum = '08'
+        if (month == "September") monthNum = '09'
+        if (month == "October") monthNum = '10'
+        if (month == "November") monthNum = '11'
+        if (month == "December") monthNum = '12'
+        const lowerTime = `${year}-${monthNum}-${date}T00:00`
+        const upperTime = `${year}-${monthNum}-${date}T23:59`
         navigate(`/viewgroup?q=${location}&mode=${mode}&lowerT=${lowerTime}&upperT=${upperTime}&d=${date}&m=${month}&y=${year}`)
     }
 
 
-return (
-    <div>
-        <div className={mystyle.searchbox} style={{maxWidth: w, marginTop: tempMargin}}>
-            <div className={clsx(mystyle.location, mystyle.inhover)} tabIndex="0" onClick={showL} onBlur={hidL}>
-                <FaLocationDot />
-                {location}
-                {locationDropDis ? <LocationDrop setLocation={setLocation} /> : null}
+    return (
+        <div>
+            <div className={mystyle.searchbox} style={{ maxWidth: w, marginTop: tempMargin }}>
+                <div className={clsx(mystyle.location, mystyle.inhover)} tabIndex="0" style={{gridArea: 'from'}} onClick={showL} onBlur={hidL}>
+                    <FaLocationDot />
+                    <div>{location}</div>
+                    {locationDropDis ? <LocationDrop setLocation={setLocation} /> : null}
+                </div>
+                <div className={clsx(mystyle.mode, mystyle.inhover)} tabIndex="0"  style={{gridArea: 'mode'}} onClick={showT} onBlur={hidT}>
+                    {(mode == "Transport ?") ? <FaPaperPlane /> : null}
+                    {(mode == "Airplane") ? <IoMdAirplane size="22px" /> : null}
+                    {(mode == "Railway") ? <FaTrainSubway /> : null}
+                    {(mode == "Taxi") ? <FaTaxi /> : null}
+                    <div>{mode}</div>
+                    {modeDropDis ? <ModeDrop setMode={setMode} /> : null}
+                </div>
+                <div className={clsx(mystyle.date, mystyle.inhover)} tabIndex="0"  style={{gridArea: 'date'}} onClick={showD} onBlur={hidD}>{date}
+                    {dateDropDis ? <DateDrop setDate={setDate} /> : null}
+                </div>
+                <div className={clsx(mystyle.month, mystyle.inhover)} tabIndex="0"  style={{gridArea: 'month'}} onClick={showM} onBlur={hidM}>{month}
+                    {monthDropDis ? <MonthDrop setMonth={setMonth} /> : null}
+                </div>
+                <div className={clsx(mystyle.year, mystyle.inhover)} tabIndex="0"  style={{gridArea: 'year'}} onClick={showY} onBlur={hidY}>{year}
+                    {yearDropDis ? <YearDrop setYear={setYear} /> : null}
+                </div>
             </div>
-            <div className={clsx(mystyle.mode, mystyle.inhover)} tabIndex="0" onClick={showT} onBlur={hidT}>
-                {(mode == "Transport?") ? <FaPaperPlane /> : null}
-                {(mode == "Airplane") ? <IoMdAirplane size="22px" /> : null}
-                {(mode == "Railway") ? <FaTrainSubway /> : null}
-                {(mode == "Taxi") ? <FaTaxi /> : null}
-                {mode}
-                {modeDropDis ? <ModeDrop setMode={setMode} /> : null}
+
+
+            <div className={mystyle.btnbox}>
+                <button className={mystyle.searchbtn} onClick={search}>
+                    <IoMdSearch size="20px" />
+                    Find groups
+                </button>
+                <Toaster />
             </div>
-            <div className={clsx(mystyle.date, mystyle.inhover)} tabIndex="0" onClick={showD} onBlur={hidD}>{date}
-                {dateDropDis ? <DateDrop setDate={setDate} /> : null}
-            </div>
-            <div className={clsx(mystyle.month, mystyle.inhover)} tabIndex="0" onClick={showM} onBlur={hidM}>{month}
-                {monthDropDis ? <MonthDrop setMonth={setMonth} /> : null}
-            </div>
-            <div className={clsx(mystyle.year, mystyle.inhover)} tabIndex="0" onClick={showY} onBlur={hidY}>{year}
-                {yearDropDis ? <YearDrop setYear={setYear} /> : null}
-            </div>
+
+
         </div>
-        <div className={mystyle.btnbox}>
-            <button className={mystyle.searchbtn} onClick={search}>
-                <IoMdSearch size="20px" />
-                Find groups
-            </button>
-            <Toaster />
-        </div>
-    </div>
-)
+    )
 }
 
 export default Searchbox
