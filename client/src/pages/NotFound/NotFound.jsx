@@ -1,4 +1,3 @@
-import React from 'react'
 import mystyle from './NotFound.module.css'
 import { BiSolidError } from "react-icons/bi";
 import Navbar from '../../components/homepage/Navbar';

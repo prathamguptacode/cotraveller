@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './chats.module.css'
-import { Mail, MessagesSquare, SendHorizontal, Cog, LogOut, HelpCircle, ChevronsLeft, Ellipsis, Smile, CheckCheck, ChevronDown } from 'lucide-react'
+import { Mail, MessagesSquare, SendHorizontal, Cog, LogOut, HelpCircle, Ellipsis, Smile, ChevronDown } from 'lucide-react'
 import clsx from 'clsx'
 import Groups from '../../../components/homepage/Sidebar/Groups'
 import Inbox from '../../../components/homepage/Sidebar/Inbox'
@@ -270,7 +270,7 @@ const Chats = () => {
                                         )
                                     })
                                 }
-                               
+
                             </Link>
 
                         </div>
@@ -322,7 +322,7 @@ const Chats = () => {
                                 if (e.key !== "Enter" || !text) return
                                 sendMessage()
                             }} onChange={(e) => setText(e.target.value)} value={text} type="text" />
-                            <button className={styles.sendBtn}>
+                            <button onClick={sendMessage} className={styles.sendBtn}>
                                 <SendHorizontal size={20} />
                             </button>
                             <button>

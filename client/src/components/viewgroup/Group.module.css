@@ -9,6 +9,7 @@
     border-radius: 5px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .memberbx {
@@ -89,4 +90,13 @@
     margin: auto;
     max-width: 900px;
     border: 1px solid var(--clr-border);
+}
+
+
+@media (max-width:768px) {
+    .groupwrapper{
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: stretch;
+    }
 }
