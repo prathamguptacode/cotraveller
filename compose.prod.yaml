@@ -8,6 +8,7 @@ services:
       - cotraveller_net
     restart: unless-stopped
 
+
   client:
     image: ghcr.io/prathamguptacode/cotraveller-client:latestHashedTag
     expose:
