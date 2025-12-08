@@ -19,21 +19,21 @@ jobs:
 
             - name: Build server image
               run: |
-                  docker build -t ghcr.io/${GITHUB.REPOSITORY,,}-server:${{ github.sha }} \
+                  docker build -t ghcr.io/${GITHUB_REPOSITORY,,}-server:${{ github.sha }} \
                   -f server/Dockerfile.prod server
 
             - name: Build client image
               run: |
-                  docker build -t ghcr.io/${GTIHUB.REPOSITORY,,}-client:${{ github.sha }} \
+                  docker build -t ghcr.io/${GTIHUB_REPOSITORY,,}-client:${{ github.sha }} \
                   -f client/Dockerfile.prod client
 
             - name: Push server image to ghcr
               run: |
-                  docker push ghcr.io/${GITHUB.REPOSITORY,,}-server:${{ github.sha }}
+                  docker push ghcr.io/${GITHUB_REPOSITORY,,}-server:${{ github.sha }}
 
             - name: Push client image to ghcr
               run: |
-                  docker push ghcr.io/${GITHUB.REPOSITORY,,}-client:${{ github.sha }}
+                  docker push ghcr.io/${GITHUB_REPOSITORY,,}-client:${{ github.sha }}
 
             - name: Update compose.prod.yaml from latest to current github.sha tag
               run: |
