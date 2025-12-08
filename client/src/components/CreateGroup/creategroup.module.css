@@ -108,3 +108,7 @@
 .hour:hover{
     border: 1px solid var(--primary);
 }
+.timeFormat{
+    font-size: 16px;
+    color: var(--dull-font);
+}
