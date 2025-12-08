@@ -13,6 +13,7 @@ import SuccessPage from '../pages/success/SuccessPage'
 import MoreInfo from '../pages/moreinfo/moreinfo'
 import SecondaryLayout from '../layouts/Secondary/SecondaryLayout'
 import Chats from '../pages/Group/Chats/Chats'
+import NotFound from '../pages/NotFound/NotFound'
 
 
 const AppRouter = () => {
@@ -33,6 +34,8 @@ const AppRouter = () => {
                     <Route path='chats' element={<Chats />} />
                 </Route>
 
+                //error route
+                <Route path='*' element={<NotFound />} />
 
 
 
