@@ -231,7 +231,7 @@ function QuestionTile() {
 
                 <div className={mystyle.questionTitle}>
                     <div className={mystyle.ques}>
-                        At what time you will be leaving your College?
+                        At what time you will be leaving your College? <span className={mystyle.timeFormat}>(24hr-format)</span>
                     </div>
                     <div className={mystyle.timeBox}>
                         <div className={mystyle.hour} tabIndex="0" onClick={showHH} onBlur={hidHH}>

@@ -45,12 +45,12 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }) => {
                         Settings
                     </p>
                 </Link>
-                <Link to={''} className={styles.listItem}>
+                <Link to={'/feedback'} className={styles.listItem}>
                     <div className={styles.avatarWrapper} >
                         <Info />
                     </div>
                     <p className={styles.detailsWrapper}>
-                        Help
+                        Feedback
                     </p>
                 </Link>
                 {user && <button onClick={handleLogout} className={styles.listItem}>

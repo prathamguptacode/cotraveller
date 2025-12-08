@@ -1,13 +1,14 @@
 import React from 'react'
 import mystyle from './homepage.module.css'
 import clsx from 'clsx'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function DiscoverBox() {
 
     const navigate=useNavigate()
-    function handle(){
-        navigate('')
+
+    function handleClick(){
+        navigate('/viewgroup?q=VIT%20Chennai&mode=Airplane&lowerT=2025-12-20T00:00&upperT=2025-12-20T23:59&d=20&m=December&y=2025')
     }
 
   return (
@@ -16,7 +17,7 @@ function DiscoverBox() {
         <div className={mystyle.discoverTitle}>Your next trip starts with one search.</div>
         <div className={mystyle.discoverContent}>Find travellers heading to the same destination, connect instantly, and join plans that match your vibe.</div>
       </div>
-      <div className={mystyle.disbtnbx}><button className={clsx(mystyle.discoverBtn, mystyle.inhover)} onClick={handle}>Explore</button></div>
+      <button onClick={handleClick} className={clsx(mystyle.discoverBtn, mystyle.inhover)}>Explore</button>
     </div>
   )
 }

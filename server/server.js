@@ -17,6 +17,7 @@ import messageRoutes from './routes/messageRoutes.js'
 import commentRoute from './routes/commentRoute.js'
 import Message from './models/Message.js'
 import Group from './models/groupSchema.js'
+import feedabck from './routes/feedbackRoute.js'
 
 const app = express()
 const server = http.createServer(app)
@@ -79,6 +80,8 @@ app.use('/api/oauth', oauthRoutes)
 app.use('/api/validateField', fieldValidationRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/message', messageRoutes)
+
+app.use('/api/feedback',feedabck)
 
 
 

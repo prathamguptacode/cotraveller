@@ -57,58 +57,49 @@
   border-bottom-color: var(--primary);
 }
 
-.dropmenu{
-    padding: 8px 0;
-    max-width: 350px;
-    position: relative;
+.feedback{
+    max-width: 900px;
+    margin: auto;
+    /* border: 2px solid red; */
 }
 
-.datebox{
-    display: flex;
-    gap: 16px;
-    padding: 8px 0;
-}
-
-.inDrop:hover{
-    border: 1px solid var(--primary);
-}
-
-.memberDrop{
-    padding: 16px 60px;
-    border: 1px solid var(--clr-border);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: 0.1s all ease-in-out;
-    max-width: 200px;
+.btnbox{
     text-align: center;
-    position: relative;
-}
-.memberDrop:hover{
-    border: 1px solid var(--primary);
 }
 
-.timeBox{
-    display: flex;
-    gap: 16px;
-    padding: 8px 0;
-    align-items: center;
+.mysubmit{
+    background-color: var(--primary);
+    color: var(--secondaryFont);
+    font-weight: 500;
+    padding: 8px 28px;
+    border-radius: 5px;
 }
-.semi{
-    font-size: 28px;
+
+@media (width<1000px) {
+    .feedback{
+        max-width: 700px;
+
+    }
 }
-.hour{
-    padding: 16px 60px;
-    border: 1px solid var(--clr-border);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: 0.1s all ease-in-out;
-    flex-shrink: 0;
-    position: relative;
+@media (width<820px) {
+    .feedback{
+        max-width: 540px;
+
+    }
 }
-.hour:hover{
-    border: 1px solid var(--primary);
+@media (width<640px) {
+    .feedback{
+        max-width: 400px;
+
+    }
 }
-.timeFormat{
-    font-size: 16px;
-    color: var(--dull-font);
+@media (width<510px) {
+    .feedback{
+        max-width: 300px;
+    }
+}
+@media (width<340px) {
+    .feedback{
+        max-width: 280px;
+    }
 }
