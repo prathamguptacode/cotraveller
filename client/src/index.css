@@ -47,6 +47,7 @@ body {
     --sidebar-bg-hover: hsl(206, 6%, 75%);
     --sidebar-anchor-active: hsl(214, 81%, 50%);
     --sidebar-button-hover: hsl(225, 4%, 60%);
+    --discoverbg: rgba(232,240,254,0.5);
 
 }
 
@@ -95,5 +96,6 @@ body {
     --sidebar-bg-hover: #3C4043;
     --sidebar-anchor-active: #609af6;
     --sidebar-button-hover: hsl(225, 4%, 20%);
+    --discoverbg: rgba(138,180,248,0.12);
 
 }

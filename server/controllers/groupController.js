@@ -327,3 +327,16 @@ export const declineIncomingRequestController = async (req, res) => {
 
     res.sendStatus(204)
 }
+
+
+export const groupnumber = async(req,res)=>{
+    const val=await groupSchema.aggregate([
+        {
+            $group:{
+                _id: "$mode",
+                count: { $sum: 1 }
+            }
+        }
+    ])
+    res.success(200,val)
+}
