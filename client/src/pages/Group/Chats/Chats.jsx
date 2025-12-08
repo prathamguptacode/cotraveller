@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './chats.module.css'
-import { Mail, MessagesSquare, SendHorizontal, Cog, LogOut, HelpCircle, ChevronsLeft, Ellipsis, Smile, CheckCheck, ChevronDown } from 'lucide-react'
+import { Mail, MessagesSquare, SendHorizontal, Cog, LogOut, HelpCircle, ChevronsLeft, Ellipsis, Smile, CheckCheck, ChevronDown, Info } from 'lucide-react'
 import clsx from 'clsx'
 import Groups from '../../../components/homepage/Sidebar/Groups'
 import Inbox from '../../../components/homepage/Sidebar/Inbox'
 import Outbox from '../../../components/homepage/Sidebar/Outbox'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
 import { useSocket } from '../../../hooks/useSocket'
@@ -24,6 +24,8 @@ const Chats = () => {
     const socket = useSocket()
     const [text, setText] = useState('')
     const [messages, setMessages] = useState([])
+
+    const navigate=useNavigate()
 
     var ping = new Howl({
         src: ['/sounds/notify.mp3'],
@@ -176,6 +178,10 @@ const Chats = () => {
         else console.error('SOMETHING WENT WRONG')
     }
 
+    function handleFeedback(){
+        navigate('/feedback')
+    }
+
     const getFormattedTime = (time) => {
         const timeZ = new Date(time)
         return timeZ.toLocaleTimeString("en-IN", {
@@ -214,9 +220,9 @@ const Chats = () => {
                             <Cog size={28} />
                             <ToolTip text={'Settings'} />
                         </button>
-                        <button className={styles.listItem}>
-                            <HelpCircle size={26} />
-                            <ToolTip text={'Help'} />
+                        <button onClick={handleFeedback} className={styles.listItem}>
+                            <Info size={26} />
+                            <ToolTip text={'Feedback'} />
                         </button>
                         <button onClick={handleLogout} className={styles.listItem}>
                             <LogOut size={26} />

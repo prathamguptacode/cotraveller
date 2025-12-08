@@ -14,6 +14,7 @@ import MoreInfo from '../pages/moreinfo/MoreInfo'
 import SecondaryLayout from '../layouts/Secondary/SecondaryLayout'
 import Chats from '../pages/Group/Chats/Chats'
 import NotFound from '../pages/NotFound/NotFound'
+import FeedbackPage from '../pages/Feedback/FeedbackPage'
 
 
 const AppRouter = () => {
@@ -33,6 +34,9 @@ const AppRouter = () => {
                 <Route path='/groups/:groupId/' element={<SecondaryLayout />} >
                     <Route path='chats' element={<Chats />} />
                 </Route>
+
+                //feedback form
+                <Route path='/feedback' element={<FeedbackPage />} />
 
                 //error route
                 <Route path='*' element={<NotFound />} />
