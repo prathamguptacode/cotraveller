@@ -3,8 +3,6 @@ import styles from './auth.module.css'
 import { Link, useNavigate } from 'react-router-dom'
 import TextField from '../../components/TextField/TextField'
 import { callAuthApi } from '../../api/axios'
-import { Eye, EyeClosed } from 'lucide-react'
-import { useAuth } from '../../hooks/useAuth'
 
 const Signup = () => {
   const [email, setEmail] = useState('')
@@ -19,7 +17,6 @@ const Signup = () => {
 
   const [isMounted, setIsMounted] = useState(false)
 
-  const { updateAccessToken, updateUser } = useAuth()
   const navigate = useNavigate()
 
   const requirements = {
@@ -38,7 +35,6 @@ const Signup = () => {
 
       (async () => {
         const { status, data } = await callAuthApi('post', '/validateField/email', { email })
-        console.log(status)
         if (status >= 400) return setEmailError(data.message)
         if (status == 200) return setEmailError('')
       }
@@ -85,7 +81,6 @@ const Signup = () => {
 
       (async () => {
         const { status, data } = await callAuthApi('post', '/validateField/username', { username })
-        console.log(status)
         if (status >= 400) return setUsernameError(data.message + " :(")
         if (status == 200) return setUsernameError('')
 
@@ -125,7 +120,7 @@ const Signup = () => {
 
     const { status, data } = await callAuthApi('post', '/auth/signup', { email, password, username, fullName })
 
-    if (status == 200) return navigate('/signup/verify')
+    if (status == 200) return navigate('/signup/verify', { state: { isAllowed: true } })
 
     const { code, message } = data
     if (code.includes("EMAIL")) setEmailError(message)

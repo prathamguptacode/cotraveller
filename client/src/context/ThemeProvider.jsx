@@ -5,11 +5,8 @@ const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useState(null)
     const toggleTheme = () => {
         setTheme(prev => {
-            console.log(theme)
             //LocalStorage is only for persistence over refreshes
-            console.log(prev)
             localStorage.setItem('theme', prev === 'light' ? 'dark' : 'light')
-            // console.log(prev==='light'?'dark': 'light')
 
             //Setting class is the real game changer for actual base css
             document.documentElement.classList.toggle('dark')

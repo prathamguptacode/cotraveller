@@ -44,7 +44,6 @@ function Group({ element }) {
                     }
                 })
             }
-            console.log(data.message)
         }
     }
 
