@@ -1,12 +1,12 @@
 import NewNav from '../../components/CreateGroup/newNav'
 import TitleTile from '../../components/CreateGroup/TitleTile'
 import QuestionTile from '../../components/CreateGroup/QuestionTile'
-
+import styles from './CreateGroup.module.css'
 
 function CreateGroup() {
 
   return (
-    <div className='createWrapper'>
+    <div className={styles.wrapper}>
       <NewNav />
       <TitleTile />
       <QuestionTile  />

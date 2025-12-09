@@ -168,6 +168,30 @@
     background-color: var(--brighter-primary);
 }
 
+.avatarWrapper {
+    --dim: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--primary);
+    overflow: hidden;
+
+    width: var(--dim);
+    height: var(--dim);
+
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    >img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+
+
 .locationDrop,
 .modeDrop {
     position: absolute;
@@ -371,9 +395,15 @@
 }
 
 @media (max-width:640px) {
-    .navbtn:last-child {
+
+    .createGroupBtn {
         display: none;
     }
+
+    .mail {
+        display: none;
+    }
+
 }
 
 @media (max-width:480px) {
@@ -381,12 +411,18 @@
         gap: .3rem;
     }
 
-    .mail {
-        display: none;
-    }
+
 
     .title {
-        font-size: 24px;
+        font-size: 28px;
+    }
+
+    .searchbox>* {
+        font-size: 14px;
+
+        >svg {
+            width: 12px;
+        }
     }
 
 

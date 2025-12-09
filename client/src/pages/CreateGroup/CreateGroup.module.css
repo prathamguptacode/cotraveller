@@ -1,4 +1,7 @@
-
+.wrapper{
+    padding-inline: 3rem;
+    margin: auto;
+}
 .submitbtn{
     display: block;
     padding: 16px 48px;
@@ -12,4 +15,15 @@
 }
 .submitbtn:hover{
     background-color: var(--brighter-primary);
+}
+
+@media (max-width:768px) {
+    .wrapper{
+        padding-inline: 1.5rem;
+    }
+}
+@media (max-width:640px) {
+    .wrapper{
+        padding-inline: .5rem;
+    }
 }

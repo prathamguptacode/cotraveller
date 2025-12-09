@@ -9,6 +9,8 @@ import Inbox from "./Sidebar/Inbox";
 import Outbox from "./Sidebar/Outbox";
 import { Mail } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import { FaUser } from "react-icons/fa6";
+import clsx from "clsx";
 
 function Navbar() {
     const [isHidden, setisHidden] = useState(true)
@@ -53,7 +55,11 @@ function Navbar() {
             {
                 !user && <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
             }
-            <Link to={'/creategroup'} className={mystyle.navbtn}>Create group</Link>
+            <Link to={'/creategroup'} className={clsx(mystyle.navbtn,mystyle.createGroupBtn)}>Create group</Link>
+            {user && <Link className={mystyle.avatarWrapper} to={`/users/${user._id}`}>
+                {user.avatar?.publicUrl ? <img src="" alt="avatar" /> : <FaUser />
+                }
+            </Link>}
         </div>
     )
 }
