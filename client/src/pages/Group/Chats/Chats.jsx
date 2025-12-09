@@ -11,6 +11,7 @@ import { useAuth } from '../../../hooks/useAuth'
 import { useSocket } from '../../../hooks/useSocket'
 import { Howl } from 'howler'
 import { FaPeopleGroup } from 'react-icons/fa6'
+import { RiPencilFill } from "react-icons/ri";
 
 
 
@@ -195,6 +196,12 @@ const Chats = () => {
         })
     }
 
+    function editgroup(){
+        const path=window.location.pathname;
+        const pathSplit=path.split('/')
+        const groupId=(pathSplit[2])
+        navigate(`/edit?q=${groupId}`, { state: { allowed: true }})
+    }
 
 
     const [currentTab, setCurrentTab] = useState('Chats')
@@ -283,8 +290,8 @@ const Chats = () => {
 
                         </div>
 
-                        <button className={clsx(styles.groupOptions, styles.listItem)}>
-                            <Ellipsis />
+                        <button className={clsx(styles.groupOptions, styles.listItem)} onClick={editgroup} >
+                            < RiPencilFill size={20} />
                         </button>
 
                     </div>

@@ -15,6 +15,7 @@ import SecondaryLayout from '../layouts/Secondary/SecondaryLayout'
 import Chats from '../pages/Group/Chats/Chats'
 import NotFound from '../pages/NotFound/NotFound'
 import FeedbackPage from '../pages/Feedback/FeedbackPage'
+import EditGroup from '../pages/EditGroup/EditGroup'
 
 
 const AppRouter = () => {
@@ -40,6 +41,9 @@ const AppRouter = () => {
 
                 //error route
                 <Route path='*' element={<NotFound />} />
+
+                //delete this tempaerary path
+                <Route path='/edit' element={<EditGroup />} />
 
 
 
