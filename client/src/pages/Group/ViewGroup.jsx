@@ -5,11 +5,11 @@ import { useSearchParams } from 'react-router-dom'
 import { api } from '../../api/axios'
 import Group from '../../components/viewgroup/Group'
 import NoGroup from '../success/NoGroup'
+import { loaderEvent } from '../../api/mitt'
 
 function ViewGroup() {
 
     const [groupData, setGroupData] = useState([])
-    console.log(groupData)
     const [localLoader, setLocalLoader] = useState(true)
 
     const [query] = useSearchParams()
@@ -26,6 +26,7 @@ function ViewGroup() {
         const upperT = query.get("upperT");
         (async () => {
             setLocalLoader(true)
+            loaderEvent.emit('startLoading')
             const body = {
                 mode: mode,
                 lowerTime: lowerT,
@@ -39,6 +40,8 @@ function ViewGroup() {
             } catch (error) {
                 //something went wrong page
                 console.error(error)
+            }finally{
+                loaderEvent.emit('stopLoading')
             }
         })()
     }, [query])
@@ -48,7 +51,6 @@ function ViewGroup() {
             <Searchbox l={location} md={mode} d={d} m={m} y={y} w="1920px" />
             <div className={mystyle.groupSection} >
                 {localLoader ? <div className={mystyle.loader} /> : groupData.length == 0 ? <NoGroup /> : groupData.map(element => {
-                    console.log(element)
                     return <Group element={element} />
                 })}
             </div>

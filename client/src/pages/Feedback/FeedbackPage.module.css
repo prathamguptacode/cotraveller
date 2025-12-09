@@ -3,7 +3,7 @@
     margin-top: 80px;
 
     max-width: 900px;
-    border-radius: 5px;
+    border-radius: 10px;
     overflow: hidden;
 
     background-color: var(--secondary-bg);
@@ -30,7 +30,7 @@
 }
 .questionTitle{
     max-width: 900px;
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: var(--secondary-bg);
     padding: 22px 20px;
     position: relative;
@@ -72,7 +72,7 @@
     color: var(--secondaryFont);
     font-weight: 500;
     padding: 8px 28px;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 

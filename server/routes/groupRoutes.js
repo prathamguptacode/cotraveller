@@ -34,7 +34,7 @@ router.get('/viewrequest', asyncHandler(viewRequest))// this is for member to se
 
 router.post('/addmember', asyncHandler(addMember))
 
-router.delete('/leavegroup', asyncHandler(leaveGroup))
+router.delete('/:groupId/leavegroup', asyncHandler(leaveGroup))
 
 router.post('/:groupId/requests/:requestId', asyncHandler(acceptIncomingRequestController))
 

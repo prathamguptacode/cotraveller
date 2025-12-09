@@ -15,7 +15,8 @@
 }
 
 .imgbx {
-    width: 200px;
+    --dim: 200px;
+    width: var(--dim);
 }
 
 .conbx {
@@ -34,10 +35,10 @@
 }
 
 .homebtn {
-    margin-top: 20px;
+    margin-top: .5rem;
     background-color: var(--primary);
     color: var(--secondaryFont);
-    border-radius: 5px;
+    border-radius: 10px;
     padding: .5em 1.5em;
     align-self: center;
     text-align: center;
@@ -83,6 +84,46 @@
     flex-shrink: 0;
 }
 
+@media (max-width:900px) {
+    .successbx {
+        padding-inline: 2rem;
+        justify-content: center;
+        gap: 3rem;
+    }
+
+    .imgbx {
+        width: 150px;
+    }
+
+    .title {
+        font-size: 32px;
+        text-align: center;
+    }
+
+}
+
+@media (max-width:700px) {
+    .successbx {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding-inline: 0;
+    }
+
+    .imgbx {
+        height: var(--dim);
+    }
+
+    .conbx {
+        gap: .75rem;
+    }
+
+    .con {
+        text-wrap: balance;
+        text-align: center;
+    }
+}
+
+
 @media (max-width:600px) {
 
     .nimg>svg {
@@ -96,13 +137,41 @@
     .ntitle {
         font-size: 24px;
     }
-    .ncon{
+
+    .ncon {
         font-size: 14px;
     }
 
-    .createbtn{
+    .createbtn {
 
         font-size: 16px;
     }
 
+}
+
+
+@media (max-width:480px) {
+    .successbx {
+        gap: 0;
+    }
+
+    .imgbx {
+        --dim: 150px;
+
+        >svg {
+            height: 100%;
+        }
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .con {
+        font-size: 1rem;
+    }
+
+    .homebtn {
+        font-size: 1rem;
+    }
 }

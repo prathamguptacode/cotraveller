@@ -1,11 +1,10 @@
-import React from 'react'
 import styles from './extras.module.css'
 
-const LoadingPage = () => {
+const LoadingPage = ({ bgColor }) => {
     return (
-        <h1 className={styles.loadingPage}>
+        <div style={{ backgroundColor: bgColor ? bgColor : "" }} className={styles.loadingPage}>
             <div className={styles.loader} />
-        </h1>
+        </div>
     )
 }
 

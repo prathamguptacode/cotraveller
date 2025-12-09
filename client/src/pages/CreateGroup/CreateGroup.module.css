@@ -4,9 +4,9 @@
 }
 .submitbtn{
     display: block;
-    padding: 16px 48px;
+    padding: 1em 3em;
     background-color: var(--primary);
-    border-radius: 5px;
+    border-radius: 10px;
     color: var(--secondaryFont);
     font-size: 18px;
     font-weight: 500;
@@ -20,6 +20,9 @@
 @media (max-width:768px) {
     .wrapper{
         padding-inline: 1.5rem;
+    }
+    .submitbtn{
+        font-size: 16px;
     }
 }
 @media (max-width:640px) {

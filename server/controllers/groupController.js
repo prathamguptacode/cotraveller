@@ -3,8 +3,7 @@ import xss from 'xss'
 import moment from "moment-timezone";
 import User from "../models/User.js";
 import mongoose from "mongoose";
-import nodemailer from 'nodemailer'
-import { accecptedNotification, newMemberJoinedNotification, rejectedNotification, sendRequestNotification } from "../services/nodemailer.js";
+import { accecptedNotification, memberLeftNotification, newMemberJoinedNotification, rejectedNotification, sendRequestNotification } from "../services/nodemailer.js";
 
 
 export async function addGroup(req, res) {
@@ -283,8 +282,8 @@ export const addMember = async (req, res) => {
 
 //leaving group
 export const leaveGroup = async (req, res) => {
-    const userID = xss(req.body?.userID)
-    const groupID = xss(req.body?.groupID)
+    const { user: { _id: userID, fullName } } = req.user
+    const groupID = xss(req.params?.groupId)
     if (!userID) {
         return res.fail(400, "INVALID_INPUT", "userID not found")
     }
@@ -303,7 +302,12 @@ export const leaveGroup = async (req, res) => {
     if (!(tempGroup.member).includes(userID)) {
         return res.fail(400, "INPUT_ERROR", "user is not authorizated to do so")
     }
-    await groupSchema.updateOne({ _id: groupID }, { $pull: { member: userID } })
+    const updatedGroup = await groupSchema.findOneAndUpdate({ _id: groupID }, { $pull: { member: userID } }, { returnDocument: 'after' })
+    await User.updateOne({ _id: userID }, { $pull: { memberGroup: groupID } })
+
+    const previousMemberEmails = updatedGroup.member.map(obj => obj.email)
+    memberLeftNotification(previousMemberEmails, fullName, tempGroup.title, groupID)
+
     //204 status code cannot have anything with e.g. body or message
     res.sendStatus(204)
 }
@@ -337,8 +341,8 @@ export const acceptIncomingRequestController = async (req, res) => {
     //Send notification to all members of the group about acceptance as well as to the user being accepted
     const previousMemberEmails = group.member.map(obj => obj.email)
 
-    accecptedNotification(user.email, user.fullName, group.title)
-    newMemberJoinedNotification(previousMemberEmails, user.fullName, group.title)
+    accecptedNotification(user.email, user.fullName, group.title, groupId)
+    newMemberJoinedNotification(previousMemberEmails, user.fullName, group.title, groupId)
 
     res.success()
 

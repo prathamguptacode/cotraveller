@@ -24,7 +24,6 @@ const AppRouter = () => {
             <Routes>
 
 
-
                 <Route path='/' element={<MainLayout />}>
                     <Route index element={<Home />} />
                     <Route path='viewgroup' element={<ViewGroup />} />
