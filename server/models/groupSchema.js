@@ -52,11 +52,6 @@ const groupSchema = new mongoose.Schema({
         default: []
         //should be unique
     },
-    dbrequests:{
-        type: [Schema.Types.ObjectId],
-        ref: 'User',
-        default: []
-    },
     messages:{
         type:[Schema.Types.ObjectId],
         ref:"Message",

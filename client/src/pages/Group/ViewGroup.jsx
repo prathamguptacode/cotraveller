@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom'
 import { api } from '../../api/axios'
 import Group from '../../components/viewgroup/Group'
 import NoGroup from '../success/NoGroup'
+import { loaderEvent } from '../../api/mitt'
 
 function ViewGroup() {
 
@@ -25,6 +26,7 @@ function ViewGroup() {
         const upperT = query.get("upperT");
         (async () => {
             setLocalLoader(true)
+            loaderEvent.emit('startLoading')
             const body = {
                 mode: mode,
                 lowerTime: lowerT,
@@ -38,6 +40,8 @@ function ViewGroup() {
             } catch (error) {
                 //something went wrong page
                 console.error(error)
+            }finally{
+                loaderEvent.emit('stopLoading')
             }
         })()
     }, [query])

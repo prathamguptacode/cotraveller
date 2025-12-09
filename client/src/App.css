@@ -96,3 +96,9 @@ input::-webkit-inner-spin-button {
     margin: 0;
     /* Optional: Removes any default margin */
 }
+
+
+.top-loading-bar {
+    /* background: var(--primary) !important; */
+
+}

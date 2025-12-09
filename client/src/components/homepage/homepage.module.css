@@ -209,7 +209,7 @@
     box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
     background-color: var(--secondary-bg);
     z-index: 2;
-    border-radius: 5px;
+    border-radius: 10px;
     overflow: hidden;
 }
 
@@ -225,7 +225,7 @@
     box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
     background-color: var(--secondary-bg);
     z-index: 2;
-    border-radius: 5px;
+    border-radius: 10px;
     overflow: hidden;
     height: 400px;
     overflow-y: auto;
@@ -258,7 +258,7 @@
     background-color: var(--discoverbg);
     justify-content: space-between;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .can {

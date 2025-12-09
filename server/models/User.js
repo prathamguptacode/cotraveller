@@ -42,11 +42,6 @@ const userSchema = new mongoose.Schema({
         ref: 'Group',
         default: []
     },
-    dbrequests:{
-        type: [Schema.Types.ObjectId],
-        ref: 'Group',
-        default: []
-    }
 })
 
 export default mongoose.model("User", userSchema)
