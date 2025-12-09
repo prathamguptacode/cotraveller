@@ -3,7 +3,7 @@ import mystyle from './MoreInfo.module.css'
 import Navbar from '../../components/homepage/Navbar'
 import { FaUser } from "react-icons/fa6";
 import { api, callAuthApi } from '../../api/axios';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth';
 import { useEffect } from 'react';
@@ -20,7 +20,7 @@ function MoreInfo() {
     const [loadind, setLoading] = useState(true);
     const { user } = useAuth()
     const [hasRequested, setHasRequested] = useState(val?.requests?.includes(user?._id))
-    console.log(hasRequested)
+
     const navigate = useNavigate()
 
     const [q] = useSearchParams()
@@ -74,7 +74,6 @@ function MoreInfo() {
             console.error(data.message)
         }
     }
-
 
 
 
@@ -142,22 +141,22 @@ function MoreInfo() {
             <Navbar />
             {
                 loadind ? <LoadingPage /> :
-                    <div>
+                    <div className={mystyle.wrapper}>
                         <div className={mystyle.wrap}>
                             <div className={mystyle.profile}>
-                                <FaUser size="220px" />
+                                <FaUser />
                             </div>
                             <div className={mystyle.infoWrapper}>
                                 <div className={mystyle.parent}>
                                     <div className={mystyle.can}>
-                                        <div className={mystyle.title}>
+                                        <h2 className={mystyle.title}>
                                             {val.title}
-                                        </div>
-                                        <div className={mystyle.content}>{val.content}</div>
+                                        </h2>
+                                        <p className={mystyle.content}>{val.content}</p>
                                         <div className={mystyle.detail}>
-                                        <div className={mystyle.time}>Date & Time: {time}</div>
-                                        <div className={mystyle.transport}>Transport: {val.mode}</div>
-                                        <div className={mystyle.college}>College: {val.intialLocation}</div>
+                                            <p className={mystyle.time}>Date & Time: {time}</p>
+                                            <p className={mystyle.transport}>Transport: {val.mode}</p>
+                                            <p className={mystyle.college}>College: {val.intialLocation}</p>
                                         </div>
                                     </div>
                                     <div className={mystyle.memberbx}>
@@ -165,9 +164,11 @@ function MoreInfo() {
                                         {
                                             member.map((e) => {
                                                 return (
-                                                    <div className={mystyle.member}>
-                                                        <FaUser size="24px" />
-                                                        <div className={mystyle.name}>{e.fullName}</div>
+                                                    <div key={e._id} className={mystyle.member}>
+                                                        <div className={mystyle.memberAvatarWrapper}>
+                                                            <FaUser />
+                                                        </div>
+                                                        <div className={mystyle.name}>{e._id !== user?._id ? e.fullName : "You"}</div>
                                                     </div>
                                                 )
                                             })
@@ -176,7 +177,7 @@ function MoreInfo() {
                                 </div>
                                 <div className={mystyle.btnbox}>
                                     <button className={mystyle.moreinfo} onClick={focus}>Add comment</button>
-                                    <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
+                                    {member.some(e => e._id === user?._id) ? <Link to={`/groups/${q.get('q')}/chats`} className={mystyle.groupbtn}>Chat now</Link> : <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>}
                                 </div>
                             </div>
                         </div>
@@ -185,7 +186,9 @@ function MoreInfo() {
                             <div className={mystyle.commentTitle}>Comments:</div>
                             <div className={mystyle.input}>
                                 <div className={mystyle.questionTitle}>
-                                    <input type="text" placeholder='Add a comment' className={mystyle.inbx} ref={incomment} />
+                                    <input onKeyDown={(e) => {
+                                        if (e.key === "Enter") commentPost()
+                                    }} type="text" placeholder='Add a comment' className={mystyle.inbx} ref={incomment} />
                                     <button onClick={commentPost} className={mystyle.addbtn} >Post</button>
                                 </div>
                             </div>
@@ -211,7 +214,7 @@ function MoreInfo() {
                         <Toaster />
                     </div>
             }
-        </div>
+        </div >
     )
 }
 

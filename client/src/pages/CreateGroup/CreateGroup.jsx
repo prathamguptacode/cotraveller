@@ -1,4 +1,3 @@
-import React, { useRef, useState } from 'react'
 import NewNav from '../../components/CreateGroup/newNav'
 import TitleTile from '../../components/CreateGroup/TitleTile'
 import QuestionTile from '../../components/CreateGroup/QuestionTile'
@@ -10,7 +9,7 @@ function CreateGroup() {
     <div className='createWrapper'>
       <NewNav />
       <TitleTile />
-      <QuestionTile />
+      <QuestionTile  />
       {/* //title component
         //question answer component */}
     </div>

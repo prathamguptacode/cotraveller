@@ -23,7 +23,8 @@
 
     position: relative;
 }
-.hamburger:focus-within{
+
+.hamburger:focus-within {
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -128,6 +129,8 @@
     display: flex;
     gap: 4px;
     align-items: center;
+
+    padding-inline: 1rem;
 }
 
 .mode {
@@ -382,9 +385,23 @@
         display: none;
     }
 
-    .title{
+    .title {
         font-size: 24px;
     }
-   
 
+
+}
+
+@media (width<375px) {
+    .searchbox {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-areas:
+            "from from from from from from"
+            "mode mode mode mode mode mode"
+            "date date month month year year"
+
+        ;
+    }
 }

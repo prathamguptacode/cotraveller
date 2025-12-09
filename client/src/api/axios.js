@@ -2,7 +2,6 @@ import axios from 'axios'
 import { useToken } from '../hooks/useToken'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL + "/api"
-
 export const api = axios.create({
     baseURL,
     withCredentials: true,
