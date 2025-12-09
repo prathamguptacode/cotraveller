@@ -190,7 +190,9 @@
     }
 }
 
-
+.plusBtn{
+    display: none;
+}
 
 .locationDrop,
 .modeDrop {
@@ -400,6 +402,10 @@
         display: none;
     }
 
+    .plusBtn {
+        display: block;
+    }
+
     .mail {
         display: none;
     }
@@ -408,7 +414,7 @@
 
 @media (max-width:480px) {
     .navbar {
-        gap: .3rem;
+        gap: .5rem;
     }
 
 
