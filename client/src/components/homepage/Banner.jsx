@@ -8,7 +8,6 @@ import lightBanner from '../../assets/lightBanner.svg'
 function Banner() {
   const { user } = useAuth()
   const { theme }=useTheme()
-  console.log(theme)
   
   return (
     <div className={mystyle.banner}>

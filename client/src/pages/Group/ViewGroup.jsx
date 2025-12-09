@@ -9,7 +9,6 @@ import NoGroup from '../success/NoGroup'
 function ViewGroup() {
 
     const [groupData, setGroupData] = useState([])
-    console.log(groupData)
     const [localLoader, setLocalLoader] = useState(true)
 
     const [query] = useSearchParams()
@@ -48,7 +47,6 @@ function ViewGroup() {
             <Searchbox l={location} md={mode} d={d} m={m} y={y} w="1920px" />
             <div className={mystyle.groupSection} >
                 {localLoader ? <div className={mystyle.loader} /> : groupData.length == 0 ? <NoGroup /> : groupData.map(element => {
-                    console.log(element)
                     return <Group element={element} />
                 })}
             </div>

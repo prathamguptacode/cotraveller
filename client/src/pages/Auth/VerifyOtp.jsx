@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './auth.module.css'
 import TextField from '../../components/TextField/TextField'
-import { Link, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { callAuthApi } from '../../api/axios'
 import { useAuth } from '../../hooks/useAuth'
 
 
 //###LATER make this page non-navigable by user , only by us(using navigate thingy)
 const VerifyOtp = () => {
+    const location = useLocation()
     const [otp, setOtp] = useState('')
     const [error, setError] = useState('')
 
@@ -38,7 +39,7 @@ const VerifyOtp = () => {
             const { accessToken, user } = data.data
             updateAccessToken(accessToken)
             updateUser(user)
-            navigate('/',{replace:true})
+            navigate('/', { replace: true })
         }
         else console.error("SOMETHING WENT WRONG!")
     }
@@ -55,18 +56,19 @@ const VerifyOtp = () => {
 
     }
 
-    return (
-        <>
-            <form className={styles.form} onClick={(e) => e.preventDefault()}>
-                <TextField autoComplete={'off'} error={error} value={otp} setValue={setOtp} type={'text'} placeholder={'OTP'} requirements={['No leading or trailing spaces', 'Numeric', 'Exactly 6 digits']} />
-                <button onClick={handleSubmit} className={styles.button}>Continue</button>
-            </form>
+    return !location.state?.isAllowed ? <Navigate to={'/'} /> :
+        <>  < form className={styles.form} onClick={(e) => e.preventDefault()}>
+            <TextField autoComplete={'off'} error={error} value={otp} setValue={setOtp} type={'text'} placeholder={'OTP'} requirements={['No leading or trailing spaces', 'Numeric', 'Exactly 6 digits']} />
+            <button onClick={handleSubmit} className={styles.button}>Continue</button>
+        </form >
             <div className={styles.switchPage}>
                 <button onClick={handleResend} to={'/login'} className={styles.anchors} >Resend OTP</button>
             </div>
         </>
 
-    )
+
+
+
 }
 
 export default VerifyOtp

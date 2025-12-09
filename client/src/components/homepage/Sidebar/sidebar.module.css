@@ -27,6 +27,12 @@
     translate: 0;
 }
 
+body:has(.showSidebar) {
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow-y: hidden;
+}
+
 .header {
     align-self: stretch;
     border-bottom: 1px solid var(--clr-border);
@@ -163,7 +169,7 @@
 }
 
 @media (max-width:480px) {
-    .wrapper{
+    .wrapper {
         width: 100vw;
     }
 }
