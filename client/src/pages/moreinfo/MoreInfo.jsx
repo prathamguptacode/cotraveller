@@ -83,6 +83,19 @@ function MoreInfo() {
         incomment.current.focus()
     }
 
+    async function share() {
+        const url = window.location.href;
+        await navigator.clipboard.writeText(url)
+        toast.success('Link copied to your clipboard', {
+            style: {
+                borderRadius: '10px',
+                background: 'var(--toast-bg)',
+                color: 'var(--toast-color)',
+            }
+        })
+
+    }
+
     async function commentPost() {
         if (user == null) {
             navigate('/login')
@@ -177,7 +190,9 @@ function MoreInfo() {
                                 </div>
                                 <div className={mystyle.btnbox}>
                                     <button className={mystyle.moreinfo} onClick={focus}>Add comment</button>
+                                    <button className={mystyle.sharebtn} onClick={share}>Share</button>
                                     {member.some(e => e._id === user?._id) ? <Link to={`/groups/${q.get('q')}/chats`} className={mystyle.groupbtn}>Chat now</Link> : <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>}
+
                                 </div>
                             </div>
                         </div>
