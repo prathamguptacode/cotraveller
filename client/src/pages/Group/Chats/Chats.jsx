@@ -147,7 +147,7 @@ const Chats = () => {
         if (loading) return
         socket.emit('JOIN_ROOM', { roomId: groupId, userId: user._id }, (res) => {
             if (!res.success) console.error('Error connecting to chatRoom')
-            else console.log('Connected to ChatRoom:', res.message, res.id)
+            
         })
 
         // eslint-disable-next-line react-hooks/exhaustive-deps

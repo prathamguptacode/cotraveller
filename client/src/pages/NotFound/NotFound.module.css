@@ -1,25 +1,112 @@
-.errorpage{
+.errorpage {
     height: 100vh;
-    width: 100vw;
+    height: 100dvh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.can{
+
+.can {
     display: flex;
     gap: 36px;
     align-items: center;
 }
-.content{
+
+.content {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
-.title{
+
+.title {
     font-size: 36px;
     font-weight: 800;
 }
-.con{
+
+.con {
     font-size: 20px;
     color: var(--dull-font);
+    max-width: 450px;
+}
+
+.backBtn {
+    border-radius: 10px;
+    background-color: var(--primary);
+    color: var(--secondaryFont);
+    padding: .5em 1.5em;
+    width: fit-content;
+    transition: all .1s linear;
+
+    &:hover {
+        background-color: var(--brighter-primary);
+    }
+
+    &:active {
+        color: white;
+        scale: .96;
+    }
+}
+
+.imgbx>svg {
+    --dim: 200px;
+    width: var(--dim);
+    height: var(--dim);
+}
+
+@media (max-width:768px) {
+    .imgbx>svg {
+        --dim: 150px;
+    }
+
+    .title {
+        font-size: 32px;
+    }
+
+    .can {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .content {
+        gap: 1.2rem;
+    }
+
+    .content>* {
+        text-align: center;
+        text-wrap: balance;
+    }
+
+    .backBtn {
+        align-self: center;
+    }
+}
+
+@media (max-width:640px) {
+    .imgbx>svg {
+        --dim: 120px;
+    }
+
+    .title {
+        font-size: 28px;
+    }
+
+    .con {
+        font-size: 18px;
+    }
+
+}
+
+@media (max-width:480px) {
+    .imgbx>svg {
+        --dim: 100px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .con {
+        font-size: 16px;
+    }
+
 }

@@ -1,6 +1,7 @@
 import mystyle from './NotFound.module.css'
 import { BiSolidError } from "react-icons/bi";
 import Navbar from '../../components/homepage/Navbar';
+import { Link } from 'react-router-dom';
 
 function NotFound() {
     return (
@@ -12,12 +13,13 @@ function NotFound() {
                         <BiSolidError size={200} />
                     </div>
                     <div className={mystyle.content}>
-                        <div className={mystyle.title}>
-                            Something went wrong
-                        </div>
-                        <div className={mystyle.con}>
-                            Cannot find the following page
-                        </div>
+                        <h2 className={mystyle.title}>
+                            Something went wrong !
+                        </h2>
+                        <p className={mystyle.con}>
+                            Cannot find the following page, click on the button below to go back to homepage.
+                        </p>
+                        <Link className={mystyle.backBtn} to={'/'}>Go back</Link>
                     </div>
                 </div>
             </div>
