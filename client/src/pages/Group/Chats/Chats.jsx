@@ -169,7 +169,11 @@ const Chats = () => {
         })
     }
 
-
+    const openGroupOptions = async (groupId) => {
+        const {status,data} = await callAuthApi('delete',`/group/${groupId}/leavegroup`)
+        if(status===204) navigate('/')
+        else console.error(data.message)
+    }
 
     const [currentTab, setCurrentTab] = useState('Chats')
 
@@ -257,8 +261,11 @@ const Chats = () => {
 
                         </div>
 
-                        <button className={clsx(styles.groupOptions, styles.listItem)}>
+                        <button onClick={openGroupOptions} className={clsx(styles.groupOptionsWrapper, styles.listItem)}>
                             <Ellipsis />
+                            <div className={styles.groupOptions}>
+                                
+                            </div>
                         </button>
 
                     </div>
