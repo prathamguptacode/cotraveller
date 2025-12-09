@@ -11,6 +11,7 @@ import { useAuth } from '../../../hooks/useAuth'
 import { useSocket } from '../../../hooks/useSocket'
 import { Howl } from 'howler'
 import { FaPeopleGroup } from 'react-icons/fa6'
+import { RiPencilFill } from "react-icons/ri";
 import LoadingPage from '../../Extras/LoadingPage'
 
 
@@ -169,6 +170,13 @@ const Chats = () => {
         })
     }
 
+    function editgroup(){
+        const path=window.location.pathname;
+        const pathSplit=path.split('/')
+        const groupId=(pathSplit[2])
+        navigate(`/edit?q=${groupId}`, { state: { allowed: true }})
+    }
+
     const openGroupOptions = async (groupId) => {
         const {status,data} = await callAuthApi('delete',`/group/${groupId}/leavegroup`)
         if(status===204) navigate('/')
@@ -261,6 +269,10 @@ const Chats = () => {
 
                         </div>
 
+                        <button className={clsx(styles.groupOptions, styles.listItem)} onClick={editgroup} >
+                            < RiPencilFill size={20} />
+                         </button>
+                         
                         <button onClick={openGroupOptions} className={clsx(styles.groupOptionsWrapper, styles.listItem)}>
                             <Ellipsis />
                             <div className={styles.groupOptions}>

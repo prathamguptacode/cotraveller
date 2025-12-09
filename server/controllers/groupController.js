@@ -15,13 +15,13 @@ export async function addGroup(req, res) {
     const travelDate = xss(req.body?.travelDate);
     const intialLocation = xss(req.body?.intialLocation);
 
-    if (!title) res.fail(400, "INPUT_ERROR", "title not found")
-    if (!content) res.fail(400, "INPUT_ERROR", "content not found")
-    if (!owner) res.fail(400, "INPUT_ERROR", "owner not found")
-    if (!memberNumber) res.fail(400, "INPUT_ERROR", "memberNumber not found")
-    if (!mode) res.fail(400, "INPUT_ERROR", "mode not found")
-    if (!travelDate) res.fail(400, "INPUT_ERROR", "travelDate not found")
-    if (!intialLocation) res.fail(400, "INPUT_ERROR", "intialLocation not found")
+    if (!title) return  res.fail(400, "INPUT_ERROR", "title not found")
+    if (!content) return res.fail(400, "INPUT_ERROR", "content not found")
+    if (!owner) return res.fail(400, "INPUT_ERROR", "owner not found")
+    if (!memberNumber) return res.fail(400, "INPUT_ERROR", "memberNumber not found")
+    if (!mode) return res.fail(400, "INPUT_ERROR", "mode not found")
+    if (!travelDate) return res.fail(400, "INPUT_ERROR", "travelDate not found")
+    if (!intialLocation) return res.fail(400, "INPUT_ERROR", "intialLocation not found")
 
     //telling mongo that date formate is ist
     const istDate = moment.tz(travelDate, "Asia/Kolkata").toDate();
@@ -44,6 +44,41 @@ export async function viewGroup(req, res) {
     } catch (error) {
         res.fail(400, "INVALID_ID")
     }
+}
+
+export async function editGroup(req, res) {
+    const user = req.user._id;
+    const group = req.query?.q;
+
+    //checking user is owner?
+    const tempGroup = await groupSchema.findById(group)
+    if (!tempGroup) {
+        return res.fail(400, "INVALID_GROUP")
+    }
+    const owner = tempGroup.owner;
+    if (! owner.equals(user)) {
+        return res.fail(403, "UNAUTHORIZED_USER")
+    }
+
+    const title = xss(req.body?.title);
+    const content = xss(req.body?.content);
+    const memberNumber = xss(req.body?.memberNumber);
+    const mode = xss(req.body?.mode);
+    const travelDate = xss(req.body?.travelDate);
+    const intialLocation = xss(req.body?.intialLocation);
+
+    if (!title) return res.fail(400, "INPUT_ERROR", "title not found")
+    if (!content) return res.fail(400, "INPUT_ERROR", "content not found")
+    if (!memberNumber) return res.fail(400, "INPUT_ERROR", "memberNumber not found")
+    if (!mode) return res.fail(400, "INPUT_ERROR", "mode not found")
+    if (!travelDate) return res.fail(400, "INPUT_ERROR", "travelDate not found")
+    if (!intialLocation) return res.fail(400, "INPUT_ERROR", "intialLocation not found")
+
+    //telling mongo that date formate is ist
+    const istDate = moment.tz(travelDate, "Asia/Kolkata").toDate();
+
+    await groupSchema.updateOne({_id: group},{ title, content, memberNumber, mode, travelDate: istDate, intialLocation,})
+    res.success(200)
 }
 
 export async function viewGroupByFilter(req, res) {

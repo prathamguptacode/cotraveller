@@ -127,7 +127,7 @@ function Searchbox({ l = 'Where from ?', md = 'Transport ?', d = 'Date ?', m = '
         }
         let monthNum = 0;
         if (month == "January") monthNum = '01'
-        if (month == "Febuary") monthNum = '02'
+        if (month == "February") monthNum = '02'
         if (month == "March") monthNum = '03'
         if (month == "April") monthNum = '04'
         if (month == "May") monthNum = '05'

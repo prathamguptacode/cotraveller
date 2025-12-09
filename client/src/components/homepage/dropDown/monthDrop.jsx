@@ -11,7 +11,7 @@ function MonthDrop({setMonth}) {
   return (
     <div className={mystyle.monthDrop}>
       <div className={mystyle.options} onClick={handle}>January</div>
-      <div className={mystyle.options} onClick={handle}>Febuary</div>
+      <div className={mystyle.options} onClick={handle}>February</div>
       <div className={mystyle.options} onClick={handle}>March</div>
       <div className={mystyle.options} onClick={handle}>April</div>
       <div className={mystyle.options} onClick={handle}>May</div>
