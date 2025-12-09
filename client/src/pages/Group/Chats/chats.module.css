@@ -188,11 +188,16 @@
 
 }
 
-.groupOptions {
+.groupOptionsWrapper {
     margin-left: auto;
     padding: .3rem;
     flex-shrink: 0;
+}
 
+.groupOptions{
+    display: flex;
+    flex-direction: column;
+    
 }
 
 .messages {

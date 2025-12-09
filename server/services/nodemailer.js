@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer'
 import env from '../config/env.js';
-import { CustomError } from '../utils/CustomError.js';
 
 export const sendOtp = async (email, otp) => {
   const transporter = nodemailer.createTransport({
@@ -93,7 +92,7 @@ export function sendRequestNotification(email, requester, groupName) {
   })
 }
 
-export function accecptedNotification(email, requester, groupName) {
+export function accecptedNotification(email, requester, groupName,groupId) {
   const html = `
   <div style="font-family: Arial, sans-serif; background:#f7f9fc; padding:20px;">
     <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
@@ -117,7 +116,7 @@ export function accecptedNotification(email, requester, groupName) {
 
       <div style="text-align:center; margin-top:25px;">
         <a 
-          href="https://cotraveller.app" 
+          href="https://cotraveller.app/groups/${groupId}/chats" 
           style="padding:12px 22px; background:#1E66C8; color:white; text-decoration:none; border-radius:6px; font-weight:bold;">
           Open Group
         </a>
@@ -153,7 +152,7 @@ export function accecptedNotification(email, requester, groupName) {
   })
 }
 
-export function newMemberJoinedNotification(emails, newMemberName, groupName) {
+export function newMemberJoinedNotification(emails, newMemberName, groupName,groupId) {
   const html = `
   <div style="font-family: Arial, sans-serif; background:#f7f9fc; padding:20px;">
     <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
@@ -177,7 +176,7 @@ export function newMemberJoinedNotification(emails, newMemberName, groupName) {
 
       <div style="text-align:center; margin-top:25px;">
         <a 
-          href="https://cotraveller.app" 
+          href="https://cotraveller.app/groups/${groupId}/chats" 
           style="padding:12px 22px; background:#1E66C8; color:white; text-decoration:none; border-radius:6px; font-weight:bold;">
           Open Group
         </a>
@@ -273,5 +272,66 @@ export function rejectedNotification(email, requester, groupName) {
 
   transport.sendMail(mailOption, function (error, value) {
     if (error) console.log(error, value)
+  });
+}
+
+export function memberLeftNotification(emails, memberName, groupName,groupId) {
+  const html = `
+  <div style="font-family: Arial, sans-serif; background:#f7f9fc; padding:20px;">
+    <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      
+      <h2 style="color:#D64545; margin-top:0; text-align:center;">
+        A Member Has Left Your Group 👋
+      </h2>
+
+      <p style="font-size:16px; color:#333;">
+        Hello,
+      </p>
+
+      <p style="font-size:16px; color:#333; line-height:1.5;">
+        <strong style="color:#1E66C8;">${memberName}</strong> has left your
+        <strong style="color:#1E66C8;">${groupName}</strong> group.
+      </p>
+
+      <p style="font-size:16px; color:#333; line-height:1.5;">
+        Your group is still active, and you can continue planning and coordinating with the remaining members.
+      </p>
+
+      <div style="text-align:center; margin-top:25px;">
+        <a 
+          href="https://cotraveller.app/groups/${groupId}/chats" 
+          style="padding:12px 22px; background:#1E66C8; color:white; text-decoration:none; border-radius:6px; font-weight:bold;">
+          View Group
+        </a>
+      </div>
+
+      <p style="font-size:14px; color:#777; margin-top:30px; text-align:center;">
+        Safe travels,<br/>The Cotraveller Team
+      </p>
+
+    </div>
+  </div>
+  `;
+
+  const text = `Hello,\n\n${memberName} has left your "${groupName}" group.\nYou can continue planning your trip with the remaining members.\n\nSafe travels,\nThe Cotraveller Team`;
+
+  const transport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: env.EMAIL_ID,
+      pass: env.EMAIL_PASS,
+    },
+  });
+
+  let mailOption = {
+    from: `"Cotraveller" ${env.EMAIL_ID}`,
+    to: emails, 
+    subject: `${memberName} Left the group ${groupName}`,
+    text,
+    html,
+  };
+
+  transport.sendMail(mailOption, function (error) {
+    if (error) console.log(error);
   });
 }

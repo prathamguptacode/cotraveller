@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useToken } from '../hooks/useToken'
+import { loaderEvent } from './mitt'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL + "/api"
 export const api = axios.create({
@@ -19,7 +20,9 @@ api.interceptors.request.use(config => {
     return config
 })
 
-api.interceptors.response.use(res => res,
+api.interceptors.response.use(res =>{
+    return res
+},
     async err => {
         const { updateAccessToken } = useToken()
         //Copying original Request for retrying incase of expired accessToken(just once)

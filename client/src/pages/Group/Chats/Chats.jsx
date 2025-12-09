@@ -11,6 +11,7 @@ import { useAuth } from '../../../hooks/useAuth'
 import { useSocket } from '../../../hooks/useSocket'
 import { Howl } from 'howler'
 import { FaPeopleGroup } from 'react-icons/fa6'
+import LoadingPage from '../../Extras/LoadingPage'
 
 
 
@@ -25,7 +26,7 @@ const Chats = () => {
     const [text, setText] = useState('')
     const [messages, setMessages] = useState([])
 
-     const navigate = useNavigate()
+    const navigate = useNavigate()
 
     const ping = useMemo(() => new Howl({
         src: ['/sounds/notify.mp3'],
@@ -33,17 +34,6 @@ const Chats = () => {
         volume: 0.25,
         preload: true,
     }), [])
-
-
-
-
-
-
-
-
-
-
-
 
     const messagesRef = useRef()
     const lastMessageRef = useRef()
@@ -61,9 +51,6 @@ const Chats = () => {
         div.style['scroll-behavior'] = 'smooth'
         setIsMounted(true)
     }, [messages])
-
-
-
 
 
     //For further auto-scroll:
@@ -114,20 +101,7 @@ const Chats = () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     useEffect(() => {
-
         (async () => {
             setLoading(true)
             const { status, data } = await callAuthApi('get', `/message/${groupId}`)
@@ -147,7 +121,7 @@ const Chats = () => {
         if (loading) return
         socket.emit('JOIN_ROOM', { roomId: groupId, userId: user._id }, (res) => {
             if (!res.success) console.error('Error connecting to chatRoom')
-            
+
         })
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -195,7 +169,11 @@ const Chats = () => {
         })
     }
 
-
+    const openGroupOptions = async (groupId) => {
+        const {status,data} = await callAuthApi('delete',`/group/${groupId}/leavegroup`)
+        if(status===204) navigate('/')
+        else console.error(data.message)
+    }
 
     const [currentTab, setCurrentTab] = useState('Chats')
 
@@ -274,7 +252,7 @@ const Chats = () => {
                                 {
                                     group.members?.map(member => {
                                         return (
-                                            <div> {member.fullName}</div>
+                                            <div key={member._id}> {member.fullName}</div>
                                         )
                                     })
                                 }
@@ -283,8 +261,11 @@ const Chats = () => {
 
                         </div>
 
-                        <button className={clsx(styles.groupOptions, styles.listItem)}>
+                        <button onClick={openGroupOptions} className={clsx(styles.groupOptionsWrapper, styles.listItem)}>
                             <Ellipsis />
+                            <div className={styles.groupOptions}>
+                                
+                            </div>
                         </button>
 
                     </div>
@@ -293,7 +274,7 @@ const Chats = () => {
 
 
 
-                        {messages.length != 0 && messages.map((message, i, arr) => {
+                        {loading ? <LoadingPage bgColor={'var(--secondary-bg-darker)'} /> : messages.length != 0 && messages.map((message, i, arr) => {
                             const isMyMessage = message.author._id == user._id
                             const timeDiff = i > 0 && new Date(arr[i - 1].createdAt).getTime() - new Date(message.createdAt).getTime()
                             const hideName = i > 0 ? (arr[i - 1].author._id == message.author._id && Math.abs(timeDiff) < 60 * 1000) : false
