@@ -3,7 +3,6 @@ import xss from 'xss'
 import moment from "moment-timezone";
 import User from "../models/User.js";
 import mongoose from "mongoose";
-import nodemailer from 'nodemailer'
 import { accecptedNotification, newMemberJoinedNotification, rejectedNotification, sendRequestNotification } from "../services/nodemailer.js";
 
 

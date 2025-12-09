@@ -129,7 +129,7 @@ export const otpVerificationController = async (req, res) => {
     })
 
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(201, { user: { fullName, username, email }, accessToken }, "Signup Successful")
+    res.success(201, { user: { fullName, username, email, _id: user._id }, accessToken }, "Signup Successful")
 
 }
 
@@ -142,7 +142,7 @@ export const loginController = async (req, res) => {
     if (!user) return res.fail(400, "USER_NOT_FOUND", "Email not registered")
 
     //Check if password mathces
-    const { passwordHash } = user
+    const { passwordHash, fullName, username, _id } = user
     if (!passwordHash) return res.fail(400, "PASSWORD_NOT_FOUND", "You do not have a password set, please login using other methods or use 'Forgot Password' to make a new one")
 
     if (!await argon2.verify(passwordHash, password)) return res.fail(400, "INVALID_PASSWORD", "Password is invalid")
@@ -153,7 +153,7 @@ export const loginController = async (req, res) => {
     res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
 
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(200, { accessToken, user }, "Login Successful")
+    res.success(200, { accessToken, user: { email, username, fullName, _id } }, "Login Successful")
 
 }
 
