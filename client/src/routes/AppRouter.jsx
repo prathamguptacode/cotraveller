@@ -42,9 +42,6 @@ const AppRouter = () => {
                 //error route
                 <Route path='*' element={<NotFound />} />
 
-                //delete this tempaerary path
-                <Route path='/edit' element={<EditGroup />} />
-
 
 
                 <Route element={<AntiProtectedRoutes />} >
@@ -61,6 +58,7 @@ const AppRouter = () => {
                 <Route element={<ProtectedRoutes />}>
                     <Route path='/creategroup' element={<CreateGroup />} />
                     <Route path='/success' element={<SuccessPage />} />
+                    <Route path='/edit' element={<EditGroup />} />
                 </Route>
 
 
