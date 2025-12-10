@@ -321,4 +321,13 @@
     .detail {
         gap: .75rem;
     }
+
+    .btnbox{
+        font-size: 0.9rem;
+    }
+
+    .addbtn{
+        font-size: 0.9rem;
+    }
+
 }
