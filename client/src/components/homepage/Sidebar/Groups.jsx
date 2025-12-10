@@ -6,7 +6,7 @@ import { useAuth } from '../../../hooks/useAuth'
 import { FaPeopleGroup } from "react-icons/fa6";
 
 
-const Groups = () => {
+const Groups = ({setIsHidden}) => {
   const { user } = useAuth()
 
   const [groups, setGroups] = useState([])
@@ -28,7 +28,7 @@ const Groups = () => {
 
         groups.map(group => {
           return (
-            <Link to={`/groups/${group._id}/chats`} key={group._id} className={styles.listItem}>
+            <Link onClick={()=>setIsHidden(true)} to={`/groups/${group._id}/chats`} key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
                 <FaPeopleGroup />
               </div>

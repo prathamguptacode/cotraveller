@@ -40,7 +40,7 @@ function Navbar() {
             }} className={mystyle.hamburger}>
                 <GiHamburgerMenu size='20px' />
 
-                <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : currentTab === "Outbox" ? <Outbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} closeSidebar={closeSidebar} />
+                <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox setisHidden={setisHidden} /> : currentTab === "Outbox" ? <Outbox setisHidden={setisHidden}  /> : <Groups setisHidden={setisHidden}  />} setCurrentTab={setCurrentTab} isHidden={isHidden} closeSidebar={closeSidebar} />
             </div>
             <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
 
