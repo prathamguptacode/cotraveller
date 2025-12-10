@@ -58,7 +58,8 @@ function Navbar() {
             <Link to={'/creategroup'} className={clsx(mystyle.navbtn, mystyle.createGroupBtn)}>Create group</Link>
             <Link to={'/creategroup'} className={mystyle.plusBtn}><Plus /></Link>
 
-            {user && <Link className={mystyle.avatarWrapper} to={`/users/${user._id}`}>
+            {/* pratham changed this to prevent error page */}
+            {user && <Link className={mystyle.avatarWrapper} to={`/`}>
                 {user.avatar?.publicUrl ? <img src="" alt="avatar" /> : <FaUser />
                 }
             </Link>}
