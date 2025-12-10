@@ -7,7 +7,7 @@ import { callAuthApi } from '../../../api/axios'
 import { useAuth } from '../../../hooks/useAuth'
 import { FaPeopleGroup } from 'react-icons/fa6'
 
-const Outbox = () => {
+const Outbox = ({setIsHidden}) => {
     const { user } = useAuth()
     const [groups, setGroups] = useState([])
     const [changed, setChanged] = useState(false)
@@ -33,7 +33,7 @@ const Outbox = () => {
         <div className={styles.list}>
             {
                 groups.map(group => {
-                    return (<Link to={`/moreinfo?q=${group._id}`} key={group._id} className={styles.listItem}>
+                    return (<Link onClick={()=>setIsHidden(true)} to={`/moreinfo?q=${group._id}`} key={group._id} className={styles.listItem}>
                         <div className={styles.avatarWrapper} >
                             <FaPeopleGroup />
                         </div>
