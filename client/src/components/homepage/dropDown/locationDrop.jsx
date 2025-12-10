@@ -8,7 +8,7 @@ function LocationDrop({setLocation}) {
         setLocation('IIT Roorkie')
     }
     function handleClick1(){
-        setLocation('IIT Delhi')
+        setLocation('IIT Dhanbad')
     }
     function handleClick2(){
         setLocation('VIT Chennai')
@@ -25,7 +25,7 @@ function LocationDrop({setLocation}) {
         </div>
       <div className={mystyle.options} onClick={handleClick1}>
         <BsBuildingsFill size="22px" />
-        IIT Delhi</div>
+        IIT Dhanbad</div>
       <div className={mystyle.options} onClick={handleClick2}>
         <BsBuildingsFill size="22px" />
         VIT Chennai</div>
