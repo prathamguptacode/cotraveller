@@ -197,7 +197,10 @@
 .groupOptions{
     display: flex;
     flex-direction: column;
-    
+
+    /* changes made by pratham */
+    margin-left: auto;
+    padding: 8px;
 }
 
 .messages {

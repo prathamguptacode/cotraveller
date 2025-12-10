@@ -281,7 +281,6 @@ function QuestionTile({ edit = 0 }) {
         if (month == "December") monthNum = '12'
 
         const indTime = `${year}-${monthNum}-${date}T${hour}:${min}`
-        console.log(indTime)
         const zobj = new Date(indTime)
         const time = zobj.toISOString()
 

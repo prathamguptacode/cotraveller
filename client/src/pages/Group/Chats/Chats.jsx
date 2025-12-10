@@ -269,16 +269,18 @@ const Chats = () => {
 
                         </div>
 
+                        {/* changes made by pratham */}
+
                         <button className={clsx(styles.groupOptions, styles.listItem)} onClick={editgroup} >
                             < RiPencilFill size={20} />
                          </button>
                          
-                        <button onClick={openGroupOptions} className={clsx(styles.groupOptionsWrapper, styles.listItem)}>
+                        {/* <button onClick={openGroupOptions} className={clsx(styles.groupOptionsWrapper, styles.listItem)}>
                             <Ellipsis />
                             <div className={styles.groupOptions}>
                                 
                             </div>
-                        </button>
+                        </button> */}
 
                     </div>
 

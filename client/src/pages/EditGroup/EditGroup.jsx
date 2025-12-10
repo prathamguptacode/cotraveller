@@ -11,7 +11,6 @@ function EditGroup() {
     const location=useLocation()
     const navigate=useNavigate()
 
-    console.log(location.state?.allowed)
 
     const [q] = useSearchParams()
     const id = q.get("q")

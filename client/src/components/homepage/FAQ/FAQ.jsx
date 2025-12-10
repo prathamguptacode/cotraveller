@@ -9,7 +9,6 @@ function FAQ() {
     const [open1, setOpen1] = useState(0)
 
     function handleClick1() {
-        console.log("hihihi")
         if (!open1) {
             sp1.current.style.margin = "16px 0"
             sp1.current.style.height = sp1.current.scrollHeight + "px";
