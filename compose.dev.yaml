@@ -5,8 +5,6 @@ services:
       dockerfile: Dockerfile.dev
     image: cotraveller_server:dev
     container_name: cotraveller_dev_server
-    env_file:
-      - ./server/.env
     expose:
       - 8080
     volumes:

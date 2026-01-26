@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "npm i && nodemon"
+    "dev": "npm i && nodemon",
+    "logs":"docker compose -f ../compose.dev.yaml logs -f server"
   },
   "keywords": [],
   "author": "",
@@ -32,10 +33,16 @@
     "unique-username-generator": "^1.5.1",
     "uuidv4": "^6.2.13",
     "xss": "^1.0.15",
-    "zod": "^4.1.13"
+    "zod": "^4.3.6"
   },
   "type": "module",
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.10",
+    "@types/nodemailer": "^7.0.5",
+    "nodemon": "^3.1.11",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }

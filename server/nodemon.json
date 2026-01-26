@@ -1,6 +1,6 @@
 {
-    "watch":["."],
+    "watch":["src",".env"],
     "exclude":["node_modules"],
-    "ext":"js,env",
-    "exec":"node server"
+    "ext":"js,env,ts",
+    "exec":"tsx src/server"
 }
