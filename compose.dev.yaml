@@ -8,10 +8,10 @@ services:
     env_file:
       - ./server/.env
     expose:
-      - "3000"
+      - 8080
     volumes:
-      - ./server:/app:ro
-      - ./server/uploads:/app/uploads:rw
+      - ./server:/app
+      - /app/node_modules/
     networks:
       - cotraveller_dev_net
     restart: unless-stopped
@@ -23,12 +23,10 @@ services:
     image: cotraveller_client:dev
     container_name: cotraveller_dev_client
     expose:
-      - "5173"
+      - 3000
     volumes:
       - ./client:/app
-      - /app/node_modules
-    environment:
-      - CHOKIDAR_USEPOLLING=true
+      - /app/node_modules/
     networks:
       - cotraveller_dev_net
     restart: unless-stopped
@@ -47,6 +45,7 @@ services:
     restart: unless-stopped
     depends_on:
       - client
+      - server
     
 
 networks:
