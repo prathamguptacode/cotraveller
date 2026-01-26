@@ -8,9 +8,9 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
-
 ENV VITE_API_BASE_URL=""
-ENV VITE_CLOUDINARY_CLOUD_NAME=dgfntqxtc
+ENV VITE_CLOUDINARY_CLOUD_NAME=""
+
+EXPOSE 5173
 
 CMD [ "npm","run","dev" ]

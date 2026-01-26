@@ -1,5 +1,0 @@
-{
-    "watch":["src",".env"],
-    "exclude":["node_modules"],
-    "exec":"node src/server"
-}
