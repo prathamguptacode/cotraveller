@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "npm i && vite",
+    "logs":"docker compose -f ../compose.dev.yaml logs -f client",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
