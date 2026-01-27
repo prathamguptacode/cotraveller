@@ -50,14 +50,14 @@ const Inbox = ({setIsHidden}) => {
                 <p className={styles.lastMessage}>{group.requestee.fullName} </p>
               </div>
               <div className={styles.choicesWrapper}>
-                <button onClickCapture={(e) => {
+                <button aria-label='Accept Request' onClickCapture={(e) => {
                   e.stopPropagation()
                   e.preventDefault()
                   acceptIncomingRequest(group._id, group.requestee._id)
                 }}>
                   <Check color='#2A903B' />
                 </button>
-                <button onClickCapture={(e) => {
+                <button aria-label='Decline Request' onClickCapture={(e) => {
                   e.stopPropagation()
                   e.preventDefault()
                   rejectIncomingRequest(group._id, group.requestee._id,)

@@ -83,7 +83,7 @@ const Login = () => {
       <form className={styles.form} onClick={(e) => e.preventDefault()}>
         <TextField autoComplete={'email'} value={email} setValue={setEmail} error={emailError} type={'email'} placeholder={'Email Address'} />
         <TextField autoComplete={'current-password'} value={password} setValue={setPassword} error={passwordError} type={'password'} placeholder={'Password'} />
-        <button onClick={handleLogin} className={styles.button}>Log in</button>
+        <button aria-label='Log in' onClick={handleLogin} className={styles.button}>Log in</button>
       </form>
       <div className={styles.switchPage}>
         <Link to={'/signup'} className={styles.anchors} >Sign up</Link>

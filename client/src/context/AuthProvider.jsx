@@ -16,7 +16,6 @@ const AuthProvider = ({ children }) => {
             updateAccessToken(data.accessToken)
             updateUser(data.user)
         }).catch(() => {
-            console.log("New Session")
         }).finally(() => {
             setLoading(false)
         })

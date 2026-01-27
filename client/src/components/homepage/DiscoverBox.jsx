@@ -17,7 +17,7 @@ function DiscoverBox() {
         <div className={mystyle.discoverTitle}>Your next trip starts with one search.</div>
         <div className={mystyle.discoverContent}>Find travellers heading to the same destination, connect instantly, and join plans that match your vibe.</div>
       </div>
-      <button onClick={handleClick} className={clsx(mystyle.discoverBtn, mystyle.inhover)}>Explore</button>
+      <button aria-label='Explore' onClick={handleClick} className={clsx(mystyle.discoverBtn, mystyle.inhover)}>Explore</button>
     </div>
   )
 }

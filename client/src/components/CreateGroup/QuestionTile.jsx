@@ -458,7 +458,7 @@ function QuestionTile({ edit = 0 }) {
             </div>
 
             {
-                edit ? <button className={btnstyle.submitbtn} onClick={editgroup}>Edit Group</button> : <button className={btnstyle.submitbtn} onClick={handleSubmit} >Create Group</button>
+                edit ? <button aria-label='Edit Group' className={btnstyle.submitbtn} onClick={editgroup}>Edit Group</button> : <button aria-label='Create Group' className={btnstyle.submitbtn} onClick={handleSubmit} >Create Group</button>
             }
 
 

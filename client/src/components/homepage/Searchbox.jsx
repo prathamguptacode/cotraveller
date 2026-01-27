@@ -173,7 +173,7 @@ function Searchbox({ l = 'Where from ?', md = 'Transport ?', d = 'Date ?', m = '
 
 
             <div className={mystyle.btnbox}>
-                <button className={mystyle.searchbtn} onClick={search}>
+                <button aria-label='Search' className={mystyle.searchbtn} onClick={search}>
                     <IoMdSearch size="20px" />
                     Find groups
                 </button>

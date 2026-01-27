@@ -68,8 +68,8 @@ function Group({ element }) {
                     <div className={mystyle.comments}>{commentNum ? commentNum : "0"} {commentNum == 1 ? 'comment' : 'comments'}</div>
                 </div>
                 <div className={mystyle.btnbox}>
-                    <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
-                    <button className={mystyle.groupbtn} onClick={nav}>More info</button>
+                    <button aria-label='Send Request' onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
+                    <button aria-label='More info' className={mystyle.groupbtn} onClick={nav}>More info</button>
                 </div>
             </div>
             <div className={mystyle.line}></div>

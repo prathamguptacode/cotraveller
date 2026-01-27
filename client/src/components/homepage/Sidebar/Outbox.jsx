@@ -42,7 +42,7 @@ const Outbox = ({setIsHidden}) => {
                             <p className={styles.lastMessage}>Members: {group.memberNumber} </p>
                         </div>
                         <div className={styles.choicesWrapper}>
-                            <button onClickCapture={(e) => {
+                            <button aria-label='Cancel Request' onClickCapture={(e) => {
                                 e.stopPropagation()
                                 e.preventDefault()
                                 deleteOutgoingRequest(group._id)

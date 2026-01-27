@@ -28,9 +28,9 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }) => {
             e.preventDefault()
         }} onClick={(e) => e.stopPropagation()} className={clsx(styles.wrapper, !isHidden && styles.showSidebar)}>
             <div className={styles.header}>
-                <button className={currentTab === "Groups" ? styles.activeTab : ""} onClick={() => setCurrentTab('Groups')}>Groups</button>
-                <button className={currentTab === "Inbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Inbox')}>Inbox</button>
-                <button className={currentTab === "Outbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Outbox')}>Sent</button>
+                <button aria-label='Groups' className={currentTab === "Groups" ? styles.activeTab : ""} onClick={() => setCurrentTab('Groups')}>Groups</button>
+                <button aria-label='Inbox' className={currentTab === "Inbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Inbox')}>Inbox</button>
+                <button aria-label='Sent' className={currentTab === "Outbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Outbox')}>Sent</button>
 
             </div>
 
@@ -53,7 +53,7 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }) => {
                         Feedback
                     </p>
                 </Link>
-                {user && <button onClick={handleLogout} className={styles.listItem}>
+                {user && <button aria-label='Logout' onClick={handleLogout} className={styles.listItem}>
                     <div className={clsx(styles.iconWrapper, styles.avatarWrapper)} >
                         <LogOut />
                     </div>

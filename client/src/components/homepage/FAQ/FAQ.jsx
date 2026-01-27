@@ -91,7 +91,7 @@ function FAQ() {
 
                 <div className={mystyle.arrowbx}>
                     <div className={mystyle.question}>How does this platform work?</div>
-                    <button className={mystyle.arrow} onClick={handleClick1} ref={arrow1} >
+                    <button aria-label='Show Answer' className={mystyle.arrow} onClick={handleClick1} ref={arrow1} >
                         < IoIosArrowDown size={20} />
                     </button>
                 </div>
@@ -104,7 +104,7 @@ function FAQ() {
             <div className={mystyle.qbox}>
                 <div className={mystyle.arrowbx}>
                     <div className={mystyle.question}>How do I approve travel requests?</div>
-                    <button className={mystyle.arrow} onClick={handleClick2} ref={arrow2} >
+                    <button aria-label='Show Answer' className={mystyle.arrow} onClick={handleClick2} ref={arrow2} >
                         < IoIosArrowDown size={20} />
                     </button>
                 </div>
@@ -118,7 +118,7 @@ function FAQ() {
             <div className={mystyle.qbox}>
                 <div className={mystyle.arrowbx}>
                     <div className={mystyle.question}>How do I create my own travel group?</div>
-                    <button className={mystyle.arrow} onClick={handleClick3} ref={arrow3} >
+                    <button aria-label='Show Answer' className={mystyle.arrow} onClick={handleClick3} ref={arrow3} >
                         < IoIosArrowDown size={20} />
                     </button>
                 </div>
@@ -134,7 +134,7 @@ function FAQ() {
             <div className={mystyle.qbox}>
                 <div className={mystyle.arrowbx}>
                     <div className={mystyle.question}>Why did we build this platform?</div>
-                    <button className={mystyle.arrow} onClick={handleClick4} ref={arrow4} >
+                    <button aria-label='Show Answer' className={mystyle.arrow} onClick={handleClick4} ref={arrow4} >
                         < IoIosArrowDown size={20} />
                     </button>
                 </div>

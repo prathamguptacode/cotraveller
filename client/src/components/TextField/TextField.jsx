@@ -17,16 +17,16 @@ const TextField = ({ error, type, placeholder, autoComplete, value, setValue, re
         <>
             <div className={styles.inputWrapper}>
                 <div className={clsx(styles.textFieldWrapper, error && styles.errorBorder)}>
-                    <input  value={value} onChange={(e) => setValue(e.target.value)} type={currentType} autoComplete={autoComplete} placeholder={placeholder} spellCheck="false" className={styles.textField} />
+                    <input value={value} onChange={(e) => setValue(e.target.value)} type={currentType} autoComplete={autoComplete} placeholder={placeholder} spellCheck="false" className={styles.textField} />
                     <label className={styles.placeholder}>{placeholder}</label>
                     {
-                        type === 'password' && <button onClick={toggleHidden}>{currentType === 'password' ? <Eye size={28} /> : <EyeOff size={28} />}</button>
+                        type === 'password' && <button aria-label={currentType === 'password' ? 'Show' : 'Hide'} onClick={toggleHidden}>{currentType === 'password' ? <Eye size={28} /> : <EyeOff size={28} />}</button>
                     }
 
                     {requirements && <div className={styles.helperWrapper}>
                         <CircleQuestionMark />
                         <ul className={styles.helper}>
-                            {requirements.map((e,i) => {
+                            {requirements.map((e, i) => {
                                 return <li key={i} >{e}</li>
                             })}
                         </ul>

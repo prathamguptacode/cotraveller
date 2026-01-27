@@ -59,10 +59,10 @@ const VerifyOtp = () => {
     return !location.state?.isAllowed ? <Navigate to={'/'} /> :
         <>  < form className={styles.form} onClick={(e) => e.preventDefault()}>
             <TextField autoComplete={'off'} error={error} value={otp} setValue={setOtp} type={'text'} placeholder={'OTP'} requirements={['No leading or trailing spaces', 'Numeric', 'Exactly 6 digits']} />
-            <button onClick={handleSubmit} className={styles.button}>Continue</button>
+            <button aria-label='Continue' onClick={handleSubmit} className={styles.button}>Continue</button>
         </form >
             <div className={styles.switchPage}>
-                <button onClick={handleResend} to={'/login'} className={styles.anchors} >Resend OTP</button>
+                <button aria-label='Resend OTP' onClick={handleResend} to={'/login'} className={styles.anchors} >Resend OTP</button>
             </div>
         </>
 

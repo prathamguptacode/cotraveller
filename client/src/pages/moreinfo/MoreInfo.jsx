@@ -189,9 +189,9 @@ function MoreInfo() {
                                     </div>
                                 </div>
                                 <div className={mystyle.btnbox}>
-                                    <button className={mystyle.moreinfo} onClick={focus}>Add comment</button>
-                                    <button className={mystyle.sharebtn} onClick={share}>Share</button>
-                                    {member.some(e => e._id === user?._id) ? <Link to={`/groups/${q.get('q')}/chats`} className={mystyle.groupbtn}>Chat now</Link> : <button onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>}
+                                    <button aria-label='Add Comment' className={mystyle.moreinfo} onClick={focus}>Add comment</button>
+                                    <button aria-label='Share' className={mystyle.sharebtn} onClick={share}>Share</button>
+                                    {member.some(e => e._id === user?._id) ? <Link to={`/groups/${q.get('q')}/chats`} className={mystyle.groupbtn}>Chat now</Link> : <button aria-label='Send Request' onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>}
 
                                 </div>
                             </div>
@@ -204,7 +204,7 @@ function MoreInfo() {
                                     <input onKeyDown={(e) => {
                                         if (e.key === "Enter") commentPost()
                                     }} type="text" placeholder='Add a comment' className={mystyle.inbx} ref={incomment} />
-                                    <button onClick={commentPost} className={mystyle.addbtn} >Post</button>
+                                    <button aria-label='Post Comment' onClick={commentPost} className={mystyle.addbtn} >Post</button>
                                 </div>
                             </div>
                             {

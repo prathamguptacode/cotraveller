@@ -138,7 +138,7 @@ const Signup = () => {
         <TextField autoComplete={'new-password'} setValue={setPassword} value={password} error={passwordError} type={'password'} placeholder={'Password'} requirements={requirements.password} />
         <TextField autoComplete={'username'} setValue={setUsername} value={username} error={usernameError} type={'text'} placeholder={'Username'} requirements={requirements.username} />
         <TextField autoComplete={'name'} setValue={setFullName} value={fullName} error={fullNameError} type={'text'} placeholder={'Full Name'} requirements={requirements.fullName} />
-        <button onClick={handleSignup} className={styles.button}>Sign up</button>
+        <button aria-label='Sign up' onClick={handleSignup} className={styles.button}>Sign up</button>
       </form>
       <div className={styles.switchPage}>
         <Link to={'/login'} className={styles.anchors} >Log in</Link>
