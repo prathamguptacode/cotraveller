@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "npm i && vite",
     "build": "vite build",
+    "logs":"clear && docker compose -f ../compose.dev.yaml logs -f client",
     "lint": "eslint .",
     "preview": "vite preview"
   },

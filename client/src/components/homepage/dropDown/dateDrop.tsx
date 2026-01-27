@@ -10,7 +10,7 @@ function DateDrop({ setDate }: DateDropProps) {
   const dates = useMemo(() => {
     const array: string[] = []
     for (let i = 1; i <= 31; i++) {
-      dates.push(i.toString().padStart(2, '0'))
+      array.push(i.toString().padStart(2, '0'))
     }
     return array
   }, [])
@@ -24,7 +24,7 @@ function DateDrop({ setDate }: DateDropProps) {
     <div className={mystyle.dateDrop}>
       {dates.map(date => {
         return (
-          <div className={mystyle.options} onClick={handle} >{date}</div>
+          <div key={date} className={mystyle.options} onClick={handle}>{date}</div>
         )
       })}
     </div>

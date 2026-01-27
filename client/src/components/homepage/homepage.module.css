@@ -227,7 +227,7 @@
     z-index: 2;
     border-radius: 10px;
     overflow: hidden;
-    height: 400px;
+    max-height: 400px;
     overflow-y: auto;
 }
 
@@ -420,11 +420,12 @@
     .navbar {
         gap: .2rem;
         padding-inline: .4rem;
-        svg{
+
+        svg {
             width: 20px;
         }
     }
-    
+
 
     .logo {
         font-size: 22px;
