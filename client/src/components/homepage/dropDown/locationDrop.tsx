@@ -29,7 +29,7 @@ function LocationDrop({ setLocation }: LocationDropProps) {
       </div>
       <div className={mystyle.options} onClick={handleClick1}>
         <BsBuildingsFill size="22px" />
-        IIT Delhi</div>
+        IIT Dhanbad</div>
       <div className={mystyle.options} onClick={handleClick2}>
         <BsBuildingsFill size="22px" />
         VIT Chennai</div>
