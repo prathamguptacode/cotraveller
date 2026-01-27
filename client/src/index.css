@@ -25,7 +25,7 @@ body {
     --brighter-primary: #1E66C8;
     --link-color: rgb(97, 129, 181);
     --commentbg: hsl(225, 4%, 93%);
-    --dull-font: hsl(216, 12%, 20%);
+    --dull-font: hsl(217, 41%, 78%);
     --comment-font: hsl(216, 12%, 32%);
     --secondaryFont: hsl(0, 0%, 99%);
     --opt-hover: hsl(225, 2%, 90%);
@@ -44,7 +44,7 @@ body {
     --sidebar-bg-hover: hsl(206, 6%, 75%);
     --sidebar-anchor-active: hsl(214, 81%, 50%);
     --sidebar-button-hover: hsl(225, 4%, 60%);
-    --discoverbg: rgba(232,240,254,0.5);
+    --discoverbg: rgba(232, 240, 254, 0.5);
 
 }
 
@@ -66,7 +66,7 @@ body {
     --commentbg: hsl(225, 4%, 20%);
     --clr-font: #e8eaed;
 
-    --dull-font: hsl(216, 12%, 52%);
+    --dull-font: hsl(217, 41%, 78%);
     --comment-font: hsl(216, 12%, 72%);
 
     --secondaryFont: rgb(32, 33, 36);
@@ -93,6 +93,6 @@ body {
     --sidebar-bg-hover: #3C4043;
     --sidebar-anchor-active: #609af6;
     --sidebar-button-hover: hsl(225, 4%, 20%);
-    --discoverbg: rgba(138,180,248,0.12);
+    --discoverbg: rgba(138, 180, 248, 0.12);
 
 }

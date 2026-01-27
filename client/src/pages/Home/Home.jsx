@@ -12,14 +12,14 @@ const Home = () => {
   return (
     <>
       <Banner />
-      <div className={styles.wrapper}>
+      <main className={styles.wrapper}>
         <Searchbox />
         <div className={styles.bottomWrapper}>
           <DiscoverBox />
           <LiveGroups />
           <FAQ />
         </div>
-      </div>
+      </main>
 
     </>
 

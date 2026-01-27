@@ -10,7 +10,7 @@ function FeedbackPage() {
     const improvement = useRef()
     const bug = useRef()
     const story = useRef()
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
     const [btn, setBtn] = useState(0)
 
@@ -47,7 +47,7 @@ function FeedbackPage() {
         }
     }
 
-    function handleHome(){
+    function handleHome() {
         navigate('/')
     }
 
@@ -65,16 +65,16 @@ function FeedbackPage() {
 
             <div className={mystyle.inputbx}>
                 <div className={mystyle.questionTitle}>
-                    <div className={mystyle.ques}>What would you like to suggest or improve?</div>
-                    <input type="text" className={mystyle.inbx} ref={improvement} />
+                    <label htmlFor='improvementFeedback' className={mystyle.ques}>What would you like to suggest or improve?</label>
+                    <input id='improvementFeedback' type="text" className={mystyle.inbx} ref={improvement} />
                 </div>
                 <div className={mystyle.questionTitle}>
-                    <div className={mystyle.ques}>Did you face any issues or bugs? If yes, describe them.</div>
-                    <input type="text" className={mystyle.inbx} ref={bug} />
+                    <label htmlFor='bugFeedback' className={mystyle.ques}>Did you face any issues or bugs? If yes, describe them.</label>
+                    <input id='bugFeedback' type="text" className={mystyle.inbx} ref={bug} />
                 </div>
                 <div className={mystyle.questionTitle}>
-                    <div className={mystyle.ques}>Any story of yours with this website which you want to share with us</div>
-                    <input type="text" className={mystyle.inbx} ref={story} />
+                    <label htmlFor='storyFeedback' className={mystyle.ques}>Any story of yours with this website which you want to share with us</label>
+                    <input id='storyFeedback' type="text" className={mystyle.inbx} ref={story} />
                 </div>
             </div>
 

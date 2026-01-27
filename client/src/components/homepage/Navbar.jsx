@@ -56,10 +56,10 @@ function Navbar() {
                 !user && <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
             }
             <Link to={'/creategroup'} className={clsx(mystyle.navbtn, mystyle.createGroupBtn)}>Create group</Link>
-            <Link to={'/creategroup'} className={mystyle.plusBtn}><Plus /></Link>
+            <Link aria-label="Create Group" to={'/creategroup'} className={mystyle.plusBtn}><Plus /></Link>
 
             {/* pratham changed this to prevent error page */}
-            {user && <Link className={mystyle.avatarWrapper} to={`/`}>
+            {user && <Link className={mystyle.avatarWrapper} aria-label="Go to your profile page" to={`/`}>
                 {user.avatar?.publicUrl ? <img src="" alt="avatar" /> : <FaUser />
                 }
             </Link>}
