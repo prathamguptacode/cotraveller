@@ -1,7 +1,7 @@
-import groupSchema from "../models/groupSchema";
+import groupSchema, { GroupType } from "../models/groupSchema";
 import xss from 'xss'
 import moment from "moment-timezone";
-import User from "../models/User";
+import User, { UserType } from "../models/User";
 import mongoose from "mongoose";
 import { accecptedNotification, newMemberJoinedNotification, rejectedNotification, sendRequestNotification } from "../services/nodemailer";
 import { RequestHandler } from "express";
@@ -146,8 +146,8 @@ export const addRequest: RequestHandler = async (req, res) => {
     if (!groupID) return res.fail(400, "INPUT_ERROR", "groupID not found")
 
     const tempUser = await User.findById(userID)
-    const Populatedgroup = await groupSchema.find({ _id: groupID }).populate({ path: 'member', select: 'fullName email' })
-    const tempGroup = Populatedgroup[0]
+    const Populatedgroup = await groupSchema.find<Omit<GroupType, 'member'> & { member: UserType[] }>({ _id: groupID }).populate({ path: 'member', select: 'fullName email' })
+    const tempGroup = Populatedgroup[0]  
     if (!tempUser) return res.fail(400, "INPUT_ERROR", "No such user")
     if (!tempGroup) return res.fail(400, "INPUT_ERROR", "No such group")
 
@@ -183,125 +183,6 @@ export const viewRequest: RequestHandler = async (req, res) => {
     res.success(200, tempGroup)
 }
 
-//adding to db requests acctually
-// export const addDBrequests = async (req, res) => {
-//     const userID = xss(req.body?.userID)
-//     if (!userID) {
-//         return res.fail(400, "INPUT_ERROR", "userID not found")
-//     }
-//     const tempUser = await User.findById(userID)
-//     if (!tempUser) {
-//         return res.fail(400, "INPUT_ERROR", "No such user")
-//     }
-//     const requestID = xss(req.body?.requestID)
-//     if (!requestID) {
-//         return res.fail(400, "INPUT_ERROR", "requestID not found")
-//     }
-//     const requserUser = await User.findById(requestID)
-//     if (!requserUser) {
-//         return res.fail(400, "INPUT_ERROR", "No such user")
-//     }
-//     const groupID = xss(req.body?.groupID)
-//     if (!groupID) {
-//         return res.fail(400, "INPUT_ERROR", "groupID not found")
-//     }
-//     const tempGroup = await groupSchema.findById(groupID)
-//     if (!tempGroup) {
-//         return res.fail(400, "INPUT_ERROR", "No such group")
-//     }
-//     const tempmember = tempGroup.member
-//     const temprequest = tempGroup.requests
-//     if (!tempmember.includes(userID)) {
-//         return res.fail(400, "INPUT_ERROR", "You do not have permission")
-//     }
-//     if (!temprequest.includes(requestID)) {
-//         return res.fail(400, "INPUT_ERROR", "userReq do not have permission")
-//     }
-
-//     const data = await groupSchema.updateOne({ _id: groupID }, { $pull: { requests: requestID }, $push: { dbrequests: requestID } })
-//     await User.updateOne({ _id: requestID }, { $push: { dbrequests: groupID }, $pull: { requests: groupID } })
-//     res.success(200, data)
-// }
-
-// export const addMember: RequestHandler = async (req, res) => {
-//     const ownerMember = req.user?._id;
-//     const userID = xss(req.body?.userID)
-//     if (!ownerMember) {
-//         return res.fail(400, "INPUT_ERROR", "member id not found")
-//     }
-//     if (!userID) {
-//         return res.fail(400, "INPUT_ERROR", "userID not found")
-//     }
-//     const tempUser = await User.findById(userID)
-//     if (!tempUser) {
-//         return res.fail(400, "INPUT_ERROR", "No such user")
-//     }
-//     const groupID = xss(req.body?.groupID)
-//     if (!groupID) {
-//         return res.fail(400, "INPUT_ERROR", "groupID not found")
-//     }
-//     const tempGroup = await groupSchema.findById(groupID)
-//     if (!tempGroup) {
-//         return res.fail(400, "INPUT_ERROR", "No such group")
-//     }
-//     if (!tempGroup.member.includes(ownerMember)) {
-//         return res.fail(404, "NOT ALLOWED")
-//     }
-//     if (tempGroup.member.includes(userID)) {
-//         return res.fail(403, "NOT_PERMITTED");
-//     }
-
-//     const data = await groupSchema.updateOne(
-//         { _id: groupID },
-//         { $push: { member: userID }, $pull: { requests: userID } }
-//     );
-//     await User.updateOne({ _id: userID }, { $push: { memberGroup: groupID }, $pull: { requests: groupID } })
-//     accecptedNotification(tempUser.email, tempUser.fullName, tempGroup.title)
-//     res.success(201, data)
-// }
-
-//leaving group
-// export const leaveGroup: RequestHandler = async (req, res) => {
-//     const { user: { _id: userID, fullName } } = req.user
-//     const groupID = xss(req.params?.groupId)
-//     if (!userID) {
-//         return res.fail(400, "INVALID_INPUT", "userID not found")
-//     }
-//     if (!groupID) {
-//         return res.fail(400, "INVALID_DATA", "groupID not found")
-//     }
-
-//     const tempUser = await User.findById(userID)
-//     const tempGroup = await groupSchema.findById(groupID)
-//     if (!tempUser) {
-//         return res.fail(400, "INPUT_ERROR", "No such user")
-//     }
-//     if (!tempGroup) {
-//         return res.fail(400, "INPUT_ERROR", "No such group")
-//     }
-//     if (!(tempGroup.member).includes(userID)) {
-//         return res.fail(400, "INPUT_ERROR", "user is not authorizated to do so")
-//     }
-//     const updatedGroup = await groupSchema.findOneAndUpdate({ _id: groupID }, { $pull: { member: userID } }, { returnDocument: 'after' })
-//     await User.updateOne({ _id: userID }, { $pull: { memberGroup: groupID } })
-
-//     const previousMemberEmails = updatedGroup.member.map(obj => obj.email)
-//     memberLeftNotification(previousMemberEmails, fullName, tempGroup.title, groupID)
-
-//     //204 status code cannot have anything with e.g. body or message
-//     res.sendStatus(204)
-// }
-
-//to get member info i need this route
-export const memberInfo: RequestHandler = async (req, res) => {
-    const id = req.query?.q;
-    // if(!id) res.fail(400,"INVALID_INPUT")
-    // const user=await User.findById(id)
-    // if(!user) res.fail(400,"INVALID_USER")
-    // res.success(200,user.fullName)
-    res.success(200, "df")
-}
-
 
 
 export const acceptIncomingRequestController: RequestHandler = async (req, res) => {
@@ -310,7 +191,7 @@ export const acceptIncomingRequestController: RequestHandler = async (req, res) 
     if (typeof groupId !== 'string' || typeof requestId !== 'string') return res.fail(400, "INVALID_REQUEST_PARAMS", "Group ID and Request ID must be strings")
 
 
-    const group = await groupSchema.findOne({ _id: groupId, requests: requestId }).populate({ path: 'member', select: 'email' }).select('member title')
+    const group = await groupSchema.findOne<Omit<GroupType, 'member'> & { member: UserType[] }>({ _id: groupId, requests: requestId }).populate({ path: 'member', select: 'email' }).select('member title')
     if (!group) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
 
 
@@ -345,7 +226,7 @@ export const declineIncomingRequestController: RequestHandler = async (req, res)
     await groupSchema.updateOne({ _id: groupId }, { $pull: { requests: requestId } })
     const user = await User.findOneAndUpdate({ _id: requestId }, { $pull: { requests: groupId } }, { returnDocument: 'after' })
     if (!user) return res.fail(400, "USER_NOT_FOUND", "User no longer exists");
-    
+
     //Sending notification to requestee about declining
     rejectedNotification(user.email, user.fullName, group.title)
 

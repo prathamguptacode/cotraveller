@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { HydratedDocument, Schema } from "mongoose";
 const commentSchema=new mongoose.Schema({
     comment:{
         type:String,
@@ -14,4 +14,7 @@ const commentSchema=new mongoose.Schema({
         required:true        
     }
 })
-export default mongoose.model('Comment',commentSchema)
+
+export type CommentType = HydratedDocument<mongoose.InferSchemaType<typeof commentSchema>>
+
+export default mongoose.model<CommentType>('Comment',commentSchema)

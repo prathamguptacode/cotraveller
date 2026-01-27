@@ -5,5 +5,17 @@
         "target": "ES2023",
         "strict": true,
         "esModuleInterop": true,
+        "outDir": "dist",
+        "rootDir": "src",
+        "sourceMap": true,
+        "noEmitOnError": true,
+        "baseUrl": "src",
+        "paths": {
+            "@/*":["*"]
+        }
+    },
+    "tsc-alias": {
+        "resolveFullPaths": true,
+        "verbose": false
     }
 }

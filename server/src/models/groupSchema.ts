@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { HydratedDocument, Schema } from "mongoose";
 
 
 const groupSchema = new mongoose.Schema({
@@ -52,18 +52,20 @@ const groupSchema = new mongoose.Schema({
         default: []
         //should be unique
     },
-    messages:{
-        type:[Schema.Types.ObjectId],
-        ref:"Message",
-        default:[]
+    messages: {
+        type: [Schema.Types.ObjectId],
+        ref: "Message",
+        default: []
     },
-    comments:{
-        type:[Schema.Types.ObjectId],
-        ref:"Comment",
+    comments: {
+        type: [Schema.Types.ObjectId],
+        ref: "Comment",
         default: []
     }
     // const toIST = (date) => moment(date).tz("Asia/Kolkata"); for timezone converstion
     // const istDate = moment.tz(req.body.travelDate, "Asia/Kolkata").toDate(); for telling backend it is ist
 })
 
-export default mongoose.model('Group', groupSchema)
+export type GroupType = HydratedDocument<mongoose.InferSchemaType<typeof groupSchema>>
+
+export default mongoose.model<GroupType>('Group', groupSchema)

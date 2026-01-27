@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import { addGroup, viewRequest, memberInfo, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup } from '../controllers/groupController'
+import { addGroup, viewRequest, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup } from '../controllers/groupController'
 import asyncHandler from '../middlewares/asyncHandler'
 import { viewGroup } from '../controllers/groupController'
 import { viewGroupByFilter } from '../controllers/groupController'
@@ -20,12 +20,9 @@ router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middlewar
 //if they accecpt the request then walah user is added as member and they all can talk now
 //then group people can talk from socket io
 
-//to get member info i need this route
-router.get('/getname', memberInfo)
-
 router.get('/getnumbers', groupnumber)
 
-//should have middle ware
+
 router.use(verifyAccessToken)
 
 router.post('/addrequest', asyncHandler(addRequest))

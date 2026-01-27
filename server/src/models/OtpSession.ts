@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { HydratedDocument } from "mongoose";
 
 const otpSessionSchema = new mongoose.Schema({
     otpUUID: {
@@ -44,4 +44,6 @@ const otpSessionSchema = new mongoose.Schema({
 })
 otpSessionSchema.index({ createdAt: 1 }, { expireAfterSeconds: 5 * 60 })
 
-export default mongoose.model("OtpSession", otpSessionSchema,'otp_sessions')
+export type OtpSessionType = HydratedDocument<mongoose.InferSchemaType<typeof otpSessionSchema>>
+
+export default mongoose.model<OtpSessionType>("OtpSession", otpSessionSchema, 'otp_sessions')

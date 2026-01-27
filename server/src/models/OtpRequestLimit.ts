@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { HydratedDocument } from 'mongoose'
 
 const otpRequestLimitSchema = new mongoose.Schema({
     email: {
@@ -20,4 +20,6 @@ const otpRequestLimitSchema = new mongoose.Schema({
 //Resets after 10 mins
 otpRequestLimitSchema.index({ createdAt: 1 }, { expireAfterSeconds: 10 * 60 })
 
-export default mongoose.model('OtpRequestLimit',otpRequestLimitSchema,'otp_request_limits')
+export type OtpRequestLimitType = HydratedDocument<mongoose.InferSchemaType<typeof otpRequestLimitSchema>>
+
+export default mongoose.model<OtpRequestLimitType>('OtpRequestLimit', otpRequestLimitSchema, 'otp_request_limits')

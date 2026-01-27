@@ -1,10 +1,10 @@
-import mongoose from 'mongoose'
+import mongoose, { HydratedDocument } from 'mongoose'
 
 const messageSchema = new mongoose.Schema({
-    author:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
     createdAt: {
         type: Date,
@@ -22,4 +22,5 @@ const messageSchema = new mongoose.Schema({
     }
 })
 
-export default mongoose.model('Message', messageSchema)
+export type MessageType = HydratedDocument<mongoose.InferSchemaType<typeof messageSchema>>
+export default mongoose.model<MessageType>('Message', messageSchema)

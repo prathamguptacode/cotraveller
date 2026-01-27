@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { HydratedDocument, mongo, Schema } from 'mongoose'
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -32,16 +32,18 @@ const userSchema = new mongoose.Schema({
         type: String
     }],
 
-    memberGroup:{
+    memberGroup: {
         type: [Schema.Types.ObjectId],
         ref: 'Group',
         default: []
     },
-    requests:{
+    requests: {
         type: [Schema.Types.ObjectId],
         ref: 'Group',
         default: []
     },
 })
 
-export default mongoose.model("User", userSchema)
+export type UserType = HydratedDocument<mongoose.InferSchemaType<typeof userSchema>>
+
+export default mongoose.model<UserType>("User", userSchema)
