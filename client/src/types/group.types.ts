@@ -1,0 +1,1 @@
+export type Group = { title: string, _id: string, lastMessage?: { author: string, text: string, createdAt: Date } }

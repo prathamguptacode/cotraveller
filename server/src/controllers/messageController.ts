@@ -2,7 +2,6 @@ import xss from "xss"
 import Message from "../models/Message"
 import Group from "../models/groupSchema"
 import User from "../models/User"
-import mongoose from "mongoose"
 import { RequestHandler } from "express"
 
 
@@ -39,7 +38,15 @@ export const fetchGroupChatController: RequestHandler = async (req, res) => {
     if (!group) return res.fail(403, "NOT_FOUND", "The user is not associated to the group")
 
 
-    const data = await Group.aggregate([
+    const data = await Group.aggregate<{
+        _id: string,
+        author: {
+            _id: string,
+            fullName: string
+        },
+        text: string,
+        createdAt: string
+    }>([
         {
             $match: { _id: group._id }
         },
@@ -100,12 +107,12 @@ export const fetchGroupChatController: RequestHandler = async (req, res) => {
                     },
                     {
                         $project: {
-                            author:1,
-                            text:1,
-                            createdAt:1,
+                            author: 1,
+                            text: 1,
+                            createdAt: 1,
                         }
                     },
-                
+
                 ],
                 as: 'messages'
             }

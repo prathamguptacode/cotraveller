@@ -4,7 +4,7 @@ import User from "../models/User"
 
 export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
     const user = req.user
-    const groups = await User.aggregate([
+    const groups = await User.aggregate<{ title: string, _id: string, lastMessage?: { author: string, text: string, createdAt: Date } }>([
         {
             $match: { _id: user._id }
         },
@@ -94,13 +94,6 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
         {
             $sort: { 'lastMessage.createdAt': -1 }
         }
-
-
-
-
-
-
-
     ])
     res.success(200, { groups }, "GREAT SHIT NGL!")
 }
@@ -171,11 +164,6 @@ export const fetchIncomingRequestsController: RequestHandler = async (req, res) 
                 groups: 1,
             }
         }
-
-
-
-
-
     ])
     res.success(200, { groups: inbox[0].groups })
 
