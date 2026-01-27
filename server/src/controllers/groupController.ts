@@ -38,13 +38,11 @@ export const viewGroup: RequestHandler = async (req, res) => {
 
     const id = xss(query)
 
-    try {
-        const val = new mongoose.Types.ObjectId(id)
-        const data = await groupSchema.where('_id').equals(val).populate({ path: 'member', select: 'fullName' }).populate({ path: 'comments', select: 'author comment' })
-        res.success(200, data)
-    } catch (error) {
-        res.fail(400, "INVALID_ID")
-    }
+    const val = new mongoose.Types.ObjectId(id)
+    const data = await groupSchema.find({ _id: val }).populate({ path: 'member', select: 'fullName' }).populate({ path: 'comments', select: 'author comment' })
+    if (data.length == 0) return res.fail(404, "GROUP_NOT_FOUND")
+    res.success(200, data)
+
 }
 
 export const editGroup: RequestHandler = async (req, res) => {
@@ -147,7 +145,7 @@ export const addRequest: RequestHandler = async (req, res) => {
 
     const tempUser = await User.findById(userID)
     const Populatedgroup = await groupSchema.find<Omit<GroupType, 'member'> & { member: UserType[] }>({ _id: groupID }).populate({ path: 'member', select: 'fullName email' })
-    const tempGroup = Populatedgroup[0]  
+    const tempGroup = Populatedgroup[0]
     if (!tempUser) return res.fail(400, "INPUT_ERROR", "No such user")
     if (!tempGroup) return res.fail(400, "INPUT_ERROR", "No such group")
 

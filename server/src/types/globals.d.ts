@@ -10,7 +10,8 @@ declare global {
             user: {
                 _id: Types.ObjectId,
                 email: string,
-                fullName: string
+                fullName: string,
+                username: string
             }
         }
     }

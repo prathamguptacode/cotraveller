@@ -34,8 +34,8 @@ export const verifyAccessToken: RequestHandler = async (req, res, next) => {
         return res.fail(401, "USER_NOT_FOUND", "Associated user could not be found, logging out")
     }
 
-    const { fullName, _id } = user
-    req.user = { fullName, _id, email }
+    const { fullName, _id, username } = user
+    req.user = { fullName, _id, email, username }
 
     next()
 }
