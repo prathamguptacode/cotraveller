@@ -45,7 +45,7 @@ function Navbar() {
             <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
 
             <div className={mystyle.themebtn}><ThemeButton /></div>
-            <button onClick={() => {
+            <button aria-label="Menu" onClick={() => {
                 setisHidden(false)
                 setCurrentTab('Inbox')
             }} onBlur={(e) => {

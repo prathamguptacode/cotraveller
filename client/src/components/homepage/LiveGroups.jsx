@@ -67,9 +67,9 @@ function LiveGroups() {
     <div className={mystyle.livebx}>
       <div className={mystyle.livetitle}>Find cotravellers from your college to anywhere</div>
       <div className={mystyle.livebtnbx}>
-        <button className={clsx(mystyle.livebtn)} ref={airplane} >Airplane</button>
-        <button className={mystyle.livebtn} ref={train}>Railway</button>
-        <button className={mystyle.livebtn} ref={taxi}>Taxi</button>
+        <button aria-label='Ariplane' className={clsx(mystyle.livebtn)} ref={airplane} >Airplane</button>
+        <button aria-label='Railway' className={mystyle.livebtn} ref={train}>Railway</button>
+        <button aria-label='Taxi' className={mystyle.livebtn} ref={taxi}>Taxi</button>
       </div>
       <div className={mystyle.livegrp}>
         <Livebx mode="Airplane" num={airNum}/>

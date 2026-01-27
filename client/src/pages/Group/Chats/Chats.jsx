@@ -191,31 +191,31 @@ const Chats = () => {
                 <div className={styles.sidebarWrapper}>
 
                     <div className={styles.list}>
-                        <button onClick={() => setCurrentTab('Chats')} className={styles.listItem}>
+                        <button aria-label='Chats' onClick={() => setCurrentTab('Chats')} className={styles.listItem}>
                             <MessagesSquare size={28} />
                             <ToolTip text={'Chats'} />
                         </button>
-                        <button onClick={() => setCurrentTab('Inbox')} className={styles.listItem}>
+                        <button aria-label='Inbox' onClick={() => setCurrentTab('Inbox')} className={styles.listItem}>
                             <Mail size={26} />
                             <ToolTip text={'Inbox'} />
 
                         </button>
-                        <button onClick={() => setCurrentTab('Sent')} className={styles.listItem}>
+                        <button aria-label='Sent' onClick={() => setCurrentTab('Sent')} className={styles.listItem}>
                             <SendHorizontal size={26} />
                             <ToolTip text={'Sent'} />
                         </button>
                     </div>
 
                     <div className={clsx(styles.list, styles.footerList)}>
-                        <button className={styles.listItem}>
+                        <button aria-label='Settings' className={styles.listItem}>
                             <Cog size={28} />
                             <ToolTip text={'Settings'} />
                         </button>
-                        <button onClick={handleFeedback} className={styles.listItem}>
+                        <button aria-label='Feedback' onClick={handleFeedback} className={styles.listItem}>
                             <Info size={26} />
                             <ToolTip text={'Feedback'} />
                         </button>
-                        <button onClick={handleLogout} className={styles.listItem}>
+                        <button aria-label='Logout' onClick={handleLogout} className={styles.listItem}>
                             <LogOut size={26} />
                             <ToolTip text={'Logout'} />
                         </button>
@@ -227,7 +227,7 @@ const Chats = () => {
 
                     <div className={styles.expansionHeader}>
                         <h2>{currentTab}</h2>
-                        {/* <button onClick={hideExpansion} className={styles.listItem}>
+                        {/* <button aria-label='Hide Sidebar' onClick={hideExpansion} className={styles.listItem}>
                             <ChevronsLeft size={28} strokeWidth={1.4} />
                             <ToolTip text={'Hide'} />
                         </button> */}
@@ -271,7 +271,7 @@ const Chats = () => {
 
                         {/* changes made by pratham */}
 
-                        <button className={clsx(styles.groupOptions, styles.listItem)} onClick={editgroup} >
+                        <button aria-label='Edit Group' className={clsx(styles.groupOptions, styles.listItem)} onClick={editgroup} >
                             < RiPencilFill size={20} />
                          </button>
                          
@@ -325,15 +325,15 @@ const Chats = () => {
                                 if (e.key !== "Enter" || !text) return
                                 sendMessage()
                             }} onChange={(e) => setText(e.target.value)} value={text} type="text" />
-                            <button onClick={sendMessage} className={styles.sendBtn}>
+                            <button aria-label='Send Message' onClick={sendMessage} className={styles.sendBtn}>
                                 <SendHorizontal size={20} />
                             </button>
-                            <button>
+                            {/* <button aria-label='Emoji' >
                                 <Smile size={20} />
-                            </button>
+                            </button> */}
 
                         </div>
-                        <button onClick={scrollToBottom} className={clsx(styles.scrollBtn, !isIntersecting && styles.showScrollBtn)}>
+                        <button aria-label='Scroll To Bottom' onClick={scrollToBottom} className={clsx(styles.scrollBtn, !isIntersecting && styles.showScrollBtn)}>
                             {unreadCount > 0 && <div className={styles.unreadCounter}>{unreadCount}</div>}
                             <ChevronDown size={26} strokeWidth={1.4} />
                         </button>

@@ -5,7 +5,7 @@ import styles from './oAuthButtons.module.css'
 const AppleButton = () => {
     const {theme}= useTheme()
     return (
-        <button className={styles.wrapper} onClick={() => window.location.href = '/api/oauth/apple'} >
+        <button aria-label='Continue with apple' className={styles.wrapper} onClick={() => window.location.href = '/api/oauth/apple'} >
             {theme == 'dark' ?
                 <img  src="/apple-light.svg" alt="apple-light-icon" />
                 :

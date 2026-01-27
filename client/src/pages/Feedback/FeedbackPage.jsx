@@ -80,7 +80,7 @@ function FeedbackPage() {
 
             <div className={mystyle.btnbox}>
                 {
-                    btn ? <button className={mystyle.mysubmit} onClick={handleHome}>Return Home</button> : <button onClick={handleClick} className={mystyle.mysubmit}>Submit</button>
+                    btn ? <button aria-label='Return Home' className={mystyle.mysubmit} onClick={handleHome}>Return Home</button> : <button aria-label='Submit' onClick={handleClick} className={mystyle.mysubmit}>Submit</button>
                 }
             </div>
             <Toaster />
