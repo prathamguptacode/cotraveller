@@ -1,8 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { AuthContext } from '../hooks/useAuth'
-import { unAuthApi } from '../api/axios'
-import { useToken } from '../hooks/useToken'
-import LoadingPage from '../pages/Extras/LoadingPage'
+import { AuthContext } from '@/hooks/useAuth'
+import { unAuthApi } from '@/api/axios'
+import { useToken } from '@/hooks/useToken'
+import LoadingPage from '@/app/pages/Extras/LoadingPage'
 import type { AuthContextUser } from '@/types/auth.types'
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {

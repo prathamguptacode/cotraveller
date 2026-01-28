@@ -4,9 +4,9 @@ import AntiProtectedRoutes from './routes/AntiProtected.Routes'
 import Home from './pages/Home/Home'
 import ViewGroup from './pages/Group/ViewGroup'
 import AuthLayout from './layouts/Auth/AuthLayout'
-import Signup from './pages/auth/Signup'
-import Login from './pages/auth/Login'
-import VerifyOtp from './pages/auth/VerifyOtp'
+import Signup from './pages/Signup'
+import Login from './pages/Login'
+import VerifyOTP from './pages/VerifyOTP'
 import CreateGroup from './pages/CreateGroup/CreateGroup'
 import MainLayout from './layouts/Main/MainLayout'
 import SuccessPage from './pages/success/SuccessPage'
@@ -27,7 +27,7 @@ const Router = () => {
         <BrowserRouter>
             <Routes>
 
-
+                {/* 
                 <Route path='/' element={<MainLayout />}>
                     <Route index element={<Home />} />
                     <Route path='viewgroup' element={<ViewGroup />} />
@@ -47,14 +47,7 @@ const Router = () => {
 
 
 
-                <Route element={<AntiProtectedRoutes />} >
-                    <Route element={<AuthLayout />} >
-                        <Route path='/signup' element={<Signup />} />
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/signup/verify' element={<VerifyOtp />} />
-                    </Route>
-                </Route>
-
+              
 
 
 
@@ -62,7 +55,15 @@ const Router = () => {
                     <Route path='/creategroup' element={<CreateGroup />} />
                     <Route path='/success' element={<SuccessPage />} />
                     <Route path='/edit' element={<EditGroup />} />
+                </Route> */}
+                <Route element={<AntiProtectedRoutes />} >
+                    <Route element={<AuthLayout />} >
+                        <Route path='/signup' element={<Signup />} />
+                        <Route path='/login' element={<Login />} />
+                        <Route path='/signup/verify' element={<VerifyOTP />} />
+                    </Route>
                 </Route>
+
 
 
             </Routes>

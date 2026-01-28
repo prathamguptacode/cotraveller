@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom'
 import styles from './auth.module.css'
-import GoogleButton from '@/components/OAuthButtons/GoogleButton'
-import GithubButton from '@/components/OAuthButtons/GithubButton'
-import AppleButton from '@/components/OAuthButtons/AppleButton'
+import GoogleButton from '@/features/auth/components/OAuthButtons/GoogleButton'
+import GithubButton from '@/features/auth/components/OAuthButtons/GithubButton'
+import AppleButton from '@/features/auth/components/OAuthButtons/AppleButton'
 
 const AuthLayout = () => {
     return (

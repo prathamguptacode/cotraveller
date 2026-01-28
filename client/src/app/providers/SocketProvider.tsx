@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from 'react'
-import { SocketContext } from '../hooks/useSocket'
+import { SocketContext } from '@/hooks/useSocket'
 import { io } from "socket.io-client"
 import { useState } from 'react'
 

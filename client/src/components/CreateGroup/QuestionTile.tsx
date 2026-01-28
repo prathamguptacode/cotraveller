@@ -13,7 +13,7 @@ import MonthDrop from '../homepage/dropDown/monthDrop';
 import YearDrop from '../homepage/dropDown/yearDrop';
 import LocationDrop from '../homepage/dropDown/locationDrop';
 import { FaLocationDot } from "react-icons/fa6";
-import btnstyle from '@/pages/CreateGroup/CreateGroup.module.css'
+import btnstyle from '@/app/pages/CreateGroup/CreateGroup.module.css'
 import MemberDrop from './dropDown/memberDrop';
 import HourDrop from './dropDown/hourDrop';
 import MinDrop from './dropDown/minDrop';

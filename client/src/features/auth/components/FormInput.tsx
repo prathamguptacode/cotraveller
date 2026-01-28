@@ -1,36 +1,41 @@
-import styles from './textField.module.css'
+import styles from '../auth.module.css'
 import clsx from 'clsx';
 import { EyeOff, CircleQuestionMark, Eye } from 'lucide-react'
 import { useState } from 'react';
+import type { FieldValues, Path, UseFormRegister } from 'react-hook-form';
 
-type TextFieldProps = {
-    error: string,
+
+type FormInputProps<T extends FieldValues> = {
+    error: string | undefined,
     type: 'text' | 'password' | 'number' | 'email',
     placeholder: string,
     autoComplete: React.HTMLInputAutoCompleteAttribute,
-    value: string,
     requirements?: string[],
-    setValue: React.Dispatch<React.SetStateAction<string>>
+    register: UseFormRegister<T>,
+    name: Path<T>
 }
 
 
-const TextField = ({ error, type, placeholder, autoComplete, value, setValue, requirements }: TextFieldProps) => {
+
+const FormInput = <T extends FieldValues,>({ error, type, placeholder, autoComplete, requirements, register, name }: FormInputProps<T>) => {
 
     const [currentType, setCurrentType] = useState(type)
 
-    const toggleHidden = () => {
+    const toggleHidden = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault()
         setCurrentType(prev => prev === 'password' ? 'text' : 'password')
     }
+
 
 
     return (
         <>
             <div className={styles.inputWrapper}>
                 <div className={clsx(styles.textFieldWrapper, error && styles.errorBorder)}>
-                    <input value={value} onChange={(e) => setValue(e.target.value)} type={currentType} autoComplete={autoComplete} placeholder={placeholder} spellCheck="false" className={styles.textField} />
+                    <input {...register(name)} name={name} type={currentType} autoComplete={autoComplete} placeholder={placeholder} spellCheck="false" className={styles.textField} />
                     <label className={styles.placeholder}>{placeholder}</label>
                     {
-                        type === 'password' && <button aria-label={currentType === 'password' ? 'Show' : 'Hide'} onClick={toggleHidden}>{currentType === 'password' ? <Eye size={28} /> : <EyeOff size={28} />}</button>
+                        type === 'password' && <button role='button' aria-label={currentType === 'password' ? 'Show' : 'Hide'} onClick={(toggleHidden)}>{currentType === 'password' ? <Eye size={28} /> : <EyeOff size={28} />}</button>
                     }
 
                     {requirements && <div className={styles.helperWrapper}>
@@ -51,4 +56,4 @@ const TextField = ({ error, type, placeholder, autoComplete, value, setValue, re
     )
 }
 
-export default TextField
+export default FormInput

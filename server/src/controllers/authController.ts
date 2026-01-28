@@ -77,7 +77,7 @@ export const otpVerificationController: RequestHandler = async (req, res) => {
     if (!otpUUID) return res.fail(410, "SESSION_EXPIRED", "Otp session expired, please re-signup")
 
     const token = await OtpSession.findOne({ otpUUID })
-    if (!token) return res.fail(400, "SESSION_EXPIRED", "Otp session expired, please re-signup")
+    if (!token) return res.fail(410, "SESSION_EXPIRED", "Otp session expired, please re-signup")
 
     //Extracting OtpSession data
     const { otpHash, email, fullName, passwordHash, username, attempts } = token
@@ -93,7 +93,7 @@ export const otpVerificationController: RequestHandler = async (req, res) => {
 
     //Updating attempts now so that, only updated if hash veification doesnt throw
     await OtpSession.updateOne({ otpUUID }, { $inc: { attempts: 1 } })
-    if (!isValid) return res.fail(400, "INVALID_OTP", "OTP did not match, please retry")
+    if (!isValid) return res.fail(400, "INCORRECT_OTP", "Incorrect OTP")
 
     //Creating new user
     if (await User.exists({ $or: [{ email }, { username }] })) return res.fail(409, "USER_EXISTS", "User already exists")

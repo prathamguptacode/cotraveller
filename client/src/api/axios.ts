@@ -1,10 +1,13 @@
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError, type AxiosRequestConfig} from 'axios'
 import { useToken } from '../hooks/useToken'
 import type { ApiError, ApiSuccess } from '@/types/api.types'
 import { toast } from 'sonner'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL + "/api"
-export const api = axios.create({
+
+
+
+export const rawAxios = axios.create({
     baseURL,
     withCredentials: true,
     //###LATER withXSRF token wth???
@@ -15,14 +18,20 @@ export const unAuthApi = axios.create({
     withCredentials: true
 })
 
-api.interceptors.request.use(config => {
+rawAxios.interceptors.request.use(config => {
     const { accessToken } = useToken()
     config.headers["authorization"] = `Bearer ${accessToken}`
     return config
 })
 
-api.interceptors.response.use(res => {
-    return res
+rawAxios.interceptors.response.use(res => {
+    const response = {
+        status: res.status,
+        success: true,
+        data: res.data.data,
+        message: res.data.message
+    }
+    return response as any
 },
     async err => {
         const { updateAccessToken } = useToken()
@@ -40,7 +49,7 @@ api.interceptors.response.use(res => {
 
                 updateAccessToken(accessToken)
                 originalRequest.headers['authorization'] = `Bearer ${accessToken}`
-                return api(originalRequest)
+                return rawAxios(originalRequest)
 
             } catch (error) {
                 console.warn("Failed to refresh token")
@@ -73,7 +82,7 @@ type ApiMethod = 'get' | 'post' | 'delete' | 'patch' | 'put'
 
 export const callAuthApi = async<T>(method: ApiMethod, route: string, body = {}): Promise<ApiSuccess<T> | ApiError> => {
     try {
-        const { status, data } = await api[method]<{ success: true, data: T, message: string }>(route, body)
+        const { status, data } = await rawAxios[method]<{ success: true, data: T, message: string }>(route, body)
         return {
             status,
             data: {
@@ -99,3 +108,33 @@ export const callAuthApi = async<T>(method: ApiMethod, route: string, body = {})
         return { status: 500, data: { success: false, code: "INTERNAL_ERROR", message: "Something went wrong !" } }
     }
 }
+
+type ApiAxiosInstance = {
+    get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiSuccess<T>>
+    post<T>(
+        url: string,
+        body?: any,
+        config?: AxiosRequestConfig
+    ): Promise<ApiSuccess<T>>
+    put<T>(
+        url: string,
+        body?: any,
+        config?: AxiosRequestConfig
+    ): Promise<ApiSuccess<T>>
+    put<T>(
+        url: string,
+        body?: any,
+        config?: AxiosRequestConfig
+    ): Promise<ApiSuccess<T>>,
+    patch<T>(
+        url: string,
+        body?: any,
+        config?: AxiosRequestConfig
+    ): Promise<ApiSuccess<T>>,
+    delete<T>(
+        url: string,
+        config?: AxiosRequestConfig
+    ): Promise<ApiSuccess<T>>,
+}
+
+export const api = rawAxios as ApiAxiosInstance
