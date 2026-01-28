@@ -1,9 +1,10 @@
-import AppRouter from "./routes/AppRouter"
+import Router from "./Router"
 import './App.css'
 import './index.css'
 import LoadingBar, { type LoadingBarRef } from 'react-top-loading-bar'
 import { useEffect, useRef } from "react"
-import { loaderEvent } from "./api/mitt"
+import { loaderEvent } from "../api/mitt"
+import Providers from "./Providers"
 
 
 function App() {
@@ -30,10 +31,10 @@ function App() {
 
 
   return (
-    <>
-      <AppRouter />
+    <Providers>
+      <Router />
       <LoadingBar color="var(--primary)" shadow={false} ref={ref} height={3} className="top-loading-bar" />
-    </>
+    </Providers>
   )
 }
 

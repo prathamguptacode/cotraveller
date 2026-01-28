@@ -5,9 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "cd client && npm i && cd ../server && npm i && clear && clear",
     "dev": "docker compose -f compose.dev.yaml up --build -d && docker compose -f compose.dev.yaml exec nginx nginx -s reload",
     "forceDev": "docker compose -f compose.dev.yaml up --build --force-recreate -d ",
-    "stopDev": "docker compose -f compose.dev.yaml down"
+    "stopDev": "docker compose -f compose.dev.yaml down",
+    "rs-client": "docker compose -f compose.dev.yaml restart client",
+    "rs-server": "docker compose -f compose.dev.yaml restart server",
+    "rs-nginx": "docker compose -f compose.dev.yaml restart nginx",
+    "logs-client": "docker compose -f compose.dev.yaml logs -f client",
+    "logs-server": "docker compose -f compose.dev.yaml logs -f server",
+    "logs-nginx": "docker compose -f compose.dev.yaml logs -f nginx"
   },
   "repository": {
     "type": "git",

@@ -1,24 +1,28 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import ProtectedRoutes from './ProtectedRoutes'
-import AntiProtectedRoutes from './AntiProtectedRoutes'
-import Home from '../pages/Home/Home'
-import ViewGroup from '../pages/Group/ViewGroup'
-import AuthLayout from '../layouts/Auth/AuthLayout'
-import Signup from '../pages/Auth/Signup'
-import Login from '../pages/Auth/Login'
-import VerifyOtp from '../pages/Auth/VerifyOtp'
-import CreateGroup from '../pages/CreateGroup/CreateGroup'
-import MainLayout from '../layouts/Main/MainLayout'
-import SuccessPage from '../pages/success/SuccessPage'
-import MoreInfo from '../pages/moreinfo/MoreInfo'
-import SecondaryLayout from '../layouts/Secondary/SecondaryLayout'
-import Chats from '../pages/Group/Chats/Chats'
-import NotFound from '../pages/NotFound/NotFound'
-import FeedbackPage from '../pages/Feedback/FeedbackPage'
-import EditGroup from '../pages/EditGroup/EditGroup'
+import ProtectedRoutes from './routes/Protected.Routes'
+import AntiProtectedRoutes from './routes/AntiProtected.Routes'
+import Home from '@/app/pages/Home/Home'
+import ViewGroup from '@/app/pages/Group/ViewGroup'
+import AuthLayout from '@/app/layouts/Auth/AuthLayout'
+import Signup from '@/app/pages/auth/Signup'
+import Login from '@/app/pages/auth/Login'
+import VerifyOtp from '@/app/pages/auth/VerifyOtp'
+import CreateGroup from '@/app/pages/CreateGroup/CreateGroup'
+import MainLayout from '@/app/layouts/Main/MainLayout'
+import SuccessPage from '@/app/pages/success/SuccessPage'
+import MoreInfo from '@/app/pages/moreinfo/MoreInfo'
+import SecondaryLayout from '@/app/layouts/Secondary/SecondaryLayout'
+import Chats from '@/app/pages/Group/Chats/Chats'
+import NotFound from '@/app/pages/NotFound/NotFound'
+import FeedbackPage from '@/app/pages/Feedback/FeedbackPage'
+import EditGroup from '@/app/pages/EditGroup/EditGroup'
 
 
-const AppRouter = () => {
+
+
+
+
+const Router = () => {
     return (
         <BrowserRouter>
             <Routes>
@@ -30,7 +34,7 @@ const AppRouter = () => {
                 </Route>
 
                 <Route path='/moreinfo' element={<MoreInfo />} />
-                
+
                 <Route path='/groups/:groupId/' element={<SecondaryLayout />} >
                     <Route path='chats' element={<Chats />} />
                 </Route>
@@ -66,4 +70,4 @@ const AppRouter = () => {
     )
 }
 
-export default AppRouter
+export default Router
