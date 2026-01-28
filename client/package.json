@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "npm i && vite",
     "build": "vite build",
-    "logs":"clear && docker compose -f ../compose.dev.yaml logs -f client",
-    "restart":"docker compose -f ../compose.dev.yaml restart client",
+    "logs": "clear && docker compose -f ../compose.dev.yaml logs -f client",
+    "restart": "docker compose -f ../compose.dev.yaml restart client",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -22,11 +22,11 @@
     "mitt": "^3.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.9.6",
     "react-top-loading-bar": "^3.0.2",
     "socket.io-client": "^4.8.1",
+    "sonner": "^2.0.7",
     "zod": "^4.3.6"
   },
   "devDependencies": {

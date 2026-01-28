@@ -4,7 +4,7 @@ import { callAuthApi } from '@/api/axios';
 import { useAuth } from '@/hooks/useAuth';
 import clsx from 'clsx'
 import { useNavigate } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 type GroupProps = {
     element: {
@@ -85,7 +85,7 @@ function Group({ element }: GroupProps) {
                 </div>
             </div>
             <div className={mystyle.line}></div>
-            <Toaster />
+            
         </div>
     )
 }

@@ -17,7 +17,7 @@ import btnstyle from '@/pages/CreateGroup/CreateGroup.module.css'
 import MemberDrop from './dropDown/memberDrop';
 import HourDrop from './dropDown/hourDrop';
 import MinDrop from './dropDown/minDrop';
-import toast, { Toaster } from 'react-hot-toast'
+import { toast } from 'sonner'
 import { api, callAuthApi } from '@/api/axios';
 import { useNavigate } from 'react-router-dom';
 import type { Mode, Month } from '@/types/constants.types';
@@ -465,7 +465,7 @@ function QuestionTile({ edit }: QuestionTileProps) {
             }
 
 
-            <Toaster />
+            
         </>
     )
 }

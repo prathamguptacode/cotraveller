@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import mystyle from './FeedbackPage.module.css'
 import NewNav from '@/components/CreateGroup/newNav'
 import { api } from '@/api/axios'
-import toast, { Toaster } from 'react-hot-toast'
+import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 
 function FeedbackPage() {
@@ -83,7 +83,7 @@ function FeedbackPage() {
                     btn ? <button aria-label='Return Home' className={mystyle.mysubmit} onClick={handleHome}>Return Home</button> : <button aria-label='Submit' onClick={handleClick} className={mystyle.mysubmit}>Submit</button>
                 }
             </div>
-            <Toaster />
+            
         </div>
     )
 }

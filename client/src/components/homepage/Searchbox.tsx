@@ -12,7 +12,7 @@ import YearDrop from './dropDown/yearDrop';
 import { IoMdAirplane } from "react-icons/io";
 import { FaTrainSubway } from "react-icons/fa6";
 import { FaTaxi } from "react-icons/fa";
-import toast, { Toaster } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { useNavigate } from "react-router-dom";
 import type { Mode } from '../CreateGroup/QuestionTile';
 import type { Month } from '@/types/constants.types';
@@ -189,7 +189,7 @@ function Searchbox({ l = 'Where from ?', md = 'Transport?', d = 'Date ?', m = 'M
                     <IoMdSearch size="20px" />
                     Find groups
                 </button>
-                <Toaster />
+                
             </div>
 
 

@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { useToken } from '../hooks/useToken'
 import type { ApiError, ApiSuccess } from '@/types/api.types'
+import { toast } from 'sonner'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL + "/api"
 export const api = axios.create({
@@ -28,6 +29,7 @@ api.interceptors.response.use(res => {
         //Copying original Request for retrying incase of expired accessToken(just once)
         const originalRequest = err.config
 
+
         //Adding a new retriedOnce property to err object, if it does not exist, i.e. request hasn't already been retried once
         //Also therefore we enter the if statement only if token had expired gracefully and request hasn't been retried
         if (err.response?.data?.code === "ACCESS_TOKEN_EXPIRED" && !originalRequest.retriedOnce) {
@@ -46,10 +48,18 @@ api.interceptors.response.use(res => {
         }
         else if (err.status === 401) {
             console.warn("ERROR:401:UNAUTHORIZED, Logging out")
+            toast.error("Unauthorized", {
+                description: "Loggin out..",
+                duration: 1500
+            })
             return unAuthApi.post('/auth/logout')
         }
-        else if (err.status === 500) {
-            console.error("ERROR:500:Something went wrong!")
+        else if (err.status >= 500) {
+            console.warn('ERROR:500:INTERNAL_ERROR, Something went wrong !')
+            toast.error("Internal Error", {
+                description: "Something went wrong !",
+                duration: 1500
+            })
         }
         return Promise.reject(err)
     }

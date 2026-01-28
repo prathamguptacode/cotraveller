@@ -4,7 +4,7 @@ import Navbar from '@/components/homepage/Navbar'
 import { FaUser } from "react-icons/fa6";
 import { api, callAuthApi } from '@/api/axios';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect } from 'react';
 import clsx from 'clsx';
@@ -247,7 +247,7 @@ function MoreInfo() {
                                         )
                                 }
                             </div>
-                            <Toaster />
+                            
                         </div> : <Navigate to='/' />
             }
         </div >
