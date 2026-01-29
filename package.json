@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/prathamguptacode/cotraveller/issues"
   },
-  "homepage": "https://github.com/prathamguptacode/cotraveller#readme"
+  "homepage": "https://github.com/prathamguptacode/cotraveller#readme",
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10"
+  }
 }
