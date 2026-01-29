@@ -35,7 +35,7 @@ function App() {
     <>
       <Router />
       <LoadingBar color="var(--primary)" shadow={false} ref={ref} height={3} className="top-loading-bar" />
-      <Toaster duration={1500}
+      <Toaster duration={3000}
         icons={{ success: <CheckCircle size={32} color="green" />, error: <XCircle size={32} color="red" /> }}
         position="top-right"
         theme={theme}

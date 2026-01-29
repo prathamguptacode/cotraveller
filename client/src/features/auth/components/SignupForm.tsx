@@ -8,6 +8,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { api } from '@/api/axios'
 import { normalizeError } from '@/utils/normalizeError'
+import SubmitButton from './SubmitButton'
+import { toast } from 'sonner'
+import { useEffect } from 'react'
 
 
 const normalizeFullName = (v: string) => v.trim().replace(/\s+/g, " ").replace(/['-]{2,}/g, (m) => m[0])
@@ -56,10 +59,12 @@ type SignupFormFields = z.infer<typeof SignupFormSchema>
 
 
 
-
 const SignupForm = () => {
     const navigate = useNavigate()
-    const { handleSubmit, register, setError, formState: { errors, isSubmitting } } = useForm<SignupFormFields>({ resolver: zodResolver(SignupFormSchema) })
+    const { handleSubmit, register, setError, formState: { errors } } = useForm<SignupFormFields>({ resolver: zodResolver(SignupFormSchema) })
+
+
+
 
     const mutation = useMutation({
         mutationFn: (body: SignupFormFields) => api.post('/auth/signup', body),
@@ -81,7 +86,7 @@ const SignupForm = () => {
                 <FormInput<SignupFormFields> name='password' error={errors.password?.message} register={register} autoComplete='new-password' placeholder='Password' type='password' requirements={requirements.password} />
                 <FormInput<SignupFormFields> name='username' error={errors.username?.message} register={register} autoComplete='username' placeholder='Username' type='text' requirements={requirements.username} />
                 <FormInput<SignupFormFields> name='fullName' error={errors.fullName?.message} register={register} autoComplete='name' placeholder='Full name' type='text' requirements={requirements.fullName} />
-                <button disabled={isSubmitting} aria-label='Sign up' className={styles.button}>Sign up</button>
+                <SubmitButton isPending={mutation.isPending}>Sign up</SubmitButton>
             </form>
             <div className={styles.switchPage}>
                 <Link to={'/login'} className={styles.anchors} >Log in</Link>

@@ -39,7 +39,7 @@ const ResendOTPButton = () => {
     }
     return (
         <div className={styles.switchPage}>
-            <button disabled={mutation.isError} aria-label='Resend OTP' role='button' onClick={handleResend} className={clsx(styles.anchors, styles.disabledBtn)}>Resend OTP</button>
+            <button disabled={mutation.isPending || mutation.isError} aria-label='Resend OTP' role='button' onClick={handleResend} className={clsx(styles.anchors, mutation.isPending && 'disabled')}>Resend OTP</button>
         </div>
     )
 }

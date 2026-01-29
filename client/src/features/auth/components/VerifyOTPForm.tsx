@@ -11,12 +11,14 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { normalizeError } from '@/utils/normalizeError'
 import { toast } from 'sonner'
 import ResendOTPButton from './ResendOTPButton'
+import clsx from 'clsx'
+import SubmitButton from './SubmitButton'
 
 const VerifyFormSchema = z.object({
-    otp: z.number({ error: "Must be a 6 digit number" }).int({ error: "Must be an integer" }).nonnegative({ error: "Cannot be negative" }).refine(val => val.toString().length === 6, { error: "Must be a 6 digit number" })
+    otp: z.coerce.number({ error: "Invalid Format" }).int({ error: "Invalid Format" }).positive({ error: "Invalid Format" }).refine(e => e.toString().length === 6, { error: "Invalid length" })
 })
 
-type VerifyFormFields = z.infer<typeof VerifyFormSchema>
+type VerifyFormFields = z.input<typeof VerifyFormSchema>
 
 const requirements = {
     otp: [
@@ -39,17 +41,15 @@ const VerifyOTPForm = () => {
         },
         onError: (error: unknown) => {
             const { status, message } = normalizeError(error)
-            if (status < 500) setError('otp', { message })
+            if (status === 400) return setError('otp', { message })
             if (status === 410) return toast.error("Session Expired", {
                 description: "Please Re-Signup, Redirecting...",
-                duration: 1000,
                 onAutoClose() {
                     navigate('/signup', { replace: true })
                 },
             })
             if (status === 409) return toast.error("User Exists", {
                 description: "Email/Username is taken, redirecting to signup page...",
-                duration: 1000,
                 onAutoClose() {
                     navigate('/signup', { replace: true })
                 }
@@ -71,7 +71,9 @@ const VerifyOTPForm = () => {
         <>
             <form onSubmit={handleSubmit(onSubmit)} className={styles.form} >
                 <FormInput<VerifyFormFields> name='otp' error={errors.otp?.message} register={register} autoComplete='one-time-code' placeholder='OTP' type='number' requirements={requirements.otp} />
-                <button aria-label='Continue' className={styles.button}>Continue</button>
+                <SubmitButton isPending={mutation.isPending}>
+                    Continue
+                </SubmitButton>
             </form>
             <ResendOTPButton />
         </>

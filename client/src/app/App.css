@@ -201,3 +201,8 @@ body {
     --discoverbg: rgba(138, 180, 248, 0.12);
 
 }
+
+.disabledBtn{
+    pointer-events: none;
+    opacity: .7;
+}

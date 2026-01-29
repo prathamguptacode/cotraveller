@@ -32,8 +32,8 @@ const FormInput = <T extends FieldValues,>({ error, type, placeholder, autoCompl
         <>
             <div className={styles.inputWrapper}>
                 <div className={clsx(styles.textFieldWrapper, error && styles.errorBorder)}>
-                    <input {...register(name)} name={name} type={currentType} autoComplete={autoComplete} placeholder={placeholder} spellCheck="false" className={styles.textField} />
-                    <label className={styles.placeholder}>{placeholder}</label>
+                    <input id={name} {...register(name)} name={name} type={currentType} autoComplete={autoComplete} placeholder={placeholder} spellCheck="false" className={styles.textField} />
+                    <label htmlFor={name} className={styles.placeholder}>{placeholder}</label>
                     {
                         type === 'password' && <button role='button' aria-label={currentType === 'password' ? 'Show' : 'Hide'} onClick={(toggleHidden)}>{currentType === 'password' ? <Eye size={28} /> : <EyeOff size={28} />}</button>
                     }

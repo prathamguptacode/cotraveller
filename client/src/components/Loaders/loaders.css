@@ -1,8 +1,9 @@
-/* From Uiverse.io by abrahamcalsin */ 
+/* From Uiverse.io by abrahamcalsin */
 .dot-spinner {
-  --uib-size: 2.8rem;
+  --uib-size: 1.2rem;
   --uib-speed: .75s;
-  --uib-color: var(--clr-);
+  --uib-color: black;
+  margin: auto;
   position: relative;
   display: flex;
   align-items: center;
@@ -91,6 +92,7 @@
 }
 
 @keyframes pulse0112 {
+
   0%,
   100% {
     transform: scale(0);
