@@ -1,4 +1,4 @@
-import styles from './sidebar.module.css'
+import styles from './tabs.module.css'
 import { Link } from 'react-router-dom'
 import { Check, X } from 'lucide-react'
 import { useState, type Dispatch, type SetStateAction } from 'react'

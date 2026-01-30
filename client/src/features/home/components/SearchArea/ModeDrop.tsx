@@ -1,9 +1,12 @@
-import mystyle from '../homepage.module.css'
+import mystyle from './search.module.css'
+
 import React from 'react'
 import { IoMdAirplane } from "react-icons/io";
 import { FaTrainSubway } from "react-icons/fa6";
 import { FaTaxi } from "react-icons/fa";
-import type { Mode } from '@/components/CreateGroup/QuestionTile';
+import type { Mode } from '@/types/constants.types';
+
+
 
 
 type ModeDropProps = {

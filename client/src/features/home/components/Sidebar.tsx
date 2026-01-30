@@ -1,11 +1,13 @@
-import styles from './sidebar.module.css'
+import styles from '@/features/home/sidebar.module.css'
 import clsx from 'clsx'
 import { Link } from 'react-router-dom'
 import { Cog, Info, LogOut } from 'lucide-react'
 import { callAuthApi } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
 import type { Dispatch, JSX } from 'react'
-import type { SidebarTab } from '../Navbar'
+import type { SidebarTab } from './Navbar'
+
+
 
 type SidebarProps = {
     isHidden: boolean,

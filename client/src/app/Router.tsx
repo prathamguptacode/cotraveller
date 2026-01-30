@@ -27,11 +27,11 @@ const Router = () => {
         <BrowserRouter>
             <Routes>
 
-                {/* 
                 <Route path='/' element={<MainLayout />}>
                     <Route index element={<Home />} />
                     <Route path='viewgroup' element={<ViewGroup />} />
                 </Route>
+                {/* 
 
                 <Route path='/moreinfo' element={<MoreInfo />} />
 

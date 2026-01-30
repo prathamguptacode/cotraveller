@@ -1,38 +1,56 @@
-.wrapper{
+.wrapper {
     margin: 16px auto;
     max-width: 1140px;
     color: var(--clr-font);
 }
-.title{
+
+.title {
     font-size: 20px;
     font-weight: 600;
     padding: 8px 0;
 }
-.qbox{
+
+.qbox {
     border-bottom: 1px solid var(--clr-border);
     padding: 8px 0;
 }
-.question{
+
+.question {
     font-size: 18px;
     font-weight: 500;
 }
-.ans{
+
+.ans {
     overflow: hidden;
     transition: all 0.4s ease;
-
     height: 0px;
+    white-space: pre-line;
 }
-.arrowbx{
+
+.arrowbx {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.arrow{
+
+.arrow {
     padding: 8px;
     border-radius: 26px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
 }
-.arrow:hover{
+
+.arrow:hover {
     background-color: var(--clr-bg-hover);
+}
+
+.open {
+    .ans {
+        height: auto;
+        margin-block: 1rem;
+    }
+
+    .arrow {
+        rotate: 180deg;
+    }
 }

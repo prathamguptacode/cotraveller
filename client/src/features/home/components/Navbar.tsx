@@ -1,12 +1,12 @@
 import { GiHamburgerMenu } from "react-icons/gi";
-import mystyle from './homepage.module.css'
-import ThemeButton from '../Buttons/ThemeButton';
-import Sidebar from './Sidebar/Sidebar';
+import mystyle from '../home.module.css'
+import ThemeButton from '@/components/Buttons/ThemeButton';
+import Sidebar from '@/features/home/components/Sidebar';
 import { Link } from 'react-router-dom';
 import { useRef, useState } from "react";
-import Groups from "./Sidebar/Groups";
-import Inbox from "./Sidebar/Inbox";
-import Outbox from "./Sidebar/Outbox";
+import Groups from "@/components/SidebarTabs/Groups";
+import Inbox from "@/components/SidebarTabs/Inbox";
+import Outbox from "@/components/SidebarTabs/Outbox";
 import { Mail, Plus } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { FaUser } from "react-icons/fa6";

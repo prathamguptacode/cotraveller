@@ -1,0 +1,85 @@
+/* LiveGroups */
+
+.liveGroupsWrapper {
+    max-width: 1140px;
+    margin: 24px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.liveGroupsTitle {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* .livebtn {
+    padding: 6px 16px;
+    border: 1px solid var(--clr-border);
+    border-radius: 24px;
+}
+
+.livebtn:hover {
+    background-color: var(--discoverbg);
+    color: var(--primary);
+}
+
+.livebtnbx {
+    display: flex;
+    gap: 12px;
+} */
+
+.liveGroups {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 0;
+}
+
+/* LiveGroup */
+
+.liveGroupWrapper {
+    font-size: 20px;
+    font-weight: 400;
+    border: 1px solid var(--clr-border);
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 28px;
+    border-radius: 10px;
+    flex: 1;
+}
+
+.liveGroupHeading {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.liveGroupWrapper:hover {
+    border: 1px solid var(--in-border);
+}
+
+.liveGroupMetrics {
+    align-self: center;
+}
+
+@media (max-width:768px) {
+    .liveGroups {
+        display: grid;
+    }
+}
+
+@media (max-width:480px) {
+    .liveGroupWrapper {
+        font-size: 16px;
+    }
+
+}
+
+@media(max-width:1108px) {
+    .livegrp {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

@@ -1,5 +1,6 @@
 import React from 'react'
-import mystyle from '../homepage.module.css'
+import mystyle from './search.module.css'
+
 import { Years, type Year } from '@/types/constants.types';
 
 type YearDropProps = {

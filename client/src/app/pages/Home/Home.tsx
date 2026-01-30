@@ -1,9 +1,9 @@
-import Banner from '@/components/homepage/Banner'
-import Searchbox from '@/components/homepage/Searchbox'
+import Banner from '@/features/home/components/Banner'
+import Searchbox from '@/features/home/components/SearchArea/Searchbox'
 import styles from './home.module.css'
-import DiscoverBox from '@/components/homepage/DiscoverBox'
-import LiveGroups from '@/components/homepage/LiveGroups'
-import FAQ from '@/components/homepage/FAQ/FAQ'
+import DiscoverBox from '@/features/home/components/DiscoverBox'
+import LiveGroups from '@/features/home/components/LiveGroups'
+import FAQ from '@/features/home/components/FAQS'
 
 const Home = () => {
   return (

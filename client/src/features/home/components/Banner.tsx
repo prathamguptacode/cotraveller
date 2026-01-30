@@ -1,4 +1,4 @@
-import mystyle from './homepage.module.css'
+import mystyle from '../home.module.css'
 import darkBanner from '@/assets/darkBanner.svg'
 import { useAuth } from '@/hooks/useAuth'
 import { useTheme } from '@/hooks/useTheme'
@@ -11,7 +11,7 @@ function Banner() {
   return (
     <div className={mystyle.banner}>
       {theme == 'dark' ? <img src={darkBanner} alt="banner svg" /> : <img src={lightBanner} alt='banner light svg' />}
-      <div className={mystyle.title}>Welcome {user && user.fullName.split(' ')[0]}!</div>
+      <div className={mystyle.bannerTitle}>Welcome {user && user.fullName.split(' ')[0]}!</div>
     </div>
   )
 }

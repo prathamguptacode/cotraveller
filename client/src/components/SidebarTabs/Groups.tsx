@@ -1,5 +1,5 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react'
-import styles from './sidebar.module.css'
+import styles from './tabs.module.css'
 import { Link } from 'react-router-dom'
 import { callAuthApi } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
@@ -31,7 +31,6 @@ const Groups = ({ setIsHidden }: GroupsProps) => {
   return (
     <div className={styles.list}>
       {
-
         groups.map(group => {
           return (
             <Link onClick={() => setIsHidden(true)} to={`/groups/${group._id}/chats`} key={group._id} className={styles.listItem}>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Searchbox from '@/components/homepage/Searchbox'
+import Searchbox from '@/features/home/components/SearchArea/Searchbox'
 import mystyle from './ViewGroup.module.css'
 import { useSearchParams } from 'react-router-dom'
 import { api } from '@/api/axios'

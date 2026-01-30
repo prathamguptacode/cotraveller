@@ -5,9 +5,9 @@ import clsx from 'clsx'
 import { callAuthApi } from '@/api/axios'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import Groups from '@/components/homepage/Sidebar/Groups'
-import Outbox from '@/components/homepage/Sidebar/Outbox'
-import Inbox from '@/components/homepage/Sidebar/Inbox'
+import Groups from '@/components/SidebarTabs/Groups'
+import Outbox from '@/components/SidebarTabs/Outbox'
+import Inbox from '@/components/SidebarTabs/Inbox'
 
 
 const Sidebar = () => {

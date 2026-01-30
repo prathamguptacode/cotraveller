@@ -6,12 +6,12 @@ import { FaTaxi } from "react-icons/fa";
 import { FaPaperPlane } from "react-icons/fa";
 import clsx from 'clsx'
 import { useState } from 'react';
-import rock from '../homepage/homepage.module.css'
-import ModeDrop from '../homepage/dropDown/modeDrop';
-import DateDrop from '../homepage/dropDown/dateDrop';
-import MonthDrop from '../homepage/dropDown/monthDrop';
-import YearDrop from '../homepage/dropDown/yearDrop';
-import LocationDrop from '../homepage/dropDown/locationDrop';
+import rock from '@/features/home/home.module.css'
+import ModeDrop from '@/features/home/components/SearchArea/ModeDrop';
+import DateDrop from '@/features/home/components/SearchArea/DateDrop';
+import MonthDrop from '@/features/home/components/SearchArea/MonthDrop';
+import YearDrop from '@/features/home/components/SearchArea/YearDrop';
+import LocationDrop from '@/features/home/components/SearchArea/LocationDrop';
 import { FaLocationDot } from "react-icons/fa6";
 import btnstyle from '@/app/pages/CreateGroup/CreateGroup.module.css'
 import MemberDrop from './dropDown/memberDrop';
@@ -465,7 +465,7 @@ function QuestionTile({ edit }: QuestionTileProps) {
             }
 
 
-            
+
         </>
     )
 }

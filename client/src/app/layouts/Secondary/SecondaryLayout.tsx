@@ -1,4 +1,4 @@
-import Navbar from '@/components/homepage/Navbar'
+import Navbar from '@/features/home/components/Navbar'
 import { Outlet } from 'react-router-dom'
 
 const SecondaryLayout = () => {

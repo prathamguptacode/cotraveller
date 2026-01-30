@@ -1,6 +1,6 @@
 import mystyle from './NotFound.module.css'
 import { BiSolidError } from "react-icons/bi";
-import Navbar from '@/components/homepage/Navbar';
+import Navbar from '@/features/home/components/Navbar';
 import { Link } from 'react-router-dom';
 
 function NotFound() {

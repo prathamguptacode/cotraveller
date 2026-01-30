@@ -1,0 +1,172 @@
+.searchbox {
+    background-color: var(--secondary-bg);
+    max-width: 1140px;
+    margin: auto;
+    padding: 20px 16px;
+    border-radius: 4px;
+    padding-bottom: 44px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btnbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.searchbtn {
+    padding: 12px 28px;
+    background-color: var(--primary);
+    border-radius: 24px;
+    color: var(--secondaryFont);
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: -20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.searchbtn:hover {
+    background-color: var(--brighter-primary);
+}
+
+
+
+.location,
+.mode,
+.date,
+.month,
+.year {
+    padding-block: 16px;
+    border: 1px solid var(--clr-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.1s all ease-in-out;
+    flex-shrink: 0;
+    position: relative;
+
+    display: flex;
+    flex: 1;
+    justify-content: center;
+
+}
+
+.location,
+.mode {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+
+    padding-inline: 1rem;
+}
+
+.mode {
+    gap: 6px;
+}
+
+.inhover:hover {
+    border: 1px solid var(--in-border);
+}
+
+.locationDrop,
+.modeDrop {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    background-color: var(--secondary-bg);
+    z-index: 2;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.dateDrop,
+.monthDrop,
+.yearDrop {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    display: flex;
+    flex-direction: column;
+    width: 105%;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    background-color: var(--secondary-bg);
+    z-index: 2;
+    border-radius: 10px;
+    overflow: hidden;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.options {
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.options:hover {
+    background-color: var(--opt-hover);
+}
+
+
+@media (max-width:1108px) {
+    .searchbox {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas:
+            "from from from mode mode mode"
+            "date date month month year year"
+        ;
+    }
+}
+
+@media (width < 1000px) {
+    .searchbox {
+        max-width: 900px;
+    }
+
+
+
+}
+
+@media(max-width:768px) {
+
+    .searchbox,
+    .searchbtn {
+        position: relative;
+    }
+}
+
+@media (max-width:480px) {
+    .searchbox>* {
+        font-size: 14px;
+
+        >svg {
+            width: 12px;
+        }
+    }
+
+}
+
+@media (width<375px) {
+    .searchbox {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-areas:
+            "from from from from from from"
+            "mode mode mode mode mode mode"
+            "date date month month year year"
+
+        ;
+    }
+}

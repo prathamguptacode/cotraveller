@@ -1,4 +1,4 @@
-import mystyle from '../homepage/homepage.module.css'
+import mystyle from '@/features/home/home.module.css'
 import ThemeButton from '../Buttons/ThemeButton'
 import { Link } from 'react-router-dom'
 

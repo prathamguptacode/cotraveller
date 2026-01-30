@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
-import mystyle from '../homepage.module.css'
+import mystyle from './search.module.css'
+
 
 type DateDropProps = {
   setDate: React.Dispatch<React.SetStateAction<string>>

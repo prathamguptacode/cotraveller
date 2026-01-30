@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import mystyle from './MoreInfo.module.css'
-import Navbar from '@/components/homepage/Navbar'
+import Navbar from '@/features/home/components/Navbar'
 import { FaUser } from "react-icons/fa6";
 import { api, callAuthApi } from '@/api/axios';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
@@ -247,7 +247,7 @@ function MoreInfo() {
                                         )
                                 }
                             </div>
-                            
+
                         </div> : <Navigate to='/' />
             }
         </div >

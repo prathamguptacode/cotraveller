@@ -1,21 +1,20 @@
 import { useState } from 'react'
-import mystyle from './homepage.module.css'
+import mystyle from './search.module.css'
 import clsx from 'clsx'
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPaperPlane } from "react-icons/fa";
 import { IoMdSearch } from "react-icons/io";
-import LocationDrop from './dropDown/locationDrop';
-import ModeDrop from './dropDown/modeDrop';
-import DateDrop from './dropDown/dateDrop';
-import MonthDrop from './dropDown/monthDrop';
-import YearDrop from './dropDown/yearDrop';
+import LocationDrop from './LocationDrop';
+import ModeDrop from './ModeDrop';
+import DateDrop from './DateDrop';
+import MonthDrop from './MonthDrop';
+import YearDrop from './YearDrop';
 import { IoMdAirplane } from "react-icons/io";
 import { FaTrainSubway } from "react-icons/fa6";
 import { FaTaxi } from "react-icons/fa";
 import { toast } from 'sonner';
 import { useNavigate } from "react-router-dom";
-import type { Mode } from '../CreateGroup/QuestionTile';
-import type { Month } from '@/types/constants.types';
+import type { Mode, Month } from '@/types/constants.types';
 
 type SearchboxProps = {
     l?: string,
@@ -189,10 +188,8 @@ function Searchbox({ l = 'Where from ?', md = 'Transport?', d = 'Date ?', m = 'M
                     <IoMdSearch size="20px" />
                     Find groups
                 </button>
-                
+
             </div>
-
-
         </div>
     )
 }
