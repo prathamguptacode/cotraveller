@@ -9,7 +9,7 @@ import type { Group, Message } from '../types'
 import { useAuth } from '@/hooks/useAuth'
 import { useSocket } from '@/hooks/useSocket'
 import { useAutoScroll } from '../hooks/useAutoScroll'
-import { callAuthApi } from '@/api/axios'
+import { api } from '@/api/axios'
 import scrollToBottom from '../utils/scrollToBottom'
 import ChatHeader from './ChatHeader'
 import { Howl } from 'howler'
@@ -75,14 +75,16 @@ const ChatArea = () => {
   useEffect(() => {
     (async () => {
       setLoading(true)
-      const { data } = await callAuthApi<{ group: Group }>('get', `/message/${groupId}`)
-      if (data.success) {
-        const { group } = data.data
+      const { success, data, message } = await api.get<{ group: Group }>(`/message/${groupId}`)
+      if (success) {
+        const { group } = data
         setGroup(group)
         setMessages([...group.messages])
         setLoading(false)
       }
-      else console.error(data.message)
+      else toast.error("An error occurred", {
+        description: message
+      })
     })()
   }, [groupId])
 

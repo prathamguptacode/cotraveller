@@ -10,7 +10,6 @@ function NoGroup() {
             <div className={mystyle.wrapper}>
                 <div className={mystyle.nimg}>
                     <GiBoatFishing size="100px" />
-
                 </div>
                 <div className={mystyle.conbx}>
                     <div className={mystyle.ntitle}>No Groups Found… But You Can Start One</div>

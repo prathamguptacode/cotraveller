@@ -17,7 +17,7 @@ function NotFound() {
                             Something went wrong !
                         </h2>
                         <p className={mystyle.con}>
-                            Cannot find the following page, click on the button below to go back to homepage.
+                           Lost ?  That's fine, but you might need some cotravellers on the way.
                         </p>
                         <Link className={mystyle.backBtn} to={'/'}>Go back</Link>
                     </div>

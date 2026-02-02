@@ -7,7 +7,7 @@
     "dev": "npm i && vite",
     "build": "vite build",
     "logs": "clear && docker compose -f ../compose.dev.yaml logs -f client",
-    "restart": "docker compose -f ../compose.dev.yaml restart client",
+    "rs": "docker compose -f ../compose.dev.yaml restart client",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -24,6 +24,7 @@
     "mitt": "^3.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-error-boundary": "^6.1.0",
     "react-hook-form": "^7.71.1",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.9.6",

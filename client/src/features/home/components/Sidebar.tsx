@@ -2,10 +2,12 @@ import styles from '@/features/home/sidebar.module.css'
 import clsx from 'clsx'
 import { Link } from 'react-router-dom'
 import { Cog, Info, LogOut } from 'lucide-react'
-import { callAuthApi } from '@/api/axios'
+import { api } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
 import type { Dispatch, JSX } from 'react'
 import type { SidebarTab } from './Navbar'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 
 
@@ -21,12 +23,15 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }: SidebarProps) =>
 
     const { user } = useAuth()
 
-    const handleLogout = async () => {
-        const { status } = await callAuthApi('post', '/auth/logout')
 
-        if (status == 204) window.location.href = '/'
-        else console.error('SOMETHING WENT WRONG')
-    }
+    const { mutate: logout } = useMutation({
+        mutationFn: () => api.post('/auth/logout'),
+        onSuccess: () => window.location.reload(),
+        onError: () => toast.error("An error occurred", {
+            description: "Something went wrong !"
+        })
+    })
+
 
 
 
@@ -42,7 +47,6 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }: SidebarProps) =>
                 <button aria-label='Groups' className={currentTab === "Groups" ? styles.activeTab : ""} onClick={() => setCurrentTab('Groups')}>Groups</button>
                 <button aria-label='Inbox' className={currentTab === "Inbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Inbox')}>Inbox</button>
                 <button aria-label='Sent' className={currentTab === "Outbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Outbox')}>Sent</button>
-
             </div>
 
             {slot}
@@ -64,7 +68,7 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }: SidebarProps) =>
                         Feedback
                     </p>
                 </Link>
-                {user && <button aria-label='Logout' onClick={handleLogout} className={styles.listItem}>
+                {user && <button aria-label='Logout' onClick={() => logout()} className={styles.listItem}>
                     <div className={clsx(styles.iconWrapper, styles.avatarWrapper)} >
                         <LogOut />
                     </div>

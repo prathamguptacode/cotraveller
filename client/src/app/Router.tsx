@@ -31,19 +31,16 @@ const Router = () => {
                     <Route index element={<Home />} />
                     <Route path='viewgroup' element={<ViewGroup />} />
                 </Route>
-                {/* 
-
-                <Route path='/moreinfo' element={<MoreInfo />} />
 
                 <Route path='/groups/:groupId/' element={<SecondaryLayout />} >
                     <Route path='chats' element={<Chats />} />
                 </Route>
+                {/* 
 
-                //feedback form
-                <Route path='/feedback' element={<FeedbackPage />} />
+                <Route path='/moreinfo' element={<MoreInfo />} />
 
-                //error route
-                <Route path='*' element={<NotFound />} />
+
+
 
 
 
@@ -63,8 +60,8 @@ const Router = () => {
                         <Route path='/signup/verify' element={<VerifyOTP />} />
                     </Route>
                 </Route>
-
-
+                <Route path='/feedback' element={<FeedbackPage />} />
+                <Route path='*' element={<NotFound />} />
 
             </Routes>
         </BrowserRouter>
