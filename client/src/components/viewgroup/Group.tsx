@@ -43,7 +43,7 @@ function Group({ element }: GroupProps) {
         if (!user) {
             return navigate('/login')
         }
-        const { status, data } = await callAuthApi('post', '/group/addRequest', { groupID: element._id })
+        const { status, data } = await callAuthApi('post', '/groups/addRequest', { groupID: element._id })
         if (status == 201) setHasRequested(true)
         else {
             setHasRequested(false)
@@ -60,7 +60,7 @@ function Group({ element }: GroupProps) {
     }
 
     function nav() {
-        navigate(`/moreinfo?q=${id}`)
+        navigate(`/groups/${id}`)
     }
 
 

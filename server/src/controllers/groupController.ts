@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import { accecptedNotification, newMemberJoinedNotification, rejectedNotification, sendRequestNotification } from "../services/nodemailer";
 import { RequestHandler } from "express";
 import * as z from "zod";
+import { fetchOutgoingRequestsController } from "./userController";
+import commentSchema from "@/models/commentSchema";
 
 const GroupSchema = z.object({
     title: z.string(),
@@ -33,31 +35,21 @@ export const addGroup: RequestHandler = async (req, res) => {
 }
 
 export const viewGroup: RequestHandler = async (req, res) => {
-    const query = req.query.q;
-    if (!query || typeof query !== 'string') return res.fail(400, "INVALID_GROUP_ID")
+    const { groupId } = req.params
 
-    const id = xss(query)
-
-    const val = new mongoose.Types.ObjectId(id)
-    const data = await groupSchema.find({ _id: val }).populate({ path: 'member', select: 'fullName' }).populate({ path: 'comments', select: 'author comment' })
-    if (data.length == 0) return res.fail(404, "GROUP_NOT_FOUND")
-    res.success(200, data)
+    const group = await groupSchema.findById(groupId).populate({ path: 'member', select: 'fullName' }).populate({ path: 'comments', select: 'author comment' })
+    res.success(200, { group })
 
 }
 
 export const editGroup: RequestHandler = async (req, res) => {
-    const user = req.user._id;
-    const group = req.query?.q;
-
+    const userId = req.user._id;
+    const { groupId } = req.params
     //checking user is owner?
-    const tempGroup = await groupSchema.findById(group)
-    if (!tempGroup) {
-        return res.fail(400, "INVALID_GROUP")
-    }
-    const owner = tempGroup.owner;
-    if (!owner.equals(user)) {
-        return res.fail(403, "UNAUTHORIZED_USER")
-    }
+    const group = await groupSchema.findById(groupId)
+    if (!group) return res.fail(404, "GROUP_NOT_FOUND", "The requested group does not exist")
+    if (!group.owner.equals(userId)) return res.fail(403, "UNAUTHORIZED_USER", "Permission denied")
+
 
     const parsedData = GroupSchema.safeParse(req.body)
     if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
@@ -137,34 +129,25 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
 
 export const addRequest: RequestHandler = async (req, res) => {
     const user = req.user
-    const userID = user._id
-    if (!userID) return res.fail(400, "INPUT_ERROR", "userID not found")
+    const userId = user._id
+    const { groupId } = req.params
 
-    const groupID = xss(req.body?.groupID)
-    if (!groupID) return res.fail(400, "INPUT_ERROR", "groupID not found")
+    const group = await groupSchema.findById<Omit<GroupType, 'member'> & { member: UserType[] }>(groupId).populate({ path: 'member', select: 'fullName email' })
+    if (!group) return res.fail(404, "GROUP_NOT_FOUND", "The group does not exist")
 
-    const tempUser = await User.findById(userID)
-    const Populatedgroup = await groupSchema.find<Omit<GroupType, 'member'> & { member: UserType[] }>({ _id: groupID }).populate({ path: 'member', select: 'fullName email' })
-    const tempGroup = Populatedgroup[0]
-    if (!tempUser) return res.fail(400, "INPUT_ERROR", "No such user")
-    if (!tempGroup) return res.fail(400, "INPUT_ERROR", "No such group")
+    const { requests, member } = group
+    if (requests.includes(userId)) return res.fail(409, "REQUEST_ALREADY_SENT", "You have already sent a request to the group")
 
-    const requestArr = tempGroup.requests
-    if (requestArr.includes(userID)) return res.fail(400, "INPUT_ERROR", "user has already send a request")
+    const memberIds = member.map((e) => e._id.toString())
 
-    const member = tempGroup.member
-    const memberId = member.map((e) => {
-        return e._id.toString()
-    })
-    if (memberId.includes(userID.toString())) {
-        return res.fail(400, "INPUT_ERROR", "member cannot send the request")
-    }
-    const data = await groupSchema.updateOne({ _id: groupID }, { $push: { requests: userID } })
-    await User.updateOne({ _id: userID }, { $push: { requests: groupID } })
+    if (memberIds.includes(userId.toString())) return res.fail(409, "ALREADY_A_MEMBER", "You are already a member of the group")
 
-    const memberEmails = tempGroup.member.map(obj => obj.email)
-    sendRequestNotification(memberEmails, tempUser.fullName, tempGroup.title)
-    res.success(201, data, "Request Sent Successfully")
+    const updatedGroup = await groupSchema.updateOne({ _id: groupId }, { $push: { requests: userId } })
+    await User.updateOne({ _id: userId }, { $push: { requests: groupId } })
+
+    const memberEmails = group.member.map(obj => obj.email)
+    sendRequestNotification(memberEmails, user.fullName, group.title)
+    res.success(201, { group: updatedGroup }, "Request Sent Successfully")
 }
 
 //for homepage hamburger request seeing so that they can accept
@@ -177,8 +160,8 @@ export const viewRequest: RequestHandler = async (req, res) => {
     if (!tempUser) {
         return res.fail(400, "INPUT_ERROR", "No such user")
     }
-    const tempGroup = await groupSchema.find({ member: userID })
-    res.success(200, tempGroup)
+    const group = await groupSchema.find({ member: userID })
+    res.success(200, group)
 }
 
 
@@ -242,4 +225,16 @@ export const groupnumber: RequestHandler = async (req, res) => {
         }
     ])
     res.success(200, val)
+}
+
+export const addComment: RequestHandler = async (req, res) => {
+    const userId = req.user._id
+    const { groupId } = req.params
+    const parsedData = z.object({ comment: z.string({ error: "Invalid Comment" }).min(1, { error: "Comment cannot be empty" }) }).safeParse(req.body)
+    if (!parsedData.success) return res.fail(400, "INPUT_ERROR", parsedData.error.issues[0].message)
+    const commentText = xss(parsedData.data.comment)
+
+    const comment = await commentSchema.create({ comment: commentText, author: userId, targetGroup: groupId })
+    await groupSchema.updateOne({ _id: groupId }, { $push: { comments: comment._id } })
+    res.success(201, { comment }, "Comment added successfully")
 }

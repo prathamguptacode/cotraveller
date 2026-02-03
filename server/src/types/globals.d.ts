@@ -12,7 +12,7 @@ declare global {
                 email: string,
                 fullName: string,
                 username: string
-            }
+            },
         }
     }
 }

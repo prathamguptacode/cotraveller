@@ -25,14 +25,14 @@ const Inbox = () => {
 
 
   const acceptRequestMutation = useMutation({
-    mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.post(`/group/${groupId}/requests/${requestId}`),
+    mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.post(`/groups/${groupId}/requests/${requestId}`),
     onSuccess: () => inboxQuery.refetch(),
     onError: () => {
 
     }
   })
   const rejectRequestMutation = useMutation({
-    mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.delete(`/group/${groupId}/requests/${requestId}`),
+    mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.delete(`/groups/${groupId}/requests/${requestId}`),
     onSuccess: () => inboxQuery.refetch()
   })
 
@@ -45,7 +45,7 @@ const Inbox = () => {
       {
         groups.map(group => {
           return (
-            <Link to={`/moreinfo?q=${group._id}`} key={group._id} className={styles.listItem}>
+            <Link to={`/groups/${group._id}`} key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
                 <FaPeopleGroup />
               </div>

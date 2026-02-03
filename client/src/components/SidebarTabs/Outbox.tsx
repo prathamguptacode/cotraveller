@@ -33,7 +33,7 @@ const Outbox = () => {
             {
                 groups.map(group => {
                     return (
-                        <Link to={`/moreinfo?q=${group._id}`} key={group._id} className={styles.listItem}>
+                        <Link to={`/groups/${group._id}`} key={group._id} className={styles.listItem}>
                             <div className={styles.avatarWrapper} >
                                 <FaPeopleGroup />
                             </div>

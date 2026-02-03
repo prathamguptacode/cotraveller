@@ -14,7 +14,6 @@ import oauthRoutes from './routes/oauthRoutes'
 import fieldValidationRoutes from './routes/fieldValidationRoutes'
 import userRoutes from './routes/userRoutes'
 import messageRoutes from './routes/messageRoutes'
-import commentRoute from './routes/commentRoute'
 import Message from './models/Message'
 import Group from './models/groupSchema'
 import feedabck from './routes/feedbackRoute'
@@ -72,9 +71,7 @@ app.use(cors({
 
 //Routes
 app.use('/api', hello)
-app.use('/api/group', groupRoutes)
-app.use('/api/comments', commentRoute)
-
+app.use('/api/groups', groupRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/oauth', oauthRoutes)
 app.use('/api/validateField', fieldValidationRoutes)

@@ -1,7 +1,7 @@
 import { GiHamburgerMenu } from "react-icons/gi";
-import mystyle from '../home.module.css'
+import mystyle from './navbar.module.css'
 import ThemeButton from '@/components/Buttons/ThemeButton';
-import Sidebar from '@/features/home/components/Sidebar';
+import Sidebar from '@/components/Sidebar/Sidebar';
 import { Link } from 'react-router-dom';
 import { useRef, useState } from "react";
 import Groups from "@/components/SidebarTabs/Groups";
@@ -41,7 +41,7 @@ function Navbar() {
             }} className={mystyle.hamburger}>
                 <GiHamburgerMenu size='20px' />
 
-                <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox setIsHidden={setIsHidden} /> : currentTab === "Outbox" ? <Outbox setIsHidden={setIsHidden} /> : <Groups setIsHidden={setIsHidden} />} setCurrentTab={setCurrentTab} isHidden={isHidden} />
+                <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : currentTab === "Outbox" ? <Outbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} />
             </div>
             <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
 
@@ -59,7 +59,6 @@ function Navbar() {
             <Link to={'/creategroup'} className={clsx(mystyle.navbtn, mystyle.createGroupBtn)}>Create group</Link>
             <Link aria-label="Create Group" to={'/creategroup'} className={mystyle.plusBtn}><Plus /></Link>
 
-            {/* pratham changed this to prevent error page */}
             {user && <Link className={mystyle.avatarWrapper} aria-label="Go to your profile page" to={`/`}>
                 <FaUser />
             </Link>}

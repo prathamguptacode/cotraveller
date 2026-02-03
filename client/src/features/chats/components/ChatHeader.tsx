@@ -13,14 +13,14 @@ type ChatHeaderProps = {
 const ChatHeader = ({ group, groupId }: ChatHeaderProps) => {
     return (
         <div className={styles.chatAreaHeader}>
-            <Link to={`/moreinfo?q=${groupId}`} className={styles.avatarWrapper}>
+            <Link to={`/groups/${groupId}`} className={styles.avatarWrapper}>
                 <FaPeopleGroup />
             </Link>
             <div className={styles.groupDetails}>
                 <h3>
-                    <Link to={`/moreinfo?q=${groupId}`}>{group?.title}</Link>
+                    <Link to={`/groups/${groupId}`}>{group?.title}</Link>
                 </h3>
-                <Link className={styles.members} to={`/moreinfo?q=${groupId}`}>
+                <Link className={styles.members} to={`/groups/${groupId}`}>
                     {group?.members?.map(member => {
                         return (
                             <div key={member._id}> {member.fullName}</div>

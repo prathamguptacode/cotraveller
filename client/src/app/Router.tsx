@@ -10,12 +10,12 @@ import VerifyOTP from './pages/VerifyOTP'
 import CreateGroup from './pages/CreateGroup/CreateGroup'
 import MainLayout from './layouts/Main/MainLayout'
 import SuccessPage from './pages/success/SuccessPage'
-import MoreInfo from './pages/moreinfo/MoreInfo'
 import SecondaryLayout from './layouts/Secondary/SecondaryLayout'
 import Chats from './pages/Chats'
 import NotFound from './pages/NotFound/NotFound'
 import FeedbackPage from './pages/Feedback/FeedbackPage'
 import EditGroup from './pages/EditGroup/EditGroup'
+import GroupInfo from './pages/GroupInfo'
 
 
 
@@ -32,22 +32,11 @@ const Router = () => {
                     <Route path='viewgroup' element={<ViewGroup />} />
                 </Route>
 
-                <Route path='/groups/:groupId/' element={<SecondaryLayout />} >
+                <Route path='/groups/:groupId' element={<SecondaryLayout />} >
+                    <Route index element={<GroupInfo />} />
                     <Route path='chats' element={<Chats />} />
                 </Route>
                 {/* 
-
-                <Route path='/moreinfo' element={<MoreInfo />} />
-
-
-
-
-
-
-              
-
-
-
                 <Route element={<ProtectedRoutes />}>
                     <Route path='/creategroup' element={<CreateGroup />} />
                     <Route path='/success' element={<SuccessPage />} />

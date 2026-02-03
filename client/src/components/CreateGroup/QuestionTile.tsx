@@ -52,7 +52,7 @@ function QuestionTile({ edit }: QuestionTileProps) {
     useEffect(() => {
         if (edit) {
             (async () => {
-                const res = await api.get(`/group/viewgroup?q=${edit}`)
+                const res = await api.get(`/groups/viewgroup?q=${edit}`)
                 const data = res.data?.data[0];
                 if (res.status != 200) {
                     return toast.error('something went wrong', {
@@ -189,7 +189,7 @@ function QuestionTile({ edit }: QuestionTileProps) {
             travelDate: time
         }
         try {
-            const res = await api.post('/group/addgroup', body)
+            const res = await api.post('/groups/addgroup', body)
             if (res.status == 201) {
                 return navigate('/success', { state: { click: true } })
             }
@@ -301,7 +301,7 @@ function QuestionTile({ edit }: QuestionTileProps) {
         }
 
 
-        const { status } = await callAuthApi('post', `/group/editgroup?q=${edit}`, body)
+        const { status } = await callAuthApi('post', `/groups/editgroup?q=${edit}`, body)
         if (status === 200) return navigate(`/moreinfo?q=${edit}`)
         if (status === 403) return toast.error("Only owner of group can edit", {
             style: {
