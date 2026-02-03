@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom'
 import { Cog, Info, LogOut } from 'lucide-react'
 import { api } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
-import type { Dispatch, JSX } from 'react'
+import { Suspense, type Dispatch, type JSX } from 'react'
 import type { SidebarTab } from '../Navbar/Navbar'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { ErrorBoundary } from 'react-error-boundary'
 
 
 
@@ -48,8 +49,12 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }: SidebarProps) =>
                 <button aria-label='Inbox' className={currentTab === "Inbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Inbox')}>Inbox</button>
                 <button aria-label='Sent' className={currentTab === "Outbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Outbox')}>Sent</button>
             </div>
+            <ErrorBoundary fallback={<p>Nothing here</p>}>
+                <Suspense fallback={<p>Loading...</p>}>
+                    {slot}
+                </Suspense>
+            </ErrorBoundary>
 
-            {slot}
 
             <div className={clsx(styles.list, styles.footerList)}>
                 <Link to={''} className={styles.listItem}>

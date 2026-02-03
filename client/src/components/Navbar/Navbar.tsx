@@ -60,22 +60,22 @@ export default Navbar
 
 Navbar.Hamburger = () => {
     const { currentTab, setCurrentTab, setIsHidden, menuRef, isHidden } = useNavbarContext()
-    return (
-        <div ref={menuRef} role="button" tabIndex={0} onClick={() => {
-            setIsHidden(prev => {
-                prev && setCurrentTab('Groups')
-                return !prev
-            })
+    const { user } = useAuth()
+    return user && <div ref={menuRef} role="button" tabIndex={0} onClick={() => {
+        setIsHidden(prev => {
+            prev && setCurrentTab('Groups')
+            return !prev
+        })
 
-        }} onBlur={(e) => {
-            if (e.currentTarget.contains(e.relatedTarget)) return
-            setIsHidden(true)
-        }} className={mystyle.hamburger}>
-            <GiHamburgerMenu size='20px' />
+    }} onBlur={(e) => {
+        if (e.currentTarget.contains(e.relatedTarget)) return
+        setIsHidden(true)
+    }} className={mystyle.hamburger}>
+        <GiHamburgerMenu size='20px' />
 
-            <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : currentTab === "Outbox" ? <Outbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} />
-        </div>
-    )
+        <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : currentTab === "Outbox" ? <Outbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} />
+    </div>
+
 }
 
 

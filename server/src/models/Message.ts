@@ -19,6 +19,10 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Group",
         required: true
+    },
+    readBy: {
+        type: [mongoose.Schema.Types.ObjectId],
+        default: []
     }
 })
 
