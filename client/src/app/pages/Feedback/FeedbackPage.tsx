@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import mystyle from './FeedbackPage.module.css'
-import NewNav from '@/components/CreateGroup/newNav'
 import { api } from '@/api/axios'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
+import Navbar from '@/components/Navbar/Navbar'
 
 function FeedbackPage() {
 
@@ -53,7 +53,10 @@ function FeedbackPage() {
 
     return (
         <div className={mystyle.feedback}>
-            <NewNav />
+            <Navbar>
+                <Navbar.Title />
+                <Navbar.ThemeButton />
+            </Navbar>
             <div className={mystyle.upperbx}>
                 <div className={mystyle.titleTile}>
                     <div className={mystyle.strip}></div>
@@ -83,7 +86,7 @@ function FeedbackPage() {
                     btn ? <button aria-label='Return Home' className={mystyle.mysubmit} onClick={handleHome}>Return Home</button> : <button aria-label='Submit' onClick={handleClick} className={mystyle.mysubmit}>Submit</button>
                 }
             </div>
-            
+
         </div>
     )
 }

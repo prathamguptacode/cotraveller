@@ -13,7 +13,7 @@ import MonthDrop from '@/features/home/components/SearchArea/MonthDrop';
 import YearDrop from '@/features/home/components/SearchArea/YearDrop';
 import LocationDrop from '@/features/home/components/SearchArea/LocationDrop';
 import { FaLocationDot } from "react-icons/fa6";
-import btnstyle from '@/app/pages/CreateGroup/CreateGroup.module.css'
+import btnstyle from '../../CreateGroup/CreateGroup.module.css'
 import MemberDrop from './dropDown/memberDrop';
 import HourDrop from './dropDown/hourDrop';
 import MinDrop from './dropDown/minDrop';
@@ -21,11 +21,13 @@ import { toast } from 'sonner'
 import { api, callAuthApi } from '@/api/axios';
 import { useNavigate } from 'react-router-dom';
 import type { Mode, Month } from '@/types/constants.types';
+import { getFormattedTime } from '../../utils/getFormattedTime';
+import type { Group } from '../../types';
 
 
 
 type QuestionTileProps = {
-    edit: string | null
+    edit?: string
 }
 
 function QuestionTile({ edit }: QuestionTileProps) {
@@ -49,36 +51,22 @@ function QuestionTile({ edit }: QuestionTileProps) {
     const title = useRef<HTMLInputElement>(null)
     const content = useRef<HTMLInputElement>(null)
 
+
     useEffect(() => {
         if (edit) {
             (async () => {
-                const res = await api.get(`/groups/viewgroup?q=${edit}`)
-                const data = res.data?.data[0];
-                if (res.status != 200) {
-                    return toast.error('something went wrong', {
-                        style: {
-                            borderRadius: '10px',
-                            background: 'var(--toast-bg)',
-                            color: 'var(--toast-color)',
-                            padding: '6px 20px'
-                        }
-                    })
-                }
-                setLocation(data.intialLocation)
-                setMode(data.mode)
-                setTitleVal(data.title)
-                setContentVal(data.content)
-                setMember(data.memberNumber)
-                const timeZ = new Date(data.travelDate)
-                const intime = timeZ.toLocaleTimeString("en-IN", {
-                    timeZone: "Asia/Kolkata",
-                    day: "2-digit",
-                    year: "numeric",
-                    month: "long",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false
+                const { data: { group }, success, message } = await api.get<{ group: Group }>(`/groups/${edit}`)
+
+                if (!success) return toast.error('An error occurred', {
+                    description: message
                 })
+
+                setLocation(group.intialLocation)
+                setMode(group.mode)
+                setTitleVal(group.title)
+                setContentVal(group.content)
+                setMember(group.memberNumber)
+                const intime = getFormattedTime(group.travelDate)
                 const timeSp = (intime.split(' at '))
                 const dateS = timeSp[0]
                 const timeS = timeSp[1]
@@ -107,60 +95,16 @@ function QuestionTile({ edit }: QuestionTileProps) {
     async function handleSubmit() {
         const titleVal = title.current?.value;
         const contentVal = content.current?.value;
-        if (!titleVal) return toast.error("please enter the Name", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-                padding: '6px 20px'
-            }
-        })
-        if (!contentVal) return toast.error("please enter the Description", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-                padding: '6px 20px'
-            }
-        })
-        if (titleVal.length < 5) return toast.error("Name cannot be less then 4 characters", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
-        if (contentVal.length < 13) return toast.error("Description cannot be less then 12 characters", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
+        if (!titleVal) return toast.error("please enter the Name")
+        if (!contentVal) return toast.error("please enter the Description")
+        if (titleVal.length < 5) return toast.error("Name cannot be less then 4 characters")
+        if (contentVal.length < 13) return toast.error("Description cannot be less then 12 characters")
 
-        if ((date == 'Date?') || (month == 'Month ?') || (year == 'Year?')) return toast.error("Please select your Travel Dates", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
+        if ((date == 'Date?') || (month == 'Month ?') || (year == 'Year?')) return toast.error("Please select your Travel Dates")
 
-        if (mode == 'Transport?') return toast.error("Please select your Transport", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
+        if (mode == 'Transport?') return toast.error("Please select your Transport")
 
-        if (location == 'Location?') return toast.error("Please select your College", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
+        if (location == 'Location?') return toast.error("Please select your College")
 
         let monthNum = '0';
         if (month == "January") monthNum = '01'
@@ -194,23 +138,11 @@ function QuestionTile({ edit }: QuestionTileProps) {
                 return navigate('/success', { state: { click: true } })
             }
             else {
-                return toast.error("Something went wrong", {
-                    style: {
-                        borderRadius: '10px',
-                        background: 'var(--toast-bg)',
-                        color: 'var(--toast-color)',
-                    }
-                })
+                return toast.error("Something went wrong")
 
             }
         } catch (error) {
-            return toast.error("Something went wrong", {
-                style: {
-                    borderRadius: '10px',
-                    background: 'var(--toast-bg)',
-                    color: 'var(--toast-color)',
-                }
-            })
+            return toast.error("Something went wrong")
         }
     }
 
@@ -218,60 +150,16 @@ function QuestionTile({ edit }: QuestionTileProps) {
 
         const titleVal = title.current?.value;
         const contentVal = content.current?.value;
-        if (!titleVal) return toast.error("please enter the Name", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-                padding: '6px 20px'
-            }
-        })
-        if (!contentVal) return toast.error("please enter the Description", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-                padding: '6px 20px'
-            }
-        })
-        if (titleVal.length < 5) return toast.error("Name cannot be less then 4 characters", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
-        if (contentVal.length < 13) return toast.error("Description cannot be less then 12 characters", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
+        if (!titleVal) return toast.error("please enter the Name")
+        if (!contentVal) return toast.error("please enter the Description")
+        if (titleVal.length < 5) return toast.error("Name cannot be less then 4 characters")
+        if (contentVal.length < 13) return toast.error("Description cannot be less then 12 characters")
 
-        if ((date == 'Date?') || (month == 'Month ?') || (year == 'Year?')) return toast.error("Please select your Travel Dates", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
+        if ((date == 'Date?') || (month == 'Month ?') || (year == 'Year?')) return toast.error("Please select your Travel Dates")
 
-        if (mode == 'Transport?') return toast.error("Please select your Transport", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
+        if (mode == 'Transport?') return toast.error("Please select your Transport")
 
-        if (location == 'Location?') return toast.error("Please select your College", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
+        if (location == 'Location?') return toast.error("Please select your College")
 
         let monthNum = '0';
         if (month == "January") monthNum = '01'
@@ -303,20 +191,8 @@ function QuestionTile({ edit }: QuestionTileProps) {
 
         const { status } = await callAuthApi('post', `/groups/editgroup?q=${edit}`, body)
         if (status === 200) return navigate(`/moreinfo?q=${edit}`)
-        if (status === 403) return toast.error("Only owner of group can edit", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
-        return toast.error("Something went wrong", {
-            style: {
-                borderRadius: '10px',
-                background: 'var(--toast-bg)',
-                color: 'var(--toast-color)',
-            }
-        })
+        if (status === 403) return toast.error("Only owner of group can edit")
+        return toast.error("Something went wrong")
 
 
 
@@ -463,8 +339,6 @@ function QuestionTile({ edit }: QuestionTileProps) {
             {
                 edit ? <button aria-label='Edit Group' className={btnstyle.submitbtn} onClick={editgroup}>Edit Group</button> : <button aria-label='Create Group' className={btnstyle.submitbtn} onClick={handleSubmit} >Create Group</button>
             }
-
-
 
         </>
     )

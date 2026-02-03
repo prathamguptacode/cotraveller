@@ -7,7 +7,7 @@ import AuthLayout from './layouts/Auth/AuthLayout'
 import Signup from './pages/Signup'
 import Login from './pages/Login'
 import VerifyOTP from './pages/VerifyOTP'
-import CreateGroup from './pages/CreateGroup/CreateGroup'
+import CreateGroup from '../features/createGroup/CreateGroup/CreateGroup'
 import MainLayout from './layouts/Main/MainLayout'
 import SuccessPage from './pages/success/SuccessPage'
 import SecondaryLayout from './layouts/Secondary/SecondaryLayout'
@@ -32,16 +32,24 @@ const Router = () => {
                     <Route path='viewgroup' element={<ViewGroup />} />
                 </Route>
 
-                <Route path='/groups/:groupId' element={<SecondaryLayout />} >
-                    <Route index element={<GroupInfo />} />
-                    <Route path='chats' element={<Chats />} />
+                <Route path='/groups' element={<SecondaryLayout />} >
+                    <Route path=':groupId' >
+                        <Route index element={<GroupInfo />} />
+                        <Route element={<ProtectedRoutes />}>
+                            <Route path='chats' element={<Chats />} />
+                            <Route path='edit' element={<EditGroup />} />
+                        </Route>
+                    </Route>
+
+                    <Route element={<ProtectedRoutes />}>
+                        <Route path='create' element={<CreateGroup />} />
+                        <Route path='success' element={<SuccessPage />} />
+
+                    </Route>
+
                 </Route>
-                {/* 
-                <Route element={<ProtectedRoutes />}>
-                    <Route path='/creategroup' element={<CreateGroup />} />
-                    <Route path='/success' element={<SuccessPage />} />
-                    <Route path='/edit' element={<EditGroup />} />
-                </Route> */}
+
+
                 <Route element={<AntiProtectedRoutes />} >
                     <Route element={<AuthLayout />} >
                         <Route path='/signup' element={<Signup />} />

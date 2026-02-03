@@ -1,12 +1,15 @@
-import React from 'react'
+import type { Dispatch, MouseEvent, SetStateAction } from 'react';
 import mystyle from './dropDown.module.css'
 
-function MinDrop({setMin}) {
+type MinDropProps = {
+  setMin: Dispatch<SetStateAction<string>>
+}
+function MinDrop({ setMin }: MinDropProps) {
 
-    function handle(e){
-        const val=e.target.innerText;
-        setMin(val)
-    }
+  const handle = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    const val = e.currentTarget.innerText;
+    setMin(val)
+  }
 
   return (
     <div className={mystyle.minDrop}>

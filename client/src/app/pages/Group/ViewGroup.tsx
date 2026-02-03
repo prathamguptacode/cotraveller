@@ -39,8 +39,9 @@ function ViewGroup() {
                 intialLocation: location
             }
             try {
-                const res = await api.post("/groups/viewgroupbyfilter", body)
-                setGroupData(res.data.data)
+                const res = await api.post<{ groups: [] }>("/groups/viewgroupbyfilter", body)
+                console.log(res.data)
+                setGroupData(res.data.groups)
                 setLocalLoader(false)
             } catch (error) {
                 //something went wrong page

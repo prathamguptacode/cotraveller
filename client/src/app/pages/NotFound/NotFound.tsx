@@ -6,7 +6,15 @@ import { Link } from 'react-router-dom';
 function NotFound() {
     return (
         <div className={mystyle.wrapper}>
-            <Navbar />
+            <Navbar >
+                <Navbar.Hamburger />
+                <Navbar.Title />
+                <Navbar.ThemeButton />
+                <Navbar.Inbox />
+                <Navbar.LoginButton />
+                <Navbar.CreateGroupButton />
+                <Navbar.ProfileButton />
+            </Navbar>
             <div className={mystyle.errorpage}>
                 <div className={mystyle.can}>
                     <div className={mystyle.imgbx}>
@@ -17,7 +25,7 @@ function NotFound() {
                             Something went wrong !
                         </h2>
                         <p className={mystyle.con}>
-                           Lost ?  That's fine, but you might need some cotravellers on the way.
+                            Lost ?  That's fine, but you might need some cotravellers on the way.
                         </p>
                         <Link className={mystyle.backBtn} to={'/'}>Go back</Link>
                     </div>

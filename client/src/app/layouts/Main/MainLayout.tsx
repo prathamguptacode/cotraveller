@@ -5,7 +5,15 @@ const MainLayout = () => {
 
     return (
         <div style={{ marginTop: "65px" }}>
-            <Navbar />
+            <Navbar >
+                <Navbar.Hamburger />
+                <Navbar.Title />
+                <Navbar.ThemeButton />
+                <Navbar.Inbox />
+                <Navbar.LoginButton />
+                <Navbar.CreateGroupButton />
+                <Navbar.ProfileButton />
+            </Navbar>
             <Outlet />
         </div>
     )

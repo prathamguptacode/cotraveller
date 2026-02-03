@@ -1,17 +1,21 @@
-import React from 'react'
+import type { Dispatch, MouseEvent, SetStateAction } from 'react';
 import mystyle from '../dropDown/dropDown.module.css'
 
-function MemberDrop({setMember}) {
+type MemberDropProps = {
+  setMember: Dispatch<SetStateAction<string>>
+}
 
-    function click(e){
-        const val=e.target.innerText;
-        const data=Number(val)
-        setMember(data)
-    }
-    function splClick(){
-        const val=32;
-        setMember(val)
-    }
+function MemberDrop({ setMember }: MemberDropProps) {
+
+  function click(e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) {
+    const val = e.currentTarget.innerText;
+    const data = val
+    setMember(data)
+  }
+  function splClick() {
+    const val = "32";
+    setMember(val)
+  }
 
   return (
     <div className={mystyle.memberDrop}>

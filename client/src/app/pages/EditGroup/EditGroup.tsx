@@ -1,25 +1,25 @@
+import QuestionTile from '@/features/createGroup/components/CreateGroup/QuestionTile'
 import mystyle from './EditGroup.module.css'
-import NewNav from '@/components/CreateGroup/newNav'
-import TitleTile from '@/components/CreateGroup/TitleTile'
-import QuestionTile from '@/components/CreateGroup/QuestionTile'
-import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
+import { Navigate, useLocation, useParams } from 'react-router-dom'
+import TitleTile from '@/features/createGroup/components/CreateGroup/TitleTile'
+import Navbar from '@/components/Navbar/Navbar'
 
 function EditGroup() {
 
     const location = useLocation()
-    const [q] = useSearchParams()
-    const id = q.get("q")
+    const { groupId } = useParams()
+    if (!groupId || !location.state?.allowed) return <Navigate to={'/'} replace />
 
-    return location.state?.allowed ?
+    return (
         <div className={mystyle.wrap}>
-            <NewNav />
+            <Navbar>
+                <Navbar.Title />
+                <Navbar.ThemeButton />
+            </Navbar>
             <TitleTile title="Edit your group information" con="A good description helps the right people join your group." />
-            <QuestionTile edit={id} />
-        </div> :
-        <Navigate to="/" replace />
-
-
-
+            <QuestionTile edit={groupId} />
+        </div>
+    )
 }
 
 export default EditGroup

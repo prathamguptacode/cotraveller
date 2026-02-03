@@ -16,7 +16,7 @@ function NoGroup() {
                     <p className={mystyle.ncon}>We’re sorry — we couldn’t find any groups for this trip.</p>
                     <p className={mystyle.ncon}>How about creating your own and letting others join you?</p>
                 </div>
-                <Link to={'/creategroup'} aria-label='Create Group' className={clsx(mystyle.homebtn, mystyle.createbtn)}>Create Group</Link>
+                <Link to={'/groups/create'} aria-label='Create Group' className={clsx(mystyle.homebtn, mystyle.createbtn)}>Create Group</Link>
             </div>
         </div>
     )

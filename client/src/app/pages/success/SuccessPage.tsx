@@ -1,6 +1,6 @@
+import Navbar from '@/components/Navbar/Navbar';
 import mystyle from './success.module.css'
 import { FaPeopleGroup } from "react-icons/fa6";
-import NewNav from '@/components/CreateGroup/newNav';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 
 function SuccessPage() {
@@ -8,7 +8,10 @@ function SuccessPage() {
 
 
     return location.state?.click ? <div className={mystyle.success}>
-        <NewNav />
+        <Navbar>
+            <Navbar.Title />
+            <Navbar.ThemeButton />
+        </Navbar>
         <div className={mystyle.successbx}>
             <div className={mystyle.imgbx}>
                 <FaPeopleGroup size={280} />

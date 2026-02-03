@@ -1,12 +1,15 @@
-import React from 'react'
+import type { Dispatch, MouseEvent, SetStateAction } from 'react';
 import mystyle from './dropDown.module.css'
 
-function HourDrop({setHour}) {
+type HourDropProps = {
+  setHour: Dispatch<SetStateAction<string>>
+}
+function HourDrop({ setHour }: HourDropProps) {
 
-    function handle(e){
-        const val=e.target.innerText;
-        setHour(val)
-    }
+  function handle(e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) {
+    const val = e.currentTarget.innerText;
+    setHour(val)
+  }
 
   return (
     <div className={mystyle.hourDrop}>

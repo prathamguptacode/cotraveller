@@ -124,7 +124,7 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
         }
 
     ])
-    res.success(200, data)
+    res.success(200, { groups: data })
 }
 
 export const addRequest: RequestHandler = async (req, res) => {

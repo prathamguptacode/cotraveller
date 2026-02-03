@@ -52,7 +52,7 @@
 
 .liveGroupHeading {
     display: flex;
-    gap: 8px;
+    gap: 1rem;
     align-items: center;
 }
 
