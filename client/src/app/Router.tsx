@@ -16,6 +16,7 @@ import NotFound from './pages/NotFound/NotFound'
 import FeedbackPage from './pages/Feedback/FeedbackPage'
 import EditGroup from './pages/EditGroup/EditGroup'
 import GroupInfo from './pages/GroupInfo'
+import Test from './pages/test/Test'
 
 
 
@@ -30,6 +31,7 @@ const Router = () => {
                 <Route path='/' element={<MainLayout />}>
                     <Route index element={<Home />} />
                     <Route path='viewgroup' element={<ViewGroup />} />
+                    <Route path='test' element={<Test />} />
                 </Route>
 
                 <Route path='/groups' element={<SecondaryLayout />} >
