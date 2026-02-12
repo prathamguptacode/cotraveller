@@ -20,10 +20,6 @@ const messageSchema = new mongoose.Schema({
         ref: "Group",
         required: true
     },
-    readBy: {
-        type: [mongoose.Schema.Types.ObjectId],
-        default: []
-    }
 })
 
 export type MessageType = HydratedDocument<mongoose.InferSchemaType<typeof messageSchema>>

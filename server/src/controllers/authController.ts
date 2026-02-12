@@ -208,7 +208,7 @@ export const refreshTokenController: RequestHandler = async (req, res) => {
 
     if (!user) {
         res.clearCookie('refreshToken', cookies.REFRESH_COOKIE_OPTIONS)
-        res.fail(401, "USER_NOT_FOUND", "User does not exist")
+        return res.fail(401, "USER_NOT_FOUND", "User does not exist")
     }
 
     res.success(200, { accessToken, user })

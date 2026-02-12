@@ -11,7 +11,6 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { normalizeError } from '@/utils/normalizeError'
 import { toast } from 'sonner'
 import ResendOTPButton from './ResendOTPButton'
-import clsx from 'clsx'
 import SubmitButton from './SubmitButton'
 
 const VerifyFormSchema = z.object({

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm i && vite",
-    "build": "vite build",
+    "build": "tsc -b && vite build",
     "logs": "clear && docker compose -f ../compose.dev.yaml logs -f client",
     "rs": "docker compose -f ../compose.dev.yaml restart client",
     "lint": "eslint .",
@@ -47,6 +47,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0",
     "vite": "^7.2.4"
   }
 }

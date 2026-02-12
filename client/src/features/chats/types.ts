@@ -14,3 +14,9 @@ export type Message = {
     text: string,
     createdAt: string
 }
+
+export type ConversationMember = {
+    userId: string,
+    roomId: string,
+    lastReadAt: number
+}

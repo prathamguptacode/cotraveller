@@ -54,6 +54,11 @@ io.on('connection', (socket) => {
 
     })
 
+    socket.on('MESSAGE_READ_TO_SERVER', async (data: { roomId: string, userId: string, readAt: number }) => {
+        const { roomId, userId, readAt } = data
+        socket.to(roomId).emit('MESSAGE_READ_TO_CLIENT', { lastReadAt: readAt, userId, roomId })
+    })
+
     socket.on('disconnect', () => {
         console.log(`Disconnected socket: ${socket.id}, total clients = ${io.engine.clientsCount}`)
     })
@@ -78,7 +83,7 @@ app.use('/api/validateField', fieldValidationRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/message', messageRoutes)
 
-app.use('/api/feedback',feedabck)
+app.use('/api/feedback', feedabck)
 
 
 

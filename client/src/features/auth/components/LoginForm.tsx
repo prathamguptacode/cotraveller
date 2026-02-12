@@ -27,14 +27,15 @@ const requirements = {
 }
 
 const LoginForm = () => {
+    const navigate = useNavigate()
+    const { updateAccessToken, updateUser } = useAuth()
 
     const mutation = useMutation({
         mutationFn: (body: LoginFormFields) => api.post<AuthResponse>('/auth/login', body),
         onSuccess: (res) => {
-            const { updateAccessToken, updateUser } = useAuth()
             updateAccessToken(res.data.accessToken)
             updateUser(res.data.user)
-            const navigate = useNavigate()
+
             navigate('/', { replace: true })
         },
         onError: (error: unknown) => {

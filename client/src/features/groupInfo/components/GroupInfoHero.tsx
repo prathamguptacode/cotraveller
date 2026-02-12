@@ -28,7 +28,7 @@ const GroupInfoHero = ({ group }: GroupInfoHeroProps) => {
     mutationFn: () => {
       //Optimistic update
       setHasRequested(true)
-      return api.post('/groups/:groupId/requests')
+      return api.post(`/groups/${group._id}/requests`)
     },
     onSuccess: () => {
       toast.success("Request Sent", {

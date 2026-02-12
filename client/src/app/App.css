@@ -98,10 +98,6 @@ input::-webkit-inner-spin-button {
 }
 
 
-.top-loading-bar {
-    /* background: var(--primary) !important; */
-
-}
 
 #root {
     margin: auto;
