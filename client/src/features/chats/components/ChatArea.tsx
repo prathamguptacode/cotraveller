@@ -54,6 +54,7 @@ const ChatArea = () => {
       queryClient.setQueryData(['groups', groupId, 'chats'], (prev: { data: { group: Group } }) => {
         const group = prev.data.group
         return { ...prev, data: { ...prev.data, group: { ...group, messages: [...group.messages, data.message] } } }
+
       })
       socket.emit('MESSAGE_READ_TO_SERVER', { roomId: groupId, userId: user?._id, readAt: Date.now() })
     })
@@ -69,6 +70,7 @@ const ChatArea = () => {
   const sendMessage = () => {
     socket.emit('SEND_MESSAGE_TO_SERVER', { text, roomId: groupId, userId: user?._id }, (res: { success: boolean, message: Message }) => {
       if (!res.success) return console.error('umm message error hua')
+      queryClient.invalidateQueries({ queryKey: ['groups'] })
 
       queryClient.setQueryData(['groups', groupId, 'chats'], (prev: { data: { group: Group } }) => {
         const group = prev.data.group

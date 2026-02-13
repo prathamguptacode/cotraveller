@@ -28,7 +28,7 @@ const ChatHeader = ({ group, groupId }: ChatHeaderProps) => {
                     })}
                 </Link>
             </div>
-            <Link to={`/edit?q=${groupId}`} state={{ allowed: true }} aria-label='Edit Group' className={clsx(styles.groupOptions, styles.listItem)} >
+            <Link to={`/groups/${groupId}/edit`} state={{ allowed: true }} aria-label='Edit Group' className={clsx(styles.groupOptions, styles.listItem)} >
                 <RiPencilFill size={20} />
             </Link>
         </div>

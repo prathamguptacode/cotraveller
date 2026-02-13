@@ -42,10 +42,17 @@ io.on('connection', (socket) => {
         try {
             const baseMessage = await Message.create({ author: userId, text, roomId })
             const message = await baseMessage.populate({ path: 'author', select: 'fullName _id' })
-            await Group.updateOne({ _id: roomId }, { $push: { messages: baseMessage._id } })
+            const group = await Group.findOneAndUpdate({ _id: roomId }, { $push: { messages: baseMessage._id } }, { returnDocument: 'after' })
+            if (!group) return
+
 
             cb({ success: true, message })
             socket.to(roomId).emit('RECEIVE_MESSAGE_ON_CLIENT', { message })
+            // group.member.forEach(member => {
+            //     socket.to(`user_room_${member._id}`).emit('RECEIVE_MESSAGE_ON_CLIENT', { message })
+            // })
+
+
         } catch (error) {
             console.error(error)
             cb({ success: false, code: "DB_ERROR", message: 'Something went wrong' })

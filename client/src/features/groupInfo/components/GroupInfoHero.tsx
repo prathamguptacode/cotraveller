@@ -21,7 +21,7 @@ type GroupInfoHeroProps = {
 const GroupInfoHero = ({ group }: GroupInfoHeroProps) => {
   const { user } = useAuth()
   const [hasRequested, setHasRequested] = useState(group.requests?.includes(user?._id ?? ''))
-  const [time, setTime] = useState(getFormattedTime(group.travelDate))
+
 
 
   const { mutate: sendRequest } = useMutation({
@@ -65,7 +65,7 @@ const GroupInfoHero = ({ group }: GroupInfoHeroProps) => {
             </h2>
             <p className={mystyle.content}>{group.content}</p>
             <div className={mystyle.detail}>
-              <p className={mystyle.time}>Date & Time: {time}</p>
+              <p className={mystyle.time}>Date & Time: {getFormattedTime(group.travelDate)}</p>
               <p className={mystyle.transport}>Transport: {group.mode}</p>
               <p className={mystyle.college}>College: {group.intialLocation}</p>
             </div>

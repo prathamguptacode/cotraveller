@@ -3,17 +3,37 @@ import { Link } from 'react-router-dom'
 import { api } from '@/api/axios'
 import { FaPeopleGroup } from "react-icons/fa6";
 import type { Group } from '@/types/group.types'
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useSocket } from '@/hooks/useSocket';
+import { useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
 
 const Groups = () => {
-  
-  const query = useSuspenseQuery({
+  const socket = useSocket()
+  const { user } = useAuth()
+  const queryClient = useQueryClient()
+
+
+
+
+  const { data: groups } = useSuspenseQuery({
     queryKey: ['groups'],
+    staleTime: Infinity,
     queryFn: () => api.get<{ groups: Group[] }>('/user/groups'),
+    select: (res) => res.data.groups
   })
 
-  const { groups } = query.data.data
+  useEffect(() => {
+    socket.emit('JOIN_ROOM', { userId: user?._id, roomId: `user_room_${user?._id}` }, ((res: { success: boolean }) => {
+      if (!res.success) console.debug('Socket connection for All chats failed')
+    }))
+
+    socket.on('RECEIVE_MESSAGE_ON_CLIENT', () => queryClient.invalidateQueries({ queryKey: ['groups'] })
+    )
+  }, [socket])
+
+
   return (
     <div className={styles.list}>
       {
