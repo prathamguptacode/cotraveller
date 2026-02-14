@@ -17,6 +17,7 @@ import FeedbackPage from './pages/Feedback/FeedbackPage'
 import EditGroup from './pages/EditGroup/EditGroup'
 import GroupInfo from './pages/GroupInfo'
 import Test from './pages/test/Test'
+import NewcreateGroup from './pages/createGroup/NewcreateGroup'
 
 
 
@@ -32,6 +33,7 @@ const Router = () => {
                     <Route index element={<Home />} />
                     <Route path='viewgroup' element={<ViewGroup />} />
                     <Route path='test' element={<Test />} />
+                    <Route path='newGroup' element={<NewcreateGroup />} />
                 </Route>
 
                 <Route path='/groups' element={<SecondaryLayout />} >
