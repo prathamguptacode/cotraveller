@@ -1,7 +1,7 @@
 .wrapper {
   max-width: 900px;
   margin: auto;
-  min-height: 39rem;
+  min-height: 40rem;
   overflow: hidden;
   border-radius: 8px;
   background-color: hsl(from var(--clr-bg) h s 18%);
@@ -36,9 +36,21 @@
   border-color: var(--primary);
 }
 
+.groupNameBox,
+.groupDescriptionBox {
+  margin: 0.5rem 0 1rem 0;
+}
+
+.error{
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgb(234, 81, 81);
+  padding: 4px 0;
+}
+
 .groupNameInput,
 .descriptionInput {
-  margin: 0.5rem 0 1.5rem 0;
+  margin: 0.4rem 0 0 0;
   width: 100%;
   background-color: hsl(from var(--clr-bg) h s 22%);
   border: 1px solid var(--clr-border);
@@ -113,7 +125,7 @@
   padding-bottom: 2rem;
 }
 
-select{
+select {
   background-color: hsl(from var(--clr-bg) h s 22%);
   color: var(--clr-font);
   border-radius: 4px;
@@ -141,4 +153,12 @@ select{
   border-radius: 4px;
   width: 100%;
   border: 1px solid var(--clr-border);
+}
+
+.disabledNextBtn{
+  background-color: hsl(from var(--clr-bg) h s 50%);
+  cursor: not-allowed;
+}
+.disabledNextBtn:hover{
+  background-color: hsl(from var(--clr-bg) h s 40%);
 }
