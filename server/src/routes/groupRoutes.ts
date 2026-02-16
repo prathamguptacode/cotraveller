@@ -9,26 +9,19 @@ import { verifyAccessToken } from '../middlewares/authMiddleware'
 import groupSchema from '@/models/groupSchema'
 
 
-//should have middleware
 router.post('/addgroup', verifyAccessToken, asyncHandler(addGroup))
 
-router.get('/:groupId', asyncHandler(viewGroup))//we never have to use this route
 
 router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middleware required
 
-//adding people to group logic
-//so the logic goes (like) first sees the post and (like) one so they request to join group
-//after this reequest comes to members (or owner) of group
-//if they accecpt the request then walah user is added as member and they all can talk now
-//then group people can talk from socket io
+router.get('/live', groupnumber)
 
-router.get('/getnumbers', groupnumber)
+router.get('/viewrequest',verifyAccessToken, asyncHandler(viewRequest))// this is for member to see request
 
+router.get('/:groupId', asyncHandler(viewGroup))//we never have to use this route
 
 router.use(verifyAccessToken)
 
-
-router.get('/viewrequest', asyncHandler(viewRequest))// this is for member to see request
 
 router.patch('/:groupId', asyncHandler(editGroup))
 

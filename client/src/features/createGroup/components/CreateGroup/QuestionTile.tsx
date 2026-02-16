@@ -142,6 +142,7 @@ function QuestionTile({ edit }: QuestionTileProps) {
 
             }
         } catch (error) {
+            console.log(error)
             return toast.error("Something went wrong")
         }
     }

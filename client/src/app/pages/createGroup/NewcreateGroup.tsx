@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Navbar from '@/components/Navbar/Navbar';
 import mystyle from './newCreateGroup.module.css';
 import Statusbar from '@/features/newCreateGroup/component/Statusbar';
@@ -7,7 +7,10 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import { is } from 'zod/v4/locales';
+import { api } from '@/api/axios';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
+import LoadingBar, { type LoadingBarRef } from 'react-top-loading-bar';
 
 const groupSchema = z.object({
   groupName: z.string().min(5, 'minimum 5 characters required*'),
@@ -23,12 +26,17 @@ type Group = z.infer<typeof groupSchema>;
 
 function NewcreateGroup() {
   const [currentStep, setCurrentStep] = useState(0);
+  const navigate = useNavigate();
+  const loadingBarRef = useRef<LoadingBarRef>(null);
+
+  // arialbtn
 
   const {
     register,
     handleSubmit,
     watch,
     trigger,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<Group>({
     resolver: zodResolver(groupSchema),
@@ -59,15 +67,42 @@ function NewcreateGroup() {
     }
   }
 
-  // const query = useQuery({
-  //   queryKey: ['createGroup'],
-  //   queryFn: async () => {},
-  // });
+  function startOver() {
+    reset();
+    setCurrentStep(0);
+  }
 
+  const { refetch } = useQuery({
+    queryKey: ['create_group'],
+    queryFn: async () => {
+      const indTime = `${watch().travelDate}T${watch().travelTime}`;
+      const timeIn = new Date(indTime);
+      const time = timeIn.toISOString();
+      const body = {
+        title: watch().groupName,
+        content: watch().description,
+        mode: watch().transportMethod,
+        intialLocation: watch().initialLocation,
+        memberNumber: watch().numberOfPeople,
+        travelDate: time,
+      };
+      try {
+        const res = await api.post('/groups/addgroup', body);
+        if (res.status == 201) {
+          return navigate('/groups/success', { state: { click: true } });
+        } else {
+          return toast.error('Something went wrong');
+        }
+      } catch {
+        return toast.error('Something went wrong');
+      }
+    },
+    enabled: false,
+  });
 
-  const submit: SubmitHandler<Group> = (data) => {
-    console.log('submited yy');
-    console.log(data);
+  const submit: SubmitHandler<Group> = async () => {
+    loadingBarRef.current?.continuousStart();
+    await refetch();
   };
 
   return (
@@ -76,6 +111,7 @@ function NewcreateGroup() {
         <Navbar.Title />
         <Navbar.ThemeButton />
       </Navbar>
+      <LoadingBar color="#8AB4F8" shadow={true} ref={loadingBarRef} />
       <div className={mystyle.container}>
         <Statusbar currentStep={currentStep} />
 
@@ -221,66 +257,72 @@ function NewcreateGroup() {
               </div>
             )}
 
-            {/* written by copilot */}
             {currentStep === 2 && (
-              <div className={mystyle.groupForm3}>
-                <div>
-                  <div className={mystyle.groupFormTitle}>Review</div>
-                  <div className={mystyle.stepIndicator}>
-                    Step 3: Review your group details
+              <div className={mystyle.reviewCard}>
+                <div className={mystyle.rowBetween}>
+                  <div>
+                    <div className={mystyle.label}>Group Name</div>
+                    <div className={mystyle.value}>{watch('groupName')}</div>
                   </div>
                 </div>
 
-                <div className={mystyle.groupForm3Content}>
-                  <div className={mystyle.reviewSection}>
-                    <div className={mystyle.reviewItem}>
-                      <span className={mystyle.reviewLabel}>Group Name:</span>
-                      <span className={mystyle.reviewValue}>
-                        {watch('groupName')}
-                      </span>
+                <div className={mystyle.divider} />
+
+                <div>
+                  <div className={mystyle.label}>Description</div>
+                  <div className={mystyle.value}>{watch('description')}</div>
+                </div>
+
+                <div className={mystyle.divider} />
+
+                <div className={mystyle.grid}>
+                  <div>
+                    <div className={mystyle.label}>Travel Date</div>
+                    <div className={mystyle.value}>{watch('travelDate')}</div>
+                  </div>
+
+                  <div>
+                    <div className={mystyle.label}>Travel Time</div>
+                    <div className={mystyle.value}>{watch('travelTime')}</div>
+                  </div>
+
+                  <div>
+                    <div className={mystyle.label}>Intial Location</div>
+                    <div className={mystyle.value}>
+                      {watch('initialLocation')}
                     </div>
-                    <div className={mystyle.reviewItem}>
-                      <span className={mystyle.reviewLabel}>Description:</span>
-                      <span className={mystyle.reviewValue}>
-                        {watch('description')}
-                      </span>
+                  </div>
+
+                  <div>
+                    <div className={mystyle.label}>Transport</div>
+                    <div className={mystyle.value}>
+                      {watch('transportMethod')}
                     </div>
-                    <div className={mystyle.reviewItem}>
-                      <span className={mystyle.reviewLabel}>Travel Date:</span>
-                      <span className={mystyle.reviewValue}>
-                        {watch('travelDate')}
-                      </span>
+                  </div>
+                </div>
+
+                <div className={mystyle.divider} />
+
+                <div className={mystyle.rowBetween}>
+                  <div>
+                    <div className={mystyle.label}>Max Group Size</div>
+                    <div className={mystyle.value}>
+                      {watch('numberOfPeople')}
                     </div>
-                    <div className={mystyle.reviewItem}>
-                      <span className={mystyle.reviewLabel}>Travel Time:</span>
-                      <span className={mystyle.reviewValue}>
-                        {watch('travelTime')}
-                      </span>
-                    </div>
-                    <div className={mystyle.reviewItem}>
-                      <span className={mystyle.reviewLabel}>
-                        Transport Method:
-                      </span>
-                      <span className={mystyle.reviewValue}>
-                        {watch('transportMethod')}
-                      </span>
-                    </div>
-                    <div className={mystyle.reviewItem}>
-                      <span className={mystyle.reviewLabel}>
-                        Initial Location:
-                      </span>
-                      <span className={mystyle.reviewValue}>
-                        {watch('initialLocation')}
-                      </span>
-                    </div>
-                    <div className={mystyle.reviewItem}>
-                      <span className={mystyle.reviewLabel}>
-                        Number of People:
-                      </span>
-                      <span className={mystyle.reviewValue}>
-                        {watch('numberOfPeople')}
-                      </span>
-                    </div>
+                  </div>
+                </div>
+
+                <div className={mystyle.note}>
+                  Once created, your group will be visible to other travelers.
+                  They can join and chat with you to coordinate the trip!
+                  <div className={mystyle.startOver}>
+                    Something not right?{' '}
+                    <button
+                      className={mystyle.startOverBtn}
+                      onClick={startOver}
+                    >
+                      Start over.
+                    </button>
                   </div>
                 </div>
               </div>
@@ -297,8 +339,8 @@ function NewcreateGroup() {
               </button>
 
               {currentStep === 2 ? (
-                <button className={mystyle.nextBtn} key={'submit'}>
-                  SUBMIT
+                <button className={mystyle.nextBtn} key={'submit'} disabled={isSubmitting}>
+                  Submit
                 </button>
               ) : (
                 <button
@@ -334,7 +376,6 @@ function NewcreateGroup() {
                 </button>
               )}
             </div>
-            
           </form>
         </div>
       </div>

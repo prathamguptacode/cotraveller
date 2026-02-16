@@ -88,6 +88,4 @@ app.use(errorMiddleware)
 
 server.listen(env.PORT || 8080, "0.0.0.0", () => {
     console.log("Listening on port", env.PORT || 8080)
-})
-
-
+});
