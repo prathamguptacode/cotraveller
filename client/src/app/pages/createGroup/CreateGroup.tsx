@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import Navbar from '@/components/Navbar/Navbar';
-import mystyle from './newCreateGroup.module.css';
+import mystyle from './CreateGroup.module.css';
 import Statusbar from '@/features/newCreateGroup/component/Statusbar';
 import { useQuery } from '@tanstack/react-query';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -24,7 +24,7 @@ const groupSchema = z.object({
 
 type Group = z.infer<typeof groupSchema>;
 
-function NewcreateGroup() {
+function CreateGroup() {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
   const loadingBarRef = useRef<LoadingBarRef>(null);
@@ -111,6 +111,7 @@ function NewcreateGroup() {
         <Navbar.Title />
         <Navbar.ThemeButton />
       </Navbar>
+      {/* ### fix the colors */}
       <LoadingBar color="#8AB4F8" shadow={true} ref={loadingBarRef} />
       <div className={mystyle.container}>
         <Statusbar currentStep={currentStep} />
@@ -320,6 +321,7 @@ function NewcreateGroup() {
                     <button
                       className={mystyle.startOverBtn}
                       onClick={startOver}
+                      aria-label="Start over"
                     >
                       Start over.
                     </button>
@@ -334,17 +336,24 @@ function NewcreateGroup() {
                 onClick={handleBack}
                 type="button"
                 key={'back'}
+                aria-label="back"
               >
                 Back
               </button>
 
               {currentStep === 2 ? (
-                <button className={mystyle.nextBtn} key={'submit'} disabled={isSubmitting}>
+                <button
+                  className={mystyle.nextBtn}
+                  key={'submit'}
+                  disabled={isSubmitting}
+                  aria-label="submit"
+                >
                   Submit
                 </button>
               ) : (
                 <button
                   type="button"
+                  aria-label="next"
                   className={clsx(
                     mystyle.nextBtn,
                     currentStep === 0 &&
@@ -383,4 +392,4 @@ function NewcreateGroup() {
   );
 }
 
-export default NewcreateGroup;
+export default CreateGroup;
