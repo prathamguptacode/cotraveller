@@ -1,7 +1,7 @@
 import styles from './tabs.module.css'
 import { Link } from 'react-router-dom'
 import { Check, X } from 'lucide-react'
-import { api, callAuthApi } from '@/api/axios'
+import { api } from '@/api/axios'
 import { FaPeopleGroup } from 'react-icons/fa6'
 import type { Group } from '@/types/group.types'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
@@ -14,7 +14,11 @@ type InboxGroup = Group & {
   }
 }
 
+
+
 const Inbox = () => {
+
+
 
 
   const inboxQuery = useSuspenseQuery({

@@ -1,11 +1,11 @@
 import express from 'express'
 import { fetchGroupChatController, postMessageController } from '../controllers/messageController'
 import  asyncHandler  from '../middlewares/asyncHandler'
-import { verifyAccessToken } from '../middlewares/authMiddleware'
+import { authMiddleware } from '../middlewares/authMiddleware'
 
 const router = express.Router()
 
-router.post('/', verifyAccessToken, asyncHandler(postMessageController))
+router.post('/', authMiddleware, asyncHandler(postMessageController))
 
-router.get('/:groupId', verifyAccessToken, asyncHandler(fetchGroupChatController))
+router.get('/:groupId', authMiddleware, asyncHandler(fetchGroupChatController))
 export default router

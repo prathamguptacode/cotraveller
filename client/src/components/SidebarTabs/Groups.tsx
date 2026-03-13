@@ -7,6 +7,7 @@ import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useSocket } from '@/hooks/useSocket';
 import { useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { Info, MessageSquare } from 'lucide-react';
 
 
 const Groups = () => {
@@ -29,7 +30,7 @@ const Groups = () => {
       if (!res.success) console.debug('Socket connection for All chats failed')
     }))
 
-    socket.on('RECEIVE_MESSAGE_ON_CLIENT', () => queryClient.invalidateQueries({ queryKey: ['groups'] })
+    socket.on('UPDATE_MESSAGE_ON_CLIENT', () => queryClient.invalidateQueries({ queryKey: ['groups'] })
     )
   }, [socket])
 
@@ -46,6 +47,14 @@ const Groups = () => {
               <div className={styles.detailsWrapper}>
                 <p className={styles.groupName}>{group.title}</p>
                 {group.lastMessage && <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>}
+              </div>
+              <div className={styles.choicesWrapper}>
+                <Link to={`/groups/${group._id}/chats`}>
+                  <MessageSquare size={20} />
+                </Link>
+                <Link to={`/groups/${group._id}`}>
+                  <Info size={20} />
+                </Link>
               </div>
             </Link>
           )

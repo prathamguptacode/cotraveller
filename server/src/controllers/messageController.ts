@@ -54,7 +54,8 @@ export const fetchGroupChatController: RequestHandler = async (req, res) => {
             $project: {
                 title: 1,
                 member: 1,
-                messages: 1
+                messages: 1,
+                owner:1
             }
         },
         {

@@ -8,6 +8,7 @@ import { RequestHandler } from "express";
 import * as z from "zod";
 import { fetchOutgoingRequestsController } from "./userController";
 import commentSchema from "@/models/commentSchema";
+import { eventBus } from "@/events/eventBus";
 
 const GroupSchema = z.object({
     title: z.string(),
@@ -147,6 +148,9 @@ export const addRequest: RequestHandler = async (req, res) => {
 
     const memberEmails = group.member.map(obj => obj.email)
     sendRequestNotification(memberEmails, user.fullName, group.title)
+
+    eventBus.emit('request_to_join_group:added', userId.toString(), memberIds)
+
     res.success(201, { group: updatedGroup }, "Request Sent Successfully")
 }
 
@@ -213,7 +217,6 @@ export const declineIncomingRequestController: RequestHandler = async (req, res)
 
     res.sendStatus(204)
 }
-
 
 export const groupnumber: RequestHandler = async (req, res) => {
     const val = await groupSchema.aggregate([

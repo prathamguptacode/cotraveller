@@ -1,11 +1,11 @@
 import express from 'express'
 import  asyncHandler  from '../middlewares/asyncHandler'
 import { deleteOutgoingRequestController, fetchIncomingRequestsController, fetchJoinedGroupsController, fetchOutgoingRequestsController } from '../controllers/userController'
-import { verifyAccessToken } from '../middlewares/authMiddleware'
+import { authMiddleware } from '../middlewares/authMiddleware'
 
 const router = express.Router()
 
-router.use(verifyAccessToken)
+router.use(authMiddleware)
 
 router.get('/groups', asyncHandler(fetchJoinedGroupsController))
 

@@ -7,7 +7,7 @@ import { sendOtp } from '../services/nodemailer'
 import { generateAccessToken, generateRefreshToken, generateUni8Array } from '../utils/generateToken'
 import { CustomError } from '../utils/CustomError'
 import OtpRequestLimit from '../models/OtpRequestLimit'
-import * as cookies from '../libs/cookies'
+import * as cookies from '../lib/cookies'
 import * as jose from 'jose'
 import { RequestHandler } from 'express'
 

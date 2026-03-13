@@ -1,6 +1,6 @@
 .navbar {
     display: flex;
-    gap: 16px;
+
     border-bottom: 1px solid var(--clr-border);
     align-items: center;
     padding: 8px 16px;
@@ -17,26 +17,38 @@
 
 .hamburger {
     flex-shrink: 0;
-    border-radius: 10px;
+    border-radius: 50%;
     cursor: pointer;
     padding: 12px;
 
     position: relative;
+
+    &:focus-within {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    &:hover {
+        background-color: var(--clr-bg-hover);
+    }
 }
 
-.hamburger:focus-within {
-    -webkit-tap-highlight-color: transparent;
-}
-
-.hamburger:hover {
-    background-color: var(--clr-bg-hover);
+.notification::after {
+    content: '';
+    --dimension: 28%;
+    position: absolute;
+    pointer-events: none;
+    right: 15%;
+    bottom: 20%;
+    width: var(--dimension);
+    height: var(--dimension);
+    border-radius: 50%;
+    background-color: var(--primary);
 }
 
 .logo {
-    /* border: 2px solid red; */
     color: var(--clr-font);
-    font-size: 30px;
-    font-weight: 700;
+    font-size: 24px;
+    font-weight: 600;
     cursor: pointer;
     flex-shrink: 0;
     padding: .5rem;
@@ -47,14 +59,23 @@
     flex-shrink: 0;
 }
 
-.mail {
-    border-radius: 10px;
+.themebtn~* {
+    margin-inline: .5rem;
+
+    &:last-child {
+        margin-inline-end: 0;
+    }
+}
+
+.inbox {
+    border-radius: 50%;
     cursor: pointer;
     padding: 10px;
     flex-shrink: 0;
+    position: relative;
 }
 
-.mail:hover {
+.inbox:hover {
     background-color: var(--clr-bg-hover);
 }
 
@@ -73,7 +94,7 @@
 
 
 .avatarWrapper {
-    --dim: 48px;
+    --dim: 40px;
     border-radius: 50%;
     border: 1px solid var(--clr-border);
     overflow: hidden;
@@ -124,7 +145,7 @@
         display: block;
     }
 
-    .mail {
+    .inbox {
         display: none;
     }
 
@@ -132,7 +153,6 @@
 
 @media (max-width:480px) {
     .navbar {
-        gap: .2rem;
         padding-inline: .4rem;
 
         svg {

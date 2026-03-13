@@ -40,7 +40,7 @@ export function sendRequestNotification(emails: string[], requester: string, gro
     <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
       
       <h2 style="color:#1E66C8; margin-top:0; text-align:center;">
-        New Join Request 🚀
+        New Join Request
       </h2>
 
       <p style="font-size:16px; color:#333;">
@@ -98,7 +98,7 @@ export function accecptedNotification(email: string, requester: string, groupNam
     <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
       
       <h2 style="color:#1E66C8; margin-top:0; text-align:center;">
-        Your Request Has Been Accepted 🎉
+        Your Request Has Been Accepted
       </h2>
 
       <p style="font-size:16px; color:#333;">
@@ -220,7 +220,7 @@ export function rejectedNotification(email: string, requester: string, groupName
     <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
       
       <h2 style="color:#D64545; margin-top:0; text-align:center;">
-        Your Request Was Declined ❗
+        Your Request Was Declined
       </h2>
 
       <p style="font-size:16px; color:#333;">
@@ -281,7 +281,7 @@ export function memberLeftNotification(emails: string[], memberName: string, gro
     <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
       
       <h2 style="color:#D64545; margin-top:0; text-align:center;">
-        A Member Has Left Your Group 👋
+        A Member Has Left Your Group
       </h2>
 
       <p style="font-size:16px; color:#333;">

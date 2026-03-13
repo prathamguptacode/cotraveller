@@ -162,6 +162,7 @@ body {
     /* google flights background color */
     --secondary-bg: #303133;
     --primary: #8AB4F8;
+    /* --primary: #669df7; */
     --brighter-primary: #9DC0FA;
     --link-color: #8ab4f8;
     --commentbg: hsl(225, 4%, 20%);
@@ -198,7 +199,7 @@ body {
 
 }
 
-.disabledBtn{
+.disabledBtn {
     pointer-events: none;
     opacity: .7;
 }

@@ -5,14 +5,13 @@ import asyncHandler from '../middlewares/asyncHandler'
 import { viewGroup } from '../controllers/groupController'
 import { viewGroupByFilter } from '../controllers/groupController'
 import { addRequest } from '../controllers/groupController'
-import { verifyAccessToken } from '../middlewares/authMiddleware'
+import { authMiddleware } from '../middlewares/authMiddleware'
 import groupSchema from '@/models/groupSchema'
 
 
 //should have middleware
-router.post('/addgroup', verifyAccessToken, asyncHandler(addGroup))
 
-router.get('/:groupId', asyncHandler(viewGroup))//we never have to use this route
+router.post('/addgroup', authMiddleware, asyncHandler(addGroup))
 
 router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middleware required
 
@@ -24,8 +23,9 @@ router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middlewar
 
 router.get('/getnumbers', groupnumber)
 
+router.get('/:groupId', asyncHandler(viewGroup))//we never have to use this route
 
-router.use(verifyAccessToken)
+router.use(authMiddleware)
 
 
 router.get('/viewrequest', asyncHandler(viewRequest))// this is for member to see request

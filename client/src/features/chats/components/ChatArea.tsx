@@ -40,6 +40,7 @@ const ChatArea = () => {
     }
   })
 
+
   useAutoScroll(group.messages[group.messages.length - 1], isAtBottom, lastMessageRef, setUnreadCount)
   useLastMessageObserver(group, setIsAtBottom, setUnreadCount, lastMessageRef)
 

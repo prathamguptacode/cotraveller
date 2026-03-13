@@ -7,16 +7,16 @@ import errorMiddleware from './middlewares/errorHandler'
 import cookieParser from 'cookie-parser'
 import connectDB from './config/mongodb'
 import env from './config/env'
-import hello from './routes/hello'
+import hello from './routes/helloRoutes'
 import groupRoutes from './routes/groupRoutes'
 import authRoutes from './routes/authRoutes'
 import oauthRoutes from './routes/oauthRoutes'
-import fieldValidationRoutes from './routes/fieldValidationRoutes'
 import userRoutes from './routes/userRoutes'
 import messageRoutes from './routes/messageRoutes'
 import Message from './models/Message'
 import Group from './models/groupSchema'
-import feedabck from './routes/feedbackRoute'
+import feedabckRoutes from './routes/feedbackRoutes'
+import eventRoutes from './routes/eventRoutes'
 
 const app = express()
 const server = http.createServer(app)
@@ -48,9 +48,9 @@ io.on('connection', (socket) => {
 
             cb({ success: true, message })
             socket.to(roomId).emit('RECEIVE_MESSAGE_ON_CLIENT', { message })
-            // group.member.forEach(member => {
-            //     socket.to(`user_room_${member._id}`).emit('RECEIVE_MESSAGE_ON_CLIENT', { message })
-            // })
+            group.member.forEach(member => {
+                socket.to(`user_room_${member._id}`).emit('UPDATE_MESSAGE_ON_CLIENT', { message })
+            })
 
 
         } catch (error) {
@@ -86,12 +86,10 @@ app.use('/api', hello)
 app.use('/api/groups', groupRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/oauth', oauthRoutes)
-app.use('/api/validateField', fieldValidationRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/message', messageRoutes)
-
-app.use('/api/feedback', feedabck)
-
+app.use('/api/feedback', feedabckRoutes)
+app.use('/api/events', eventRoutes)
 
 
 connectDB()

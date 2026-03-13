@@ -1,26 +1,35 @@
-import { GiHamburgerMenu } from "react-icons/gi";
 import mystyle from './navbar.module.css'
 import ThemeButton from '@/components/Buttons/ThemeButton';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import { Link } from 'react-router-dom';
-import { createContext, useContext, useRef, useState, type Dispatch, type ReactNode, type RefObject, type SetStateAction } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type Dispatch, type ReactNode, type RefObject, type SetStateAction } from "react";
 import Groups from "@/components/SidebarTabs/Groups";
 import Inbox from "@/components/SidebarTabs/Inbox";
-import Outbox from "@/components/SidebarTabs/Outbox";
-import { Mail, Plus } from "lucide-react";
+import { Inbox as InboxLogo, Plus, TextAlignJustify } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { FaUser } from "react-icons/fa6";
 import clsx from "clsx";
+import { useEventSource } from "@/hooks/useEventSource";
 
 
-export type SidebarTab = 'Groups' | 'Inbox' | 'Outbox'
+export type SidebarTab = 'Groups' | 'Inbox'
+
+type EventType = {
+    event: string,
+    for: string,
+}
+type Notifications = {
+    groups: boolean,
+    inbox: boolean
+}
 
 type NavbarContextType = {
     setCurrentTab: Dispatch<SetStateAction<SidebarTab>>,
     currentTab: SidebarTab,
     setIsHidden: Dispatch<SetStateAction<boolean>>,
     isHidden: boolean,
-    menuRef: RefObject<HTMLDivElement | null>
+    menuRef: RefObject<HTMLDivElement | null>,
+    notifications: Notifications
 }
 
 
@@ -28,7 +37,7 @@ const NavbarContext = createContext<NavbarContextType | null>(null)
 
 const useNavbarContext = () => {
     const ctx = useContext(NavbarContext)
-    if (!ctx) throw new Error("Cannot access outside context of navbar")
+    if (!ctx) throw new Error("Cannot access context outside of navbar")
     return ctx
 }
 type NavbarProps = {
@@ -40,9 +49,27 @@ function Navbar({ children }: NavbarProps) {
     const menuRef = useRef<HTMLDivElement>(null)
     const [currentTab, setCurrentTab] = useState<SidebarTab>('Groups')
 
+    const [notifications, setNotifications] = useState<Notifications>({ groups: true, inbox: true })
+
+    const eventSource = useEventSource()
+    useEffect(() => {
+        eventSource.addEventListener('message', (message) => {
+            const data = JSON.parse(message.data) as unknown
+
+            const isEvent = (data: unknown): data is EventType => {
+                if (typeof data === 'object' && !Array.isArray(data)) return true
+                return false
+            }
+
+            if (!isEvent(data)) return
+            if (data.for === 'Inbox' && data.event === 'request_to_join_group:added') setNotifications(prev => ({ ...prev, inbox: true }))
+        })
+
+    }, [])
 
 
-    const value = { setCurrentTab, currentTab, setIsHidden, menuRef, isHidden }
+
+    const value = { setCurrentTab, currentTab, setIsHidden, menuRef, isHidden, notifications }
 
     // $$$please include profile picture feature
 
@@ -58,35 +85,37 @@ function Navbar({ children }: NavbarProps) {
 
 export default Navbar
 
-Navbar.Hamburger = () => {
-    const { currentTab, setCurrentTab, setIsHidden, menuRef, isHidden } = useNavbarContext()
+const NavbarHamburger = () => {
+    const { currentTab, setCurrentTab, setIsHidden, menuRef, isHidden, notifications } = useNavbarContext()
     const { user } = useAuth()
+
     return user && <div ref={menuRef} role="button" tabIndex={0} onClick={() => {
         setIsHidden(prev => {
-            prev && setCurrentTab('Groups')
+            if (prev) setCurrentTab('Groups')
             return !prev
         })
 
     }} onBlur={(e) => {
         if (e.currentTarget.contains(e.relatedTarget)) return
         setIsHidden(true)
-    }} className={mystyle.hamburger}>
-        <GiHamburgerMenu size='20px' />
-
-        <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : currentTab === "Outbox" ? <Outbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} />
+    }} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification)}>
+        <TextAlignJustify strokeWidth={2.5} size={20} />
+        <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} />
     </div>
 
 }
+Navbar.Hamburger = NavbarHamburger
 
 
 
-Navbar.Title = () => <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
+const NavbarTitle = () => <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
+Navbar.Title = NavbarTitle
 
-Navbar.ThemeButton = () => <div className={mystyle.themebtn}><ThemeButton /></div>
+const NavbarThemeButton = () => <div className={mystyle.themebtn}><ThemeButton /></div>
+Navbar.ThemeButton = NavbarThemeButton
 
-
-Navbar.Inbox = () => {
-    const { setCurrentTab, setIsHidden, menuRef } = useNavbarContext()
+const NavbarInbox = () => {
+    const { setCurrentTab, setIsHidden, menuRef, notifications } = useNavbarContext()
     return (
         <button aria-label="Inbox" onClick={() => {
             setIsHidden(false)
@@ -94,32 +123,40 @@ Navbar.Inbox = () => {
         }} onBlur={(e) => {
             if (menuRef.current?.contains(e.relatedTarget)) return
             setIsHidden(true)
-        }} className={mystyle.mail}>
-            <Mail strokeWidth={1.4} size={26} />
+        }} className={clsx(mystyle.inbox, notifications.inbox && mystyle.notification)}>
+            <InboxLogo strokeWidth={1.4} size={20} />
         </button>
     )
 }
+Navbar.Inbox = NavbarInbox
 
-Navbar.LoginButton = () => {
+
+const NavbarLoginButton = () => {
     const { user } = useAuth()
 
     return !user && <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
 
 }
+Navbar.LoginButton = NavbarLoginButton
 
-Navbar.CreateGroupButton = () => {
+const NavbarCreateGroupButton = () => {
     return (
         <>
             <Link to={'/groups/create'} className={clsx(mystyle.navbtn, mystyle.createGroupBtn)}>Create group</Link>
-            <Link aria-label="Create Group" to={'/groups/create'} className={mystyle.plusBtn}><Plus /></Link>
+            <Link aria-label="Create Group" to={'/groups/create'} className={mystyle.plusBtn}><Plus size={20} /></Link>
         </>
 
     )
 }
-Navbar.ProfileButton = () => {
+Navbar.CreateGroupButton = NavbarCreateGroupButton
+
+
+const NavbarProfileButton = () => {
     const { user } = useAuth()
     return user && <Link className={mystyle.avatarWrapper} aria-label="Go to your profile page" to={`/`}>
         <FaUser />
     </Link>
 
 }
+
+Navbar.ProfileButton = NavbarProfileButton

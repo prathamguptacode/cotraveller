@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 50%;
     flex-shrink: 0;
 }
 .themeButton:hover{
