@@ -40,7 +40,7 @@ function ViewGroup() {
             }
             try {
                 const res = await api.post<{ groups: [] }>("/groups/viewgroupbyfilter", body)
-                console.log(res.data)
+
                 setGroupData(res.data.groups)
                 setLocalLoader(false)
             } catch (error) {

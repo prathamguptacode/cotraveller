@@ -15,7 +15,7 @@ type ChatHeaderProps = {
 const ChatHeader = ({ group, groupId }: ChatHeaderProps) => {
 
     const { user } = useAuth()
-    console.log(group)
+
 
     return (
         <div className={styles.chatAreaHeader}>

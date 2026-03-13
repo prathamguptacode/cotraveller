@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { FaUser } from "react-icons/fa6";
 import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
+import { toast } from 'sonner';
 
 
 export type SidebarTab = 'Groups' | 'Inbox'
@@ -49,11 +50,11 @@ function Navbar({ children }: NavbarProps) {
     const menuRef = useRef<HTMLDivElement>(null)
     const [currentTab, setCurrentTab] = useState<SidebarTab>('Groups')
 
-    const [notifications, setNotifications] = useState<Notifications>({ groups: true, inbox: true })
+    const [notifications, setNotifications] = useState<Notifications>({ groups: false, inbox: false })
 
     const eventSource = useEventSource()
     useEffect(() => {
-        eventSource.addEventListener('message', (message) => {
+        const eventListener = (message: { data: string }) => {
             const data = JSON.parse(message.data) as unknown
 
             const isEvent = (data: unknown): data is EventType => {
@@ -62,9 +63,20 @@ function Navbar({ children }: NavbarProps) {
             }
 
             if (!isEvent(data)) return
-            if (data.for === 'Inbox' && data.event === 'request_to_join_group:added') setNotifications(prev => ({ ...prev, inbox: true }))
-        })
+            if (data.for === 'Inbox' && data.event === 'request_to_join_group:added') {
+                console.log(data, 'at', Date.now())
+                toast.info('Request Alert', {
+                    description: "Someone wants to join your group"
+                })
+                setNotifications(prev => ({ ...prev, inbox: true }))
+            }
+        }
+        eventSource.addEventListener('message', eventListener)
 
+        return () => {
+            console.log('removing listener for events')
+            eventSource.removeEventListener('message', eventListener)
+        }
     }, [])
 
 

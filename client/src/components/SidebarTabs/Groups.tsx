@@ -40,7 +40,7 @@ const Groups = () => {
       {
         groups.map(group => {
           return (
-            <Link to={`/groups/${group._id}/chats`} key={group._id} className={styles.listItem}>
+            <div key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
                 <FaPeopleGroup />
               </div>
@@ -56,7 +56,7 @@ const Groups = () => {
                   <Info size={20} />
                 </Link>
               </div>
-            </Link>
+            </div>
           )
         })
       }

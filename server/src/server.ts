@@ -1,3 +1,4 @@
+import eventListeners from '@/events/eventHandlers'
 import express from 'express'
 import http from 'http'
 import cors from 'cors'
@@ -17,6 +18,7 @@ import Message from './models/Message'
 import Group from './models/groupSchema'
 import feedabckRoutes from './routes/feedbackRoutes'
 import eventRoutes from './routes/eventRoutes'
+import { eventBus } from './events/eventBus'
 
 const app = express()
 const server = http.createServer(app)
@@ -80,6 +82,7 @@ app.use(cors({
     origin: env.CLIENT_URL,
     credentials: true
 }))
+app.use(eventListeners)
 
 //Routes
 app.use('/api', hello)

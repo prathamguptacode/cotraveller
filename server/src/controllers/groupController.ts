@@ -148,8 +148,9 @@ export const addRequest: RequestHandler = async (req, res) => {
 
     const memberEmails = group.member.map(obj => obj.email)
     sendRequestNotification(memberEmails, user.fullName, group.title)
+    console.log("Gonna emit eventBus event now")
 
-    eventBus.emit('request_to_join_group:added', userId.toString(), memberIds)
+    eventBus.emit('request_to_join_group:added', memberIds)
 
     res.success(201, { group: updatedGroup }, "Request Sent Successfully")
 }

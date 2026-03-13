@@ -1,5 +1,4 @@
 import styles from './tabs.module.css'
-import { Link } from 'react-router-dom'
 import { Check, X } from 'lucide-react'
 import { api } from '@/api/axios'
 import { FaPeopleGroup } from 'react-icons/fa6'
@@ -49,7 +48,7 @@ const Inbox = () => {
       {
         groups.map(group => {
           return (
-            <Link to={`/groups/${group._id}`} key={group._id} className={styles.listItem}>
+            <div key={group._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
                 <FaPeopleGroup />
               </div>
@@ -69,10 +68,9 @@ const Inbox = () => {
                   <X color='#EE2D3E' />
                 </button>
               </div>
-            </Link>
+            </div>
           )
         })
-
 
       }
 
