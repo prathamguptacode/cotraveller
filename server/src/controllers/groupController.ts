@@ -1,4 +1,4 @@
-import groupSchema, { GroupType } from "../models/groupSchema";
+import Group, { GroupType } from "../models/Group";
 import xss from 'xss'
 import moment from "moment-timezone";
 import User, { UserType } from "../models/User";
@@ -7,8 +7,9 @@ import { accecptedNotification, newMemberJoinedNotification, rejectedNotificatio
 import { RequestHandler } from "express";
 import * as z from "zod";
 import { fetchOutgoingRequestsController } from "./userController";
-import commentSchema from "@/models/commentSchema";
+import commentSchema from "@/models/Comment";
 import { eventBus } from "@/events/eventBus";
+import JoinRequest from "@/models/JoinRequest";
 
 const GroupSchema = z.object({
     title: z.string(),
@@ -29,7 +30,7 @@ export const addGroup: RequestHandler = async (req, res) => {
     //telling mongo that date formate is ist
     const istDate = moment.tz(travelDate, "Asia/Kolkata").toDate();
 
-    const group = new groupSchema({ title, content, owner, memberNumber, mode, travelDate: istDate, intialLocation, member: [owner] })
+    const group = new Group({ title, content, owner, memberNumber, mode, travelDate: istDate, intialLocation, member: [owner] })
     const data = await group.save()
     await User.updateOne({ _id: owner }, { $push: { memberGroup: data._id } })
     res.success(201, data, "Group Created Successfully")
@@ -38,7 +39,7 @@ export const addGroup: RequestHandler = async (req, res) => {
 export const viewGroup: RequestHandler = async (req, res) => {
     const { groupId } = req.params
 
-    const group = await groupSchema.findById(groupId).populate({ path: 'member', select: 'fullName' }).populate({ path: 'comments', select: 'author comment' })
+    const group = await Group.findById(groupId).populate({ path: 'member', select: 'fullName' }).populate({ path: 'comments', select: 'author comment' })
     res.success(200, { group })
 
 }
@@ -47,7 +48,7 @@ export const editGroup: RequestHandler = async (req, res) => {
     const userId = req.user._id;
     const { groupId } = req.params
     //checking user is owner?
-    const group = await groupSchema.findById(groupId)
+    const group = await Group.findById(groupId)
     if (!group) return res.fail(404, "GROUP_NOT_FOUND", "The requested group does not exist")
     if (!group.owner.equals(userId)) return res.fail(403, "UNAUTHORIZED_USER", "Permission denied")
 
@@ -60,7 +61,7 @@ export const editGroup: RequestHandler = async (req, res) => {
     //telling mongo that date formate is ist
     const istDate = moment.tz(travelDate, "Asia/Kolkata").toDate();
 
-    await groupSchema.updateOne({ _id: group }, { title, content, memberNumber, mode, travelDate: istDate, intialLocation, })
+    await Group.updateOne({ _id: group }, { title, content, memberNumber, mode, travelDate: istDate, intialLocation, })
     res.success(200)
 }
 
@@ -82,7 +83,7 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
     // const utcTime = moment.tz(istTime, "Asia/Kolkata").utc().format();for converting time
     const utcLowerTime = moment.tz(lowerTime, "Asia/Kolkata").utc().toDate()
     const utcUpperTime = moment.tz(upperTime, "Asia/Kolkata").utc().toDate()
-    const data = await groupSchema.aggregate([
+    const data = await Group.aggregate([
         {
             $match: {
                 mode: mode,
@@ -133,22 +134,23 @@ export const addRequest: RequestHandler = async (req, res) => {
     const userId = user._id
     const { groupId } = req.params
 
-    const group = await groupSchema.findById<Omit<GroupType, 'member'> & { member: UserType[] }>(groupId).populate({ path: 'member', select: 'fullName email' })
+    const group = await Group.findById<Omit<GroupType, 'member'> & { member: UserType[] }>(groupId).populate({ path: 'member', select: 'fullName email' })
     if (!group) return res.fail(404, "GROUP_NOT_FOUND", "The group does not exist")
 
-    const { requests, member } = group
-    if (requests.includes(userId)) return res.fail(409, "REQUEST_ALREADY_SENT", "You have already sent a request to the group")
+    const memberIds = group.member.map((e) => e._id.toString())
+    const isAlreadyAMember = memberIds.includes(userId.toString())
+    if (isAlreadyAMember) return res.fail(409, "ALREADY_A_MEMBER", "You are already a member of the group")
 
-    const memberIds = member.map((e) => e._id.toString())
+    const hasAlreadyRequested = await JoinRequest.exists({ requesterId: userId, groupId })
+    if (hasAlreadyRequested) return res.fail(409, "REQUEST_ALREADY_SENT", "You have already sent a request to this group")
 
-    if (memberIds.includes(userId.toString())) return res.fail(409, "ALREADY_A_MEMBER", "You are already a member of the group")
+    const joinRequest = await JoinRequest.create({ groupId, requesterId: userId })
+    const updatedGroup = await Group.updateOne({ _id: groupId }, { $push: { incomingRequests: joinRequest._id } })
+    await User.updateOne({ _id: userId }, { $push: { outgoingRequests: joinRequest._id } })
 
-    const updatedGroup = await groupSchema.updateOne({ _id: groupId }, { $push: { requests: userId } })
-    await User.updateOne({ _id: userId }, { $push: { requests: groupId } })
 
     const memberEmails = group.member.map(obj => obj.email)
     sendRequestNotification(memberEmails, user.fullName, group.title)
-    console.log("Gonna emit eventBus event now")
 
     eventBus.emit('request_to_join_group:added', memberIds)
 
@@ -165,7 +167,7 @@ export const viewRequest: RequestHandler = async (req, res) => {
     if (!tempUser) {
         return res.fail(400, "INPUT_ERROR", "No such user")
     }
-    const group = await groupSchema.find({ member: userID })
+    const group = await Group.find({ member: userID })
     res.success(200, group)
 }
 
@@ -177,17 +179,25 @@ export const acceptIncomingRequestController: RequestHandler = async (req, res) 
     if (typeof groupId !== 'string' || typeof requestId !== 'string') return res.fail(400, "INVALID_REQUEST_PARAMS", "Group ID and Request ID must be strings")
 
 
-    const group = await groupSchema.findOne<Omit<GroupType, 'member'> & { member: UserType[] }>({ _id: groupId, requests: requestId }).populate({ path: 'member', select: 'email' }).select('member title')
+    const group = await Group.findOne<Omit<GroupType, 'member'> & { member: UserType[] }>({ _id: groupId, incomingRequests: requestId }).populate({ path: 'member', select: 'email' }).select('member title')
     if (!group) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
 
+    const joinRequest = await JoinRequest.findById(requestId)
+    if (!joinRequest) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
 
-    //Checking if member limit is available
-    if (group.memberNumber === group.member.length) return res.fail(403, 'MEMBER_LIMIT', 'Group already has maximum possible members')
+    //Checking if group-sizeLimit allows more members
+    if (group.memberNumber >= group.member.length) return res.fail(403, 'MEMBER_LIMIT', 'Group already has maximum possible members')
 
-    await groupSchema.updateOne({ _id: groupId }, { $pull: { requests: requestId }, $push: { member: requestId } })
-    const user = await User.findOneAndUpdate({ _id: requestId }, { $pull: { requests: groupId }, $push: { memberGroup: groupId } }, { returnDocument: 'after' })
+    const user = await User.findOneAndUpdate({ _id: joinRequest.requesterId }, { $pull: { outgoingRequests: requestId }, $push: { memberGroup: groupId } }, { returnDocument: 'after' })
+    if (!user) {
+        await Group.updateOne({ _id: groupId }, { $pull: { incomingRequests: requestId } })
+        await JoinRequest.deleteMany({ requesterId: joinRequest.requesterId })
+        return res.fail(400, "USER_NOT_FOUND", "User no longer exists")
+    }
 
-    if (!user) return res.fail(400, "USER_NOT_FOUND", "User no longer exists");
+    await Group.updateOne({ _id: groupId }, { $pull: { incomingRequests: requestId }, $push: { member: joinRequest.requesterId } })
+
+
     //Send notification to all members of the group about acceptance as well as to the user being accepted
     const previousMemberEmails = group.member.map(obj => obj.email)
 
@@ -204,14 +214,17 @@ export const declineIncomingRequestController: RequestHandler = async (req, res)
     const groupId = req.params.groupId
     if (typeof groupId !== 'string' || typeof requestId !== 'string') return res.fail(400, "INVALID_REQUEST_PARAMS", "Group ID and Request ID must be strings")
 
-    const group = await groupSchema.findOne({ _id: groupId, requests: requestId })
+    const group = await Group.findOne({ _id: groupId, incomingRequests: requestId })
     if (!group) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
+
+    const joinRequest = await JoinRequest.findById(requestId)
+    if (!joinRequest) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
 
 
     //Updating db for removed request
-    await groupSchema.updateOne({ _id: groupId }, { $pull: { requests: requestId } })
-    const user = await User.findOneAndUpdate({ _id: requestId }, { $pull: { requests: groupId } }, { returnDocument: 'after' })
-    if (!user) return res.fail(400, "USER_NOT_FOUND", "User no longer exists");
+    await Group.updateOne({ _id: groupId }, { $pull: { incomingRequests: requestId } })
+    const user = await User.findOneAndUpdate({ _id: joinRequest.requesterId }, { $pull: { requests: requestId } }, { returnDocument: 'after' })
+    if (!user) return res.fail(400, "USER_NOT_FOUND", "User no longer exists")
 
     //Sending notification to requestee about declining
     rejectedNotification(user.email, user.fullName, group.title)
@@ -220,7 +233,7 @@ export const declineIncomingRequestController: RequestHandler = async (req, res)
 }
 
 export const groupnumber: RequestHandler = async (req, res) => {
-    const val = await groupSchema.aggregate([
+    const val = await Group.aggregate([
         {
             $group: {
                 _id: "$mode",
@@ -239,6 +252,6 @@ export const addComment: RequestHandler = async (req, res) => {
     const commentText = xss(parsedData.data.comment)
 
     const comment = await commentSchema.create({ comment: commentText, author: userId, targetGroup: groupId })
-    await groupSchema.updateOne({ _id: groupId }, { $push: { comments: comment._id } })
+    await Group.updateOne({ _id: groupId }, { $push: { comments: comment._id } })
     res.success(201, { comment }, "Comment added successfully")
 }

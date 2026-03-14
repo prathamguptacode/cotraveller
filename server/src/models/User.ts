@@ -37,11 +37,13 @@ const userSchema = new mongoose.Schema({
         ref: 'Group',
         default: []
     },
-    requests: {
+
+    //Stores a ref to JoinRequest Schema
+    outgoingRequests: {
         type: [Schema.Types.ObjectId],
-        ref: 'Group',
+        ref: 'JoinRequest',
         default: []
-    },
+    }
 })
 
 export type UserType = HydratedDocument<mongoose.InferSchemaType<typeof userSchema>>

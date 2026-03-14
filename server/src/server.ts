@@ -15,10 +15,11 @@ import oauthRoutes from './routes/oauthRoutes'
 import userRoutes from './routes/userRoutes'
 import messageRoutes from './routes/messageRoutes'
 import Message from './models/Message'
-import Group from './models/groupSchema'
+import Group from './models/Group'
 import feedabckRoutes from './routes/feedbackRoutes'
 import eventRoutes from './routes/eventRoutes'
 import { eventBus } from './events/eventBus'
+import { migrateRequests } from './services/dbMigrationScripts'
 
 const app = express()
 const server = http.createServer(app)
@@ -102,5 +103,7 @@ app.use(errorMiddleware)
 server.listen(env.PORT || 8080, "0.0.0.0", () => {
     console.log("Listening on port", env.PORT || 8080)
 })
+
+
 
 

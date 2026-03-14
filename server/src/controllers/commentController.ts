@@ -1,6 +1,6 @@
-import commentSchema from "../models/commentSchema";
+import commentSchema from "../models/Comment";
 import xss from "xss";
-import groupSchema from "../models/groupSchema";
+import Group from "../models/Group";
 import { RequestHandler } from "express";
 
 

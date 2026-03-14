@@ -1,6 +1,6 @@
 import xss from "xss"
 import Message from "../models/Message"
-import Group from "../models/groupSchema"
+import Group from "../models/Group"
 import User from "../models/User"
 import { RequestHandler } from "express"
 

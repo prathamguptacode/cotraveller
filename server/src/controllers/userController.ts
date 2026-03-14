@@ -1,5 +1,5 @@
 import { RequestHandler } from "express"
-import Group from "../models/groupSchema"
+import Group from "../models/Group"
 import User from "../models/User"
 
 export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {

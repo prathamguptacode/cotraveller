@@ -6,7 +6,7 @@ import { viewGroup } from '../controllers/groupController'
 import { viewGroupByFilter } from '../controllers/groupController'
 import { addRequest } from '../controllers/groupController'
 import { authMiddleware } from '../middlewares/authMiddleware'
-import groupSchema from '@/models/groupSchema'
+import Group from '@/models/Group'
 
 
 //should have middleware
@@ -43,7 +43,7 @@ router.delete('/:groupId/requests/:requestId', asyncHandler(declineIncomingReque
 
 router.param('groupId', async (req, res, next, groupId) => {
     try {
-        const group = await groupSchema.findById(groupId)
+        const group = await Group.findById(groupId)
         if (!group) return res.fail(404, "GROUP_NOT_FOUND", "The group does not exist")
         next()
     } catch (error) {

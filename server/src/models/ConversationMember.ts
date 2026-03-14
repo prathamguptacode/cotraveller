@@ -17,7 +17,7 @@ const conversationMemberSchema = new mongoose.Schema({
     },
 })
 
-conversationMemberSchema.index({ author: 1, roomId: 1 }, { unique: true })
+conversationMemberSchema.index({ userId: 1, roomId: 1 }, { unique: true })
 
 export type ConversationMemberType = HydratedDocument<mongoose.InferSchemaType<typeof conversationMemberSchema>>
 

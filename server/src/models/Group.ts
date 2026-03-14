@@ -52,6 +52,14 @@ const groupSchema = new mongoose.Schema({
         default: []
         //should be unique
     },
+
+    //Stores a ref to JoinRequest Schema
+    incomingRequests: {
+        type: [Schema.Types.ObjectId],
+        ref: 'JoinRequest',
+        default: []
+    },
+    
     messages: {
         type: [Schema.Types.ObjectId],
         ref: "Message",
