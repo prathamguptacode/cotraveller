@@ -15,6 +15,8 @@ const conversationMemberSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+}, {
+    timestamps: true
 })
 
 conversationMemberSchema.index({ userId: 1, roomId: 1 }, { unique: true })

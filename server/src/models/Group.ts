@@ -26,14 +26,6 @@ const groupSchema = new mongoose.Schema({
         //add owner to it at first place
     },
     vehicleNumber: String,
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
-    updateAt: {
-        type: Date,
-    },
     mode: {
         type: String,
         required: true
@@ -46,20 +38,14 @@ const groupSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    requests: {
-        type: [Schema.Types.ObjectId],
-        ref: 'User',
-        default: []
-        //should be unique
-    },
-
+   
     //Stores a ref to JoinRequest Schema
     incomingRequests: {
         type: [Schema.Types.ObjectId],
         ref: 'JoinRequest',
         default: []
     },
-    
+
     messages: {
         type: [Schema.Types.ObjectId],
         ref: "Message",
@@ -72,6 +58,8 @@ const groupSchema = new mongoose.Schema({
     }
     // const toIST = (date) => moment(date).tz("Asia/Kolkata"); for timezone converstion
     // const istDate = moment.tz(req.body.travelDate, "Asia/Kolkata").toDate(); for telling backend it is ist
+}, {
+    timestamps: true
 })
 
 export type GroupType = HydratedDocument<mongoose.InferSchemaType<typeof groupSchema>>

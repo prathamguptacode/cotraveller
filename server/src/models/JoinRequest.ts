@@ -19,10 +19,12 @@ const joinRequestSchema = new mongoose.Schema({
         ref: 'User',
         default: []
     }
+}, {
+    timestamps: true
 })
 
 joinRequestSchema.index({ requesterId: 1, groupId: 1 }, { unique: true })
 
 export type JoinRequestType = HydratedDocument<mongoose.InferSchemaType<typeof joinRequestSchema>>
 
-export default mongoose.model<JoinRequestType>('JoinRequest', joinRequestSchema,'join_requests')
+export default mongoose.model<JoinRequestType>('JoinRequest', joinRequestSchema, 'join_requests')
