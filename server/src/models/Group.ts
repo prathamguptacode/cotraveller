@@ -38,7 +38,15 @@ const groupSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-   
+
+    //###REMOVE Will be removed after migration is complete on production
+    requests: {
+        type: [Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
+        //should be unique
+    },
+
     //Stores a ref to JoinRequest Schema
     incomingRequests: {
         type: [Schema.Types.ObjectId],
