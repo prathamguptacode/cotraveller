@@ -10,6 +10,7 @@ const messageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    
     //groupId is the roomId
     roomId: {
         type: mongoose.Schema.Types.ObjectId,

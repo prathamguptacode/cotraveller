@@ -2,14 +2,13 @@ import Group, { GroupType } from "../models/Group";
 import xss from 'xss'
 import moment from "moment-timezone";
 import User, { UserType } from "../models/User";
-import mongoose from "mongoose";
 import { accecptedNotification, newMemberJoinedNotification, rejectedNotification, sendRequestNotification } from "../services/nodemailer";
 import { RequestHandler } from "express";
 import * as z from "zod";
-import { fetchOutgoingRequestsController } from "./userController";
 import commentSchema from "@/models/Comment";
 import { eventBus } from "@/events/eventBus";
 import JoinRequest from "@/models/JoinRequest";
+import ConversationRecord from "@/models/ConversationRecord";
 
 const GroupSchema = z.object({
     title: z.string(),
@@ -33,6 +32,7 @@ export const addGroup: RequestHandler = async (req, res) => {
     const group = new Group({ title, content, owner, memberNumber, mode, travelDate: istDate, intialLocation, member: [owner] })
     const data = await group.save()
     await User.updateOne({ _id: owner }, { $push: { memberGroup: data._id } })
+    await ConversationRecord.create({ roomId: group._id, memberId: owner })
     res.success(201, data, "Group Created Successfully")
 }
 
@@ -197,6 +197,7 @@ export const acceptIncomingRequestController: RequestHandler = async (req, res) 
 
     await Group.updateOne({ _id: groupId }, { $pull: { incomingRequests: requestId }, $push: { member: joinRequest.requesterId } })
 
+    await ConversationRecord.create({ memberId: joinRequest.requesterId, roomId: groupId })
 
     //Send notification to all members of the group about acceptance as well as to the user being accepted
     const previousMemberEmails = group.member.map(obj => obj.email)

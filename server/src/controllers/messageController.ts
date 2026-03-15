@@ -3,6 +3,7 @@ import Message from "../models/Message"
 import Group from "../models/Group"
 import User from "../models/User"
 import { RequestHandler } from "express"
+import ConversationRecord from "@/models/ConversationRecord"
 
 
 export const postMessageController: RequestHandler = async (req, res) => {
@@ -34,9 +35,7 @@ export const fetchGroupChatController: RequestHandler = async (req, res) => {
     if (!groupId) return res.fail(400, "BAD_REQUEST", "Group id waas missing")
 
     const group = await Group.findOne({ _id: groupId, member: user._id })
-
     if (!group) return res.fail(403, "NOT_FOUND", "The user is not associated to the group")
-
 
     const data = await Group.aggregate<{
         _id: string,
@@ -55,7 +54,7 @@ export const fetchGroupChatController: RequestHandler = async (req, res) => {
                 title: 1,
                 member: 1,
                 messages: 1,
-                owner:1
+                owner: 1
             }
         },
         {
@@ -126,5 +125,25 @@ export const fetchGroupChatController: RequestHandler = async (req, res) => {
 
     ])
 
-    res.success(200, { group: data[0] })
+    let conversationRecords = await ConversationRecord.find({ roomId: groupId })
+
+
+    res.success(200, { group: data[0], conversationRecords })
+}
+
+export const updateLastReadAtController: RequestHandler = async (req, res) => {
+    const user = req.user
+    const { groupId } = req.params
+    if (typeof groupId != 'string' || !groupId) return res.fail(400, "BAD_REQUEST", "Invalid groupId")
+    // ###LATER probably change this to instead directly get converstaionId from the frontend or somewhere, so that it doesnt have to queried again and again
+    let conversationRecord = await ConversationRecord.findOne({ memberId: user._id, roomId: groupId })
+    if (!conversationRecord) conversationRecord = await ConversationRecord.create({ memberId: user._id, roomId: groupId })
+
+    conversationRecord.lastReadAt = new Date(Date.now())
+    await conversationRecord.save()
+    console.log(conversationRecord)
+    console.log("Updated timestamp for user with email", user.email)
+
+
+    return res.success(200, { conversationRecord })
 }

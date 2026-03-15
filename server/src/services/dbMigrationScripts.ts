@@ -1,4 +1,5 @@
 import env from "@/config/env";
+import ConversationRecord from "@/models/ConversationRecord";
 import Group from "@/models/Group";
 import JoinRequest from "@/models/JoinRequest";
 import MigrationScript from "@/models/MigrationScript";
@@ -13,7 +14,7 @@ const migrateRequests = async () => {
 
     const migrationName = "Requests_Migration_To_JoinRequestSchema_Script_14_March_2026"
     const description = "This is to migrate requests from User and Group Schemas refrencing each other to instead reference a common requestId which contains neccessary info related to seen/unseen state for every group Member and inter-relation between Group and User"
-    
+
     if (await MigrationScript.exists({ name: migrationName })) return
 
     const groups = await Group.find({})
@@ -30,10 +31,30 @@ const migrateRequests = async () => {
     await User.updateMany({}, { $unset: { requests: 1 } })
     await Group.updateMany({}, { $unset: { requests: 1 } })
 
-    console.log("Requests_Migration_To_JoinRequestSchema_Script_14_March_2026 has successfully completed running")
+    console.log(`${migrationName} has successfully completed running`)
 
     await MigrationScript.create({ name: migrationName, description })
     console.log(`Successfully saved ${migrationName} migration details to db`)
 }
 
+const createConverstaionRecords = async () => {
+    if (env.MODE === 'development') return
 
+    const migrationName = "Retroactive_Creation_Of_Conversation_Records_Script_15_March_2026"
+    const description = "This is to create conversation records for every member of every group that exists for correct working of read/unread status in chats"
+
+    if (await MigrationScript.exists({ name: migrationName })) return
+
+    const groups = await Group.find({})
+    for (const group of groups) {
+        const memberIds = group.member
+        for (const memberId of memberIds) {
+            await ConversationRecord.findOneAndUpdate({ memberId, roomId: group._id }, {}, { upsert: true, setDefaultsOnInsert: true })
+        }
+    }
+
+    console.log(`${migrationName} has successfully completed running`)
+
+    await MigrationScript.create({ name: migrationName, description })
+    console.log(`Successfully saved ${migrationName} migration details to db`)
+}
