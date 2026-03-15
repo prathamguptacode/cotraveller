@@ -7,7 +7,7 @@ import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useSocket } from '@/hooks/useSocket';
 import { useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { Info, MessageSquare } from 'lucide-react';
+import { Info, MessageSquare, MountainSnow } from 'lucide-react';
 
 
 const Groups = () => {
@@ -36,32 +36,39 @@ const Groups = () => {
 
 
   return (
-    <div className={styles.list}>
-      {
-        groups.map(group => {
-          return (
-            <div key={group._id} className={styles.listItem}>
-              <div className={styles.avatarWrapper} >
-                <FaPeopleGroup />
+    groups.length == 0 ?
+      <div className={styles.fallbackWrapper}>
+        {/* ###LATER Replace this fallback */}
+        <MountainSnow size={48} />
+        Find your first group now !
+        <Link to={`/viewgroup?q=VIT%20Chennai&mode=Airplane&lowerT=2025-12-20T00:00&upperT=2025-12-20T23:59&d=20&m=December&y=2025`} className={styles.redirectButton} >Go</Link>
+      </div> :
+      <div className={styles.list}>
+        {
+          groups.map(group => {
+            return (
+              <div key={group._id} className={styles.listItem}>
+                <div className={styles.avatarWrapper} >
+                  <FaPeopleGroup />
+                </div>
+                <div className={styles.detailsWrapper}>
+                  <p className={styles.groupName}>{group.title}</p>
+                  {group.lastMessage && <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>}
+                </div>
+                <div className={styles.choicesWrapper}>
+                  <Link to={`/groups/${group._id}/chats`}>
+                    <MessageSquare size={20} />
+                  </Link>
+                  <Link to={`/groups/${group._id}`}>
+                    <Info size={20} />
+                  </Link>
+                </div>
               </div>
-              <div className={styles.detailsWrapper}>
-                <p className={styles.groupName}>{group.title}</p>
-                {group.lastMessage && <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>}
-              </div>
-              <div className={styles.choicesWrapper}>
-                <Link to={`/groups/${group._id}/chats`}>
-                  <MessageSquare size={20} />
-                </Link>
-                <Link to={`/groups/${group._id}`}>
-                  <Info size={20} />
-                </Link>
-              </div>
-            </div>
-          )
-        })
-      }
+            )
+          })
+        }
 
-    </div>
+      </div>
 
   )
 }

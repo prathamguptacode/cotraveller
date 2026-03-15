@@ -2,7 +2,7 @@ import mystyle from './navbar.module.css'
 import ThemeButton from '@/components/Buttons/ThemeButton';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import { Link } from 'react-router-dom';
-import { createContext, useContext, useEffect, useRef, useState, type Dispatch, type ReactNode, type RefObject, type SetStateAction } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Groups from "@/components/SidebarTabs/Groups";
 import Inbox from "@/components/SidebarTabs/Inbox";
 import { Inbox as InboxLogo, Plus, TextAlignJustify } from "lucide-react";
@@ -11,36 +11,17 @@ import { FaUser } from "react-icons/fa6";
 import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
 import { toast } from 'sonner';
+import type { Notifications, SidebarTab } from './types';
+import { NavbarContext, useNavbarContext } from './useNavbarContext';
 
 
-export type SidebarTab = 'Groups' | 'Inbox'
 
 type EventType = {
     event: string,
     for: string,
 }
-type Notifications = {
-    groups: boolean,
-    inbox: boolean
-}
-
-type NavbarContextType = {
-    setCurrentTab: Dispatch<SetStateAction<SidebarTab>>,
-    currentTab: SidebarTab,
-    setIsHidden: Dispatch<SetStateAction<boolean>>,
-    isHidden: boolean,
-    menuRef: RefObject<HTMLDivElement | null>,
-    notifications: Notifications
-}
 
 
-const NavbarContext = createContext<NavbarContextType | null>(null)
-
-const useNavbarContext = () => {
-    const ctx = useContext(NavbarContext)
-    if (!ctx) throw new Error("Cannot access context outside of navbar")
-    return ctx
-}
 type NavbarProps = {
     children: ReactNode
 }
@@ -81,7 +62,7 @@ function Navbar({ children }: NavbarProps) {
 
 
 
-    const value = { setCurrentTab, currentTab, setIsHidden, menuRef, isHidden, notifications }
+    const value = { setCurrentTab, currentTab, setIsHidden, menuRef, isHidden, notifications, setNotifications }
 
     // $$$please include profile picture feature
 
@@ -98,7 +79,7 @@ function Navbar({ children }: NavbarProps) {
 export default Navbar
 
 const NavbarHamburger = () => {
-    const { currentTab, setCurrentTab, setIsHidden, menuRef, isHidden, notifications } = useNavbarContext()
+    const { currentTab, setCurrentTab, setIsHidden, menuRef, notifications } = useNavbarContext()
     const { user } = useAuth()
 
     return user && <div ref={menuRef} role="button" tabIndex={0} onClick={() => {
@@ -112,7 +93,7 @@ const NavbarHamburger = () => {
         setIsHidden(true)
     }} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification)}>
         <TextAlignJustify strokeWidth={2.5} size={20} />
-        <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : <Groups />} setCurrentTab={setCurrentTab} isHidden={isHidden} />
+        <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : <Groups />} />
     </div>
 
 }

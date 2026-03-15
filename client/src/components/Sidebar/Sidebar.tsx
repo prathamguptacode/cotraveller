@@ -4,25 +4,26 @@ import { Link } from 'react-router-dom'
 import { Cog, Inbox as InboxLogo, Info, LogOut, MessagesSquare } from 'lucide-react'
 import { api } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
-import { Suspense, type Dispatch, type JSX } from 'react'
-import type { SidebarTab } from '../Navbar/Navbar'
+import { Suspense, type JSX } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useNavbarContext } from '../Navbar/useNavbarContext'
+import type { SidebarTab } from '../Navbar/types'
+import ThreeDotLoader from '../Loaders/ThreeDotLoader'
 
 
 
 type SidebarProps = {
-    isHidden: boolean,
     slot: JSX.Element,
-    setCurrentTab: Dispatch<React.SetStateAction<SidebarTab>>,
     currentTab: SidebarTab
 }
 
 
-const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }: SidebarProps) => {
+const Sidebar = ({ slot, currentTab }: SidebarProps) => {
 
     const { user } = useAuth()
+    const { setCurrentTab, isHidden } = useNavbarContext()
 
 
     const { mutate: logout } = useMutation({
@@ -47,7 +48,7 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }: SidebarProps) =>
             <div className={styles.header}>
                 <button aria-label='Groups' className={currentTab === "Groups" ? styles.activeTab : ""} onClick={() => setCurrentTab('Groups')}>
                     <MessagesSquare size={20} />
-                   Chats
+                    Chats
                 </button>
                 <button aria-label='Inbox' className={currentTab === "Inbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Inbox')}>
                     <InboxLogo size={20} />
@@ -55,7 +56,7 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }: SidebarProps) =>
                 </button>
             </div>
             <ErrorBoundary fallback={<p>Nothing here</p>}>
-                <Suspense fallback={<p>Loading...</p>}>
+                <Suspense fallback={<div className={styles.fallbackWrapper}><ThreeDotLoader /></div>}>
                     {slot}
                 </Suspense>
             </ErrorBoundary>
