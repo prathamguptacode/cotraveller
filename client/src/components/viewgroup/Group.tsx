@@ -15,8 +15,8 @@ type GroupProps = {
             fullName: string;
         };
         travelDate: string;
-        comments?: Array<any>;
-        requests?: Array<string>;
+        comments?: Array<unknown>;
+        incomingRequests: Array<string>;
     };
 };
 
@@ -38,7 +38,7 @@ function Group({ element }: GroupProps) {
     const navigate = useNavigate()
 
     const { user } = useAuth()
-    const [hasRequested, setHasRequested] = useState<boolean | undefined>(element?.requests?.includes(user?._id ?? ''))
+    const [hasRequested, setHasRequested] = useState<boolean | undefined>(element?.incomingRequests.includes(user?._id ?? ''))
     const sendRequest = async () => {
         if (!user) {
             return navigate('/login')
@@ -85,7 +85,7 @@ function Group({ element }: GroupProps) {
                 </div>
             </div>
             <div className={mystyle.line}></div>
-            
+
         </div>
     )
 }

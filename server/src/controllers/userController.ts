@@ -1,6 +1,7 @@
 import { RequestHandler } from "express"
 import Group from "../models/Group"
 import User from "../models/User"
+import JoinRequest from "@/models/JoinRequest"
 
 export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
     const user = req.user
@@ -100,72 +101,64 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
 
 export const fetchIncomingRequestsController: RequestHandler = async (req, res) => {
     const user = req.user
-    const inbox = await User.aggregate([
-        {
-            $match: { _id: user._id }
-        },
 
+    const requests = await JoinRequest.aggregate([
         {
-            $project: {
-                _id: 0,
-                memberGroup: 1,
+            $match: {
+                groupId: { $in: user.groups }
+            }
+        },
+        {
+            $lookup: {
+                from: 'users',
+                let: { requesterId: '$requesterId' },
+                pipeline: [
+                    {
+                        $match: { $expr: { $eq: ['$_id', '$$requesterId'] } }
+                    },
+                    {
+                        $project: {
+                            fullName: 1,
+                        }
+                    }
+                ],
+                as: 'requester'
             }
         },
         {
             $lookup: {
                 from: 'groups',
-                let: { ids: '$memberGroup' },
+                let: { groupId: '$groupId' },
                 pipeline: [
                     {
-                        $match: { $expr: { $in: ['$_id', '$$ids'] } }
+                        $match: { $expr: { $eq: ['$_id', '$$groupId'] } }
                     },
                     {
                         $project: {
                             title: 1,
-                            requests: 1,
-                            createdAt: 1,
-                        }
-                    },
-                    {
-                        $lookup: {
-                            from: 'users',
-                            let: { ids: '$requests' },
-                            pipeline: [
-                                {
-                                    $match: { $expr: { $in: ['$_id', '$$ids'] } }
-                                },
-                                {
-                                    $project: {
-                                        fullName: 1,
-                                    }
-                                }
-                            ],
-                            as: 'requestee'
-                        }
-                    },
-                    {
-                        $unwind: '$requestee'
-                    },
-                    {
-                        $sort: { _id: 1, createdAt: -1 }
-                    },
-                    {
-                        $project: {
-                            createdAt: 0,
-                            requests: 0,
+                            members: '$member',
                         }
                     }
                 ],
-                as: 'groups'
+                as: 'group'
             }
         },
         {
+            $unwind: '$requester'
+        },
+        {
+            $unwind: '$group'
+        },
+        {
+            $sort: { createdAt: -1 }
+        },
+        {
             $project: {
-                groups: 1,
+                createdAt: 0
             }
         }
     ])
-    res.success(200, { groups: inbox[0].groups })
+    res.success(200, { requests })
 
 }
 

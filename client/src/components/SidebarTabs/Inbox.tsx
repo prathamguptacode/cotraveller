@@ -2,15 +2,23 @@ import styles from './tabs.module.css'
 import { Check, X } from 'lucide-react'
 import { api } from '@/api/axios'
 import { FaPeopleGroup } from 'react-icons/fa6'
-import type { Group } from '@/types/group.types'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { normalizeError } from '@/utils/normalizeError'
 
 
-type InboxGroup = Group & {
-  requestee: {
-    fullName: string,
-    _id: string
-  }
+type InboxRequest = {
+  _id: string,
+  group: {
+    _id: string,
+    title: string,
+    members: string[]
+  },
+  requester: {
+    _id: string,
+    fullName: string
+  },
+  readBy: string[]
 }
 
 
@@ -20,23 +28,35 @@ const Inbox = () => {
 
 
 
-  const inboxQuery = useSuspenseQuery({
+  const { data: requests, refetch: refetchInbox } = useSuspenseQuery({
     queryKey: ['inbox'],
-    queryFn: () => api.get<{ groups: InboxGroup[] }>('/user/inbox')
+    queryFn: () => api.get<{ requests: InboxRequest[] }>('/user/inbox'),
+    select: (res) => res.data.requests
   })
-  const { groups } = inboxQuery.data.data
+
 
 
   const acceptRequestMutation = useMutation({
     mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.post(`/groups/${groupId}/requests/${requestId}`),
-    onSuccess: () => inboxQuery.refetch(),
-    onError: () => {
-
+    onSuccess: () => refetchInbox(),
+    onError: (error) => {
+      const err = normalizeError(error)
+      if (err.status < 500) toast.error('An error occurred', {
+        description: err.message
+      })
+      refetchInbox()
     }
   })
   const rejectRequestMutation = useMutation({
     mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.delete(`/groups/${groupId}/requests/${requestId}`),
-    onSuccess: () => inboxQuery.refetch()
+    onSuccess: () => refetchInbox(),
+    onError: (error) => {
+      const err = normalizeError(error)
+      if (err.status < 500) toast.error('An error occurred', {
+        description: err.message
+      })
+      refetchInbox()
+    }
   })
 
 
@@ -46,24 +66,24 @@ const Inbox = () => {
   return (
     <div className={styles.list}>
       {
-        groups.map(group => {
+        requests.map(request => {
           return (
-            <div key={group._id} className={styles.listItem}>
+            <div key={request._id} className={styles.listItem}>
               <div className={styles.avatarWrapper} >
                 <FaPeopleGroup />
               </div>
               <div className={styles.detailsWrapper}>
-                <p className={styles.groupName}>{group.title}</p>
-                <p className={styles.lastMessage}>{group.requestee.fullName} </p>
+                <p className={styles.groupName}>{request.group.title}</p>
+                <p className={styles.lastMessage}>{request.requester.fullName} </p>
               </div>
               <div className={styles.choicesWrapper}>
                 <button aria-label='Accept Request' onClick={() => {
-                  acceptRequestMutation.mutate({ groupId: group._id, requestId: group.requestee._id })
+                  acceptRequestMutation.mutate({ groupId: request.group._id, requestId: request._id })
                 }}>
                   <Check color='#2A903B' />
                 </button>
                 <button aria-label='Decline Request' onClick={() => {
-                  rejectRequestMutation.mutate({ groupId: group._id, requestId: group.requestee._id })
+                  rejectRequestMutation.mutate({ groupId: request.group._id, requestId: request._id })
                 }}>
                   <X color='#EE2D3E' />
                 </button>

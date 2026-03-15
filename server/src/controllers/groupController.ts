@@ -223,7 +223,8 @@ export const declineIncomingRequestController: RequestHandler = async (req, res)
 
     //Updating db for removed request
     await Group.updateOne({ _id: groupId }, { $pull: { incomingRequests: requestId } })
-    const user = await User.findOneAndUpdate({ _id: joinRequest.requesterId }, { $pull: { requests: requestId } }, { returnDocument: 'after' })
+    await JoinRequest.deleteOne({ _id: requestId })
+    const user = await User.findOneAndUpdate({ _id: joinRequest.requesterId }, { $pull: { outgoingRequests: requestId } }, { returnDocument: 'after' })
     if (!user) return res.fail(400, "USER_NOT_FOUND", "User no longer exists")
 
     //Sending notification to requestee about declining
