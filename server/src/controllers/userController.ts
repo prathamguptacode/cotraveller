@@ -2,16 +2,17 @@ import { RequestHandler } from "express"
 import Group from "../models/Group"
 import User from "../models/User"
 import JoinRequest from "@/models/JoinRequest"
+import ConversationRecord from "@/models/ConversationRecord"
 
 export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
     const user = req.user
+
     const groups = await User.aggregate<{ title: string, _id: string, lastMessage?: { author: string, text: string, createdAt: Date } }>([
         {
             $match: { _id: user._id }
         },
         {
             $project: {
-                _id: 0,
                 memberGroup: 1
             }
         },
@@ -40,56 +41,106 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
         },
         {
             $lookup: {
+                from: 'conversation_records',
+                let: { groupId: '$memberGroup._id', userId: '$_id' },
+                pipeline: [
+                    {
+                        $match: {
+                            $and: [{ $expr: { $eq: ['$memberId', '$$userId'] } }, { $expr: { $eq: ['$roomId', '$$groupId'] } }]
+                        }
+                    },
+                    // {
+                    //     $project: {
+                    //         lastReadAt: 1
+                    //     }
+                    // }
+                ],
+                as: 'conversationRecord'
+            }
+        },
+        {
+            $unwind: '$conversationRecord'
+        },
+        {
+            $lookup: {
                 from: 'messages',
-                let: { roomId: '$memberGroup._id' },
+                let: { roomId: '$memberGroup._id', lastReadAt: '$conversationRecord.lastReadAt' },
                 pipeline: [
                     {
                         $match: { $expr: { $eq: ['$roomId', '$$roomId'] } }
                     },
-
                     {
-                        $sort: { createdAt: -1 }
-                    },
-                    {
-                        $limit: 1
-                    },
-                    {
-                        $lookup: {
-                            from: 'users',
-                            localField: 'author',
-                            foreignField: '_id',
-                            as: 'author'
+                        $facet: {
+                            unreadMessages: [
+                                {
+                                    $match: { $expr: { $gt: ['$createdAt', '$$lastReadAt'] } },
+                                },
+                                {
+                                    $count: 'unreadMessagesCount'
+                                }
+                            ],
+                            lastMessage: [
+                                {
+                                    $sort: { createdAt: -1 }
+                                },
+                                {
+                                    $limit: 1
+                                },
+                                {
+                                    $lookup: {
+                                        from: 'users',
+                                        localField: 'author',
+                                        foreignField: '_id',
+                                        as: 'author'
+                                    }
+                                },
+                                {
+                                    $project: {
+                                        author: '$author.fullName',
+                                        text: 1,
+                                        createdAt: 1,
+                                        _id: 0
+                                    }
+                                },
+                                {
+                                    $unwind: '$author'
+                                }
+                            ]
                         }
                     },
                     {
-                        $project: {
-                            author: '$author.fullName',
-                            text: 1,
-                            createdAt: 1,
-                            _id: 0
+                        $unwind: {
+                            path: '$unreadMessages',
+                            preserveNullAndEmptyArrays: true
                         }
                     },
                     {
-                        $unwind: '$author'
+                        $unwind: {
+                            path: '$lastMessage',
+                            preserveNullAndEmptyArrays: true
+                        }
                     }
 
+
                 ],
-                as: 'lastMessage'
+                as: 'lastMessageAndStats'
             }
         },
         {
             $unwind: {
-                path: '$lastMessage',
+                path: '$lastMessageAndStats',
                 preserveNullAndEmptyArrays: true
             }
         },
         {
-            $replaceRoot: { newRoot: { $mergeObjects: ['$memberGroup', '$$ROOT'] } }
+            $replaceWith: { $mergeObjects: ['$memberGroup', '$lastMessageAndStats'] }
         },
         {
             $project: {
-                memberGroup: 0,
-                messages: 0,
+                unreadMessagesCount: { $ifNull: ['$unreadMessages.unreadMessagesCount', 0] },
+                _id: 1,
+                title: 1,
+                lastMessage: 1
             }
         },
         {

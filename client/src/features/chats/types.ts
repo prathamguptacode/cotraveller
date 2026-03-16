@@ -3,7 +3,8 @@ export type Group = {
     title: string,
     messages: Message[],
     members: { _id: string, fullName: string }[],
-    owner: string
+    owner: string,
+    unreadMessagesCount: number
 }
 
 export type Message = {

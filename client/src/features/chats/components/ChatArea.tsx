@@ -14,6 +14,8 @@ import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-q
 import { useLastMessageObserver } from '../hooks/useLastMessageObserver'
 import { api } from '@/api/axios'
 
+// ###BUG Navbar multimount issue creating multiple toasts upon SSE
+
 const ChatArea = () => {
   const queryClient = useQueryClient()
   const { groupId } = useParams() as { groupId: string }
@@ -34,8 +36,12 @@ const ChatArea = () => {
     queryKey: ['groups', groupId, 'chats'],
     queryFn: () => api.get<{ group: Group, conversationRecords: ConversationRecord[] }>(`/message/${groupId}`),
     staleTime: Infinity,
-    select: (res) => res.data
+    select: (res) => {
+      console.log(res)
+      return res.data
+    }
   })
+  console.log(group)
 
   // Update LastReadAt Timestamp
   const updateTimeStampMutation = useMutation({

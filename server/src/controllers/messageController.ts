@@ -4,6 +4,7 @@ import Group from "../models/Group"
 import User from "../models/User"
 import { RequestHandler } from "express"
 import ConversationRecord from "@/models/ConversationRecord"
+import { Types } from "mongoose"
 
 
 export const postMessageController: RequestHandler = async (req, res) => {
@@ -37,14 +38,29 @@ export const fetchGroupChatController: RequestHandler = async (req, res) => {
     const group = await Group.findOne({ _id: groupId, member: user._id })
     if (!group) return res.fail(403, "NOT_FOUND", "The user is not associated to the group")
 
+    let conversationRecord = await ConversationRecord.findOne({ memberId: user._id, roomId: groupId })
+    if (!conversationRecord) conversationRecord = await ConversationRecord.create({ memberId: user._id, roomId: groupId, lastReadAt: new Date(Date.now()) })
+    console.log(conversationRecord, typeof conversationRecord.lastReadAt)
+
     const data = await Group.aggregate<{
         _id: string,
-        author: {
+        messages: {
+            _id: string,
+            author: {
+                _id: string,
+                fullName: string
+            },
+            text: string,
+            createdAt: Date,
+        }[],
+        members: {
             _id: string,
             fullName: string
-        },
-        text: string,
-        createdAt: string
+        }[],
+        title: string,
+        owner: Types.ObjectId
+
+        unreadMessagesCount: number
     }>([
         {
             $match: { _id: group._id }
@@ -121,11 +137,42 @@ export const fetchGroupChatController: RequestHandler = async (req, res) => {
             $project: {
                 member: 0
             }
-        }
+        },
+        {
+            $facet: {
+                unreadMessages: [
+                    {
+                        $unwind: '$messages'
+                    },
+                    {
+                        $match: { 'messages.createdAt': { $gt: conversationRecord.lastReadAt } }
+                    },
+                    {
+                        $count: 'unreadMessagesCount'
+                    },
+
+                ],
+                details: []
+            }
+        },
+        {
+            $unwind: '$details'
+        },
+        {
+            $unwind: {
+                preserveNullAndEmptyArrays: true,
+                path: '$unreadMessages'
+                // ###REVIEW LATER FOR better understanding
+            }
+        },
+        {
+            $replaceWith: { $mergeObjects: ['$details', '$unreadMessages'] }
+        },
 
     ])
 
     let conversationRecords = await ConversationRecord.find({ roomId: groupId })
+
 
 
     res.success(200, { group: data[0], conversationRecords })
