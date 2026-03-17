@@ -20,6 +20,24 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
 
+    avatar: {
+        type: {
+            publicId: {
+                type: String,
+                required: true
+            },
+            version: {
+                type: Number,
+                required: true
+            },
+            _id: false
+        },
+        default: {
+            publicId: '',
+            version: 0
+        }
+    },
+
     oAuthProviders: [{
         type: String
     }],
@@ -36,7 +54,7 @@ const userSchema = new mongoose.Schema({
         ref: 'JoinRequest',
         default: []
     },
-    
+
     __v: {
         type: Number,
         select: false,

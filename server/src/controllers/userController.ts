@@ -3,6 +3,8 @@ import Group from "../models/Group"
 import User from "../models/User"
 import JoinRequest from "@/models/JoinRequest"
 import ConversationRecord from "@/models/ConversationRecord"
+import cloudinary from "@/config/cloudinary"
+import env from "@/config/env"
 
 export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
     const user = req.user
@@ -214,39 +216,39 @@ export const fetchIncomingRequestsController: RequestHandler = async (req, res) 
 }
 
 // ###CHANGE all necessary shit to ACID instead of one by one
-export const fetchOutgoingRequestsController: RequestHandler = async (req, res) => {
-    const user = req.user
-    const outbox = await User.aggregate([
-        {
-            $match: { _id: user._id }
-        },
-        {
-            $project: {
-                requests: 1
-            }
-        },
-        {
-            $lookup: {
-                from: 'groups',
-                let: { requests: '$requests' },
-                pipeline: [
-                    {
-                        $match: { $expr: { $in: ['$_id', '$$requests'] } }
-                    },
-                    {
-                        $project: {
-                            title: 1,
-                            memberNumber: 1,
-                        }
-                    }
-                ],
-                as: 'groups'
-            }
-        }
-    ])
+// export const fetchOutgoingRequestsController: RequestHandler = async (req, res) => {
+//     const user = req.user
+//     const outbox = await User.aggregate([
+//         {
+//             $match: { _id: user._id }
+//         },
+//         {
+//             $project: {
+//                 requests: 1
+//             }
+//         },
+//         {
+//             $lookup: {
+//                 from: 'groups',
+//                 let: { requests: '$requests' },
+//                 pipeline: [
+//                     {
+//                         $match: { $expr: { $in: ['$_id', '$$requests'] } }
+//                     },
+//                     {
+//                         $project: {
+//                             title: 1,
+//                             memberNumber: 1,
+//                         }
+//                     }
+//                 ],
+//                 as: 'groups'
+//             }
+//         }
+//     ])
 
-    res.success(200, { groups: outbox[0].groups })
-}
+//     res.success(200, { groups: outbox[0].groups })
+// }
 
 export const deleteOutgoingRequestController: RequestHandler = async (req, res) => {
     const user = req.user
@@ -262,5 +264,21 @@ export const deleteOutgoingRequestController: RequestHandler = async (req, res) 
 }
 
 
+export const uploadAvatarController: RequestHandler = async (req, res) => {
+    const file = req.file
+    const user = req.user
+    if (!file) return res.fail(400, "BAD_REQUEST", "File is invalid/empty")
 
+    //###LATER Add replace old file logic using publicId but with correct non-tamperable protected way
 
+    const { public_id: publicId, version } = await cloudinary.uploader.upload(file.path, {
+        asset_folder: env.MODE,
+        use_filename: true,
+        unique_filename: true,
+        resource_type: 'auto'
+    })
+
+    await User.updateOne({ _id: user._id }, { $set: { avatar: { publicId, version } } })
+
+    return res.success(201, { publicId, version }, "User Avatar upload successful")
+}

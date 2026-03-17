@@ -116,7 +116,7 @@ export const otpVerificationController: RequestHandler = async (req, res) => {
     })
 
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(201, { user: { fullName, username, email, _id: user._id }, accessToken }, "Signup Successful")
+    res.success(201, { user: { fullName, username, email, _id: user._id, avatar: user.avatar }, accessToken }, "Signup Successful")
 
 }
 
@@ -140,7 +140,7 @@ export const loginController: RequestHandler = async (req, res) => {
     res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
 
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(200, { accessToken, user: { email, username, fullName, _id } }, "Login Successful")
+    res.success(200, { accessToken, user: { email, username, fullName, _id, avatar: user.avatar } }, "Login Successful")
 
 }
 

@@ -13,6 +13,7 @@ import { useEventSource } from "@/hooks/useEventSource";
 import { toast } from 'sonner';
 import type { Notifications, SidebarTab } from './types';
 import { NavbarContext, useNavbarContext } from './useNavbarContext';
+import { getImgURL } from '@/lib/cloudinary';
 
 
 
@@ -146,8 +147,13 @@ Navbar.CreateGroupButton = NavbarCreateGroupButton
 
 const NavbarProfileButton = () => {
     const { user } = useAuth()
+
+    const url = user?.avatar.publicId && getImgURL(user.avatar.publicId, user.avatar.version, 400)
+    const firstLetter = user?.fullName.charAt(0)
+
+
     return user && <Link className={mystyle.avatarWrapper} aria-label="Go to your profile page" to={`/`}>
-        <FaUser />
+        {url ? <img src={url} alt="user-avatar" /> : firstLetter}
     </Link>
 
 }
