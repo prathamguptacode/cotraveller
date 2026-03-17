@@ -36,12 +36,9 @@ const ChatArea = () => {
     queryKey: ['groups', groupId, 'chats'],
     queryFn: () => api.get<{ group: Group, conversationRecords: ConversationRecord[] }>(`/message/${groupId}`),
     staleTime: Infinity,
-    select: (res) => {
-      console.log(res)
-      return res.data
-    }
+    select: (res) => res.data
+
   })
-  console.log(group)
 
   // Update LastReadAt Timestamp
   const updateTimeStampMutation = useMutation({

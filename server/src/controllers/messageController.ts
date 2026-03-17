@@ -188,8 +188,6 @@ export const updateLastReadAtController: RequestHandler = async (req, res) => {
 
     conversationRecord.lastReadAt = new Date(Date.now())
     await conversationRecord.save()
-    console.log(conversationRecord)
-    console.log("Updated timestamp for user with email", user.email)
 
 
     return res.success(200, { conversationRecord })
