@@ -1,3 +1,4 @@
+import eventListeners from '@/events/eventHandlers'
 import express from 'express'
 import http from 'http'
 import cors from 'cors'
@@ -14,9 +15,10 @@ import oauthRoutes from './routes/oauthRoutes'
 import userRoutes from './routes/userRoutes'
 import messageRoutes from './routes/messageRoutes'
 import Message from './models/Message'
-import Group from './models/groupSchema'
+import Group from './models/Group'
 import feedabckRoutes from './routes/feedbackRoutes'
 import eventRoutes from './routes/eventRoutes'
+import ConversationRecord from './models/ConversationRecord'
 
 const app = express()
 const server = http.createServer(app)
@@ -45,9 +47,11 @@ io.on('connection', (socket) => {
             const group = await Group.findOneAndUpdate({ _id: roomId }, { $push: { messages: baseMessage._id } }, { returnDocument: 'after' })
             if (!group) return
 
+            const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId: group._id, memberId: userId }, { $set: { lastReadAt: new Date(Date.now()) } }, { returnDocument: 'after' })
+            if (!conversationRecord) return
 
             cb({ success: true, message })
-            socket.to(roomId).emit('RECEIVE_MESSAGE_ON_CLIENT', { message })
+            socket.to(roomId).emit('RECEIVE_MESSAGE_ON_CLIENT', { message, conversationRecord })
             group.member.forEach(member => {
                 socket.to(`user_room_${member._id}`).emit('UPDATE_MESSAGE_ON_CLIENT', { message })
             })
@@ -63,14 +67,14 @@ io.on('connection', (socket) => {
 
     socket.on('MESSAGE_READ_TO_SERVER', async (data: { roomId: string, userId: string, readAt: number }) => {
         const { roomId, userId, readAt } = data
-        socket.to(roomId).emit('MESSAGE_READ_TO_CLIENT', { lastReadAt: readAt, userId, roomId })
+        const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId, memberId: userId }, { $set: { lastReadAt: new Date(readAt) } }, { returnDocument: 'after' })
+        socket.to(roomId).emit('MESSAGE_READ_TO_CLIENT', { conversationRecord })
     })
 
     socket.on('disconnect', () => {
         console.log(`Disconnected socket: ${socket.id}, total clients = ${io.engine.clientsCount}`)
     })
 })
-
 
 
 app.use(cookieParser())
@@ -80,6 +84,7 @@ app.use(cors({
     origin: env.CLIENT_URL,
     credentials: true
 }))
+app.use(eventListeners)
 
 //Routes
 app.use('/api', hello)
@@ -99,5 +104,7 @@ app.use(errorMiddleware)
 server.listen(env.PORT || 8080, "0.0.0.0", () => {
     console.log("Listening on port", env.PORT || 8080)
 })
+
+
 
 

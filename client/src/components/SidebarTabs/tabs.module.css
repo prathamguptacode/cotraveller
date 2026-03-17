@@ -29,6 +29,14 @@
     }
 }
 
+.activeItem {
+    background-color: var(--sidebar-bg-active);
+
+    &:hover {
+        background-color: var(--sidebar-bg-active);
+    }
+}
+
 .avatarWrapper {
     --dim: 48px;
     width: var(--dim);
@@ -117,4 +125,40 @@
         }
     }
 
+}
+
+.unreadCount {
+    background-color: var(--primary);
+    color: var(--secondaryFont);
+
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    pointer-events: none;
+}
+
+.fallbackWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.redirectButton {
+    padding: .5em 1.5em;
+    background-color: var(--primary);
+    color: var(--secondaryFont);
+    border-radius: 8px;
+    transition: all .2s linear;
+
+    &:hover {
+        background-color: var(--brighter-primary);
+
+    }
 }

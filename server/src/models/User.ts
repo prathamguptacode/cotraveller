@@ -19,15 +19,25 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        required: true
+
+    avatar: {
+        type: {
+            publicId: {
+                type: String,
+                required: true
+            },
+            version: {
+                type: Number,
+                required: true
+            },
+            _id: false
+        },
+        default: {
+            publicId: '',
+            version: 0
+        }
     },
-    __v: {
-        type: Number,
-        select: false,
-    },
+
     oAuthProviders: [{
         type: String
     }],
@@ -37,11 +47,20 @@ const userSchema = new mongoose.Schema({
         ref: 'Group',
         default: []
     },
-    requests: {
+
+    //Stores a ref to JoinRequest Schema
+    outgoingRequests: {
         type: [Schema.Types.ObjectId],
-        ref: 'Group',
+        ref: 'JoinRequest',
         default: []
     },
+
+    __v: {
+        type: Number,
+        select: false,
+    },
+}, {
+    timestamps: true
 })
 
 export type UserType = HydratedDocument<mongoose.InferSchemaType<typeof userSchema>>

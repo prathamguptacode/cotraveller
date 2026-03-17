@@ -1,1 +1,10 @@
-export type Group = { title: string, _id: string, lastMessage?: { author: string, text: string, createdAt: Date } }
+export type Group = {
+    _id: string,
+    title: string,
+    lastMessage?: {
+        author: string,
+        text: string,
+        createdAt: Date
+    },
+    unreadMessagesCount: number
+}

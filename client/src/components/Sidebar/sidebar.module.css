@@ -37,7 +37,7 @@ body:has(.showSidebar) {
     align-self: stretch;
     border-bottom: 1px solid var(--clr-border);
     display: flex;
-    padding: .5em ;
+    padding: .5em;
     gap: .3rem;
 }
 
@@ -68,6 +68,16 @@ body:has(.showSidebar) {
         background-color: var(--sidebar-anchor-active);
 
     }
+}
+
+.fallbackWrapper {
+    flex: 1;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }
 
 .list {

@@ -1,82 +1,113 @@
 import styles from './tabs.module.css'
-import { Link } from 'react-router-dom'
-import { Check, X } from 'lucide-react'
+import { Check, MailCheck, X } from 'lucide-react'
 import { api } from '@/api/axios'
 import { FaPeopleGroup } from 'react-icons/fa6'
-import type { Group } from '@/types/group.types'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { normalizeError } from '@/utils/normalizeError'
+import { useNavbarContext } from '../Navbar/useNavbarContext'
+import { useEffect } from 'react'
 
 
-type InboxGroup = Group & {
-  requestee: {
-    fullName: string,
-    _id: string
-  }
+type InboxRequest = {
+  _id: string,
+  group: {
+    _id: string,
+    title: string,
+    members: string[]
+  },
+  requester: {
+    _id: string,
+    fullName: string
+  },
+  readBy: string[]
 }
 
 
 
 const Inbox = () => {
 
+  const { setNotifications } = useNavbarContext()
 
 
 
-  const inboxQuery = useSuspenseQuery({
+  const { data: requests, refetch: refetchInbox } = useSuspenseQuery({
     queryKey: ['inbox'],
-    queryFn: () => api.get<{ groups: InboxGroup[] }>('/user/inbox')
+    queryFn: () => api.get<{ requests: InboxRequest[] }>('/user/inbox'),
+    select: (res) => res.data.requests
   })
-  const { groups } = inboxQuery.data.data
+
 
 
   const acceptRequestMutation = useMutation({
     mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.post(`/groups/${groupId}/requests/${requestId}`),
-    onSuccess: () => inboxQuery.refetch(),
-    onError: () => {
-
+    onSuccess: () => refetchInbox(),
+    onError: (error) => {
+      const err = normalizeError(error)
+      if (err.status < 500) toast.error('An error occurred', {
+        description: err.message
+      })
+      refetchInbox()
     }
   })
   const rejectRequestMutation = useMutation({
     mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.delete(`/groups/${groupId}/requests/${requestId}`),
-    onSuccess: () => inboxQuery.refetch()
+    onSuccess: () => refetchInbox(),
+    onError: (error) => {
+      const err = normalizeError(error)
+      if (err.status < 500) toast.error('An error occurred', {
+        description: err.message
+      })
+      refetchInbox()
+    }
   })
+
+  useEffect(() => {
+    setNotifications(prev => ({ ...prev, inbox: requests.length == 0 ? false : true }))
+  }, [requests])
+
 
 
 
 
 
   return (
-    <div className={styles.list}>
-      {
-        groups.map(group => {
-          return (
-            <Link to={`/groups/${group._id}`} key={group._id} className={styles.listItem}>
-              <div className={styles.avatarWrapper} >
-                <FaPeopleGroup />
+    requests.length == 0 ?
+      <div className={styles.fallbackWrapper}>
+        {/* ###LATER Replace this fallback */}
+        <MailCheck size={48} />
+        Incoming Join Requests will appear here
+      </div> :
+      <div className={styles.list}>
+        {
+          requests.map(request => {
+            return (
+              <div key={request._id} className={styles.listItem}>
+                <div className={styles.avatarWrapper} >
+                  <FaPeopleGroup />
+                </div>
+                <div className={styles.detailsWrapper}>
+                  <p className={styles.groupName}>{request.group.title}</p>
+                  <p className={styles.lastMessage}>{request.requester.fullName} </p>
+                </div>
+                <div className={styles.choicesWrapper}>
+                  <button aria-label='Accept Request' onClick={() => {
+                    acceptRequestMutation.mutate({ groupId: request.group._id, requestId: request._id })
+                  }}>
+                    <Check color='#2A903B' />
+                  </button>
+                  <button aria-label='Decline Request' onClick={() => {
+                    rejectRequestMutation.mutate({ groupId: request.group._id, requestId: request._id })
+                  }}>
+                    <X color='#EE2D3E' />
+                  </button>
+                </div>
               </div>
-              <div className={styles.detailsWrapper}>
-                <p className={styles.groupName}>{group.title}</p>
-                <p className={styles.lastMessage}>{group.requestee.fullName} </p>
-              </div>
-              <div className={styles.choicesWrapper}>
-                <button aria-label='Accept Request' onClick={() => {
-                  acceptRequestMutation.mutate({ groupId: group._id, requestId: group.requestee._id })
-                }}>
-                  <Check color='#2A903B' />
-                </button>
-                <button aria-label='Decline Request' onClick={() => {
-                  rejectRequestMutation.mutate({ groupId: group._id, requestId: group.requestee._id })
-                }}>
-                  <X color='#EE2D3E' />
-                </button>
-              </div>
-            </Link>
-          )
-        })
+            )
+          })
+        }
 
-
-      }
-
-    </div>
+      </div>
   )
 }
 

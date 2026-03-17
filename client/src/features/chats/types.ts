@@ -3,7 +3,8 @@ export type Group = {
     title: string,
     messages: Message[],
     members: { _id: string, fullName: string }[],
-    owner: string
+    owner: string,
+    unreadMessagesCount: number
 }
 
 export type Message = {
@@ -16,8 +17,8 @@ export type Message = {
     createdAt: string
 }
 
-export type ConversationMember = {
-    userId: string,
+export type ConversationRecord = {
+    memberId: string,
     roomId: string,
-    lastReadAt: number
+    lastReadAt: Date
 }

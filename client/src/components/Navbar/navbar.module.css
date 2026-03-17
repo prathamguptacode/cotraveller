@@ -81,11 +81,17 @@
 
 .navbtn {
     background-color: var(--primary);
-    padding: .5em 1em;
-    border-radius: 5px;
     color: var(--secondaryFont);
     font-weight: 500;
+
+    padding: .5em 1em;
+    border-radius: 5px;
+
     flex-shrink: 0;
+    
+    /*###LATER try this instead */
+    /* padding-right: .5em; */
+    /* color: var(--primary); */
 }
 
 .navbtn:hover {
@@ -97,10 +103,15 @@
     --dim: 40px;
     border-radius: 50%;
     border: 1px solid var(--clr-border);
+    outline-offset: 1px;
+    outline: 2px solid var(--primary);
     overflow: hidden;
 
     width: var(--dim);
     height: var(--dim);
+
+    font-size: 20px;
+    font-weight: 500;
 
     flex-shrink: 0;
     display: flex;
@@ -125,8 +136,6 @@
     .logo {
         font-size: 1.6rem;
     }
-
-
 
     .navbtn {
         font-size: 14px;
@@ -160,9 +169,7 @@
         }
     }
 
-
     .logo {
         font-size: 22px;
-        padding-inline: 0;
     }
 }

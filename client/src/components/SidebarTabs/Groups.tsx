@@ -1,18 +1,22 @@
 import styles from './tabs.module.css'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { api } from '@/api/axios'
 import { FaPeopleGroup } from "react-icons/fa6";
 import type { Group } from '@/types/group.types'
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useSocket } from '@/hooks/useSocket';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { Info, MessageSquare } from 'lucide-react';
+import { MountainSnow } from 'lucide-react';
+import { NavbarContext } from '../Navbar/useNavbarContext';
+import clsx from 'clsx';
+
 
 
 const Groups = () => {
   const socket = useSocket()
   const { user } = useAuth()
+  const ctx = useContext(NavbarContext)
   const queryClient = useQueryClient()
 
 
@@ -25,6 +29,7 @@ const Groups = () => {
     select: (res) => res.data.groups
   })
 
+
   useEffect(() => {
     socket.emit('JOIN_ROOM', { userId: user?._id, roomId: `user_room_${user?._id}` }, ((res: { success: boolean }) => {
       if (!res.success) console.debug('Socket connection for All chats failed')
@@ -34,34 +39,48 @@ const Groups = () => {
     )
   }, [socket])
 
+  useEffect(() => {
+    if (ctx && groups.some(group => group.unreadMessagesCount > 0)) ctx.setNotifications(prev => ({ ...prev, groups: true }))
+  }, [groups])
+
+
 
   return (
-    <div className={styles.list}>
-      {
-        groups.map(group => {
-          return (
-            <Link to={`/groups/${group._id}/chats`} key={group._id} className={styles.listItem}>
-              <div className={styles.avatarWrapper} >
-                <FaPeopleGroup />
-              </div>
-              <div className={styles.detailsWrapper}>
-                <p className={styles.groupName}>{group.title}</p>
-                {group.lastMessage && <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>}
-              </div>
-              <div className={styles.choicesWrapper}>
-                <Link to={`/groups/${group._id}/chats`}>
-                  <MessageSquare size={20} />
-                </Link>
-                <Link to={`/groups/${group._id}`}>
-                  <Info size={20} />
-                </Link>
-              </div>
-            </Link>
-          )
-        })
-      }
+    groups.length == 0 ?
+      <div className={styles.fallbackWrapper}>
+        {/* ###LATER Replace this fallback */}
+        <MountainSnow size={48} />
+        Find your first group now !
+        <Link to={`/viewgroup?q=VIT%20Chennai&mode=Airplane&lowerT=2025-12-20T00:00&upperT=2025-12-20T23:59&d=20&m=December&y=2025`} className={styles.redirectButton} >Go</Link>
+      </div> :
+      <div className={styles.list}>
+        {
+          groups.map(group => {
+            return (
+              <NavLink to={`/groups/${group._id}/chats`} key={group._id} className={({ isActive }) => clsx(isActive && styles.activeItem, styles.listItem)
+              }>
+                <div className={styles.avatarWrapper} >
+                  <FaPeopleGroup />
+                </div>
+                <div className={styles.detailsWrapper}>
+                  <p className={styles.groupName}>{group.title}</p>
+                  {group.lastMessage && <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>}
+                </div>
+                <div className={styles.choicesWrapper}>
+                  {group.unreadMessagesCount > 0 && < div className={styles.unreadCount}>{group.unreadMessagesCount}</div>}
+                  {/* <Link to={`/groups/${group._id}/chats`}>
+                    <MessageSquare size={20} />
+                  </Link>
+                  <Link to={`/groups/${group._id}`}>
+                    <Info size={20} />
+                  </Link> */}
+                </div>
+              </NavLink>
+            )
+          })
+        }
 
-    </div>
+      </div >
 
   )
 }
