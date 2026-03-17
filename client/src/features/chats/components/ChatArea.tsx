@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useSocket } from '@/hooks/useSocket'
 import { useAutoScroll } from '../hooks/useAutoScroll'
 import ChatHeader from './ChatHeader'
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useLastMessageObserver } from '../hooks/useLastMessageObserver'
 import { api } from '@/api/axios'
 
@@ -40,65 +40,53 @@ const ChatArea = () => {
 
   })
 
-  // Update LastReadAt Timestamp
-  const updateTimeStampMutation = useMutation({
-    // ###LATER review and make it real and better
-    mutationKey: ['timestamp', 'update'],
-    mutationFn: () => api.patch(`/message/${groupId}`),
-    onError: () => toast.error("Error updating Timestamp !!!"),
-  })
 
 
   useAutoScroll(group.messages[group.messages.length - 1], isAtBottom, lastMessageRef, setUnreadCount)
   useLastMessageObserver(group, setIsAtBottom, setUnreadCount, lastMessageRef)
 
   useEffect(() => {
+
     //Join ChatRoom
     socket.emit('JOIN_ROOM', { roomId: groupId, userId: user?._id }, (res: { success: boolean }) => {
       if (!res.success) toast.error('Error connecting to chatRoom')
     })
 
     //Receive ChatRoom Message
-    socket.on('RECEIVE_MESSAGE_ON_CLIENT', (data) => {
-      queryClient.setQueryData(['groups', groupId, 'chats'], (prev: { data: { group: Group, conversationRecords: ConversationRecord[] } }) => {
-        const group = prev.data.group
-        const conversationRecords = prev.data.conversationRecords.map(record => {
-          if (record.memberId == data.conversationRecord.memberId) return { ...record, lastReadAt: data.conversationRecord.lastReadAt }
-          return record
-        })
-        return { ...prev, data: { ...prev.data, group: { ...group, messages: [...group.messages, data.message], conversationRecords } } }
-
-      })
+    const receiveMessage = () => {
+      queryClient.invalidateQueries({ queryKey: ['groups', groupId, 'chats'] })
       if (!document.hasFocus()) return
       socket.emit('MESSAGE_READ_TO_SERVER', { roomId: groupId, userId: user?._id, readAt: Date.now() })
-    })
+    }
+    const refreshMessages = () => {
+      queryClient.invalidateQueries({ queryKey: ['groups', groupId, 'chats'] })
+    }
 
-    socket.on('MESSAGE_READ_TO_CLIENT', (data) => {
-      queryClient.setQueryData(['groups', groupId, 'chats'], (prev: { data: { conversationRecords: ConversationRecord[] } }) => {
-        const conversationRecords = prev.data.conversationRecords.map(record => {
-          if (record.memberId == data.conversationRecord.memberId) return { ...record, lastReadAt: data.conversationRecord.lastReadAt }
-          return record
-        })
-        return { ...prev, data: { ...prev.data, conversationRecords } }
-      })
-    })
+    socket.on('RECEIVE_MESSAGE_ON_CLIENT', receiveMessage)
+    socket.on('MESSAGE_READ_TO_CLIENT', refreshMessages)
+    console.log(socket.listeners('RECEIVE_MESSAGE_ON_CLIENT'))
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    return () => {
+      socket.off('RECEIVE_MESSAGE_ON_CLIENT', receiveMessage)
+      socket.off('MESSAGE_READ_TO_CLIENT', refreshMessages)
+    }
+
   }, [socket, groupId])
 
-  useEffect(() => {
-    updateTimeStampMutation.mutate()
-  }, [groupId])
+
 
   useEffect(() => {
     const event = () => {
       socket.emit('MESSAGE_READ_TO_SERVER', { roomId: groupId, userId: user?._id, readAt: Date.now() })
+      queryClient.invalidateQueries({ queryKey: ['groups'] })
     }
+    event()
     window.addEventListener('focus', event)
     return () => {
       window.removeEventListener('focus', event)
     }
-  }, [])
+  }, [groupId])
 
 
 
@@ -128,3 +116,22 @@ const ChatArea = () => {
 }
 
 export default ChatArea
+
+
+// queryClient.setQueryData(['groups', groupId, 'chats'], (prev: { data: { group: Group, conversationRecords: ConversationRecord[] } }) => {
+//   const group = prev.data.group
+//   const conversationRecords = prev.data.conversationRecords.map(record => {
+//     if (record.memberId == data.conversationRecord.memberId) return { ...record, lastReadAt: data.conversationRecord.lastReadAt }
+//     return record
+//   })
+//   return { ...prev, data: { ...prev.data, group: { ...group, messages: [...group.messages, data.message], conversationRecords } } }
+
+// })
+
+// queryClient.setQueryData(['groups', groupId, 'chats'], (prev: { data: { conversationRecords: ConversationRecord[] } }) => {
+//   const conversationRecords = prev.data.conversationRecords.map(record => {
+//     if (record.memberId == data.conversationRecord.memberId) return { ...record, lastReadAt: data.conversationRecord.lastReadAt }
+//     return record
+//   })
+//   return { ...prev, data: { ...prev.data, conversationRecords } }
+// })

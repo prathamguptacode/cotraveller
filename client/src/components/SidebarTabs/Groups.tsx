@@ -1,18 +1,22 @@
 import styles from './tabs.module.css'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { api } from '@/api/axios'
 import { FaPeopleGroup } from "react-icons/fa6";
 import type { Group } from '@/types/group.types'
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useSocket } from '@/hooks/useSocket';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { Info, MessageSquare, MountainSnow } from 'lucide-react';
+import { MountainSnow } from 'lucide-react';
+import { NavbarContext } from '../Navbar/useNavbarContext';
+import clsx from 'clsx';
+
 
 
 const Groups = () => {
   const socket = useSocket()
   const { user } = useAuth()
+  const ctx = useContext(NavbarContext)
   const queryClient = useQueryClient()
 
 
@@ -25,6 +29,7 @@ const Groups = () => {
     select: (res) => res.data.groups
   })
 
+
   useEffect(() => {
     socket.emit('JOIN_ROOM', { userId: user?._id, roomId: `user_room_${user?._id}` }, ((res: { success: boolean }) => {
       if (!res.success) console.debug('Socket connection for All chats failed')
@@ -33,6 +38,11 @@ const Groups = () => {
     socket.on('UPDATE_MESSAGE_ON_CLIENT', () => queryClient.invalidateQueries({ queryKey: ['groups'] })
     )
   }, [socket])
+
+  useEffect(() => {
+    if (ctx && groups.some(group => group.unreadMessagesCount > 0)) ctx.setNotifications(prev => ({ ...prev, groups: true }))
+  }, [groups])
+
 
 
   return (
@@ -47,7 +57,8 @@ const Groups = () => {
         {
           groups.map(group => {
             return (
-              <div key={group._id} className={styles.listItem}>
+              <NavLink to={`/groups/${group._id}/chats`} key={group._id} className={({ isActive }) => clsx(isActive && styles.activeItem, styles.listItem)
+              }>
                 <div className={styles.avatarWrapper} >
                   <FaPeopleGroup />
                 </div>
@@ -56,19 +67,20 @@ const Groups = () => {
                   {group.lastMessage && <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>}
                 </div>
                 <div className={styles.choicesWrapper}>
-                  <Link to={`/groups/${group._id}/chats`}>
+                  {group.unreadMessagesCount > 0 && < div className={styles.unreadCount}>{group.unreadMessagesCount}</div>}
+                  {/* <Link to={`/groups/${group._id}/chats`}>
                     <MessageSquare size={20} />
                   </Link>
                   <Link to={`/groups/${group._id}`}>
                     <Info size={20} />
-                  </Link>
+                  </Link> */}
                 </div>
-              </div>
+              </NavLink>
             )
           })
         }
 
-      </div>
+      </div >
 
   )
 }

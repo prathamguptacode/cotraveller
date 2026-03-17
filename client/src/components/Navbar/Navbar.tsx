@@ -56,7 +56,6 @@ function Navbar({ children }: NavbarProps) {
         eventSource.addEventListener('message', eventListener)
 
         return () => {
-            console.log('removing listener for events')
             eventSource.removeEventListener('message', eventListener)
         }
     }, [])
