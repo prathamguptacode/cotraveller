@@ -2,12 +2,12 @@ import * as jose from 'jose'
 import { generateUni8Array } from '../utils/generateToken'
 import env from '../config/env'
 import User from '../models/User'
-import * as cookies from '../libs/cookies'
+import * as cookies from '../lib/cookies'
 import { CustomError } from '../utils/CustomError'
 import { RequestHandler } from 'express'
 
 
-export const verifyAccessToken: RequestHandler = async (req, res, next) => {
+export const authMiddleware: RequestHandler = async (req, res, next) => {
     const authHeader = req.headers["authorization"]
     const accessToken = authHeader && authHeader.split(' ')[1]
     if (!accessToken) return res.fail(401, "TOKEN_NOT_FOUND", "Acesss token could not be found")
@@ -34,8 +34,8 @@ export const verifyAccessToken: RequestHandler = async (req, res, next) => {
         return res.fail(401, "USER_NOT_FOUND", "Associated user could not be found, logging out")
     }
 
-    const { fullName, _id, username } = user
-    req.user = { fullName, _id, email, username }
+    const { fullName, _id, username, memberGroup: groups } = user
+    req.user = { fullName, _id, email, username, groups }
 
     next()
 }

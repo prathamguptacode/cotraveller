@@ -5,9 +5,7 @@
     height: calc(100dvh - 65px);
 }
 
-/* svg {
-    color: var(--primary);
-} */
+
 
 .sidebarWrapper {
     padding: .5rem 1rem;
@@ -47,10 +45,6 @@
 
     &:hover {
         background-color: var(--clr-bg-hover);
-
-        .listItemTooltip {
-            display: flex;
-        }
     }
 
 
@@ -59,24 +53,7 @@
     }
 }
 
-.listItemTooltip {
-    position: absolute;
-    left: 110%;
-    z-index: 5;
 
-    border-radius: 8px;
-    padding: .2rem .6rem;
-
-    font-size: 14px;
-    background-color: var(--clr-complementary-bg-400);
-    color: var(--clr-non-complementary-font);
-
-    display: none;
-
-    justify-content: center;
-    align-items: center;
-
-}
 
 .footerList {
     margin-top: auto;
@@ -126,6 +103,7 @@
     display: flex;
     flex-direction: column;
 
+    position: relative;
 }
 
 .chatAreaHeader {
@@ -194,7 +172,7 @@
     flex-shrink: 0;
 }
 
-.groupOptions{
+.groupOptions {
     display: flex;
     flex-direction: column;
 
@@ -239,7 +217,7 @@
 
     .messageSeenState {
         display: flex;
-
+        justify-content: center;
     }
 }
 
@@ -278,6 +256,11 @@
 .messageSeenState {
     flex-shrink: 0;
     display: none;
+}
+
+
+.seen {
+    color: rgb(105, 249, 27);
 }
 
 .inputAreaWrapper {
@@ -331,7 +314,7 @@
 .scrollBtn {
     position: absolute;
     right: 15px;
-    bottom: 100%;
+    bottom: 40px;
     border-radius: 50%;
     border: 1px solid var(--clr-complementary-bg-400);
     width: 35px;
@@ -366,7 +349,7 @@
 
 .showScrollBtn {
     transition: bottom .05s linear, opacity .05s linear, pointer-events .05s linear;
-    bottom: 120%;
+    bottom: 60px;
     pointer-events: all;
     opacity: 1;
 }
@@ -416,7 +399,8 @@
     .groupDetails {
         max-width: 200px;
     }
-    .sidebarWrapper{
+
+    .sidebarWrapper {
         display: none;
     }
 }

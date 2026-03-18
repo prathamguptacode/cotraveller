@@ -98,10 +98,6 @@ input::-webkit-inner-spin-button {
 }
 
 
-.top-loading-bar {
-    /* background: var(--primary) !important; */
-
-}
 
 #root {
     margin: auto;
@@ -166,6 +162,7 @@ body {
     /* google flights background color */
     --secondary-bg: #303133;
     --primary: #8AB4F8;
+    /* --primary: #669df7; */
     --brighter-primary: #9DC0FA;
     --link-color: #8ab4f8;
     --commentbg: hsl(225, 4%, 20%);
@@ -195,16 +192,15 @@ body {
 
     /*homepage sidebar */
     --sidebar-bg: #303133;
-    --sidebar-bg-hover: #3C4043;
+    --sidebar-bg-hover: var(--clr-bg);
+    --sidebar-bg-active: #2e3133;
     --sidebar-anchor-active: #609af6;
     --sidebar-button-hover: hsl(225, 4%, 20%);
     --discoverbg: rgba(138, 180, 248, 0.12);
 
 }
 
-
-
-.disabledBtn{
+.disabledBtn {
     pointer-events: none;
     opacity: .7;
 }

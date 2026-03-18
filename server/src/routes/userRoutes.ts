@@ -1,17 +1,18 @@
 import express from 'express'
-import  asyncHandler  from '../middlewares/asyncHandler'
-import { deleteOutgoingRequestController, fetchIncomingRequestsController, fetchJoinedGroupsController, fetchOutgoingRequestsController } from '../controllers/userController'
-import { verifyAccessToken } from '../middlewares/authMiddleware'
+import asyncHandler from '../middlewares/asyncHandler'
+import { deleteOutgoingRequestController, fetchIncomingRequestsController, fetchJoinedGroupsController, uploadAvatarController } from '../controllers/userController'
+import { authMiddleware } from '../middlewares/authMiddleware'
+import { checkMagicBytes, checkMulterUploadPath, multerUploadImage } from '@/middlewares/multer'
 
 const router = express.Router()
 
-router.use(verifyAccessToken)
+router.use(authMiddleware)
 
 router.get('/groups', asyncHandler(fetchJoinedGroupsController))
 
 router.get('/inbox', asyncHandler(fetchIncomingRequestsController))
 
-router.get('/outbox', asyncHandler(fetchOutgoingRequestsController))
+router.patch('/avatar', asyncHandler(checkMulterUploadPath), multerUploadImage.single('user-avatar'), asyncHandler(checkMagicBytes), asyncHandler(uploadAvatarController))
 
 router.delete('/requests/:requestId', asyncHandler(deleteOutgoingRequestController))
 

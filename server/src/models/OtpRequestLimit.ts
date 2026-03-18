@@ -15,6 +15,8 @@ const otpRequestLimitSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+}, {
+    timestamps: true
 })
 
 //Resets after 10 mins

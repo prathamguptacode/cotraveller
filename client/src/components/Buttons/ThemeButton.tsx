@@ -6,9 +6,9 @@ const ThemeButton = () => {
     return (
         <button aria-label={"Switch mode to " + (theme === 'dark' ? 'light' : 'dark')} onClick={toggleTheme} className={styles.themeButton}>
             {theme === 'dark' ?
-                <Moon strokeWidth={1.4} />
+                <Moon strokeWidth={1.4} size={20} />
                 :
-                <Sun strokeWidth={1.4} size={28} />
+                <Sun strokeWidth={1.4} size={20} />
             }
         </button>
 

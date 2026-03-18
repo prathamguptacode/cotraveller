@@ -5,7 +5,7 @@
     background-color: var(--sidebar-bg);
     box-shadow: 1px 0 16px 2px var(--clr-bg);
     translate: -100% 0;
-    transition: translate .2s ease-in;
+    transition: translate .25s cubic-bezier(0.4, 0, 0.2, 1);
 
 
     height: calc(100vh - 65px);
@@ -36,25 +36,48 @@ body:has(.showSidebar) {
 .header {
     align-self: stretch;
     border-bottom: 1px solid var(--clr-border);
-    padding: 1rem;
     display: flex;
-    gap: 1rem;
+    padding: .5em;
+    gap: .3rem;
 }
 
 .header>* {
-    border: 1px solid var(--clr-border);
-    border-radius: 20px;
-    padding: .2rem .6rem;
+    flex: 1;
+    padding: .8em;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    transition: all .25s ease-out;
+
+    &::selection {
+        background-color: transparent;
+    }
 
     &:hover {
-        background-color: var(--sidebar-anchor-active);
-        color: var(--secondaryFont);
+        background-color: hsl(from var(--sidebar-bg) h s 30);
     }
 }
 
 .activeTab {
     background-color: var(--sidebar-anchor-active);
     color: var(--secondaryFont);
+
+    &:hover {
+        background-color: var(--sidebar-anchor-active);
+
+    }
+}
+
+.fallbackWrapper {
+    flex: 1;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }
 
 .list {

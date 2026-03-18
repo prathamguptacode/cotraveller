@@ -7,7 +7,7 @@ import { sendOtp } from '../services/nodemailer'
 import { generateAccessToken, generateRefreshToken, generateUni8Array } from '../utils/generateToken'
 import { CustomError } from '../utils/CustomError'
 import OtpRequestLimit from '../models/OtpRequestLimit'
-import * as cookies from '../libs/cookies'
+import * as cookies from '../lib/cookies'
 import * as jose from 'jose'
 import { RequestHandler } from 'express'
 
@@ -116,7 +116,7 @@ export const otpVerificationController: RequestHandler = async (req, res) => {
     })
 
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(201, { user: { fullName, username, email, _id: user._id }, accessToken }, "Signup Successful")
+    res.success(201, { user: { fullName, username, email, _id: user._id, avatar: user.avatar }, accessToken }, "Signup Successful")
 
 }
 
@@ -140,7 +140,7 @@ export const loginController: RequestHandler = async (req, res) => {
     res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
 
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(200, { accessToken, user: { email, username, fullName, _id } }, "Login Successful")
+    res.success(200, { accessToken, user: { email, username, fullName, _id, avatar: user.avatar } }, "Login Successful")
 
 }
 
@@ -208,7 +208,7 @@ export const refreshTokenController: RequestHandler = async (req, res) => {
 
     if (!user) {
         res.clearCookie('refreshToken', cookies.REFRESH_COOKIE_OPTIONS)
-        res.fail(401, "USER_NOT_FOUND", "User does not exist")
+        return res.fail(401, "USER_NOT_FOUND", "User does not exist")
     }
 
     res.success(200, { accessToken, user })

@@ -1,12 +1,11 @@
 import styles from '../chats.module.css'
-import { Cog, Info, LogOut, Mail, MessagesSquare, SendHorizontal } from 'lucide-react'
-import { ToolTip } from './ToolTip'
+import { Cog, Home, Info, LogOut, Inbox as InboxLogo, MessagesSquare } from 'lucide-react'
+import { ToolTip } from '@/components/Accessibility/ToolTip'
 import clsx from 'clsx'
-import { api} from '@/api/axios'
+import { api } from '@/api/axios'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import Groups from '@/components/SidebarTabs/Groups'
-import Outbox from '@/components/SidebarTabs/Outbox'
 import Inbox from '@/components/SidebarTabs/Inbox'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -29,18 +28,18 @@ const Sidebar = () => {
             <div className={styles.sidebarWrapper}>
 
                 <div className={styles.list}>
+                    <Link to={'/'} className={styles.listItem}>
+                        <Home size={26} />
+                        <ToolTip text='Home' />
+                    </Link>
                     <button aria-label='Chats' onClick={() => setCurrentTab('Chats')} className={styles.listItem}>
-                        <MessagesSquare size={28} />
-                        <ToolTip text={'Chats'} />
+                        <MessagesSquare size={26} />
+                        <ToolTip text='Chats' />
                     </button>
                     <button aria-label='Inbox' onClick={() => setCurrentTab('Inbox')} className={styles.listItem}>
-                        <Mail size={26} />
-                        <ToolTip text={'Inbox'} />
+                        <InboxLogo size={24} />
+                        <ToolTip text='Inbox' />
 
-                    </button>
-                    <button aria-label='Sent' onClick={() => setCurrentTab('Sent')} className={styles.listItem}>
-                        <SendHorizontal size={26} />
-                        <ToolTip text={'Sent'} />
                     </button>
                 </div>
 

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm i && vite",
-    "build": "vite build",
+    "build": "tsc -b && vite build",
     "logs": "clear && docker compose -f ../compose.dev.yaml logs -f client",
     "rs": "docker compose -f ../compose.dev.yaml restart client",
     "lint": "eslint .",
@@ -16,9 +16,10 @@
     "@cloudinary/url-gen": "^1.22.0",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "^5.90.20",
+    "@types/event-source-polyfill": "^1.0.5",
     "axios": "^1.13.2",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.23.24",
+    "event-source-polyfill": "^1.0.31",
     "howler": "^2.2.4",
     "lucide-react": "^0.553.0",
     "mitt": "^3.0.1",
@@ -47,6 +48,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0",
     "vite": "^7.2.4"
   }
 }

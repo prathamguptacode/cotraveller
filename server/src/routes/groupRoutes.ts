@@ -5,12 +5,13 @@ import asyncHandler from '../middlewares/asyncHandler'
 import { viewGroup } from '../controllers/groupController'
 import { viewGroupByFilter } from '../controllers/groupController'
 import { addRequest } from '../controllers/groupController'
-import { verifyAccessToken } from '../middlewares/authMiddleware'
-import groupSchema from '@/models/groupSchema'
+import { authMiddleware } from '../middlewares/authMiddleware'
+import Group from '@/models/Group'
 
 
-router.post('/addgroup', verifyAccessToken, asyncHandler(addGroup))
+//should have middleware
 
+router.post('/addgroup', authMiddleware, asyncHandler(addGroup))
 
 router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middleware required
 
@@ -20,7 +21,7 @@ router.get('/viewrequest',verifyAccessToken, asyncHandler(viewRequest))// this i
 
 router.get('/:groupId', asyncHandler(viewGroup))//we never have to use this route
 
-router.use(verifyAccessToken)
+router.use(authMiddleware)
 
 
 router.patch('/:groupId', asyncHandler(editGroup))
@@ -36,7 +37,7 @@ router.delete('/:groupId/requests/:requestId', asyncHandler(declineIncomingReque
 
 router.param('groupId', async (req, res, next, groupId) => {
     try {
-        const group = await groupSchema.findById(groupId)
+        const group = await Group.findById(groupId)
         if (!group) return res.fail(404, "GROUP_NOT_FOUND", "The group does not exist")
         next()
     } catch (error) {

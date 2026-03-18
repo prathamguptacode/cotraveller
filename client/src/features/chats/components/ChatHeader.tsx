@@ -4,6 +4,8 @@ import styles from '../chats.module.css'
 import { RiPencilFill } from 'react-icons/ri'
 import clsx from 'clsx'
 import type { Group } from '../types'
+import { ToolTip } from '@/components/Accessibility/ToolTip'
+import { useAuth } from '@/hooks/useAuth'
 
 type ChatHeaderProps = {
     group: Group | undefined,
@@ -11,6 +13,10 @@ type ChatHeaderProps = {
 }
 
 const ChatHeader = ({ group, groupId }: ChatHeaderProps) => {
+
+    const { user } = useAuth()
+
+
     return (
         <div className={styles.chatAreaHeader}>
             <Link to={`/groups/${groupId}`} className={styles.avatarWrapper}>
@@ -28,10 +34,11 @@ const ChatHeader = ({ group, groupId }: ChatHeaderProps) => {
                     })}
                 </Link>
             </div>
-            <Link to={`/groups/${groupId}/edit`} state={{ allowed: true }} aria-label='Edit Group' className={clsx(styles.groupOptions, styles.listItem)} >
+            {user?._id == group?.owner && < Link to={`/groups/${groupId}/edit`} state={{ allowed: true }} aria-label='Edit Group' className={clsx(styles.groupOptions, styles.listItem)} >
                 <RiPencilFill size={20} />
-            </Link>
-        </div>
+                <ToolTip position='left' text='Edit Group' />
+            </Link>}
+        </div >
     )
 }
 

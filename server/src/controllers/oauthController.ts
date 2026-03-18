@@ -1,11 +1,11 @@
 import { generateCodeVerifier, generateState, OAuth2RequestError, } from "arctic"
-import { github, google } from "../libs/oauth"
+import { github, google } from "../lib/oauth"
 import env from "../config/env"
 import * as jose from 'jose'
 import { generateRefreshToken } from "../utils/generateToken"
 import User from "../models/User"
 import { generateFromEmail } from 'unique-username-generator'
-import * as cookies from '../libs/cookies'
+import * as cookies from '../lib/cookies'
 import axios from 'axios'
 import { RequestHandler } from "express"
 import * as z from "zod"

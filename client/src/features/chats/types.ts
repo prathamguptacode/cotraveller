@@ -2,7 +2,9 @@ export type Group = {
     _id: string,
     title: string,
     messages: Message[],
-    members: { _id: string, fullName: string }[]
+    members: { _id: string, fullName: string }[],
+    owner: string,
+    unreadMessagesCount: number
 }
 
 export type Message = {
@@ -13,4 +15,10 @@ export type Message = {
     },
     text: string,
     createdAt: string
+}
+
+export type ConversationRecord = {
+    memberId: string,
+    roomId: string,
+    lastReadAt: Date
 }

@@ -13,6 +13,8 @@ const commentSchema = new mongoose.Schema({
         ref: 'Group',
         required: true
     }
+}, {
+    timestamps: true
 })
 
 export type CommentType = HydratedDocument<mongoose.InferSchemaType<typeof commentSchema>>

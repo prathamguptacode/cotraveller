@@ -11,7 +11,8 @@ declare global {
                 _id: Types.ObjectId,
                 email: string,
                 fullName: string,
-                username: string
+                username: string,
+                groups: Types.ObjectId[]
             },
         }
     }

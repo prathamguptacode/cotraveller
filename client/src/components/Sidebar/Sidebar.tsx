@@ -1,28 +1,29 @@
 import styles from './sidebar.module.css'
 import clsx from 'clsx'
 import { Link } from 'react-router-dom'
-import { Cog, Info, LogOut } from 'lucide-react'
+import { Cog, Inbox as InboxLogo, Info, LogOut, MessagesSquare } from 'lucide-react'
 import { api } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
-import { Suspense, type Dispatch, type JSX } from 'react'
-import type { SidebarTab } from '../Navbar/Navbar'
+import { Suspense, type JSX } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useNavbarContext } from '../Navbar/useNavbarContext'
+import type { SidebarTab } from '../Navbar/types'
+import ThreeDotLoader from '../Loaders/ThreeDotLoader'
 
 
 
 type SidebarProps = {
-    isHidden: boolean,
     slot: JSX.Element,
-    setCurrentTab: Dispatch<React.SetStateAction<SidebarTab>>,
     currentTab: SidebarTab
 }
 
 
-const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }: SidebarProps) => {
+const Sidebar = ({ slot, currentTab }: SidebarProps) => {
 
     const { user } = useAuth()
+    const { setCurrentTab, isHidden } = useNavbarContext()
 
 
     const { mutate: logout } = useMutation({
@@ -45,19 +46,24 @@ const Sidebar = ({ isHidden, slot, setCurrentTab, currentTab }: SidebarProps) =>
             e.preventDefault()
         }} onClick={(e) => e.stopPropagation()} className={clsx(styles.wrapper, !isHidden && styles.showSidebar)}>
             <div className={styles.header}>
-                <button aria-label='Groups' className={currentTab === "Groups" ? styles.activeTab : ""} onClick={() => setCurrentTab('Groups')}>Groups</button>
-                <button aria-label='Inbox' className={currentTab === "Inbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Inbox')}>Inbox</button>
-                <button aria-label='Sent' className={currentTab === "Outbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Outbox')}>Sent</button>
+                <button aria-label='Groups' className={currentTab === "Groups" ? styles.activeTab : ""} onClick={() => setCurrentTab('Groups')}>
+                    <MessagesSquare size={20} />
+                    Chats
+                </button>
+                <button aria-label='Inbox' className={currentTab === "Inbox" ? styles.activeTab : ""} onClick={() => setCurrentTab('Inbox')}>
+                    <InboxLogo size={20} />
+                    Inbox
+                </button>
             </div>
             <ErrorBoundary fallback={<p>Nothing here</p>}>
-                <Suspense fallback={<p>Loading...</p>}>
+                <Suspense fallback={<div className={styles.fallbackWrapper}><ThreeDotLoader /></div>}>
                     {slot}
                 </Suspense>
             </ErrorBoundary>
 
 
             <div className={clsx(styles.list, styles.footerList)}>
-                <Link to={''} className={styles.listItem}>
+                <Link to={'#'} className={styles.listItem}>
                     <div className={clsx(styles.iconWrapper, styles.avatarWrapper)} >
                         <Cog />
                     </div>
