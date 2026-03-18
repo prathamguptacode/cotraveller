@@ -7,7 +7,7 @@ import AuthLayout from './layouts/Auth/AuthLayout'
 import Signup from './pages/Signup'
 import Login from './pages/Login'
 import VerifyOTP from './pages/VerifyOTP'
-import CreateGroup from './pages/createGroup/CreateGroup'
+import CreateGroup from '../app/pages/CreateGroup/CreateGroup'
 import MainLayout from './layouts/Main/MainLayout'
 import SuccessPage from './pages/success/SuccessPage'
 import SecondaryLayout from './layouts/Secondary/SecondaryLayout'
@@ -17,7 +17,6 @@ import FeedbackPage from './pages/Feedback/FeedbackPage'
 import EditGroup from './pages/EditGroup/EditGroup'
 import GroupInfo from './pages/GroupInfo'
 import Test from './pages/test/Test'
-import NewcreateGroup from './pages/createGroup/CreateGroup'
 
 
 
@@ -33,7 +32,6 @@ const Router = () => {
                     <Route index element={<Home />} />
                     <Route path='viewgroup' element={<ViewGroup />} />
                     <Route path='test' element={<Test />} />
-                    <Route path='newGroup' element={<NewcreateGroup />} />
                 </Route>
 
                 <Route path='/groups' element={<SecondaryLayout />} >
