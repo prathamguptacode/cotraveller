@@ -2,7 +2,7 @@ import mystyle from './navbar.module.css'
 import ThemeButton from '@/components/Buttons/ThemeButton';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import { Link } from 'react-router-dom';
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import Groups from "@/components/SidebarTabs/Groups";
 import Inbox from "@/components/SidebarTabs/Inbox";
 import { Camera, Edit, Inbox as InboxLogo, Plus, TextAlignJustify, User2Icon, X } from "lucide-react";
@@ -13,6 +13,10 @@ import { toast } from 'sonner';
 import type { Notifications, SidebarTab } from './types';
 import { NavbarContext, useNavbarContext } from './useNavbarContext';
 import { getImgURL } from '@/lib/cloudinary';
+import { useMutation } from '@tanstack/react-query';
+import { api } from '@/api/axios';
+import { loaderEvent } from '@/api/mitt';
+import { normalizeError } from '@/utils/normalizeError';
 
 
 
@@ -45,7 +49,6 @@ function Navbar({ children }: NavbarProps) {
 
             if (!isEvent(data)) return
             if (data.for === 'Inbox' && data.event === 'request_to_join_group:added') {
-                console.log(data, 'at', Date.now())
                 toast.info('Request Alert', {
                     description: "Someone wants to join your group"
                 })
@@ -144,9 +147,18 @@ Navbar.CreateGroupButton = NavbarCreateGroupButton
 
 
 const NavbarProfileButton = () => {
-    const { user } = useAuth()
+    const { user, updateUser } = useAuth()
     const profileDialogRef = useRef<HTMLDialogElement>(null)
     const avatarDialogRef = useRef<HTMLDialogElement>(null)
+
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const resetFile = () => {
+        const input = inputRef.current
+        if (!input) return
+        input.value = ''
+    }
+
 
     const url = user?.avatar.publicId && getImgURL(user.avatar.publicId, user.avatar.version, 400)
     const firstLetter = user?.fullName.charAt(0)
@@ -171,13 +183,57 @@ const NavbarProfileButton = () => {
         if (dialog) dialog.close()
     }
 
+    const uploadAvatarMutation = useMutation({
+        mutationFn: (formData: FormData) => api.patch<{ publicId: string, version: number }>('/user/avatar', formData),
+        onSuccess: (res) => {
+            updateUser(prev => prev && ({ ...prev, avatar: res.data }))
+            toast.success(`Photo ${user?.avatar.publicId ? 'Changed' : 'Added'}`)
+        },
+        onError: (error) => {
+            const err = normalizeError(error)
+            if (err.status >= 500) return
+            toast.error('An error occurred', {
+                description: err.message
+            })
+        },
+        onSettled: () => {
+            resetFile()
+            loaderEvent.emit('stopLoading')
+        }
+    })
+
+    const uploadAvatar = (e: ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files
+        if (!files || !files[0] || !files[0].type.startsWith('image/')) return toast.error('An error occurred', {
+            description: "File is invalid/empty"
+        })
+
+        const file = files[0]
+
+        if (file.size > 8 * 1024 * 1024) {
+            resetFile()
+            return toast.error('An error occurred', {
+                description: "File cannot be larger than 8 Mb"
+            })
+        }
+
+        loaderEvent.emit('startLoading')
+        closeAvatarDialog()
+
+        const formData = new FormData()
+        formData.append('user-avatar', file)
+        uploadAvatarMutation.mutate(formData)
+    }
+
+
+
+
     useEffect(() => {
         const profileDialog = profileDialogRef.current
         const avatarDialog = avatarDialogRef.current
         if (!profileDialog || !avatarDialog) return
 
         const eventHandler = (e: PointerEvent, dialog: HTMLDialogElement) => {
-            console.log('running for', dialog)
             const dialogDimensions = dialog.getBoundingClientRect()
             if (e.clientX < dialogDimensions.left || e.clientX > dialogDimensions.right || e.clientY < dialogDimensions.top || e.clientY > dialogDimensions.bottom) dialog.close()
 
@@ -248,15 +304,16 @@ const NavbarProfileButton = () => {
                     <dialog ref={avatarDialogRef} className={mystyle.avatarDialog}>
                         <h2>Change Profile Photo</h2>
                         <div>
-                            <button>Upload Photo</button>
-                            <button>Remove Current Photo</button>
+                            <input ref={inputRef} onChange={uploadAvatar} id='avatarInput' accept='image/*' type="file" style={{ display: 'none' }} />
+                            <label role='button' style={{ color: 'var(--primary-darker)' }} htmlFor='avatarInput'>Upload Photo</label>
+                            <button style={{ color: 'rgb(240, 28, 28)' }}>Remove Current Photo</button>
                             <button onClick={closeAvatarDialog}>Cancel</button>
                         </div>
                     </dialog>
-                </div>
+                </div >
 
 
-            </dialog>
+            </dialog >
         </>
 }
 

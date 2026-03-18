@@ -12,7 +12,11 @@ declare global {
                 email: string,
                 fullName: string,
                 username: string,
-                groups: Types.ObjectId[]
+                groups: Types.ObjectId[],
+                avatar: {
+                    publicId: string,
+                    version: number
+                },
             },
         }
     }

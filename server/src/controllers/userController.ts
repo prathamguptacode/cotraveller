@@ -270,13 +270,25 @@ export const uploadAvatarController: RequestHandler = async (req, res) => {
     const user = req.user
     if (!file) return res.fail(400, "BAD_REQUEST", "File is invalid/empty")
 
-    //###LATER Add replace old file logic using publicId but with correct non-tamperable protected way
+    let options: {} | {
+        public_id: string,
+        invalidate: true,
+        overwrite: true
+    } = {}
+
+    if (user.avatar.publicId) options = {
+        public_id: user.avatar.publicId,
+        invalidate: true,
+        overwrite: true
+    }
 
     const { public_id: publicId, version } = await cloudinary.uploader.upload(file.path, {
         asset_folder: env.MODE,
         use_filename: true,
         unique_filename: true,
-        resource_type: 'auto'
+        resource_type: 'auto',
+        ...options
+
     })
 
     await User.updateOne({ _id: user._id }, { $set: { avatar: { publicId, version } } })

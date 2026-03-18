@@ -42,7 +42,6 @@ function EditGroup() {
     queryFn: () => {
       try {
         const groupData = api.get<mytype>(`/groups/${groupId}`);
-        console.log(groupData);
         return groupData;
       } catch {
         toast.error('Something went wrong');

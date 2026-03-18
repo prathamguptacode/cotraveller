@@ -181,7 +181,7 @@
     padding: .5rem 1rem;
     align-items: stretch;
     margin-block-end: 44px;
-    min-width: 379px;
+    min-width: 400px;
 
 
     display: flex;
@@ -303,19 +303,12 @@
         display: flex;
         flex-direction: column;
 
-        >button {
+        >* {
             text-align: center;
             border-block: 1px solid var(--clr-bg);
             padding: .5em 1.5em;
+            cursor: pointer;
 
-
-            &:first-child {
-                color: var(--primary);
-            }
-
-            &:nth-child(2) {
-                color: rgb(240, 28, 28);
-            }
 
 
             &:hover {
