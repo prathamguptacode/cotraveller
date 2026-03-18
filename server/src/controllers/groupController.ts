@@ -21,7 +21,7 @@ const GroupSchema = z.object({
 })
 
 export const addGroup: RequestHandler = async (req, res) => {
-    req.body.owner=req.user._id.toString();
+    req.body.owner = req.user._id.toString();
     const parsedData = GroupSchema.safeParse(req.body)
     if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
 
@@ -197,6 +197,7 @@ export const acceptIncomingRequestController: RequestHandler = async (req, res) 
     }
 
     await Group.updateOne({ _id: groupId }, { $pull: { incomingRequests: requestId }, $push: { member: joinRequest.requesterId } })
+    await JoinRequest.deleteOne({ _id: joinRequest._id })
 
     await ConversationRecord.create({ memberId: joinRequest.requesterId, roomId: groupId })
 

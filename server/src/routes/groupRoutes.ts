@@ -17,8 +17,6 @@ router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middlewar
 
 router.get('/live', groupnumber)
 
-router.get('/viewrequest',verifyAccessToken, asyncHandler(viewRequest))// this is for member to see request
-
 router.get('/:groupId', asyncHandler(viewGroup))//we never have to use this route
 
 router.use(authMiddleware)

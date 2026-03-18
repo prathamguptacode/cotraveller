@@ -5,6 +5,7 @@ import JoinRequest from "@/models/JoinRequest"
 import ConversationRecord from "@/models/ConversationRecord"
 import cloudinary from "@/config/cloudinary"
 import env from "@/config/env"
+import fs from 'fs/promises'
 
 export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
     const user = req.user
@@ -279,6 +280,12 @@ export const uploadAvatarController: RequestHandler = async (req, res) => {
     })
 
     await User.updateOne({ _id: user._id }, { $set: { avatar: { publicId, version } } })
+
+    try {
+        await fs.unlink(file.path)
+    } catch (error) {
+        console.error("File was not unlinked")
+    }
 
     return res.success(201, { publicId, version }, "User Avatar upload successful")
 }
