@@ -109,7 +109,17 @@ body {
     background-color: var(--clr-bg);
     color: var(--clr-font);
     font-family: Mulish, Roboto, sans-serif;
+    anchor-name: --body;
 }
+
+html {
+    anchor-name: --root;
+
+    &:has(dialog[open]) {
+        overflow: hidden;
+    }
+}
+
 
 :root {
 
@@ -183,7 +193,7 @@ body {
     /* auth page color */
     --primary-darker: #186ef8;
     --secondary-bg-lighter: hsl(220, 3%, 75%);
-    --expansion-bg: hsl(220, 3%, 9%);
+    --expansion-bg: #161718;
     --secondary-bg-darker: hsl(220, 3%, 9%);
     --secondary-bg-darkest: hsl(220, 3%, 6%);
     --clr-non-complementary-font: #202124;
@@ -198,6 +208,9 @@ body {
     --sidebar-button-hover: hsl(225, 4%, 20%);
     --discoverbg: rgba(138, 180, 248, 0.12);
 
+    /* dialog */
+    --dialog-hover: #37393b;
+    --dialog-darker: #161718;
 }
 
 .disabledBtn {

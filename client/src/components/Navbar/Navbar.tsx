@@ -5,9 +5,8 @@ import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Groups from "@/components/SidebarTabs/Groups";
 import Inbox from "@/components/SidebarTabs/Inbox";
-import { Inbox as InboxLogo, Plus, TextAlignJustify } from "lucide-react";
+import { Camera, Edit, Inbox as InboxLogo, Plus, TextAlignJustify, User2Icon, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { FaUser } from "react-icons/fa6";
 import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
 import { toast } from 'sonner';
@@ -146,15 +145,119 @@ Navbar.CreateGroupButton = NavbarCreateGroupButton
 
 const NavbarProfileButton = () => {
     const { user } = useAuth()
+    const profileDialogRef = useRef<HTMLDialogElement>(null)
+    const avatarDialogRef = useRef<HTMLDialogElement>(null)
 
     const url = user?.avatar.publicId && getImgURL(user.avatar.publicId, user.avatar.version, 400)
     const firstLetter = user?.fullName.charAt(0)
 
+    const openProfileDialog = () => {
+        const dialog = profileDialogRef.current
+        if (dialog) dialog.showModal()
+    }
 
-    return user && <Link className={mystyle.avatarWrapper} aria-label="Go to your profile page" to={`/`}>
-        {url ? <img src={url} alt="user-avatar" /> : firstLetter}
-    </Link>
+    const closeProfileDialog = () => {
+        const dialog = profileDialogRef.current
+        if (dialog) dialog.close()
+    }
 
+    const openAvatarDialog = () => {
+        const dialog = avatarDialogRef.current
+        if (dialog) dialog.showModal()
+    }
+
+    const closeAvatarDialog = () => {
+        const dialog = avatarDialogRef.current
+        if (dialog) dialog.close()
+    }
+
+    useEffect(() => {
+        const profileDialog = profileDialogRef.current
+        const avatarDialog = avatarDialogRef.current
+        if (!profileDialog || !avatarDialog) return
+
+        const eventHandler = (e: PointerEvent, dialog: HTMLDialogElement) => {
+            console.log('running for', dialog)
+            const dialogDimensions = dialog.getBoundingClientRect()
+            if (e.clientX < dialogDimensions.left || e.clientX > dialogDimensions.right || e.clientY < dialogDimensions.top || e.clientY > dialogDimensions.bottom) dialog.close()
+
+        }
+        profileDialog.addEventListener('click', (e) => eventHandler(e, profileDialog))
+        avatarDialog.addEventListener('click', (e) => eventHandler(e, avatarDialog))
+
+        return () => {
+            profileDialog.removeEventListener('click', (e) => eventHandler(e, profileDialog))
+            avatarDialog.removeEventListener('click', (e) => eventHandler(e, avatarDialog))
+        }
+    }, [])
+
+    const formattedDate = user && new Intl.DateTimeFormat('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    }).format(new Date(user.createdAt))
+
+    return user &&
+        <>
+            <button onClick={openProfileDialog} className={mystyle.avatarWrapper} aria-label="View your profile">
+                {url ? <img src={url} alt="user-avatar" /> : firstLetter}
+            </button>
+
+            <dialog ref={profileDialogRef} className={mystyle.profileDialog}>
+                <button aria-label='close profile dialog' className={mystyle.closeDialog} onClick={closeProfileDialog}>
+                    <X strokeWidth={1.5} size={20} />
+                </button>
+
+                <div className={mystyle.profileArea}>
+                    <div className={mystyle.profileHeader}>
+                        <button onClick={openAvatarDialog} aria-label='change profile picture' className={mystyle.avatarWrapper}>
+                            {url ? <img src={url} alt="user-avatar" /> : firstLetter}
+                        </button>
+                        <div className={mystyle.profileHeaderDetails}>
+                            <h2>{user.username}</h2>
+                            <span>{user.fullName}</span>
+                        </div>
+                    </div>
+
+                    <div className={mystyle.profileMainArea}>
+                        <div>
+                            <h3>Email</h3>
+                            <span>{user.email}</span>
+                        </div>
+                        <div>
+                            <h3>Member Since</h3>
+                            <span>
+                                {formattedDate}
+                            </span>
+                        </div>
+                        <div>
+                            <h3>Associated Groups</h3>
+                            <span>{user.memberGroup.length}</span>
+                        </div>
+                    </div>
+
+                    <div className={mystyle.profileFooter}>
+                        <Link to={'#'} >
+                            <Edit size={20} /> Edit Profile
+                        </Link>
+                        <button onClick={openAvatarDialog} aria-label='change profile picture'>
+                            <Camera size={20} /> {url ? 'Change' : 'Add'} Photo
+                        </button>
+                    </div>
+
+                    <dialog ref={avatarDialogRef} className={mystyle.avatarDialog}>
+                        <h2>Change Profile Photo</h2>
+                        <div>
+                            <button>Upload Photo</button>
+                            <button>Remove Current Photo</button>
+                            <button onClick={closeAvatarDialog}>Cancel</button>
+                        </div>
+                    </dialog>
+                </div>
+
+
+            </dialog>
+        </>
 }
 
 Navbar.ProfileButton = NavbarProfileButton

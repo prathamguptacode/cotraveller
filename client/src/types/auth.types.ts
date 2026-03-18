@@ -6,5 +6,7 @@ export type AuthContextUser = {
     avatar: {
         publicId: string,
         version: number
-    }
+    },
+    createdAt: string,
+    memberGroup: string[]
 } | null
