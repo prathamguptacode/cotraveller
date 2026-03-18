@@ -145,35 +145,49 @@ Navbar.CreateGroupButton = NavbarCreateGroupButton
 
 const NavbarProfileButton = () => {
     const { user } = useAuth()
-    const dialogRef = useRef<HTMLDialogElement>(null)
+    const profileDialogRef = useRef<HTMLDialogElement>(null)
+    const avatarDialogRef = useRef<HTMLDialogElement>(null)
 
     const url = user?.avatar.publicId && getImgURL(user.avatar.publicId, user.avatar.version, 400)
     const firstLetter = user?.fullName.charAt(0)
 
-    const openDialog = () => {
-        const dialog = dialogRef.current
-        if (!dialog) return
-        dialog.showModal()
+    const openProfileDialog = () => {
+        const dialog = profileDialogRef.current
+        if (dialog) dialog.showModal()
     }
 
-    const closeDialog = () => {
-        const dialog = dialogRef.current
-        if (!dialog) return
-        dialog.close()
+    const closeProfileDialog = () => {
+        const dialog = profileDialogRef.current
+        if (dialog) dialog.close()
+    }
+
+    const openAvatarDialog = () => {
+        const dialog = avatarDialogRef.current
+        if (dialog) dialog.showModal()
+    }
+
+    const closeAvatarDialog = () => {
+        const dialog = avatarDialogRef.current
+        if (dialog) dialog.close()
     }
 
     useEffect(() => {
-        const dialog = dialogRef.current
-        if (!dialog) return
+        const profileDialog = profileDialogRef.current
+        const avatarDialog = avatarDialogRef.current
+        if (!profileDialog || !avatarDialog) return
 
-        const eventHandler = (e: PointerEvent) => {
+        const eventHandler = (e: PointerEvent, dialog: HTMLDialogElement) => {
+            console.log('running for', dialog)
             const dialogDimensions = dialog.getBoundingClientRect()
             if (e.clientX < dialogDimensions.left || e.clientX > dialogDimensions.right || e.clientY < dialogDimensions.top || e.clientY > dialogDimensions.bottom) dialog.close()
+
         }
-        dialog.addEventListener('click', eventHandler)
+        profileDialog.addEventListener('click', (e) => eventHandler(e, profileDialog))
+        avatarDialog.addEventListener('click', (e) => eventHandler(e, avatarDialog))
 
         return () => {
-            dialog.removeEventListener('click', eventHandler)
+            profileDialog.removeEventListener('click', (e) => eventHandler(e, profileDialog))
+            avatarDialog.removeEventListener('click', (e) => eventHandler(e, avatarDialog))
         }
     }, [])
 
@@ -185,21 +199,26 @@ const NavbarProfileButton = () => {
 
     return user &&
         <>
-            <button onClick={openDialog} className={mystyle.avatarWrapper} aria-label="View your profile">
+            <button onClick={openProfileDialog} className={mystyle.avatarWrapper} aria-label="View your profile">
                 {url ? <img src={url} alt="user-avatar" /> : firstLetter}
             </button>
-            <dialog ref={dialogRef} className={mystyle.profileDialog}>
-                <button className={mystyle.closeDialog} onClick={closeDialog}><X strokeWidth={1.5} size={20} /></button>
+
+            <dialog ref={profileDialogRef} className={mystyle.profileDialog}>
+                <button aria-label='close profile dialog' className={mystyle.closeDialog} onClick={closeProfileDialog}>
+                    <X strokeWidth={1.5} size={20} />
+                </button>
+
                 <div className={mystyle.profileArea}>
                     <div className={mystyle.profileHeader}>
-                        <div className={mystyle.avatarWrapper}>
+                        <button onClick={openAvatarDialog} aria-label='change profile picture' className={mystyle.avatarWrapper}>
                             {url ? <img src={url} alt="user-avatar" /> : firstLetter}
-                        </div>
+                        </button>
                         <div className={mystyle.profileHeaderDetails}>
                             <h2>{user.username}</h2>
                             <span>{user.fullName}</span>
                         </div>
                     </div>
+
                     <div className={mystyle.profileMainArea}>
                         <div>
                             <h3>Email</h3>
@@ -216,15 +235,26 @@ const NavbarProfileButton = () => {
                             <span>{user.memberGroup.length}</span>
                         </div>
                     </div>
+
                     <div className={mystyle.profileFooter}>
                         <Link to={'#'} >
                             <Edit size={20} /> Edit Profile
                         </Link>
-                        <button>
-                            <Camera size={20} /> Change Photo
+                        <button onClick={openAvatarDialog} aria-label='change profile picture'>
+                            <Camera size={20} /> {url ? 'Change' : 'Add'} Photo
                         </button>
                     </div>
+
+                    <dialog ref={avatarDialogRef} className={mystyle.avatarDialog}>
+                        <h2>Change Profile Photo</h2>
+                        <div>
+                            <button>Upload Photo</button>
+                            <button>Remove Current Photo</button>
+                            <button onClick={closeAvatarDialog}>Cancel</button>
+                        </div>
+                    </dialog>
                 </div>
+
 
             </dialog>
         </>

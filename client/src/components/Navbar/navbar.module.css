@@ -136,6 +136,7 @@
 
 .profileDialog {
     /* ###FIX LATER flexbox is leaving space for this fixed element */
+    anchor-name: --profile-dialog;
 
     left: 50%;
     top: 50%;
@@ -144,7 +145,7 @@
     width: 440px;
 
     border-radius: 15px;
-    border: 2px solid var(--secondary-bg);
+    border: 1.5px solid var(--secondary-bg);
     padding: .5rem;
 
 
@@ -261,6 +262,69 @@
         }
     }
 }
+
+.avatarDialog {
+    border: none;
+    width: 500px;
+    position-anchor: --profile-dialog;
+    left: anchor(50%);
+    top: anchor(50%);
+    transform: translate(-50%, -50%);
+
+    background-color: var(--dialog-darker);
+    border-radius: 15px;
+    color: var(--clr-font);
+
+
+
+    flex-direction: column;
+
+
+    >h2 {
+        padding: 1em;
+        text-align: center;
+    }
+
+    >div {
+        display: flex;
+        flex-direction: column;
+
+        >button {
+            text-align: center;
+            border-block: 1px solid var(--clr-bg);
+            padding: .5em 1.5em;
+
+
+            &:first-child {
+                color: var(--primary);
+            }
+
+            &:nth-child(2) {
+                color: rgb(240, 28, 28);
+            }
+
+
+            &:hover {
+                background-color: var(--secondary-bg);
+            }
+
+            &:active {
+                background-color: var(--clr-bg);
+            }
+        }
+    }
+
+    &[open] {
+        display: flex;
+    }
+
+    &::backdrop {
+        backdrop-filter: blur(1px);
+    }
+}
+
+
+
 
 @media (max-width:800px) {
     .logo {

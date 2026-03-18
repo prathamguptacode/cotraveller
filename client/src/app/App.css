@@ -120,6 +120,7 @@ html {
     }
 }
 
+
 :root {
 
     --clr-border: hsl(0, 0%, 70%);
@@ -192,7 +193,7 @@ html {
     /* auth page color */
     --primary-darker: #186ef8;
     --secondary-bg-lighter: hsl(220, 3%, 75%);
-    --expansion-bg: hsl(220, 3%, 9%);
+    --expansion-bg: #161718;
     --secondary-bg-darker: hsl(220, 3%, 9%);
     --secondary-bg-darkest: hsl(220, 3%, 6%);
     --clr-non-complementary-font: #202124;
@@ -209,6 +210,7 @@ html {
 
     /* dialog */
     --dialog-hover: #37393b;
+    --dialog-darker: #161718;
 }
 
 .disabledBtn {
