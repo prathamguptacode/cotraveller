@@ -109,6 +109,15 @@ body {
     background-color: var(--clr-bg);
     color: var(--clr-font);
     font-family: Mulish, Roboto, sans-serif;
+    anchor-name: --body;
+}
+
+html {
+    anchor-name: --root;
+
+    &:has(dialog[open]) {
+        overflow: hidden;
+    }
 }
 
 :root {
@@ -198,6 +207,8 @@ body {
     --sidebar-button-hover: hsl(225, 4%, 20%);
     --discoverbg: rgba(138, 180, 248, 0.12);
 
+    /* dialog */
+    --dialog-hover: #37393b;
 }
 
 .disabledBtn {
