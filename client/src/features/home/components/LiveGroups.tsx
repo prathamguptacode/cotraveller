@@ -1,104 +1,65 @@
-import { useState } from 'react'
-import mystyle from '../liveGroups.module.css'
-import { MdGroups } from "react-icons/md";
-
-
+import { useEffect, useState } from 'react';
+import mystyle from '../liveGroups.module.css';
+import { MdGroups } from 'react-icons/md';
+import { api } from '@/api/axios';
 
 function LiveGroups() {
-    const [airNum, setAirNum] = useState(0)
-    const [railNum, setRailNum] = useState(0)
-    const [taxiNum, setTaxiNum] = useState(0)
-    // const airplane = useRef<HTMLButtonElement>(null)
-    // const train = useRef<HTMLButtonElement>(null)
-    // const taxi = useRef<HTMLButtonElement>(null)
+  const [airNum, setAirNum] = useState(0);
+  const [railNum, setRailNum] = useState(0);
+  const [taxiNum, setTaxiNum] = useState(0);
 
-    // useEffect(() => {
-    //     (async () => {
-    //         const res = await api.get('group/getnumbers')
-    //         const val = res.data?.data 
-    //         if (val[0]) {
-    //             if (val[0]._id == "Airplane") {
-    //                 const num = val[0].count
-    //                 setAirNum(num)
-    //             }
-    //             if (val[0]._id == "Railway") {
-    //                 const num = val[0].count
-    //                 setRailNum(num)
-    //             }
-    //             if (val[0]._id == "Taxi") {
-    //                 const num = val[0].count
-    //                 setTaxiNum(num)
-    //             }
-    //         }
-    //         if (val[1]) {
-    //             if (val[1]._id == "Airplane") {
-    //                 const num = val[1].count
-    //                 setAirNum(num)
-    //             }
-    //             if (val[1]._id == "Railway") {
-    //                 const num = val[1].count
-    //                 setRailNum(num)
-    //             }
-    //             if (val[1]._id == "Taxi") {
-    //                 const num = val[1].count
-    //                 setTaxiNum(num)
-    //             }
-    //         }
-    //         if (val[2]) {
-    //             if (val[2]._id == "Airplane") {
-    //                 const num = val[2].count
-    //                 setAirNum(num)
-    //             }
-    //             if (val[2]._id == "Railway") {
-    //                 const num = val[2].count
-    //                 setRailNum(num)
-    //             }
-    //             if (val[2]._id == "Taxi") {
-    //                 const num = val[2].count
-    //                 setTaxiNum(num)
-    //             }
-    //         }
-    //     })()
-    // }, [])
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await api.get('groups/live');
+        console.log(res);
+        if (Array.isArray(res.data)) {
+          res.data.forEach((element) => {
+            if (element._id == 'Taxi') {
+              setTaxiNum(element.count);
+            }
+            if (element._id == 'Railway') {
+              setRailNum(element.count);
+            }
+            if (element._id == 'Airplane') {
+              setAirNum(element.count);
+            }
+          });
+        }
+      } catch {}
+    })();
+  });
 
 
-    return (
-        <div className={mystyle.liveGroupsWrapper}>
-            <div className={mystyle.liveGroupsTitle}>Find cotravellers from your college to anywhere</div>
-            {/* <div className={mystyle.livebtnbx}>
-                <button aria-label='Ariplane' className={mystyle.livebtn} ref={airplane} >Airplane</button>
-                <button aria-label='Railway' className={mystyle.livebtn} ref={train}>Railway</button>
-                <button aria-label='Taxi' className={mystyle.livebtn} ref={taxi}>Taxi</button>
-            </div> */}
-            <div className={mystyle.liveGroups}>
-                <LiveGroup mode="Airplane" num={airNum} />
-                <LiveGroup mode="Train" num={railNum} />
-                <LiveGroup mode="Taxi" num={taxiNum} />
-            </div>
-        </div>
-    )
+  return (
+    <div className={mystyle.liveGroupsWrapper}>
+      <div className={mystyle.liveGroupsTitle}>
+        Find cotravellers from your college to anywhere
+      </div>
+      <div className={mystyle.liveGroups}>
+        <LiveGroup mode="Airplane" num={airNum} />
+        <LiveGroup mode="Train" num={railNum} />
+        <LiveGroup mode="Taxi" num={taxiNum} />
+      </div>
+    </div>
+  );
 }
 
-export default LiveGroups
-
-
-
-
+export default LiveGroups;
 
 type LivebxProps = {
-    mode: string;
-    num: number;
-}
+  mode: string;
+  num: number;
+};
 
 function LiveGroup({ mode, num }: LivebxProps) {
-    return (
-        <div className={mystyle.liveGroupWrapper}>
-            <div className={mystyle.liveGroupHeading}>
-                <MdGroups size="28px" />
-                Live {mode} Groups
-            </div>
-            <div className={mystyle.liveGroupMetrics}>{num}</div>
-        </div>
-    )
+  return (
+    <div className={mystyle.liveGroupWrapper}>
+      <div className={mystyle.liveGroupHeading}>
+        <MdGroups size="28px" />
+        Live {mode} Groups
+      </div>
+      <div className={mystyle.liveGroupMetrics}>{num}</div>
+    </div>
+  );
 }
-

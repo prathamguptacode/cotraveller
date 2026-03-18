@@ -21,6 +21,7 @@ const GroupSchema = z.object({
 })
 
 export const addGroup: RequestHandler = async (req, res) => {
+    req.body.owner=req.user._id.toString();
     const parsedData = GroupSchema.safeParse(req.body)
     if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
 

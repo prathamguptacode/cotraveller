@@ -13,21 +13,6 @@
     font-weight: 600;
 }
 
-/* .livebtn {
-    padding: 6px 16px;
-    border: 1px solid var(--clr-border);
-    border-radius: 24px;
-}
-
-.livebtn:hover {
-    background-color: var(--discoverbg);
-    color: var(--primary);
-}
-
-.livebtnbx {
-    display: flex;
-    gap: 12px;
-} */
 
 .liveGroups {
     display: flex;

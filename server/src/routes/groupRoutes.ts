@@ -15,20 +15,14 @@ router.post('/addgroup', authMiddleware, asyncHandler(addGroup))
 
 router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middleware required
 
-//adding people to group logic
-//so the logic goes (like) first sees the post and (like) one so they request to join group
-//after this reequest comes to members (or owner) of group
-//if they accecpt the request then walah user is added as member and they all can talk now
-//then group people can talk from socket io
+router.get('/live', groupnumber)
 
-router.get('/getnumbers', groupnumber)
+router.get('/viewrequest',verifyAccessToken, asyncHandler(viewRequest))// this is for member to see request
 
 router.get('/:groupId', asyncHandler(viewGroup))//we never have to use this route
 
 router.use(authMiddleware)
 
-
-router.get('/viewrequest', asyncHandler(viewRequest))// this is for member to see request
 
 router.patch('/:groupId', asyncHandler(editGroup))
 
