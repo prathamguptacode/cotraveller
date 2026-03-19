@@ -2,10 +2,10 @@ import mystyle from './navbar.module.css'
 import ThemeButton from '@/components/Buttons/ThemeButton';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import { Link } from 'react-router-dom';
-import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type ReactNode, type RefObject } from "react";
 import Groups from "@/components/SidebarTabs/Groups";
 import Inbox from "@/components/SidebarTabs/Inbox";
-import { Camera, Edit, Inbox as InboxLogo, Plus, TextAlignJustify, User2Icon, X } from "lucide-react";
+import { Camera, Edit, Inbox as InboxLogo, Plus, TextAlignJustify, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
@@ -15,8 +15,8 @@ import { NavbarContext, useNavbarContext } from './useNavbarContext';
 import { getImgURL } from '@/lib/cloudinary';
 import { useMutation } from '@tanstack/react-query';
 import { api } from '@/api/axios';
-import { loaderEvent } from '@/api/mitt';
 import { normalizeError } from '@/utils/normalizeError';
+import Spinner from '@/components/Loaders/Spinner';
 
 
 
@@ -163,25 +163,18 @@ const NavbarProfileButton = () => {
     const url = user?.avatar.publicId && getImgURL(user.avatar.publicId, user.avatar.version, 400)
     const firstLetter = user?.fullName.charAt(0)
 
-    const openProfileDialog = () => {
-        const dialog = profileDialogRef.current
+
+
+    const openDialog = (dialogRef: RefObject<HTMLDialogElement | null>) => {
+        const dialog = dialogRef.current
         if (dialog) dialog.showModal()
     }
 
-    const closeProfileDialog = () => {
-        const dialog = profileDialogRef.current
+    const closeDialog = (dialogRef: RefObject<HTMLDialogElement | null>) => {
+        const dialog = dialogRef.current
         if (dialog) dialog.close()
     }
 
-    const openAvatarDialog = () => {
-        const dialog = avatarDialogRef.current
-        if (dialog) dialog.showModal()
-    }
-
-    const closeAvatarDialog = () => {
-        const dialog = avatarDialogRef.current
-        if (dialog) dialog.close()
-    }
 
     const uploadAvatarMutation = useMutation({
         mutationFn: (formData: FormData) => api.patch<{ publicId: string, version: number }>('/user/avatar', formData),
@@ -198,8 +191,23 @@ const NavbarProfileButton = () => {
         },
         onSettled: () => {
             resetFile()
-            loaderEvent.emit('stopLoading')
         }
+    })
+
+    const { mutate: removeAvatar, isPending: isRemovingAvatar } = useMutation({
+        mutationFn: () => api.delete('/user/avatar'),
+        onSuccess: (res) => {
+            updateUser(prev => prev && ({ ...prev, avatar: { publicId: '', version: 0 } }))
+            toast.success('Removal successful')
+            console.log(res)
+        },
+        onError: (error) => {
+            const err = normalizeError(error)
+            if (err.status >= 500) return
+            toast.error('An error occurred', {
+                description: err.message
+            })
+        },
     })
 
     const uploadAvatar = (e: ChangeEvent<HTMLInputElement>) => {
@@ -217,13 +225,14 @@ const NavbarProfileButton = () => {
             })
         }
 
-        loaderEvent.emit('startLoading')
-        closeAvatarDialog()
+        closeDialog(avatarDialogRef)
 
         const formData = new FormData()
         formData.append('user-avatar', file)
         uploadAvatarMutation.mutate(formData)
     }
+
+
 
 
 
@@ -255,64 +264,85 @@ const NavbarProfileButton = () => {
 
     return user &&
         <>
-            <button onClick={openProfileDialog} className={mystyle.avatarWrapper} aria-label="View your profile">
+            <button onClick={() => openDialog(profileDialogRef)} className={mystyle.avatarWrapper} aria-label="View your profile">
                 {url ? <img src={url} alt="user-avatar" /> : firstLetter}
+                {
+                    (uploadAvatarMutation.isPending || isRemovingAvatar) &&
+                    <div className={mystyle.spinnerWrapper}>
+                        <Spinner className={clsx(mystyle.spinner)} />
+                    </div>
+                }
             </button>
 
             <dialog ref={profileDialogRef} className={mystyle.profileDialog}>
-                <button aria-label='close profile dialog' className={mystyle.closeDialog} onClick={closeProfileDialog}>
-                    <X strokeWidth={1.5} size={20} />
-                </button>
+                <div>
+                    <button aria-label='close profile dialog' className={mystyle.closeDialogBtn} onClick={() => closeDialog(profileDialogRef)}>
+                        <X strokeWidth={1.5} size={20} />
+                    </button>
+                    <div className={mystyle.profileArea}>
+                        <div className={mystyle.profileHeader}>
+                            <button disabled={uploadAvatarMutation.isPending || isRemovingAvatar} onClick={() => openDialog(avatarDialogRef)} aria-label='change profile picture' className={mystyle.avatarWrapper}>
+                                {url ?
+                                    <img src={url} alt="user-avatar" />
+                                    : firstLetter}
+                                {
+                                    (uploadAvatarMutation.isPending || isRemovingAvatar) &&
+                                    <div className={mystyle.spinnerWrapper}>
+                                        <Spinner className={clsx(mystyle.spinner)} />
+                                    </div>
+                                }
 
-                <div className={mystyle.profileArea}>
-                    <div className={mystyle.profileHeader}>
-                        <button onClick={openAvatarDialog} aria-label='change profile picture' className={mystyle.avatarWrapper}>
-                            {url ? <img src={url} alt="user-avatar" /> : firstLetter}
-                        </button>
-                        <div className={mystyle.profileHeaderDetails}>
-                            <h2>{user.username}</h2>
-                            <span>{user.fullName}</span>
+                            </button>
+                            <div className={mystyle.profileHeaderDetails}>
+                                <h2>{user.username}</h2>
+                                <span>{user.fullName}</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className={mystyle.profileMainArea}>
-                        <div>
-                            <h3>Email</h3>
-                            <span>{user.email}</span>
+                        <div className={mystyle.profileMainArea}>
+                            <div>
+                                <h3>Email</h3>
+                                <span>{user.email}</span>
+                            </div>
+                            <div>
+                                <h3>Member Since</h3>
+                                <span>
+                                    {formattedDate}
+                                </span>
+                            </div>
+                            <div>
+                                <h3>Associated Groups</h3>
+                                <span>{user.memberGroup.length}</span>
+                            </div>
                         </div>
-                        <div>
-                            <h3>Member Since</h3>
-                            <span>
-                                {formattedDate}
-                            </span>
+
+                        <div className={mystyle.profileFooter}>
+                            <Link to={'#'} >
+                                <Edit size={20} /> Edit Profile
+                            </Link>
+                            <button disabled={uploadAvatarMutation.isPending || isRemovingAvatar} onClick={() => openDialog(avatarDialogRef)} aria-label='change profile picture'>
+                                <Camera size={20} /> {url ? 'Change' : 'Add'} Photo
+                            </button>
                         </div>
-                        <div>
-                            <h3>Associated Groups</h3>
-                            <span>{user.memberGroup.length}</span>
-                        </div>
-                    </div>
-
-                    <div className={mystyle.profileFooter}>
-                        <Link to={'#'} >
-                            <Edit size={20} /> Edit Profile
-                        </Link>
-                        <button onClick={openAvatarDialog} aria-label='change profile picture'>
-                            <Camera size={20} /> {url ? 'Change' : 'Add'} Photo
-                        </button>
-                    </div>
-
-                    <dialog ref={avatarDialogRef} className={mystyle.avatarDialog}>
-                        <h2>Change Profile Photo</h2>
-                        <div>
-                            <input ref={inputRef} onChange={uploadAvatar} id='avatarInput' accept='image/*' type="file" style={{ display: 'none' }} />
-                            <label role='button' style={{ color: 'var(--primary-darker)' }} htmlFor='avatarInput'>Upload Photo</label>
-                            <button style={{ color: 'rgb(240, 28, 28)' }}>Remove Current Photo</button>
-                            <button onClick={closeAvatarDialog}>Cancel</button>
-                        </div>
-                    </dialog>
-                </div >
-
-
+                        <dialog ref={avatarDialogRef} className={mystyle.avatarDialog}>
+                            <div>
+                                <h2>Change Profile Photo</h2>
+                                <div>
+                                    <input ref={inputRef} onChange={uploadAvatar} id='avatarInput' accept='image/*' type="file" style={{ display: 'none' }} />
+                                    <label role='button' style={{ color: 'var(--primary-darker)' }} htmlFor='avatarInput'>Upload Photo</label>
+                                    <button onClick={() => {
+                                        if (!user.avatar.publicId) return toast.error("Nothing to remove", {
+                                            description: "You do not have an avatar"
+                                        })
+                                        closeDialog(avatarDialogRef)
+                                        removeAvatar()
+                                    }} style={{ color: 'rgb(240, 28, 28)' }}>Remove Current Photo</button>
+                                    <button onClick={() => closeDialog(avatarDialogRef)}>Cancel</button>
+                                </div>
+                            </div>
+                        </dialog>
+                    </div >
+                </div>
             </dialog >
         </>
 }

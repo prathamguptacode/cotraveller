@@ -1,8 +1,13 @@
+import clsx from 'clsx'
 import './loaders.css'
 
-const Spinner = () => {
+type SpinnerProps = {
+    className?: string
+}
+
+const Spinner = ({ className }: SpinnerProps) => {
     return (
-        <div className="dot-spinner">
+        <div className={clsx('dot-spinner', `${className}`)}>
             <div className="dot-spinner__dot"></div>
             <div className="dot-spinner__dot"></div>
             <div className="dot-spinner__dot"></div>

@@ -301,3 +301,18 @@ export const uploadAvatarController: RequestHandler = async (req, res) => {
 
     return res.success(201, { publicId, version }, "User Avatar upload successful")
 }
+
+
+
+export const removeAvatarController: RequestHandler = async (req, res) => {
+    const { publicId } = req.user.avatar
+    if (!publicId) return res.fail(404, "RESOURCE_NOT_FOUND", "You do not have an avatar")
+
+    const result = await cloudinary.uploader.destroy(publicId, {
+        invalidate: true,
+    })
+
+    await User.updateOne({ _id: req.user._id }, { $set: { avatar: { publicId: '', version: 0 } } })
+
+    res.success(204, { result }, "Removal successful")
+}

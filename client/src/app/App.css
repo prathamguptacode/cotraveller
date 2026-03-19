@@ -157,6 +157,12 @@ html {
     --sidebar-button-hover: hsl(225, 4%, 60%);
     --discoverbg: rgba(232, 240, 254, 0.5);
 
+    /* dialog */
+    --dialog-border: hsl(0, 0%, 70%);
+    --dialog-dark: #e9ecef;
+    --dialog-hover: #dbdee1;
+    --dialog-darker: hsl(0, 0%, 100%);
+
 }
 
 :root.dark {
@@ -209,8 +215,10 @@ html {
     --discoverbg: rgba(138, 180, 248, 0.12);
 
     /* dialog */
-    --dialog-hover: #37393b;
-    --dialog-darker: #161718;
+    --dialog-border: hsl(225, 6%, 28%);
+    --dialog-dark: hsl(210, 4%, 19%);
+    --dialog-hover: hsl(210, 4%, 22%);
+    --dialog-darker: hsl(210, 4%, 9%);
 }
 
 .disabledBtn {
