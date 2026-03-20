@@ -1,0 +1,85 @@
+import mystyle from '../groupForm.module.css'
+import { useGroupForm } from '../hooks/useGroupForm'
+
+type GroupFormReviewProps = {
+  startOver: () => void
+}
+
+const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
+
+  const { watch } = useGroupForm()
+
+  return (
+    <div className={mystyle.reviewCard}>
+      <div className={mystyle.rowBetween}>
+        <div>
+          <div className={mystyle.label}>Group Name</div>
+          <div className={mystyle.value}>{watch('title')}</div>
+        </div>
+      </div>
+
+      <div className={mystyle.divider} />
+
+      <div>
+        <div className={mystyle.label}>Description</div>
+        <div className={mystyle.value}>{watch('content')}</div>
+      </div>
+
+      <div className={mystyle.divider} />
+
+      <div className={mystyle.grid}>
+        <div>
+          <div className={mystyle.label}>Travel Date</div>
+          <div className={mystyle.value}>{watch('travelDate')}</div>
+        </div>
+
+        <div>
+          <div className={mystyle.label}>Travel Time</div>
+          <div className={mystyle.value}>{watch('travelTime')}</div>
+        </div>
+
+        <div>
+          <div className={mystyle.label}>Intial Location</div>
+          <div className={mystyle.value}>
+            {watch('initialLocation')}
+          </div>
+        </div>
+
+        <div>
+          <div className={mystyle.label}>Transport</div>
+          <div className={mystyle.value}>
+            {watch('mode')}
+          </div>
+        </div>
+      </div>
+
+      <div className={mystyle.divider} />
+
+      <div className={mystyle.rowBetween}>
+        <div>
+          <div className={mystyle.label}>Max Group Size</div>
+          <div className={mystyle.value}>
+            {watch('memberNumber')}
+          </div>
+        </div>
+      </div>
+
+      <div className={mystyle.note}>
+        Once created, your group will be visible to other travelers.
+        They can join and chat with you to coordinate the trip!
+        <div className={mystyle.startOver}>
+          Something not right?{' '}
+          <button
+            className={mystyle.startOverBtn}
+            onClick={startOver}
+            aria-label="Start over"
+          >
+            Start over.
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default GroupFormReview

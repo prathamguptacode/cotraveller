@@ -10,7 +10,7 @@ import LoadingBar from 'react-top-loading-bar';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import mystyle from './EditGroup.module.css';
-import Statusbar from '@/features/createGroup/component/Statusbar';
+import Statusbar from '@/features/groups/components/Statusbar';
 import clsx from 'clsx';
 
 const groupSchema = z.object({

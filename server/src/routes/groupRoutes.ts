@@ -11,7 +11,7 @@ import Group from '@/models/Group'
 
 //should have middleware
 
-router.post('/addgroup', authMiddleware, asyncHandler(addGroup))
+router.post('/', authMiddleware, asyncHandler(addGroup))
 
 router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middleware required
 
