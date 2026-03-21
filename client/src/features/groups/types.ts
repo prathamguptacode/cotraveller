@@ -1,3 +1,13 @@
+import { z } from "zod";
+import type { groupFormSchema } from "./schemas";
+
+// GroupForms
+
+export type GroupFormSchema = z.infer<typeof groupFormSchema>
+
+
+// GroupInfo
+
 export type Comment = {
     author: string,
     comment: string

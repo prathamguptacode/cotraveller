@@ -1,9 +1,9 @@
-import AuthProvider from './providers/AuthProvider'
-import SocketProvider from './providers/SocketProvider'
-import ThemeProvider from './providers/ThemeProvider'
+import AuthProvider from '@/providers/AuthProvider'
+import SocketProvider from '@/providers/SocketProvider'
+import ThemeProvider from '@/providers/ThemeProvider'
 import { type ReactNode } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import EventSourceProvider from './providers/EventSourceProvider'
+import EventSourceProvider from '@/providers/EventSourceProvider'
 
 const queryClient = new QueryClient()
 

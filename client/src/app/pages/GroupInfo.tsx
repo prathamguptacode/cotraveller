@@ -1,5 +1,6 @@
 import Navbar from '@/components/Navbar/Navbar'
-import GroupInfoFeature from '@/features/groupInfo/components/GroupInfoFeature'
+import GroupInfoFeature from '@/features/groups/components/GroupInfoFeature'
+
 
 const GroupInfo = () => {
   return (

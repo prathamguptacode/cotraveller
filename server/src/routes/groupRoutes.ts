@@ -11,13 +11,11 @@ import Group from '@/models/Group'
 
 //should have middleware
 
-router.post('/addgroup', authMiddleware, asyncHandler(addGroup))
+router.post('/', authMiddleware, asyncHandler(addGroup))
 
 router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middleware required
 
 router.get('/live', groupnumber)
-
-router.get('/viewrequest',verifyAccessToken, asyncHandler(viewRequest))// this is for member to see request
 
 router.get('/:groupId', asyncHandler(viewGroup))//we never have to use this route
 

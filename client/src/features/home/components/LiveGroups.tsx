@@ -12,7 +12,6 @@ function LiveGroups() {
     (async () => {
       try {
         const res = await api.get('groups/live');
-        console.log(res);
         if (Array.isArray(res.data)) {
           res.data.forEach((element) => {
             if (element._id == 'Taxi') {

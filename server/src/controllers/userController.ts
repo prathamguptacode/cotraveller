@@ -5,6 +5,7 @@ import JoinRequest from "@/models/JoinRequest"
 import ConversationRecord from "@/models/ConversationRecord"
 import cloudinary from "@/config/cloudinary"
 import env from "@/config/env"
+import fs from 'fs/promises'
 
 export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
     const user = req.user
@@ -269,16 +270,49 @@ export const uploadAvatarController: RequestHandler = async (req, res) => {
     const user = req.user
     if (!file) return res.fail(400, "BAD_REQUEST", "File is invalid/empty")
 
-    //###LATER Add replace old file logic using publicId but with correct non-tamperable protected way
+    let options: {} | {
+        public_id: string,
+        invalidate: true,
+        overwrite: true
+    } = {}
+
+    if (user.avatar.publicId) options = {
+        public_id: user.avatar.publicId,
+        invalidate: true,
+        overwrite: true
+    }
 
     const { public_id: publicId, version } = await cloudinary.uploader.upload(file.path, {
         asset_folder: env.MODE,
         use_filename: true,
         unique_filename: true,
-        resource_type: 'auto'
+        resource_type: 'auto',
+        ...options
+
     })
 
     await User.updateOne({ _id: user._id }, { $set: { avatar: { publicId, version } } })
 
+    try {
+        await fs.unlink(file.path)
+    } catch (error) {
+        console.error("File was not unlinked")
+    }
+
     return res.success(201, { publicId, version }, "User Avatar upload successful")
+}
+
+
+
+export const removeAvatarController: RequestHandler = async (req, res) => {
+    const { publicId } = req.user.avatar
+    if (!publicId) return res.fail(404, "RESOURCE_NOT_FOUND", "You do not have an avatar")
+
+    const result = await cloudinary.uploader.destroy(publicId, {
+        invalidate: true,
+    })
+
+    await User.updateOne({ _id: req.user._id }, { $set: { avatar: { publicId: '', version: 0 } } })
+
+    res.success(204, { result }, "Removal successful")
 }

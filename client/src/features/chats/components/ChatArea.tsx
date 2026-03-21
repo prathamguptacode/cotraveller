@@ -64,7 +64,7 @@ const ChatArea = () => {
 
     socket.on('RECEIVE_MESSAGE_ON_CLIENT', receiveMessage)
     socket.on('MESSAGE_READ_TO_CLIENT', refreshMessages)
-    console.log(socket.listeners('RECEIVE_MESSAGE_ON_CLIENT'))
+
 
 
     return () => {
