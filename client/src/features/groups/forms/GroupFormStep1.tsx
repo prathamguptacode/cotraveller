@@ -1,9 +1,7 @@
-import mystyle from '../groupForm.module.css'
-import { useGroupForm } from '../hooks/useGroupForm'
+import mystyle from '../groupForm.module.css';
+import { useGroupForm } from '../hooks/useGroupForm';
 
-
-
-const GroupForm1 = () => {
+const GroupFormStep1 = () => {
     const { register, formState: { errors } } = useGroupForm()
 
     return (
@@ -46,4 +44,4 @@ const GroupForm1 = () => {
     )
 }
 
-export default GroupForm1
+export default GroupFormStep1

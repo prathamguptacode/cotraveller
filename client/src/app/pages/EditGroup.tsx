@@ -1,4 +1,4 @@
-import EditGroupForm from '@/features/groups/components/EditGroupForm';
+import EditGroupForm from '@/features/groups/forms/EditGroupForm';
 
 function EditGroup() {
   return <EditGroupForm />;

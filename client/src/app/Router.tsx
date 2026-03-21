@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProtectedRoutes from './routes/Protected.Routes'
 import AntiProtectedRoutes from './routes/AntiProtected.Routes'
-import Home from './pages/Home/Home'
+import Home from './pages/Home'
 import ViewGroup from './pages/Group/ViewGroup'
 import AuthLayout from './layouts/Auth/AuthLayout'
 import Signup from './pages/Signup'
@@ -16,7 +16,6 @@ import NotFound from './pages/NotFound/NotFound'
 import FeedbackPage from './pages/Feedback/FeedbackPage'
 import EditGroup from './pages/EditGroup'
 import GroupInfo from './pages/GroupInfo'
-import Test from './pages/test/Test'
 
 
 
@@ -31,7 +30,6 @@ const Router = () => {
                 <Route path='/' element={<MainLayout />}>
                     <Route index element={<Home />} />
                     <Route path='viewgroup' element={<ViewGroup />} />
-                    <Route path='test' element={<Test />} />
                 </Route>
 
                 <Route path='/groups' element={<SecondaryLayout />} >

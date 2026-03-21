@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 import { normalizeError } from '@/utils/normalizeError'
 import { useState } from 'react'
 import { api } from '@/api/axios'
-import { getFormattedTime } from '../utils/getFormattedTime'
+import { getFormattedTime } from '../utils'
 
 
 type GroupInfoHeroProps = {

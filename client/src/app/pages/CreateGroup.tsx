@@ -1,4 +1,4 @@
-import CreateGroupForm from "@/features/groups/components/CreateGroupForm";
+import CreateGroupForm from "@/features/groups/forms/CreateGroupForm";
 
 
 function CreateGroup() {

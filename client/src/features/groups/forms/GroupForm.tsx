@@ -2,15 +2,15 @@ import { useState } from 'react';
 import mystyle from '../groupForm.module.css';
 import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
-import GroupForm1 from './GroupForm1';
 import { groupForm1Schema, groupForm2Schema, groupFormSchema } from '../schemas';
-import GroupForm2 from './GroupForm2';
-import GroupFormReview from './GroupFormReview';
 import Statusbar from './Statusbar';
 import GroupFormProvider from '../providers/GroupFormProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { GroupFormSchema } from '../types';
 import { useForm, type SubmitHandler } from 'react-hook-form';
+import GroupFormStep1 from './GroupFormStep1';
+import GroupFormStep2 from './GroupFormStep2';
+import GroupFormReview from './GroupFormReview';
 
 type GroupFormProps = {
     onSubmit: SubmitHandler<GroupFormSchema>,
@@ -21,6 +21,7 @@ type GroupFormProps = {
 const GroupForm = ({ onSubmit, isPending, group }: GroupFormProps) => {
     const [currentStep, setCurrentStep] = useState(0);
     const navigate = useNavigate();
+    
 
     const form = useForm<GroupFormSchema>({
         resolver: zodResolver(groupFormSchema), mode: 'onChange', defaultValues: group,
@@ -61,8 +62,8 @@ const GroupForm = ({ onSubmit, isPending, group }: GroupFormProps) => {
 
                 <div className={mystyle.wrapper}>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        {currentStep == 0 && <GroupForm1 />}
-                        {currentStep == 1 && <GroupForm2 />}
+                        {currentStep == 0 && <GroupFormStep1 />}
+                        {currentStep == 1 && <GroupFormStep2 />}
                         {currentStep == 2 && <GroupFormReview startOver={startOver} />}
 
                         <div className={mystyle.btnbox}>
@@ -93,3 +94,5 @@ const GroupForm = ({ onSubmit, isPending, group }: GroupFormProps) => {
 }
 
 export default GroupForm
+
+
