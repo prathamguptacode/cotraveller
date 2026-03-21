@@ -1,0 +1,100 @@
+.wrapper {
+    display: flex;
+    margin-top: 65px;
+}
+
+.heroWrapper {
+    flex-grow: 1;
+    margin-inline-start: auto;
+    padding-inline: 1rem;
+
+    height: calc(100vh - 65px);
+    overflow-y: scroll;
+}
+
+.sidebarsWrapper {
+    width: 430px;
+    background-color: var(--sidebar-v2-bg);
+
+    /* ##Should be expandable(with max) or compressable( till  a point , otherwise user must click on the hamburger to collapse it ), and discord's max is around current chat max(totalW us chats<=>totalW DC ) */
+    /* ##It will a feature in itself which every or atleast most of the pages ( it seems like every for now ) will have as part of the base layout like navbar which would also get rid of the unread notification dot when going to chats cuz sidebars were diff for them*/
+    height: calc(100vh - 65px);
+    display: flex;
+
+
+}
+
+.primarySidebar {
+    width: 80px;
+    flex-shrink: 0;
+    padding: .5rem;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    border-right: 1px solid var(--sidebar-v2-border);
+}
+
+
+.primarySidebarList {
+    display: grid;
+    place-content: center;
+    align-content: start;
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    >* {
+        padding: 1em;
+        border-radius: 15px;
+        position: relative;
+        transition: all .15s ease-out;
+
+        &:hover {
+            background-color: var(--sidebar-v2-bg-hover);
+        }
+    }
+}
+
+.contextualSidebar {
+    flex-grow: 1;
+    display: grid;
+    grid-template-rows: auto 1fr;
+
+    /* resize: horizontal;
+    overflow: hidden; */
+    >* {
+        padding: .5rem;
+    }
+
+}
+
+.ctxSidebarHeader {
+    border-block: 1px solid var(--sidebar-v2-border);
+
+    >h2 {
+        font-size: 14px;
+        font-weight: 400;
+        text-align: center;
+
+        border-radius: 8px;
+        width: 80%;
+
+        padding: .5em;
+        margin: auto;
+
+        background-color: var(--sidebar-v2-bg-600);
+        color: var(--sidebar-v2-font);
+        border: .5px solid var(--sidebar-v2-border);
+    }
+
+}
+
+.ctxSidebarList {
+    overflow: hidden;
+
+    >div {
+        max-height: 100%;
+        overflow-y: scroll;
+    }
+}
