@@ -3,7 +3,7 @@ import mystyle from './FeedbackPage.module.css'
 import { api } from '@/api/axios'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
-import Navbar from '@/components/Navbar/Navbar'
+import Navbar from '@/app/layouts/Navbar/Navbar'
 
 function FeedbackPage() {
 

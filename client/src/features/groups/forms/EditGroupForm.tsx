@@ -1,4 +1,4 @@
-import Navbar from '@/components/Navbar/Navbar'
+import Navbar from '@/app/layouts/Navbar/Navbar'
 import GroupForm from './GroupForm'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'

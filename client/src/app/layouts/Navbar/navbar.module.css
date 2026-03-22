@@ -32,6 +32,15 @@
     }
 }
 
+.fallbackWrapper {
+    flex: 1;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .notification::after {
     content: '';
     --dimension: 28%;
@@ -96,6 +105,14 @@
 
 .navbtn:hover {
     background-color: var(--brighter-primary);
+}
+
+.createGroupBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .25rem;
+    border-radius: 50px;
 }
 
 .plusBtn {

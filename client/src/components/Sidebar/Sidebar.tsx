@@ -8,8 +8,8 @@ import { Suspense, type JSX } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { ErrorBoundary } from 'react-error-boundary'
-import { useNavbarContext } from '../Navbar/useNavbarContext'
-import type { SidebarTab } from '../Navbar/types'
+import { useNavbarContext } from '../../app/layouts/Navbar/useNavbarContext'
+import type { SidebarTab } from '../../app/layouts/Navbar/types'
 import ThreeDotLoader from '../Loaders/ThreeDotLoader'
 
 

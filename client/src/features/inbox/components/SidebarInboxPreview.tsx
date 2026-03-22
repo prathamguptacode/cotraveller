@@ -1,12 +1,12 @@
-import styles from './tabs.module.css'
+import styles from '../inbox.module.css'
 import { Check, MailCheck, X } from 'lucide-react'
 import { api } from '@/api/axios'
 import { FaPeopleGroup } from 'react-icons/fa6'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { normalizeError } from '@/utils/normalizeError'
-import { useNavbarContext } from '../../app/layouts/Navbar/useNavbarContext'
-import { useEffect } from 'react'
+import { NavbarContext } from '@/app/layouts/Navbar/useNavbarContext'
+import { useContext, useEffect } from 'react'
 
 
 type InboxRequest = {
@@ -25,10 +25,10 @@ type InboxRequest = {
 
 
 
-const Inbox = () => {
+const SidebarInboxPreview = () => {
 
-  const { setNotifications } = useNavbarContext()
 
+  const ctx = useContext(NavbarContext)
 
 
   const { data: requests, refetch: refetchInbox } = useSuspenseQuery({
@@ -63,7 +63,7 @@ const Inbox = () => {
   })
 
   useEffect(() => {
-    setNotifications(prev => ({ ...prev, inbox: requests.length == 0 ? false : true }))
+    if (ctx) ctx.setNotifications(prev => ({ ...prev, inbox: requests.length == 0 ? false : true }))
   }, [requests])
 
 
@@ -111,4 +111,4 @@ const Inbox = () => {
   )
 }
 
-export default Inbox
+export default SidebarInboxPreview

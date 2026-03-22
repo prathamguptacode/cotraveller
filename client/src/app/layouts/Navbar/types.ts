@@ -3,4 +3,5 @@ export type Notifications = {
     inbox: boolean
 }
 
-export type SidebarTab = 'Groups' | 'Inbox'
+
+export type SidebarTab = 'Groups' | 'Chats' | 'Inbox' | 'Search'

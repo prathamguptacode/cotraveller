@@ -8,7 +8,7 @@ import { useSocket } from '@/hooks/useSocket';
 import { useContext, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { MountainSnow } from 'lucide-react';
-import { NavbarContext } from '../Navbar/useNavbarContext';
+import { NavbarContext } from '../../app/layouts/Navbar/useNavbarContext';
 import clsx from 'clsx';
 
 
