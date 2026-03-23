@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import mystyle from '../groupForm.module.css'
 import { useGroupForm } from '../hooks/useGroupForm'
 
