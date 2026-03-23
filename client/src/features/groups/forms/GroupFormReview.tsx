@@ -12,7 +12,7 @@ const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
 
   const date = watch('travelDate') + 'T' + watch('travelTime')
   const Acdate = new Date(date);
-  const time = Acdate.toLocaleTimeString('en-US', {
+  const time = Acdate.toLocaleTimeString('en-IN', {
     hour12: true,
     hour: 'numeric',
     minute: '2-digit'
