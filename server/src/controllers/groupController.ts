@@ -56,6 +56,8 @@ export const viewGroup: RequestHandler = async (req, res) => {
 
 export const editGroup: RequestHandler = async (req, res) => {
     const userId = req.user._id;
+    if (!req.body) return res.fail(400, "INPUT_ERROR", "Invalid input data");
+    req.body.owner = req.user._id.toString();
     const { groupId } = req.params
     //checking user is owner?
     const group = await Group.findById(groupId)
