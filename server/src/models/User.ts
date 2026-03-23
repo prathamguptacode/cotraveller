@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
         default: {
             publicId: '',
             version: 0
-        }
+        },
     },
 
     oAuthProviders: [{

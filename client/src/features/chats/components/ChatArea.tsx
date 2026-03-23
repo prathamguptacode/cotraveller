@@ -10,11 +10,16 @@ import { useAuth } from '@/hooks/useAuth'
 import { useSocket } from '@/hooks/useSocket'
 import { useAutoScroll } from '../hooks/useAutoScroll'
 import ChatHeader from './ChatHeader'
-import { useInfiniteQuery, useQueryClient, useSuspenseInfiniteQuery, useSuspenseQuery } from '@tanstack/react-query'
+import { type InfiniteData, useQueryClient, useSuspenseInfiniteQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { useLastMessageObserver } from '../hooks/useLastMessageObserver'
 import { api } from '@/api/axios'
+import { messagesInfiniteQueryOptions, messagesKeys } from '../queries'
+import type { ApiSuccess } from '@/types/api.types'
 
 // ###BUG Navbar multimount issue creating multiple toasts upon SSE
+
+
+
 
 const ChatArea = () => {
   const queryClient = useQueryClient()
@@ -31,29 +36,20 @@ const ChatArea = () => {
   const lastMessageRef = useRef<HTMLDivElement>(null)
 
 
-  const { data: group } = useSuspenseQuery({
+  const { data: { group, conversationRecords } } = useSuspenseQuery({
     queryKey: ['groups', groupId],
-    queryFn: () => api.get<{ group: Group }>(`/groups/${groupId}`),
-    select: (res) => res.data.group
+    queryFn: () => api.get<{ group: Group, conversationRecords: ConversationRecord[] }>(`/groups/${groupId}`),
+    select: (res) => res.data
   })
+
 
 
 
   //Get Group data
-  const { data } = useSuspenseInfiniteQuery({
-    queryKey: ['groups', groupId, 'chats'],
-    queryFn: ({ pageParam }) => api.get<{ chat: { messages: Message[], unreadMessagesCount: number }, conversationRecords: ConversationRecord[], pagination: { hasNextPage: boolean, nextCursor: string } }>(`/message/${groupId}?cursor=${pageParam}&limit=${50}`),
-    initialPageParam: 'default',
-    getNextPageParam: (lastPageData) => lastPageData.data.pagination.nextCursor,
-    staleTime: Infinity
-  })
+  const { data: messages } = useSuspenseInfiniteQuery(messagesInfiniteQueryOptions(groupId))
 
 
-  const messages = data.pages.flatMap(page => page.data.chat.messages)
-  const conversationRecords = data.pages[0].data.conversationRecords
-
-
-  useAutoScroll(messages[0], isAtBottom, lastMessageRef, setUnreadCount)
+  useAutoScroll(messages[messages.length - 1], isAtBottom, lastMessageRef, setUnreadCount)
   useLastMessageObserver(group, setIsAtBottom, setUnreadCount, lastMessageRef)
 
   useEffect(() => {
@@ -63,23 +59,37 @@ const ChatArea = () => {
     })
 
     //Receive ChatRoom Message
-    const receiveMessage = () => {
-      queryClient.invalidateQueries({ queryKey: ['groups', groupId, 'chats'] })
+    const receiveMessage = (data: { message: Message }) => {
+      queryClient.setQueryData<InfiniteData<ApiSuccess<{ messages: Message[] }>>>(messagesKeys.infinite(groupId), (prev) => {
+        if (!prev) return prev
+        const messages = [...prev.pages[0].data.messages]
+        messages.push(data.message)
+        return { ...prev, pages: [{ ...prev.pages[0], data: { ...prev.pages[0].data, messages } }, ...prev.pages.slice(1)] }
+      })
       if (!document.hasFocus()) return
+      // ###Check for message_read_to_server signal on mount or something like that to prevent shitty bugs
       socket.emit('MESSAGE_READ_TO_SERVER', { roomId: groupId, userId: user?._id, readAt: Date.now() })
     }
-    const refreshMessages = () => {
-      queryClient.invalidateQueries({ queryKey: ['groups', groupId, 'chats'] })
+    const refreshReadStatus = (data: { conversationRecord: ConversationRecord }) => {
+      queryClient.setQueryData<ApiSuccess<{ group: Group, conversationRecords: ConversationRecord[] }>>(['groups', groupId], (prev) => {
+        if (!prev) return prev
+        const conversationRecords = prev.data.conversationRecords.map(record => {
+          //updating the conversationRecord for whatever user's record is received in data from socket
+          if (record.memberId == data.conversationRecord.memberId) return { ...record, lastReadAt: data.conversationRecord.lastReadAt }
+          return record
+        })
+        return { ...prev, data: { ...prev.data, conversationRecords } }
+      })
     }
 
     socket.on('RECEIVE_MESSAGE_ON_CLIENT', receiveMessage)
-    socket.on('MESSAGE_READ_TO_CLIENT', refreshMessages)
+    socket.on('MESSAGE_READ_TO_CLIENT', refreshReadStatus)
 
 
 
     return () => {
       socket.off('RECEIVE_MESSAGE_ON_CLIENT', receiveMessage)
-      socket.off('MESSAGE_READ_TO_CLIENT', refreshMessages)
+      socket.off('MESSAGE_READ_TO_CLIENT', refreshReadStatus)
     }
 
   }, [socket, groupId])
@@ -89,14 +99,17 @@ const ChatArea = () => {
   useEffect(() => {
     const event = () => {
       socket.emit('MESSAGE_READ_TO_SERVER', { roomId: groupId, userId: user?._id, readAt: Date.now() })
-      queryClient.invalidateQueries({ queryKey: ['groups'] })
+      queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
     }
     event()
     window.addEventListener('focus', event)
+    window.addEventListener('focusout', event)
     return () => {
       window.removeEventListener('focus', event)
+      window.removeEventListener('focusout', event)
     }
   }, [groupId])
+
 
 
 
@@ -105,11 +118,13 @@ const ChatArea = () => {
   const sendMessage = () => {
     socket.emit('SEND_MESSAGE_TO_SERVER', { text, roomId: groupId, userId: user?._id }, (res: { success: boolean, message: Message }) => {
       if (!res.success) return console.error('umm message error hua')
-      queryClient.invalidateQueries({ queryKey: ['groups'] })
+      queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
 
-      queryClient.setQueryData(['groups', groupId, 'chats'], (prev: { data: { group: Group } }) => {
-        const group = prev.data.group
-        return { ...prev, data: { ...prev.data, group: { ...group, messages: [...messages, res.message] } } }
+      queryClient.setQueryData<InfiniteData<ApiSuccess<{ messages: Message[] }>>>(messagesKeys.infinite(groupId), (prev) => {
+        if (!prev) return prev
+        const messages = [...prev.pages[0].data.messages]
+        messages.push(res.message)
+        return { ...prev, pages: [{ ...prev.pages[0], data: { ...prev.pages[0].data, messages } }, ...prev.pages.slice(1)] }
       })
     })
     setText('')
@@ -128,20 +143,5 @@ const ChatArea = () => {
 export default ChatArea
 
 
-// queryClient.setQueryData(['groups', groupId, 'chats'], (prev: { data: { group: Group, conversationRecords: ConversationRecord[] } }) => {
-//   const group = prev.data.group
-//   const conversationRecords = prev.data.conversationRecords.map(record => {
-//     if (record.memberId == data.conversationRecord.memberId) return { ...record, lastReadAt: data.conversationRecord.lastReadAt }
-//     return record
-//   })
-//   return { ...prev, data: { ...prev.data, group: { ...group, messages: [...messages, data.message], conversationRecords } } }
 
-// })
 
-// queryClient.setQueryData(['groups', groupId, 'chats'], (prev: { data: { conversationRecords: ConversationRecord[] } }) => {
-//   const conversationRecords = prev.data.conversationRecords.map(record => {
-//     if (record.memberId == data.conversationRecord.memberId) return { ...record, lastReadAt: data.conversationRecord.lastReadAt }
-//     return record
-//   })
-//   return { ...prev, data: { ...prev.data, conversationRecords } }
-// })
