@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useSocket } from '@/hooks/useSocket'
 import { useAutoScroll } from '../hooks/useAutoScroll'
 import ChatHeader from './ChatHeader'
-import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQueryClient, useSuspenseInfiniteQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { useLastMessageObserver } from '../hooks/useLastMessageObserver'
 import { api } from '@/api/axios'
 
@@ -31,22 +31,32 @@ const ChatArea = () => {
   const lastMessageRef = useRef<HTMLDivElement>(null)
 
 
-  //Get Group data
-  const { data: { group, conversationRecords } } = useSuspenseQuery({
-    queryKey: ['groups', groupId, 'chats'],
-    queryFn: () => api.get<{ group: Group, conversationRecords: ConversationRecord[] }>(`/message/${groupId}`),
-    staleTime: Infinity,
-    select: (res) => res.data
-
+  const { data: group } = useSuspenseQuery({
+    queryKey: ['groups', groupId],
+    queryFn: () => api.get<{ group: Group }>(`/groups/${groupId}`),
+    select: (res) => res.data.group
   })
 
 
 
-  useAutoScroll(group.messages[group.messages.length - 1], isAtBottom, lastMessageRef, setUnreadCount)
+  //Get Group data
+  const { data } = useSuspenseInfiniteQuery({
+    queryKey: ['groups', groupId, 'chats'],
+    queryFn: ({ pageParam }) => api.get<{ chat: { messages: Message[], unreadMessagesCount: number }, conversationRecords: ConversationRecord[], pagination: { hasNextPage: boolean, nextCursor: string } }>(`/message/${groupId}?cursor=${pageParam}&limit=${50}`),
+    initialPageParam: 'default',
+    getNextPageParam: (lastPageData) => lastPageData.data.pagination.nextCursor,
+    staleTime: Infinity
+  })
+
+
+  const messages = data.pages.flatMap(page => page.data.chat.messages)
+  const conversationRecords = data.pages[0].data.conversationRecords
+
+
+  useAutoScroll(messages[0], isAtBottom, lastMessageRef, setUnreadCount)
   useLastMessageObserver(group, setIsAtBottom, setUnreadCount, lastMessageRef)
 
   useEffect(() => {
-
     //Join ChatRoom
     socket.emit('JOIN_ROOM', { roomId: groupId, userId: user?._id }, (res: { success: boolean }) => {
       if (!res.success) toast.error('Error connecting to chatRoom')
@@ -99,7 +109,7 @@ const ChatArea = () => {
 
       queryClient.setQueryData(['groups', groupId, 'chats'], (prev: { data: { group: Group } }) => {
         const group = prev.data.group
-        return { ...prev, data: { ...prev.data, group: { ...group, messages: [...group.messages, res.message] } } }
+        return { ...prev, data: { ...prev.data, group: { ...group, messages: [...messages, res.message] } } }
       })
     })
     setText('')
@@ -108,7 +118,7 @@ const ChatArea = () => {
   return (
     <div className={styles.chatAreaWrapper}>
       <ChatHeader group={group} groupId={groupId} />
-      <Messages key={groupId} lastMessageRef={lastMessageRef} messages={group.messages} conversationRecords={conversationRecords} />
+      <Messages key={groupId} lastMessageRef={lastMessageRef} messages={messages} conversationRecords={conversationRecords} />
       <MessageComposer sendMessage={sendMessage} setText={setText} text={text} />
       <ScrollToBottomButton lastMessageRef={lastMessageRef} unreadCount={unreadCount} isAtBottom={isAtBottom} />
     </div>
@@ -124,7 +134,7 @@ export default ChatArea
 //     if (record.memberId == data.conversationRecord.memberId) return { ...record, lastReadAt: data.conversationRecord.lastReadAt }
 //     return record
 //   })
-//   return { ...prev, data: { ...prev.data, group: { ...group, messages: [...group.messages, data.message], conversationRecords } } }
+//   return { ...prev, data: { ...prev.data, group: { ...group, messages: [...messages, data.message], conversationRecords } } }
 
 // })
 

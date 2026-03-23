@@ -38,7 +38,7 @@ const Messages = ({ messages, lastMessageRef, conversationRecords }: MessagesPro
 
 
                 return (
-                    <div ref={i === arr.length - 1 ? lastMessageRef : null} key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
+                    <div ref={i === 0 ? lastMessageRef : null} key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
                         {(!isMyMessage && !shouldHideName) && <div className={styles.messageAuthor}>
                             {message.author.fullName}
                         </div>}

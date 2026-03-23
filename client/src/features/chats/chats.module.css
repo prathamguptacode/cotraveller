@@ -183,13 +183,15 @@
     overflow-y: auto;
     padding: .5rem 1rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: .5rem;
     font-size: 14px;
     background-color: var(--secondary-bg-darker);
 }
 
 .message {
+  
+
     background-color: var(--clr-bg);
     width: fit-content;
     padding: .4em 1.2em;
@@ -200,6 +202,10 @@
     gap: .15rem;
 
     max-width: 95%;
+    
+      &:first-child{
+        margin-top: auto;
+    }
 }
 
 .myMessage {

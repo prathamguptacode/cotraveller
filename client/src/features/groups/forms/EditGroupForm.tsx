@@ -1,4 +1,3 @@
-import Navbar from '@/app/layouts/Navbar/Navbar'
 import GroupForm from './GroupForm'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
@@ -51,17 +50,7 @@ const EditGroupForm = () => {
     }
 
     return (
-        <div>
-            <Navbar>
-                <Navbar.Hamburger />
-                <Navbar.Title />
-                <Navbar.ThemeButton />
-                {/* <Navbar.ProfileButton /> */}
-            </Navbar>
-            {/* ### fix the colors */}
-            <GroupForm isPending={isPending} onSubmit={onSubmit} group={group} />
-
-        </div>
+        <GroupForm isPending={isPending} onSubmit={onSubmit} group={group} />
     )
 }
 

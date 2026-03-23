@@ -1,10 +1,10 @@
 import { type ReactNode } from 'react'
 import { GroupFormContext } from '../hooks/useGroupForm'
 import type { UseFormReturn } from 'react-hook-form'
-import type { GroupForm } from '../types'
+import type { GroupFormSchema } from '../types'
 
 type GroupFormProviderTypes = {
-    value: UseFormReturn<GroupForm>,
+    value: UseFormReturn<GroupFormSchema>,
     children: ReactNode
 }
 

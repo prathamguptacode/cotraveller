@@ -22,3 +22,4 @@ export type ConversationRecord = {
     roomId: string,
     lastReadAt: Date
 }
+
