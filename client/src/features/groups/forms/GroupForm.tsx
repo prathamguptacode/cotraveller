@@ -11,6 +11,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import GroupFormStep1 from './GroupFormStep1';
 import GroupFormStep2 from './GroupFormStep2';
 import GroupFormReview from './GroupFormReview';
+import {z} from 'zod';
 
 type GroupFormProps = {
     onSubmit: SubmitHandler<GroupFormSchema>,
@@ -22,8 +23,8 @@ const GroupForm = ({ onSubmit, isPending, group }: GroupFormProps) => {
     const [currentStep, setCurrentStep] = useState(0);
     const navigate = useNavigate();
     
-
-    const form = useForm<GroupFormSchema>({
+    type SchemaInput = z.input<typeof groupFormSchema>
+    const form = useForm<SchemaInput, unknown, GroupFormSchema>({
         resolver: zodResolver(groupFormSchema), mode: 'onChange', defaultValues: group,
     });
     const { handleSubmit, formState: { errors }, trigger, clearErrors, reset } = form
