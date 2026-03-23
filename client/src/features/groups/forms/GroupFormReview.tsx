@@ -17,6 +17,11 @@ const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
     hour: 'numeric',
     minute: '2-digit'
   })
+  const Trvdate = Acdate.toLocaleString('en-IN',{
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
 
   return (
     <div className={mystyle.reviewCard}>
@@ -39,7 +44,7 @@ const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
       <div className={mystyle.grid}>
         <div>
           <div className={mystyle.label}>Travel Date</div>
-          <div className={mystyle.value}>{watch('travelDate')}</div>
+          <div className={mystyle.value}>{Trvdate}</div>
         </div>
 
         <div>

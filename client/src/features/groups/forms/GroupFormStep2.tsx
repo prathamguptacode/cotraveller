@@ -5,6 +5,15 @@ const GroupFormStep2 = () => {
 
     const { register, formState: { errors } } = useGroupForm()
 
+    const date = new Date();
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1).toString().padStart(2, '0');
+    let day = date.getDate().toString().padStart(2, '0');
+    const myDateHtml = `${year}-${month}-${day}`;
+    const hour = date.getHours().toString().padStart(2, '0');
+    const time = date.getMinutes().toString().padStart(2, '0');
+    const myTimeHtml = `${hour}:${time}`
+
     return (
         <div className={mystyle.groupForm2}>
             <div>
@@ -18,14 +27,14 @@ const GroupFormStep2 = () => {
                 <div className={mystyle.dateSection}>
                     <div className={mystyle.datebox}>
                         <div className={mystyle.startDate}>Travel Date</div>
-                        <input type="date" id="startDate" className={mystyle.dateInput} defaultValue={new Intl.DateTimeFormat('en-ca', { year: 'numeric', month: '2-digit', day: '2-digit', }).format(new Date())} {...register('travelDate')} />
+                        <input type="date" id="startDate" className={mystyle.dateInput} defaultValue={myDateHtml} {...register('travelDate')} />
                         <div className={mystyle.error}>
                             {errors.travelDate?.message}
                         </div>
                     </div>
                     <div className={mystyle.datebox}>
                         <div className={mystyle.endDate}>Travel Time</div>
-                        <input type="time" id="endDate" className={mystyle.dateInput} defaultValue={new Intl.DateTimeFormat('en-gb', { hour: '2-digit', minute: '2-digit' }).format(new Date())} {...register('travelTime')} />
+                        <input type="time" id="endDate" className={mystyle.dateInput} defaultValue={myTimeHtml} {...register('travelTime')} />
                         <div className={mystyle.error}>
                             {errors.travelTime?.message}
                         </div>
