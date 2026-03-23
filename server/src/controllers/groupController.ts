@@ -11,7 +11,7 @@ import JoinRequest from "@/models/JoinRequest";
 import ConversationRecord from "@/models/ConversationRecord";
 
 const allowedTags = ["Alcohol free", "Boys only", "Girls only", "Backpacking"] as const
-const allowedMode = ["Train", "Airplane", "Taxi", "Car", "Bike", "Others"] as const
+const allowedMode = ["Train", "Flight", "Taxi", "Car", "Bike", "Others"] as const
 
 const GroupSchema = z.object({
     title: z.string(),
@@ -29,7 +29,6 @@ export const addGroup: RequestHandler = async (req, res) => {
     req.body.owner = req.user._id.toString();
     const parsedData = GroupSchema.safeParse(req.body)
     if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
-
     const { title, content, owner, memberNumber, mode, travelDate, intialLocation, tags } = parsedData.data
 
     const checkDate = moment(travelDate, moment.ISO_8601, true).isValid();
