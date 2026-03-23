@@ -10,27 +10,37 @@ import { eventBus } from "@/events/eventBus";
 import JoinRequest from "@/models/JoinRequest";
 import ConversationRecord from "@/models/ConversationRecord";
 
+const allowedTags = ["Alcohol free", "Boys only", "Girls only", "Backpacking"] as const
+const allowedMode = ["Train", "Airplane", "Taxi", "Car", "Bike", "Others"] as const
+
 const GroupSchema = z.object({
     title: z.string(),
     content: z.string(),
     owner: z.string(),
-    memberNumber: z.string(),
-    mode: z.string(),
+    memberNumber: z.number(),
+    mode: z.enum(allowedMode),
     travelDate: z.string(),
     intialLocation: z.string(),
+    tags: z.array(z.enum(allowedTags)).max(4).optional(),
 })
 
 export const addGroup: RequestHandler = async (req, res) => {
+    if (!req.body) return res.fail(400, "INPUT_ERROR", "Invalid input data");
     req.body.owner = req.user._id.toString();
     const parsedData = GroupSchema.safeParse(req.body)
     if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
 
-    const { title, content, owner, memberNumber, mode, travelDate, intialLocation } = parsedData.data
+    const { title, content, owner, memberNumber, mode, travelDate, intialLocation, tags } = parsedData.data
+
+    const checkDate = moment(travelDate, moment.ISO_8601, true).isValid();
+    if (!checkDate) {
+        return res.fail(400, "INPUT_ERROR", "Invalid input date")
+    }
 
     //telling mongo that date formate is ist
     const istDate = moment.tz(travelDate, "Asia/Kolkata").toDate();
 
-    const group = new Group({ title, content, owner, memberNumber, mode, travelDate: istDate, intialLocation, member: [owner] })
+    const group = new Group({ title, content, owner, memberNumber, mode, travelDate: istDate, intialLocation, member: [owner], tags })
     const data = await group.save()
     await User.updateOne({ _id: owner }, { $push: { memberGroup: data._id } })
     await ConversationRecord.create({ roomId: group._id, memberId: owner })
