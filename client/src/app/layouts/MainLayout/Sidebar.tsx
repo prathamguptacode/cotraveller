@@ -2,28 +2,24 @@ import { Link } from 'react-router-dom'
 import styles from './sidebar.module.css'
 import { Home, Inbox, LogOut, MessageCircle, Search, Settings, Users } from 'lucide-react'
 import { MdOutlineFeedback } from 'react-icons/md'
-import { Suspense, type Dispatch, type JSX, type SetStateAction } from 'react'
+import { Suspense, type JSX } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useMutation } from '@tanstack/react-query'
 import { api } from '@/api/axios'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import ThreeDotLoader from '@/components/Loaders/ThreeDotLoader'
+import { useMainLayoutContext } from './useMainLayout'
+import SidebarChatsPreview from '@/features/chats/components/SidebarChatsPreview'
+import SidebarInboxPreview from '@/features/inbox/components/SidebarInboxPreview'
 
 
 type SidebarTab = 'Groups' | 'Chats' | 'Inbox' | 'Search'
 
-type SidebarProps = {
-    currentSidebarTab: SidebarTab,
-    setCurrentSidebarTab: Dispatch<SetStateAction<SidebarTab>>,
-    slot: JSX.Element,
-    isHidden: boolean,
-    setIsHidden: Dispatch<SetStateAction<boolean>>
-}
 
 
-
-const Sidebar = ({ currentSidebarTab, setCurrentSidebarTab, slot, isHidden, setIsHidden }: SidebarProps) => {
+const Sidebar = () => {
+    const { currentSidebarTab, setCurrentSidebarTab, sidebarIsHidden, setSidebarIsHidden } = useMainLayoutContext()
     const { user } = useAuth()
 
 
@@ -45,14 +41,14 @@ const Sidebar = ({ currentSidebarTab, setCurrentSidebarTab, slot, isHidden, setI
 
 
     return (
-        <aside className={styles.sidebarsWrapper} style={{ width: isHidden ? '80px' : '' }}>
+        <aside className={styles.sidebarsWrapper} style={{ width: sidebarIsHidden ? '80px' : '' }}>
             <div className={styles.primarySidebar}>
                 <div className={styles.primarySidebarList}>
                     <Link to={'/'}><Home /></Link>
                     {sidebarTabs.map(sidebarTab => {
                         return (
                             <button aria-label={sidebarTab.name} key={sidebarTab.name} onClick={() => {
-                                setIsHidden(false)
+                                setSidebarIsHidden(false)
                                 setCurrentSidebarTab(sidebarTab.name)
                             }}>{sidebarTab.icon}</button>
                         )
@@ -70,9 +66,14 @@ const Sidebar = ({ currentSidebarTab, setCurrentSidebarTab, slot, isHidden, setI
                     <h2>{currentSidebarTab}</h2>
                 </div>
                 <div className={styles.ctxSidebarList}>
-                    {user ? <ErrorBoundary fallback={<div className={styles.fallbackWrapper}>Error Loading data</div>}>
+                    {user ? <ErrorBoundary fallback={<div className={styles.fallbackWrapper}>An Error Occurred</div>}>
                         <Suspense fallback={<div className={styles.fallbackWrapper}><ThreeDotLoader /></div>}>
-                            {slot}
+                            {
+                                currentSidebarTab == 'Chats' ? <SidebarChatsPreview /> :
+                                    currentSidebarTab == 'Inbox' ? <SidebarInboxPreview /> :
+                                        <div className={styles.fallbackWrapper}>Coming Soon !</div>
+                            }
+
                         </Suspense>
                     </ErrorBoundary> :
                         <div className={styles.fallbackWrapper}>Login to view your shit</div>
