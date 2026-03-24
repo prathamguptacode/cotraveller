@@ -221,6 +221,12 @@ html {
     --sidebar-v2-bg-600: hsl(225, 6%, 13%);
     --sidebar-v2-font: hsl(0, 0%, 100%);
 
+    /* chats */
+    --chats-font-muted: hsl(200, 11%, 72%);
+    --chats-font-muted-600: hsl(200, 11%, 52%);
+    --chats-bg: hsl(220, 3%, 7%);
+    --chats-border: hsl(210, 4%, 16%);
+
     /* dialog */
     --dialog-border: hsl(225, 6%, 28%);
     --dialog-dark: hsl(210, 4%, 19%);

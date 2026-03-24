@@ -17,8 +17,13 @@ const EditGroupForm = () => {
 
     const { data: group } = useSuspenseQuery({
         queryKey: ['groups', groupId],
-        queryFn: () => api.get<{ group: Group }>(`/groups/${groupId}`),
+        queryFn: () => {
+            loaderEvent.emit('startLoading')
+            return api.get<{ group: Group }>(`/groups/${groupId}`)
+        },
         select: (res) => {
+            loaderEvent.emit('stopLoading')
+            
             const { group } = res.data
             const time = new Intl.DateTimeFormat('en-gb', { hour: '2-digit', minute: '2-digit' }).format(new Date(group.travelDate))
             const date = new Intl.DateTimeFormat('en-ca', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(group.travelDate))

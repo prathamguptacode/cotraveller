@@ -9,7 +9,9 @@ export const messagesInfiniteQueryOptions = (groupId: string) => infiniteQueryOp
     queryKey: messagesKeys.infinite(groupId),
     queryFn: ({ pageParam }) => fetchMessages(groupId, pageParam),
     initialPageParam: 'default',
-    getNextPageParam: (lastPageData) => lastPageData.data.pagination.nextCursor,
-    select: (res) => res.pages.flatMap(page => page.data.messages),
-    staleTime: Infinity
+    getNextPageParam: (lastPageData) => lastPageData.data.pagination.hasNextPage ? lastPageData.data.pagination.nextCursor : undefined,
+    select: (res) => {
+        return { messages: [...res.pages].reverse().flatMap(page => page.data.messages), pagination: res.pages[res.pages.length - 1].data.pagination }
+    },
+    staleTime: Infinity,
 })

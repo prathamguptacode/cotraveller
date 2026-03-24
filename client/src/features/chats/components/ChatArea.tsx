@@ -46,7 +46,9 @@ const ChatArea = () => {
 
 
   //Get Group data
-  const { data: messages } = useSuspenseInfiniteQuery(messagesInfiniteQueryOptions(groupId))
+  const { data: { messages, pagination }, fetchNextPage, isFetchingNextPage } = useSuspenseInfiniteQuery(messagesInfiniteQueryOptions(groupId))
+
+
 
 
   useAutoScroll(messages[messages.length - 1], isAtBottom, lastMessageRef, setUnreadCount)
@@ -67,7 +69,7 @@ const ChatArea = () => {
         return { ...prev, pages: [{ ...prev.pages[0], data: { ...prev.pages[0].data, messages } }, ...prev.pages.slice(1)] }
       })
       if (!document.hasFocus()) return
-      // ###Check for message_read_to_server signal on mount or something like that to prevent shitty bugs
+
       socket.emit('MESSAGE_READ_TO_SERVER', { roomId: groupId, userId: user?._id, readAt: Date.now() })
     }
     const refreshReadStatus = (data: { conversationRecord: ConversationRecord }) => {
@@ -92,7 +94,7 @@ const ChatArea = () => {
       socket.off('MESSAGE_READ_TO_CLIENT', refreshReadStatus)
     }
 
-  }, [socket, groupId])
+  }, [socket, groupId, queryClient, user?._id])
 
 
 
@@ -108,7 +110,10 @@ const ChatArea = () => {
       window.removeEventListener('focus', event)
       window.removeEventListener('focusout', event)
     }
-  }, [groupId])
+  }, [groupId, queryClient, user?._id, socket])
+
+
+
 
 
 

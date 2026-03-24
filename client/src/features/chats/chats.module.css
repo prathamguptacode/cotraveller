@@ -108,15 +108,15 @@
     align-items: center;
     gap: .5rem;
     padding: .5rem 1rem;
-    height: 51.4px;
-    border-bottom: .5px solid var(--clr-border);
+    border-bottom: .5px solid var(--chats-border);
 }
 
 .avatarWrapper {
-    width: 32px;
-    height: 32px;
+    --dim: 38px;
+    width: var(--dim);
+    height: var(--dim);
     border-radius: 50%;
-    border: .5px solid var(--clr-border);
+    border: .2px solid var(--clr-border);
     overflow: hidden;
     flex-shrink: 0;
 
@@ -133,23 +133,29 @@
 
 
 .groupDetails {
-    font-size: 12px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     max-width: 500px;
     overflow: hidden;
+
+
+
 
 
     h3>a {
         font-size: 1rem;
         font-weight: 600;
         text-wrap: nowrap;
+        display: flex;
+        align-items: center;
     }
 
     .members {
         display: flex;
         gap: 1ch;
-
+        font-size: 12px;
+        color: var(--chats-font-muted);
 
         >div {
             text-wrap: nowrap;
@@ -159,6 +165,13 @@
             content: ',';
         }
     }
+
+    &:has(>*:active) {
+        >* {
+            color: var(--chats-font-muted-600);
+        }
+    }
+
 
 
 }
@@ -186,7 +199,7 @@
     flex-direction: column;
     gap: .5rem;
     font-size: 14px;
-    background-color: var(--secondary-bg-darker);
+    background-color: var(--chats-bg);
 }
 
 .message {
@@ -313,7 +326,7 @@
     right: 15px;
     bottom: 40px;
     border-radius: 50%;
-    border: 1px solid var(--clr-complementary-bg-400);
+    border: 1px solid var(--chats-border);
     width: 35px;
     aspect-ratio: 1;
 

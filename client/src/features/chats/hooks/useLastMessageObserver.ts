@@ -1,25 +1,37 @@
-import { useEffect, type Dispatch, type RefObject, type SetStateAction } from "react"
+import { useEffect, useRef, type Dispatch, type RefObject, type SetStateAction } from "react"
 import type { Group } from "../types"
 import { useQueryClient } from "@tanstack/react-query"
 
 export const useLastMessageObserver = (group: Group, setIsAtBottom: Dispatch<SetStateAction<boolean>>, setUnreadCount: Dispatch<SetStateAction<number>>, lastMessageRef: RefObject<HTMLDivElement | null>) => {
 
     const queryClient = useQueryClient()
+    const observerRef = useRef<IntersectionObserver>(null)
+
+    useEffect(() => {
+        console.log('Creating a new observer')
+        const observer = new IntersectionObserver(entries => {
+            if (!entries[0].isIntersecting) setIsAtBottom(false)
+            else {
+                setIsAtBottom(true)
+                setUnreadCount(0)
+                queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
+            }
+        }, { threshold: 0 })
+        observerRef.current = observer
+
+        return () => {
+            observer.disconnect()
+        }
+    }, [queryClient, setIsAtBottom, setUnreadCount])
 
     //Observer for LastMessage
-    const observer = new IntersectionObserver(entries => {
-        if (!entries[0].isIntersecting) setIsAtBottom(false)
-        else {
-            setIsAtBottom(true)
-            setUnreadCount(0)
-            queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
-        }
-    }, { threshold: 0 })
+
 
     //Check if LastMessage exists and start observing the latest one
     useEffect(() => {
         const lastMessageDiv = lastMessageRef.current
-        if (!lastMessageDiv) return
+        const observer = observerRef.current
+        if (!lastMessageDiv || !observer) return
         observer.observe(lastMessageDiv)
 
         return () => {

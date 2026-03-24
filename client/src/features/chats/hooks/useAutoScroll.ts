@@ -23,7 +23,7 @@ export const useAutoScroll = (lastMessage: Message | undefined, isAtBottom: bool
         }
         else div.scrollIntoView({ behavior: 'smooth' })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lastMessage])
+    }, [lastMessage?._id])
 
 }
 

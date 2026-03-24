@@ -39,7 +39,6 @@ export const fetchGroupChatController: RequestHandler = async (req, res) => {
     const group = await Group.findOne({ _id: groupId, member: user._id })
     if (!group) return res.fail(403, "FORBIDDEN", "The user is not associated to the group")
 
-
     // Pagination
     const MAX_LIMIT = 50
     const DEFAULT_LIMIT = 10
@@ -65,10 +64,42 @@ export const fetchGroupChatController: RequestHandler = async (req, res) => {
 
     const { limit } = parsedData.data
 
-    const messages = await Message.find({ roomId: groupId }).sort({ createdAt: -1 }).limit(limit + 1).populate({path:'author',select:'fullName'})
+    // const messages = await Message.find({ roomId: groupId, _id: { $lt: cursor } }).sort({ createdAt: -1 }).limit(limit + 1).populate({ path: 'author', select: 'fullName' })
+    const messages = await Message.aggregate([
+        {
+            $match: { roomId: group._id, _id: { $lt: new mongoose.Types.ObjectId(cursor) } }
+        },
+        {
+            $sort: { createdAt: -1 }
+        },
+        {
+            $limit: limit + 1
+        },
+        {
+            $lookup: {
+                from: 'users',
+                let: { userId: '$author' },
+                pipeline: [
+                    {
+                        $match: { $expr: { $eq: ['$_id', '$$userId'] } }
+                    },
+                    {
+                        $project: {
+                            fullName: 1
+                        }
+                    }
+
+                ],
+                as: 'author'
+            }
+        },
+        {
+            $unwind: '$author'
+        }
+    ])
 
     const hasNextPage = messages.length > limit
-    messages.pop()
+    hasNextPage && messages.pop()
     messages.reverse()
     const nextCursor = messages.length > 0 ? messages[0]._id : ''
 
