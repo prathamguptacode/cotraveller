@@ -4,8 +4,6 @@
     overflow: hidden;
     flex-shrink: 0;
 
-    /* ##Should be expandable(with max) or compressable( till  a point , otherwise user must click on the hamburger to collapse it ), and discord's max is around current chat max(totalW us chats<=>totalW DC ) */
-    /* ##It will a feature in itself which every or atleast most of the pages ( it seems like every for now ) will have as part of the base layout like navbar which would also get rid of the unread notification dot when going to chats cuz sidebars were diff for them*/
     height: calc(100vh - 65px);
     display: flex;
 
@@ -71,7 +69,7 @@
         text-align: center;
 
         border-radius: 8px;
-        width: 80%;
+        width: 90%;
 
         padding: .5em;
         margin: auto;

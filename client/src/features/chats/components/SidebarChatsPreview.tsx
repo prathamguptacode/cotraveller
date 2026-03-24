@@ -5,18 +5,18 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import type { Group } from '@/types/group.types'
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useSocket } from '@/hooks/useSocket';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { MountainSnow } from 'lucide-react';
-import { NavbarContext } from '@/app/layouts/Navbar/useNavbarContext';
 import clsx from 'clsx';
+import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout';
 
 
 
 const SidebarChatsPreview = () => {
     const socket = useSocket()
     const { user } = useAuth()
-    const ctx = useContext(NavbarContext)
+    const { setNotifications } = useMainLayoutContext()
     const queryClient = useQueryClient()
 
 
@@ -41,7 +41,8 @@ const SidebarChatsPreview = () => {
     }, [socket])
 
     useEffect(() => {
-        if (ctx && groups.some(group => group.unreadMessagesCount > 0)) ctx.setNotifications(prev => ({ ...prev, groups: true }))
+
+        if (groups.some(group => group.unreadMessagesCount > 0)) setNotifications(prev => ({ ...prev, Chats: true }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [groups])
 

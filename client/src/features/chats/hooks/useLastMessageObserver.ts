@@ -1,7 +1,10 @@
 import { useEffect, type Dispatch, type RefObject, type SetStateAction } from "react"
 import type { Group } from "../types"
+import { useQueryClient } from "@tanstack/react-query"
 
 export const useLastMessageObserver = (group: Group, setIsAtBottom: Dispatch<SetStateAction<boolean>>, setUnreadCount: Dispatch<SetStateAction<number>>, lastMessageRef: RefObject<HTMLDivElement | null>) => {
+
+    const queryClient = useQueryClient()
 
     //Observer for LastMessage
     const observer = new IntersectionObserver(entries => {
@@ -9,6 +12,7 @@ export const useLastMessageObserver = (group: Group, setIsAtBottom: Dispatch<Set
         else {
             setIsAtBottom(true)
             setUnreadCount(0)
+            queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
         }
     }, { threshold: 0 })
 

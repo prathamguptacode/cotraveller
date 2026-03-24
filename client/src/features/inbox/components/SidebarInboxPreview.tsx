@@ -5,9 +5,8 @@ import { FaPeopleGroup } from 'react-icons/fa6'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { normalizeError } from '@/utils/normalizeError'
-import { NavbarContext } from '@/app/layouts/Navbar/useNavbarContext'
-import { useContext, useEffect } from 'react'
-
+import { useEffect } from 'react'
+import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout'
 
 type InboxRequest = {
   _id: string,
@@ -26,9 +25,7 @@ type InboxRequest = {
 
 
 const SidebarInboxPreview = () => {
-
-
-  const ctx = useContext(NavbarContext)
+  const { setNotifications } = useMainLayoutContext()
 
 
   const { data: requests, refetch: refetchInbox } = useSuspenseQuery({
@@ -63,7 +60,7 @@ const SidebarInboxPreview = () => {
   })
 
   useEffect(() => {
-    if (ctx) ctx.setNotifications(prev => ({ ...prev, inbox: requests.length == 0 ? false : true }))
+    setNotifications(prev => ({ ...prev, Inbox: requests.length == 0 ? false : true }))
   }, [requests])
 
 

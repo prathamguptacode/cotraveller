@@ -1,4 +1,4 @@
-import Navbar from '@/app/layouts/Navbar/Navbar';
+import Navbar from '@/app/layouts/MainLayout/Navbar';
 import { useMutation } from '@tanstack/react-query';
 import { type SubmitHandler } from 'react-hook-form';
 import { api } from '@/api/axios';
