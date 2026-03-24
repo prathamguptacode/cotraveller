@@ -50,9 +50,10 @@ export const addGroup: RequestHandler = async (req, res) => {
 
 export const viewGroup: RequestHandler = async (req, res) => {
     const { groupId } = req.params
+    const conversationRecords = await ConversationRecord.find({ roomId: groupId })
 
     const group = await Group.findById(groupId).populate({ path: 'member', select: 'fullName' }).populate({ path: 'comments', select: 'author comment' })
-    res.success(200, { group })
+    res.success(200, { group, conversationRecords })
 
 }
 

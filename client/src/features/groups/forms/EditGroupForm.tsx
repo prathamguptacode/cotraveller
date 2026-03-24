@@ -1,4 +1,3 @@
-import Navbar from '@/components/Navbar/Navbar'
 import GroupForm from './GroupForm'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
@@ -18,8 +17,13 @@ const EditGroupForm = () => {
 
     const { data: group } = useSuspenseQuery({
         queryKey: ['groups', groupId],
-        queryFn: () => api.get<{ group: Group }>(`/groups/${groupId}`),
+        queryFn: () => {
+            loaderEvent.emit('startLoading')
+            return api.get<{ group: Group }>(`/groups/${groupId}`)
+        },
         select: (res) => {
+            loaderEvent.emit('stopLoading')
+            
             const { group } = res.data
             const travelDate = res.data.group.travelDate;
             const travelDateUtc = new Date(travelDate);
@@ -60,17 +64,7 @@ const EditGroupForm = () => {
     }
 
     return (
-        <div>
-            <Navbar>
-                <Navbar.Hamburger />
-                <Navbar.Title />
-                <Navbar.ThemeButton />
-                {/* <Navbar.ProfileButton /> */}
-            </Navbar>
-            {/* ### fix the colors */}
-            <GroupForm isPending={isPending} onSubmit={onSubmit} group={group} />
-
-        </div>
+        <GroupForm isPending={isPending} onSubmit={onSubmit} group={group} />
     )
 }
 

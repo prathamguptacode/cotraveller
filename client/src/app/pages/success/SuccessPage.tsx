@@ -1,4 +1,4 @@
-import Navbar from '@/components/Navbar/Navbar';
+import Navbar from '@/app/layouts/MainLayout/Navbar';
 import mystyle from './success.module.css'
 import { FaPeopleGroup } from "react-icons/fa6";
 import { Link, Navigate, useLocation } from 'react-router-dom';

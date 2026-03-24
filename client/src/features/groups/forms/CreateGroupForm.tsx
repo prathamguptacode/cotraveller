@@ -1,4 +1,3 @@
-import Navbar from '@/components/Navbar/Navbar';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type SubmitHandler } from 'react-hook-form';
 import { api } from '@/api/axios';
@@ -44,17 +43,7 @@ function CreateGroupForm() {
         createGroup(body)
     };
     return (
-        <div>
-            <Navbar>
-                <Navbar.Hamburger />
-                <Navbar.Title />
-                <Navbar.ThemeButton />
-                {/* <Navbar.ProfileButton /> */}
-            </Navbar>
-            {/* ### fix the colors */}
-            <GroupForm isPending={isPending} onSubmit={onSubmit} />
-
-        </div>
+        <GroupForm isPending={isPending} onSubmit={onSubmit} />
     );
 }
 

@@ -27,7 +27,7 @@ const ChatHeader = ({ group, groupId }: ChatHeaderProps) => {
                     <Link to={`/groups/${groupId}`}>{group?.title}</Link>
                 </h3>
                 <Link className={styles.members} to={`/groups/${groupId}`}>
-                    {group?.members?.map(member => {
+                    {group?.member?.map(member => {
                         return (
                             <div key={member._id}> {member.fullName}</div>
                         )

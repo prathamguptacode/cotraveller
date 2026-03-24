@@ -8,9 +8,8 @@ import Signup from './pages/Signup'
 import Login from './pages/Login'
 import VerifyOTP from './pages/VerifyOTP'
 import CreateGroup from './pages/CreateGroup'
-import MainLayout from './layouts/Main/MainLayout'
+import MainLayout from './layouts/MainLayout/MainLayout'
 import SuccessPage from './pages/success/SuccessPage'
-import SecondaryLayout from './layouts/Secondary/SecondaryLayout'
 import Chats from './pages/Chats'
 import NotFound from './pages/NotFound/NotFound'
 import FeedbackPage from './pages/Feedback/FeedbackPage'
@@ -30,24 +29,26 @@ const Router = () => {
                 <Route path='/' element={<MainLayout />}>
                     <Route index element={<Home />} />
                     <Route path='viewgroup' element={<ViewGroup />} />
-                </Route>
 
-                <Route path='/groups' element={<SecondaryLayout />} >
-                    <Route path=':groupId' >
-                        <Route index element={<GroupInfo />} />
+                    <Route path='/groups'>
+                        <Route path=':groupId'>
+                            <Route index element={<GroupInfo />} />
+
+                            <Route element={<ProtectedRoutes />}>
+                                <Route path='edit' element={<EditGroup />} />
+                                <Route path='chats' element={<Chats />} />
+                            </Route>
+                        </Route>
+
                         <Route element={<ProtectedRoutes />}>
-                            <Route path='chats' element={<Chats />} />
-                            <Route path='edit' element={<EditGroup />} />
+                            <Route path='create' element={<CreateGroup />} />
+                            <Route path='success' element={<SuccessPage />} />
                         </Route>
                     </Route>
-
-                    <Route element={<ProtectedRoutes />}>
-                        <Route path='create' element={<CreateGroup />} />
-                        <Route path='success' element={<SuccessPage />} />
-
-                    </Route>
-
                 </Route>
+
+
+
 
 
                 <Route element={<AntiProtectedRoutes />} >
