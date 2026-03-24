@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
 
     socket.on('JOIN_ROOM', (data, cb) => {
         socket.join(data.roomId)
-        console.log(`User ${data.userId}, has connected to room ${data.roomId} on socket ${socket.id}`)
+        // console.log(`User ${data.userId}, has connected to room ${data.roomId} on socket ${socket.id}`)
         cb({ success: true, message: data.roomId, id: socket.id })
     })
 

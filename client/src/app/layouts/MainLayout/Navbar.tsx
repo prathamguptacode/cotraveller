@@ -1,22 +1,18 @@
 import mystyle from './navbar.module.css'
 import ThemeButton from '@/components/Buttons/ThemeButton';
-import Sidebar from '@/components/Sidebar/Sidebar';
 import { Link } from 'react-router-dom';
-import { useEffect, useRef, useState, type ChangeEvent, type ReactNode, type RefObject } from "react";
-import Groups from "@/components/SidebarTabs/Groups";
-import Inbox from "@/components/SidebarTabs/Inbox";
-import { Camera, Edit, Inbox as InboxLogo, Plus, TextAlignJustify, X } from "lucide-react";
+import { useEffect, useRef, type ChangeEvent, type ReactNode, type RefObject } from "react";
+import { Camera, Edit, Plus, TextAlignJustify, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
 import { toast } from 'sonner';
-import type { Notifications, SidebarTab } from './types';
-import { NavbarContext, useNavbarContext } from './useNavbarContext';
 import { getImgURL } from '@/lib/cloudinary';
 import { useMutation } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 import { normalizeError } from '@/utils/normalizeError';
 import Spinner from '@/components/Loaders/Spinner';
+import { useMainLayoutContext } from './useMainLayout';
 
 
 
@@ -30,14 +26,11 @@ type NavbarProps = {
     children: ReactNode
 }
 
+
 function Navbar({ children }: NavbarProps) {
-    const [isHidden, setIsHidden] = useState(true)
-    const menuRef = useRef<HTMLDivElement>(null)
-    const [currentTab, setCurrentTab] = useState<SidebarTab>('Groups')
-
-    const [notifications, setNotifications] = useState<Notifications>({ groups: false, inbox: false })
-
+    const { setNotifications } = useMainLayoutContext()
     const eventSource = useEventSource()
+
     useEffect(() => {
         const eventListener = (message: { data: string }) => {
             const data = JSON.parse(message.data) as unknown
@@ -52,7 +45,7 @@ function Navbar({ children }: NavbarProps) {
                 toast.info('Request Alert', {
                     description: "Someone wants to join your group"
                 })
-                setNotifications(prev => ({ ...prev, inbox: true }))
+                setNotifications(prev => ({ ...prev, Inbox: true }))
             }
         }
         eventSource.addEventListener('message', eventListener)
@@ -64,16 +57,13 @@ function Navbar({ children }: NavbarProps) {
 
 
 
-    const value = { setCurrentTab, currentTab, setIsHidden, menuRef, isHidden, notifications, setNotifications }
 
     // $$$please include profile picture feature
+    //  AWWW ofc :)
 
     return (
         <div className={mystyle.navbar}>
-
-            <NavbarContext.Provider value={value}>
-                {children}
-            </NavbarContext.Provider>
+            {children}
         </div>
     )
 }
@@ -81,21 +71,12 @@ function Navbar({ children }: NavbarProps) {
 export default Navbar
 
 const NavbarHamburger = () => {
-    const { currentTab, setCurrentTab, setIsHidden, menuRef, notifications } = useNavbarContext()
+    const { setSidebarIsHidden, notifications } = useMainLayoutContext()
     const { user } = useAuth()
 
-    return user && <div ref={menuRef} role="button" tabIndex={0} onClick={() => {
-        setIsHidden(prev => {
-            if (prev) setCurrentTab('Groups')
-            return !prev
-        })
 
-    }} onBlur={(e) => {
-        if (e.currentTarget.contains(e.relatedTarget)) return
-        setIsHidden(true)
-    }} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification)}>
+    return user && <div role="button" tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification)}>
         <TextAlignJustify strokeWidth={2.5} size={20} />
-        <Sidebar currentTab={currentTab} slot={currentTab === "Inbox" ? <Inbox /> : <Groups />} />
     </div>
 
 }
@@ -109,22 +90,6 @@ Navbar.Title = NavbarTitle
 const NavbarThemeButton = () => <div className={mystyle.themebtn}><ThemeButton /></div>
 Navbar.ThemeButton = NavbarThemeButton
 
-const NavbarInbox = () => {
-    const { setCurrentTab, setIsHidden, menuRef, notifications } = useNavbarContext()
-    return (
-        <button aria-label="Inbox" onClick={() => {
-            setIsHidden(false)
-            setCurrentTab('Inbox')
-        }} onBlur={(e) => {
-            if (menuRef.current?.contains(e.relatedTarget)) return
-            setIsHidden(true)
-        }} className={clsx(mystyle.inbox, notifications.inbox && mystyle.notification)}>
-            <InboxLogo strokeWidth={1.4} size={20} />
-        </button>
-    )
-}
-Navbar.Inbox = NavbarInbox
-
 
 const NavbarLoginButton = () => {
     const { user } = useAuth()
@@ -137,7 +102,7 @@ Navbar.LoginButton = NavbarLoginButton
 const NavbarCreateGroupButton = () => {
     return (
         <>
-            <Link to={'/groups/create'} className={clsx(mystyle.navbtn, mystyle.createGroupBtn)}>Create group</Link>
+            <Link to={'/groups/create'} className={clsx(mystyle.navbtn, mystyle.createGroupBtn)}><Plus size={20} />Create Group</Link>
             <Link aria-label="Create Group" to={'/groups/create'} className={mystyle.plusBtn}><Plus size={20} /></Link>
         </>
 

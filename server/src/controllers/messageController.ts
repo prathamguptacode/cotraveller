@@ -4,7 +4,8 @@ import Group from "../models/Group"
 import User from "../models/User"
 import { RequestHandler } from "express"
 import ConversationRecord from "@/models/ConversationRecord"
-import { Types } from "mongoose"
+import mongoose, { Types } from "mongoose"
+import { z } from "zod"
 
 
 export const postMessageController: RequestHandler = async (req, res) => {
@@ -33,149 +34,76 @@ export const postMessageController: RequestHandler = async (req, res) => {
 export const fetchGroupChatController: RequestHandler = async (req, res) => {
     const user = req.user
     const groupId = req.params?.groupId
-    if (!groupId) return res.fail(400, "BAD_REQUEST", "Group id waas missing")
+    if (!groupId) return res.fail(400, "BAD_REQUEST", "Group id was missing")
 
     const group = await Group.findOne({ _id: groupId, member: user._id })
-    if (!group) return res.fail(403, "NOT_FOUND", "The user is not associated to the group")
+    if (!group) return res.fail(403, "FORBIDDEN", "The user is not associated to the group")
 
-    let conversationRecord = await ConversationRecord.findOne({ memberId: user._id, roomId: groupId })
-    if (!conversationRecord) conversationRecord = await ConversationRecord.create({ memberId: user._id, roomId: groupId, lastReadAt: new Date(Date.now()) })
-    console.log(conversationRecord, typeof conversationRecord.lastReadAt)
+    // Pagination
+    const MAX_LIMIT = 50
+    const DEFAULT_LIMIT = 10
 
-    const data = await Group.aggregate<{
-        _id: string,
-        messages: {
-            _id: string,
-            author: {
-                _id: string,
-                fullName: string
-            },
-            text: string,
-            createdAt: Date,
-        }[],
-        members: {
-            _id: string,
-            fullName: string
-        }[],
-        title: string,
-        owner: Types.ObjectId
+    const paginationParamsSchema = z.object({
+        limit: z.coerce.number().catch(DEFAULT_LIMIT).transform(e => {
+            const temp = Math.round(e)
+            return Math.min(MAX_LIMIT, Math.max(DEFAULT_LIMIT, temp))
+        }),
+        cursor: z.string()
+    })
 
-        unreadMessagesCount: number
-    }>([
+
+    const parsedData = paginationParamsSchema.safeParse(req.query)
+
+
+    if (!parsedData.success) return res.fail(400, "BAD_REQUEST", "Invalid params")
+
+    let cursor = parsedData.data.cursor as string | undefined
+    if (parsedData.data.cursor === 'default') cursor = undefined
+    else if (!mongoose.Types.ObjectId.isValid(parsedData.data.cursor)) return res.fail(400, "BAD_REQUEST", "Invalid params")
+
+
+    const { limit } = parsedData.data
+
+    // const messages = await Message.find({ roomId: groupId, _id: { $lt: cursor } }).sort({ createdAt: -1 }).limit(limit + 1).populate({ path: 'author', select: 'fullName' })
+    const messages = await Message.aggregate([
         {
-            $match: { _id: group._id }
+            $match: { roomId: group._id, _id: { $lt: new mongoose.Types.ObjectId(cursor) } }
         },
         {
-            $project: {
-                title: 1,
-                member: 1,
-                messages: 1,
-                owner: 1
-            }
+            $sort: { createdAt: -1 }
+        },
+        {
+            $limit: limit + 1
         },
         {
             $lookup: {
                 from: 'users',
-                let: { ids: '$member' },
+                let: { userId: '$author' },
                 pipeline: [
                     {
-                        $match: { $expr: { $in: ['$_id', '$$ids'] } }
+                        $match: { $expr: { $eq: ['$_id', '$$userId'] } }
                     },
                     {
                         $project: {
                             fullName: 1
                         }
                     }
-                ],
-                as: 'members'
-            }
-        },
-        {
-            $lookup: {
-                from: 'messages',
-                let: { ids: '$messages' },
-                pipeline: [
-                    {
-                        $match: { $expr: { $in: ['$_id', '$$ids'] } }
-                    },
-                    {
-                        $sort: { createdAt: 1 }
-                    },
-                    {
-                        $lookup: {
-                            from: 'users',
-                            let: { id: '$author' },
-                            pipeline: [
-                                {
-                                    $match: { $expr: { $eq: ['$_id', '$$id'] } }
-                                },
-                                {
-                                    $project: {
-                                        fullName: 1,
-                                    }
-                                },
-                            ],
-                            as: 'author'
-                        }
-                    },
-                    {
-                        $unwind: '$author'
-                    },
-                    {
-                        $project: {
-                            author: 1,
-                            text: 1,
-                            createdAt: 1,
-                        }
-                    },
 
                 ],
-                as: 'messages'
+                as: 'author'
             }
         },
         {
-            $project: {
-                member: 0
-            }
-        },
-        {
-            $facet: {
-                unreadMessages: [
-                    {
-                        $unwind: '$messages'
-                    },
-                    {
-                        $match: { 'messages.createdAt': { $gt: conversationRecord.lastReadAt } }
-                    },
-                    {
-                        $count: 'unreadMessagesCount'
-                    },
-
-                ],
-                details: []
-            }
-        },
-        {
-            $unwind: '$details'
-        },
-        {
-            $unwind: {
-                preserveNullAndEmptyArrays: true,
-                path: '$unreadMessages'
-                // ###REVIEW LATER FOR better understanding
-            }
-        },
-        {
-            $replaceWith: { $mergeObjects: ['$details', '$unreadMessages'] }
-        },
-
+            $unwind: '$author'
+        }
     ])
 
-    let conversationRecords = await ConversationRecord.find({ roomId: groupId })
+    const hasNextPage = messages.length > limit
+    hasNextPage && messages.pop()
+    messages.reverse()
+    const nextCursor = messages.length > 0 ? messages[0]._id : ''
 
-
-
-    res.success(200, { group: data[0], conversationRecords })
+    res.success(200, { messages, pagination: { hasNextPage, nextCursor } })
 }
 
 export const updateLastReadAtController: RequestHandler = async (req, res) => {
