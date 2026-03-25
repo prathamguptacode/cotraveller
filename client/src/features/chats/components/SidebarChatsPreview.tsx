@@ -41,10 +41,9 @@ const SidebarChatsPreview = () => {
     }, [socket])
 
     useEffect(() => {
-
         if (groups.some(group => group.unreadMessagesCount > 0)) setNotifications(prev => ({ ...prev, Chats: true }))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [groups])
+        else setNotifications(prev => ({ ...prev, Chats: false }))
+    }, [groups, setNotifications])
 
 
 
