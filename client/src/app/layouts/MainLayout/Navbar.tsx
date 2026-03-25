@@ -221,7 +221,7 @@ const NavbarProfileButton = () => {
         }
     }, [])
 
-    const formattedDate = user && new Intl.DateTimeFormat('en-GB', {
+    const formattedDate = user && new Intl.DateTimeFormat('en-IN', {
         day: '2-digit',
         month: 'short',
         year: 'numeric'

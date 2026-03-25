@@ -13,7 +13,7 @@ import Group from '@/models/Group'
 
 router.post('/', authMiddleware, asyncHandler(addGroup))
 
-router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middleware required
+router.get('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middleware required
 
 router.get('/live', groupnumber)
 

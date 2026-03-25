@@ -25,9 +25,18 @@ const EditGroupForm = () => {
             loaderEvent.emit('stopLoading')
             
             const { group } = res.data
-            const time = new Intl.DateTimeFormat('en-gb', { hour: '2-digit', minute: '2-digit' }).format(new Date(group.travelDate))
-            const date = new Intl.DateTimeFormat('en-ca', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(group.travelDate))
-            return { ...group, travelDate: date, travelTime: time } as GroupFormSchema
+            const travelDate = res.data.group.travelDate;
+            const travelDateUtc = new Date(travelDate);
+            const DateInd = travelDateUtc.toString();
+            const travelDateInd = new Date(DateInd);
+            let year = travelDateInd.getFullYear();
+            let month = (travelDateInd.getMonth() + 1).toString().padStart(2, '0');
+            let day = travelDateInd.getDate().toString().padStart(2, '0');
+            const myDateHtml = `${year}-${month}-${day}`;
+            const hour = travelDateInd.getHours().toString().padStart(2, '0');
+            const time = travelDateInd.getMinutes().toString().padStart(2, '0');
+            const myTimeHtml = `${hour}:${time}`
+            return { ...group, travelDate: myDateHtml, travelTime: myTimeHtml } as GroupFormSchema
         }
     })
 

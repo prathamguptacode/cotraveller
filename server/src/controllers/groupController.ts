@@ -10,27 +10,38 @@ import { eventBus } from "@/events/eventBus";
 import JoinRequest from "@/models/JoinRequest";
 import ConversationRecord from "@/models/ConversationRecord";
 
+const allowedTags = ["Alcohol free", "Boys only", "Girls only", "Backpacking"] as const
+const allowedMode = ["Train", "Flight", "Taxi", "Car", "Bike", "Others"] as const
+
 const GroupSchema = z.object({
     title: z.string(),
     content: z.string(),
     owner: z.string(),
-    memberNumber: z.string(),
-    mode: z.string(),
+    memberNumber: z.number(),
+    mode: z.enum(allowedMode),
     travelDate: z.string(),
     intialLocation: z.string(),
+    tags: z.array(z.enum(allowedTags)).max(4).optional(),
 })
 
+// ### we send  create grp --> ind time
+
 export const addGroup: RequestHandler = async (req, res) => {
+    if (!req.body) return res.fail(400, "INPUT_ERROR", "Invalid input data");
     req.body.owner = req.user._id.toString();
     const parsedData = GroupSchema.safeParse(req.body)
     if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
+    const { title, content, owner, memberNumber, mode, travelDate, intialLocation, tags } = parsedData.data
 
-    const { title, content, owner, memberNumber, mode, travelDate, intialLocation } = parsedData.data
+    const checkDate = moment(travelDate, moment.ISO_8601, true).isValid();
+    if (!checkDate) {
+        return res.fail(400, "INPUT_ERROR", "Invalid input date")
+    }
 
     //telling mongo that date formate is ist
     const istDate = moment.tz(travelDate, "Asia/Kolkata").toDate();
 
-    const group = new Group({ title, content, owner, memberNumber, mode, travelDate: istDate, intialLocation, member: [owner] })
+    const group = new Group({ title, content, owner, memberNumber, mode, travelDate: istDate, intialLocation, member: [owner], tags })
     const data = await group.save()
     await User.updateOne({ _id: owner }, { $push: { memberGroup: data._id } })
     await ConversationRecord.create({ roomId: group._id, memberId: owner })
@@ -48,6 +59,8 @@ export const viewGroup: RequestHandler = async (req, res) => {
 
 export const editGroup: RequestHandler = async (req, res) => {
     const userId = req.user._id;
+    if (!req.body) return res.fail(400, "INPUT_ERROR", "Invalid input data");
+    req.body.owner = req.user._id.toString();
     const { groupId } = req.params
     //checking user is owner?
     const group = await Group.findById(groupId)
@@ -68,51 +81,105 @@ export const editGroup: RequestHandler = async (req, res) => {
 }
 
 export const viewGroupByFilter: RequestHandler = async (req, res) => {
-    const FilterSchema = z.object({
-        mode: z.string(),
-        intialLocation: z.string(),
-        lowerTime: z.string(),
-        upperTime: z.string(),
+    const filterSchema = z.object({
+        title: z.string().optional(),
+        memberNumber: z.coerce.number().optional(),
+        mode: z.enum(allowedMode).optional(),
+        travelDate: z.string().optional(),
+        travelTime: z.string().optional(),
+        intialLocation: z.string().optional(),
+        tags: z.array(z.enum(allowedTags)).max(4).optional(),
     })
-    const parsedData = FilterSchema.safeParse(req.body)
-    if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
-
-    const lowerTime = xss(parsedData.data.lowerTime)
-    const upperTime = xss(parsedData.data.upperTime)
-    const mode = xss(parsedData.data.mode)
-    const intialLocation = xss(parsedData.data.intialLocation)
-
-    // const utcTime = moment.tz(istTime, "Asia/Kolkata").utc().format();for converting time
-    const utcLowerTime = moment.tz(lowerTime, "Asia/Kolkata").utc().toDate()
-    const utcUpperTime = moment.tz(upperTime, "Asia/Kolkata").utc().toDate()
-    const data = await Group.aggregate([
-        {
+    const validateData = filterSchema.safeParse(req.query);
+    if (!validateData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data");
+    const { title, memberNumber, mode, travelDate, travelTime, intialLocation, tags } = validateData.data;
+    if (travelDate && travelTime) {
+        const dateCheck = `${travelDate}T${travelTime}`;
+        const dateResult = moment(dateCheck, moment.ISO_8601, true).isValid();
+        if (!dateResult) {
+            return res.fail(400, "INPUT_ERROR", "Invalid input date or invalid time")
+        }
+    }
+    if (travelDate) {
+        const dateResult = moment(travelDate, moment.ISO_8601, true).isValid();
+        if (!dateResult) {
+            return res.fail(400, "INPUT_ERROR", "Invalid input date")
+        }
+    }
+    let filter: z.infer<typeof filterSchema> = {};
+    if (title) {
+        filter.title = title;
+    }
+    if (mode) {
+        filter.mode = mode;
+    }
+    if (intialLocation) {
+        filter.intialLocation = intialLocation;
+    }
+    if (memberNumber) {
+        filter.memberNumber = memberNumber;
+    }
+    const pipeline = [];
+    pipeline.push({
+        $match: {
+            $expr: {
+                $lt: [
+                    { $size: "$member" },
+                    "$memberNumber"
+                ]
+            }
+        }
+    })
+    pipeline.push({ $match: filter });
+    if (tags && tags.length > 0) {
+        console.log(tags)
+        pipeline.push({
             $match: {
-                mode: mode,
-                intialLocation: intialLocation,
-                travelDate: { $gte: utcLowerTime, $lte: utcUpperTime },
-
-                //if membernumber is reached
-                $expr: {
-                    $lt: [
-                        { $size: "$member" },
-                        "$memberNumber"
-                    ]
+                tags: { $in: tags }
+            }
+        })
+    };
+    if (travelDate) {
+        let flag = 0;
+        if (travelTime) {
+            flag = 1;
+            console.log(travelTime)
+            const dateString = `${travelDate}T${travelTime}`;
+            const date = new Date(dateString);
+            date.setHours(date.getHours() - 2);
+            const lowerTime = new Date(date);
+            date.setHours(date.getHours() + 4);
+            const upperTime = new Date(date);
+            pipeline.push({
+                $match: {
+                    travelDate: { $gte: lowerTime, $lte: upperTime }
                 }
-
-            }
-        },
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'owner',
-                foreignField: '_id',
-                as: "ownerPop"
-            }
-        },
-        {
-            $unwind: "$ownerPop"
-        },
+            })
+        }
+        if (!flag) {
+            const lowerTimeString = `${travelDate}T00:00`;
+            const lowerTime = new Date(lowerTimeString);
+            const upperTimeString = `${travelDate}T23:59`;
+            const upperTime = new Date(upperTimeString);
+            pipeline.push({
+                $match: {
+                    travelDate: { $gte: lowerTime, $lte: upperTime }
+                }
+            })
+        }
+    }
+    pipeline.push({
+        $lookup: {
+            from: 'users',
+            localField: 'owner',
+            foreignField: '_id',
+            as: "ownerPop"
+        }
+    })
+    pipeline.push({
+        $unwind: "$ownerPop"
+    })
+    pipeline.push(
         {
             $project: {
                 ownerPop: {
@@ -122,13 +189,76 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
                 _id: 1,
                 content: 1,
                 travelDate: 1,
-                requests: 1,
-                comments: 1,
+                incomingRequests: 1,
+                //   comments: 1,
+                memberNumber: 1,
             }
         }
+    )
+    const groupData = await Group.aggregate(pipeline)
+    res.success(200, { groups: groupData });
 
-    ])
-    res.success(200, { groups: data })
+    // const FilterSchema = z.objet({
+    //     mode: z.string(),
+    //     intialLocation: z.string(),
+    //     lowerTime: z.string(),
+    //     upperTime: z.string(),
+    // })
+    // const parsedData = FilterSchema.safeParse(req.body)
+    // if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
+
+    // const lowerTime = xss(parsedData.data.lowerTime)
+    // const upperTime = xss(parsedData.data.upperTime)
+    // const mode = xss(parsedData.data.mode)
+    // const intialLocation = xss(parsedData.data.intialLocation)
+
+    // // const utcTime = moment.tz(istTime, "Asia/Kolkata").utc().format();for converting time
+    // const utcLowerTime = moment.tz(lowerTime, "Asia/Kolkata").utc().toDate()
+    // const utcUpperTime = moment.tz(upperTime, "Asia/Kolkata").utc().toDate()
+    // const data = await Group.aggregate([
+    //     {
+    //         $match: {
+    //             mode: mode,
+    //             intialLocation: intialLocation,
+    //             travelDate: { $gte: utcLowerTime, $lte: utcUpperTime },
+
+    //             //if membernumber is reached
+    //             $expr: {
+    //                 $lt: [
+    //                     { $size: "$member" },
+    //                     "$memberNumber"
+    //                 ]
+    //             }
+
+    //         }
+    //     },
+    //     {
+    //         $lookup: {
+    //             from: 'users',
+    //             localField: 'owner',
+    //             foreignField: '_id',
+    //             as: "ownerPop"
+    //         }
+    //     },
+    //     {
+    //         $unwind: "$ownerPop"
+    //     },
+    //     {
+    //         $project: {
+    //             ownerPop: {
+    //                 fullName: 1
+    //             },
+    //             title: 1,
+    //             _id: 1,
+    //             content: 1,
+    //             travelDate: 1,
+    //             requests: 1,
+    //             comments: 1,
+    //         }
+    //     }
+
+    // ])
+    // res.success(200, { groups: data })
 }
 
 export const addRequest: RequestHandler = async (req, res) => {

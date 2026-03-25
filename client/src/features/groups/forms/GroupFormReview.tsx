@@ -9,6 +9,19 @@ const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
 
   const { watch } = useGroupForm()
 
+  const date = watch('travelDate') + 'T' + watch('travelTime')
+  const Acdate = new Date(date);
+  const time = Acdate.toLocaleTimeString('en-IN', {
+    hour12: true,
+    hour: 'numeric',
+    minute: '2-digit'
+  })
+  const Trvdate = Acdate.toLocaleString('en-IN',{
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
+
   return (
     <div className={mystyle.reviewCard}>
       <div className={mystyle.rowBetween}>
@@ -30,18 +43,18 @@ const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
       <div className={mystyle.grid}>
         <div>
           <div className={mystyle.label}>Travel Date</div>
-          <div className={mystyle.value}>{watch('travelDate')}</div>
+          <div className={mystyle.value}>{Trvdate}</div>
         </div>
 
         <div>
           <div className={mystyle.label}>Travel Time</div>
-          <div className={mystyle.value}>{watch('travelTime')}</div>
+          <div className={mystyle.value}>{time}</div>
         </div>
 
         <div>
           <div className={mystyle.label}>Intial Location</div>
           <div className={mystyle.value}>
-            {watch('initialLocation')}
+            {watch('intialLocation')}
           </div>
         </div>
 

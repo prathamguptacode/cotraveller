@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type SubmitHandler } from 'react-hook-form';
 import { api } from '@/api/axios';
 import { toast } from 'sonner';
@@ -13,11 +13,17 @@ import GroupForm from './GroupForm';
 
 function CreateGroupForm() {
     const navigate = useNavigate()
-
+    const queryClient = useQueryClient();
 
     const { mutate: createGroup, isPending } = useMutation({
         mutationFn: (body: GroupFormSchema) => api.post('/groups', body),
-        onSuccess: () => navigate('/groups/success', { state: { click: true } }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["groups"],
+                exact: true
+            })
+            navigate('/groups/success', { state: { click: true } })
+        },
         onError: (error) => {
             const err = normalizeError(error)
             if (err.status >= 500) return
