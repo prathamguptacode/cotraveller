@@ -16,8 +16,6 @@ import { api } from '@/api/axios'
 import { messagesInfiniteQueryOptions, messagesKeys } from '../queries'
 import type { ApiSuccess } from '@/types/api.types'
 
-// ###BUG Navbar multimount issue creating multiple toasts upon SSE
-
 
 
 
@@ -46,9 +44,7 @@ const ChatArea = () => {
 
 
   //Get Group data
-  const { data: { messages, pagination }, fetchNextPage, isFetchingNextPage } = useSuspenseInfiniteQuery(messagesInfiniteQueryOptions(groupId))
-
-
+  const { data: { messages }, hasNextPage, fetchNextPage, isFetchingNextPage } = useSuspenseInfiniteQuery(messagesInfiniteQueryOptions(groupId))
 
 
   useAutoScroll(messages[messages.length - 1], isAtBottom, lastMessageRef, setUnreadCount)
@@ -114,6 +110,28 @@ const ChatArea = () => {
 
 
 
+  const messagesRef = useRef<HTMLDivElement>(null)
+  const isFetchingNextPageRef = useRef<boolean>(false)
+  const firstMessageRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const container = messagesRef.current
+    if (!hasNextPage || !container) return
+
+    const scrollHandler = async () => {
+      if (container.scrollTop < 1200 && !isFetchingNextPage && !isFetchingNextPageRef.current) {
+        isFetchingNextPageRef.current = true
+        await fetchNextPage()
+        isFetchingNextPageRef.current = false
+      }
+    }
+
+    container.addEventListener('scroll', scrollHandler)
+
+    return () => container.removeEventListener('scroll', scrollHandler)
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+
+
 
 
 
@@ -138,7 +156,7 @@ const ChatArea = () => {
   return (
     <div className={styles.chatAreaWrapper}>
       <ChatHeader group={group} groupId={groupId} />
-      <Messages key={groupId} lastMessageRef={lastMessageRef} messages={messages} conversationRecords={conversationRecords} />
+      <Messages firstMessageRef={firstMessageRef} messagesRef={messagesRef} key={groupId} lastMessageRef={lastMessageRef} messages={messages} conversationRecords={conversationRecords} />
       <MessageComposer sendMessage={sendMessage} setText={setText} text={text} />
       <ScrollToBottomButton lastMessageRef={lastMessageRef} unreadCount={unreadCount} isAtBottom={isAtBottom} />
     </div>

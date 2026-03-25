@@ -200,6 +200,9 @@
     gap: .5rem;
     font-size: 14px;
     background-color: var(--chats-bg);
+    &::-webkit-scrollbar{
+        display: none;
+    }
 }
 
 .message {
@@ -380,6 +383,17 @@
 
     background-color: #055a24;
     transition: all .15s linear;
+
+
+}
+
+
+.messageLoadingPlaceholder {
+    border: 1px solid aqua;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    min-height: 800px;
 
 
 }
