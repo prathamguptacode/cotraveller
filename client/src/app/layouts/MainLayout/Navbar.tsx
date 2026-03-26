@@ -2,7 +2,7 @@ import mystyle from './navbar.module.css'
 import ThemeButton from '@/components/Buttons/ThemeButton';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, type ChangeEvent, type ReactNode, type RefObject } from "react";
-import { Camera, Edit, Plus, TextAlignJustify, X } from "lucide-react";
+import { Camera, Plus, TextAlignJustify, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
@@ -13,6 +13,7 @@ import { api } from '@/api/axios';
 import { normalizeError } from '@/utils/normalizeError';
 import Spinner from '@/components/Loaders/Spinner';
 import { useMainLayoutContext } from './useMainLayout';
+import LogOutButton from '@/components/Buttons/LogOutButton';
 
 
 
@@ -282,9 +283,7 @@ const NavbarProfileButton = () => {
                         </div>
 
                         <div className={mystyle.profileFooter}>
-                            <Link to={'#'} >
-                                <Edit size={20} /> Edit Profile
-                            </Link>
+                            <LogOutButton iconSize={20}>Log out</LogOutButton>
                             <button disabled={uploadAvatarMutation.isPending || isRemovingAvatar} onClick={() => openDialog(avatarDialogRef)} aria-label='change profile picture'>
                                 <Camera size={20} /> {url ? 'Change' : 'Add'} Photo
                             </button>
