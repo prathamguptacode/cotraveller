@@ -2,7 +2,7 @@ import mystyle from './search.module.css'
 import { IoMdSearch } from "react-icons/io";
 import { useLoadScript, type Libraries } from '@react-google-maps/api'
 import { MdLocationPin } from "react-icons/md";
-import LocationBar from './Locationbar';
+import LocBar from './LocBar';
 
 const lib: Libraries = ["places"]
 
@@ -11,7 +11,7 @@ function Searchbox() {
 
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: import.meta.env.VITE_MAP_KEY,
-        // region: 'in',
+        region: 'in',
         libraries: lib
     })
 
@@ -25,7 +25,7 @@ function Searchbox() {
         <div>
             <div className={mystyle.searchbox}>
                 {
-                    isLoaded ? <LocationBar /> : (<div className={mystyle.loadingLoc}>
+                    isLoaded ? <LocBar /> : (<div className={mystyle.loadingLoc}>
                         <MdLocationPin size={20} />
                         Loading...
                     </div>)
