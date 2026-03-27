@@ -31,6 +31,7 @@ function LocationBar() {
             <div className={mystyle.locationBox}>
                 <MdLocationPin size={20} />
                 <input type="text" placeholder='From Where?' ref={locationIn} className={mystyle.locationInput} onChange={(e) => setValue(e.target.value)} onClick={handleClk} disabled={!ready} autoFocus />
+                <div>work git</div>
             </div>
         </div>
     )
