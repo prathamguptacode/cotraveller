@@ -58,6 +58,7 @@ const Router = () => {
                         <Route path='/signup/verify' element={<VerifyOTP />} />
                     </Route>
                 </Route>
+                
                 <Route path='/feedback' element={<FeedbackPage />} />
                 <Route path='*' element={<NotFound />} />
 

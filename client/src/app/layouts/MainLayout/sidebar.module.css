@@ -38,14 +38,18 @@
     }
 
     >* {
+        --clr-active: var(--sidebar-v2-bg-active);
+        --clr-hover: var(--sidebar-v2-bg-hover);
         padding: 1em;
         border-radius: 15px;
         position: relative;
         transition: all .15s ease-out;
 
-        &:hover {
-            background-color: var(--sidebar-v2-bg-hover);
+        
+        &:active {
+            scale: .95;
         }
+
     }
 }
 

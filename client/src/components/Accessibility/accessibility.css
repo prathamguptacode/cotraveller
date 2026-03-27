@@ -20,3 +20,7 @@
 *:hover>.tooltip {
     display: flex;
 }
+
+*:focus-within>.tooltip {
+    display: none;
+}

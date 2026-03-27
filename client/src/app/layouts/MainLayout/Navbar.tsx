@@ -76,9 +76,9 @@ const NavbarHamburger = () => {
     const { user } = useAuth()
 
 
-    return user && <div role="button" tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification)}>
+    return user && <button aria-label='hamburger menu' tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification)}>
         <TextAlignJustify strokeWidth={2.5} size={20} />
-    </div>
+    </button>
 
 }
 Navbar.Hamburger = NavbarHamburger
@@ -103,7 +103,7 @@ Navbar.LoginButton = NavbarLoginButton
 const NavbarCreateGroupButton = () => {
     return (
         <>
-            <Link to={'/groups/create'} className={clsx(mystyle.navbtn, mystyle.createGroupBtn)}><Plus size={20} />Create Group</Link>
+            <Link role='button' to={'/groups/create'} className={clsx(mystyle.navbtn, mystyle.createGroupBtn)}><Plus size={20} />Create Group</Link>
             <Link aria-label="Create Group" to={'/groups/create'} className={mystyle.plusBtn}><Plus size={20} /></Link>
         </>
 

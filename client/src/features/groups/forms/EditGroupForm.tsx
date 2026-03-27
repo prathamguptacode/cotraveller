@@ -23,21 +23,22 @@ const EditGroupForm = () => {
         },
         select: (res) => {
             loaderEvent.emit('stopLoading')
-            
+
             const { group } = res.data
             const travelDate = res.data.group.travelDate;
             const travelDateUtc = new Date(travelDate);
             const DateInd = travelDateUtc.toString();
             const travelDateInd = new Date(DateInd);
-            let year = travelDateInd.getFullYear();
-            let month = (travelDateInd.getMonth() + 1).toString().padStart(2, '0');
-            let day = travelDateInd.getDate().toString().padStart(2, '0');
+            const year = travelDateInd.getFullYear();
+            const month = (travelDateInd.getMonth() + 1).toString().padStart(2, '0');
+            const day = travelDateInd.getDate().toString().padStart(2, '0');
             const myDateHtml = `${year}-${month}-${day}`;
             const hour = travelDateInd.getHours().toString().padStart(2, '0');
             const time = travelDateInd.getMinutes().toString().padStart(2, '0');
             const myTimeHtml = `${hour}:${time}`
             return { ...group, travelDate: myDateHtml, travelTime: myTimeHtml } as GroupFormSchema
-        }
+        },
+        refetchOnWindowFocus: false
     })
 
 

@@ -1,7 +1,7 @@
 import { api } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
 import { useMutation } from '@tanstack/react-query'
-import { LogOut } from 'lucide-react'
+import { DoorOpen } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 import { toast } from 'sonner'
 
@@ -26,7 +26,7 @@ const LogOutButton = ({ className, children, iconSize, style }: LogOutButtonProp
     })
 
     return user && <button style={style} className={className} aria-label='Logout' onClick={() => logout()}>
-        <LogOut size={iconSize} /> {children}
+        <DoorOpen size={iconSize} /> {children}
     </button>
 
 }
