@@ -34,6 +34,35 @@
     background-color: var(--brighter-primary);
 }
 
+.loadingLoc {
+    flex-shrink: 0;
+    flex-grow: 1;
+    border: 2px solid red;
+    padding: 16px;
+    border: 2px solid var(--clr-border);
+    border-radius: 4px;
+    cursor: not-allowed;
+    display: flex;
+    gap: 8px;
+}
+
+.locationcamp {
+    flex-grow: 1;
+    flex-shrink: 0;
+    border: 2px solid red;
+    padding: 16px;
+    border: 2px solid var(--clr-border);
+    border-radius: 4px;
+}
+
+.locationInput {
+    width: 100%;
+}
+
+.locationBox {
+    display: flex;
+    gap: 8px;
+}
 
 
 .location,
