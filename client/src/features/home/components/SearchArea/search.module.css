@@ -9,7 +9,6 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    max-width: 960px;
     border-radius: 14px;
 }
 
@@ -132,11 +131,12 @@ ul {
 }
 
 .mainLoc {
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .secondaryLoc {
     color: var(--suggestionSecondoryfont);
+    font-size: 14px;
 }
 
 .suggestionTab {

@@ -25,7 +25,7 @@ import { MdLocationPin } from "react-icons/md";
 //         },
 //     ]
 
-function LocBar() {
+function LocBar({setLocation}:{setLocation: React.Dispatch<React.SetStateAction<string>>}) {
     const locationIn = useRef<HTMLInputElement>(null);
     const locationBox = useRef<HTMLInputElement>(null);
     // const [history, setHistory] = useState("none");
@@ -39,6 +39,7 @@ function LocBar() {
         debounce: 300
     });
     function handleSelect(item: google.maps.places.AutocompletePrediction) {
+        setLocation(item.structured_formatting.main_text);
         setValue(item.structured_formatting.main_text, false);
         clearSuggestions();
     }
