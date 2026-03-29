@@ -232,6 +232,11 @@ html {
     --dialog-dark: hsl(210, 4%, 19%);
     --dialog-hover: hsl(210, 4%, 22%);
     --dialog-darker: hsl(210, 4%, 9%);
+
+    /* suggestion */
+    --suggestionbox: hsl(0, 0%, 22%);
+    --suggestionSecondoryfont: rgb(157, 155, 155);
+    --suggestionHover: hsl(0, 0%, 32%);
 }
 
 .disabledBtn {

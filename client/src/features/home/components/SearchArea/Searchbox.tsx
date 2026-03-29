@@ -30,6 +30,12 @@ function Searchbox() {
                         Loading...
                     </div>)
                 }
+                <div className={mystyle.dateIn}>
+                    <div>
+                        Date:
+                    </div>
+                    <input type="date" />
+                </div>
             </div>
 
 

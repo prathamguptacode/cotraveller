@@ -1,10 +1,34 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import usePlace from 'use-places-autocomplete';
 import mystyle from './search.module.css'
 import { MdLocationPin } from "react-icons/md";
 
+// const historyCards: {
+//     index: number,
+//     value: string
+// }[] = [
+//         {
+//             index: 0,
+//             value: "IIT Roorkie"
+//         },
+//         {
+//             index: 1,
+//             value: "IIT Dhanbad"
+//         },
+//         {
+//             index: 2,
+//             value: "VIT Chennai"
+//         },
+//         {
+//             index: 3,
+//             value: "Paris"
+//         },
+//     ]
+
 function LocBar() {
     const locationIn = useRef<HTMLInputElement>(null);
+    const locationBox = useRef<HTMLInputElement>(null);
+    // const [history, setHistory] = useState("none");
     const {
         ready,
         value,
@@ -18,35 +42,65 @@ function LocBar() {
         setValue(item.structured_formatting.main_text, false);
         clearSuggestions();
     }
-    function handleClk() {
-        // if (locationIn.current) {
-        //     setValue(locationIn.current.value)
-        // }
+    // function handleClk() {
+    //     if (locationIn.current) {
+    //         setValue(locationIn.current.value)
+    //         if (!locationIn.current.value) {
+    //             setHistory('block')
+    //         }
+    //     }
+    // }
+    // function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    //     setValue(e.target.value);
+    //     setHistory('none')
+    // }
+    // function handleClkHistory(e: number) {
+    //     if (locationIn.current) {
+    //         const val = historyCards[e].value
+    //         setValue(val)
+    //         setHistory("none")
+    //     }
+    // }
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setValue(e.target.value)
     }
-    useEffect(() => {
-        // locationIn.current?.focus()
-    }, [])
-
-    // console.log(data)
+    function handleClklocationcamp() {
+        locationIn.current?.focus()
+    }
 
     return (
-        <div className={mystyle.locationcamp}>
+        <div className={mystyle.locationcamp} onClick={handleClklocationcamp}>
             <div className={mystyle.locationBox}>
-                <MdLocationPin size={20} />
-                <input type="text" value={value} placeholder='From Where?' ref={locationIn} className={mystyle.locationInput} onChange={(e) => setValue(e.target.value)} onClick={handleClk} disabled={!ready} />
+                <MdLocationPin size={28} />
+                <input type="text" value={value} placeholder='From Where?' ref={locationIn} className={mystyle.locationInput} onChange={handleChange} disabled={!ready} />
             </div>
-            {
-                status === 'OK' &&
-                <ul>
+            <div className={mystyle.suggestion}>
+
+
+                {
+                    status === 'OK' &&
+                    <ul>
+                        {
+                            data.map((item, index) => <li className={mystyle.suggestionTab} key={index} onClick={() => handleSelect(item)}>
+                                <div className={mystyle.suggestionIcon}>
+                                    <MdLocationPin size={24} />
+                                </div>
+                                <div>
+                                    <div className={mystyle.mainLoc}>
+                                        {item.structured_formatting.main_text}
+                                    </div>
+                                    <div className={mystyle.secondaryLoc}>{item.structured_formatting.secondary_text}</div>
+                                </div>
+                            </li>)
+                        }
+                    </ul>
+                }
+                {/* <ul style={{ display: history }}>
                     {
-                        data.map((item, index) => <li style={{padding: '20px', background: 'red'}} key={index} onClick={() => handleSelect(item)}>
-                            {
-                                item.description
-                            }
-                        </li>)
+                        historyCards.map((e) => <li onClick={() => handleClkHistory(e.index)}>{e.value}</li>)
                     }
-                </ul>
-            }
+                </ul> */}
+            </div>
         </div>
     )
 }

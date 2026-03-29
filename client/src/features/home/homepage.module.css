@@ -325,14 +325,14 @@
 }
 
 @media (max-width:1108px) {
-    .searchbox {
+    /* .searchbox {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
         grid-template-rows: 1fr 1fr;
         grid-template-areas:
             "from from from mode mode mode"
             "date date month month year year"
-        ;
+        ; */
     }
 
     .livegrp {
