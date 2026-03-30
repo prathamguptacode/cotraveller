@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import usePlace from 'use-places-autocomplete';
 import mystyle from './search.module.css'
 import { MdLocationPin } from "react-icons/md";
@@ -25,9 +25,8 @@ import { MdLocationPin } from "react-icons/md";
 //         },
 //     ]
 
-function LocBar({setLocation}:{setLocation: React.Dispatch<React.SetStateAction<string>>}) {
+function LocBar({ setLocation, location }: { setLocation: React.Dispatch<React.SetStateAction<string | null>>, location: string | null }) {
     const locationIn = useRef<HTMLInputElement>(null);
-    const locationBox = useRef<HTMLInputElement>(null);
     // const [history, setHistory] = useState("none");
     const {
         ready,
@@ -68,6 +67,13 @@ function LocBar({setLocation}:{setLocation: React.Dispatch<React.SetStateAction<
     function handleClklocationcamp() {
         locationIn.current?.focus()
     }
+    useEffect(() => {
+        if (location) {
+            if (locationIn.current) {
+                setValue(location,false)
+            }
+        }
+    }, [])
 
     return (
         <div className={mystyle.locationcamp} onClick={handleClklocationcamp}>

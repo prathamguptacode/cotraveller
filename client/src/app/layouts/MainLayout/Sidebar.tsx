@@ -73,10 +73,9 @@ const Sidebar = () => {
                                     currentSidebarTab == 'Inbox' ? <SidebarInboxPreview /> :
                                         <div className={styles.fallbackWrapper}>Coming Soon !</div>
                             }
-
                         </Suspense>
                     </ErrorBoundary> :
-                        <div className={styles.fallbackWrapper}>Login to view your shit</div>
+                        <div className={styles.fallbackWrapper}>Login to view</div>
                     }
                 </div>
             </div>

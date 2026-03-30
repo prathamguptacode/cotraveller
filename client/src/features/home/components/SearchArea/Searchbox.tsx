@@ -10,15 +10,18 @@ import { toast } from 'sonner';
 const lib: Libraries = ["places"]
 const Currentdate = new Date();
 
-function Searchbox() {
+function Searchbox({dLocation, dDate}:{dLocation:string|null, dDate:string|null}) {
     const navigate = useNavigate();
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: import.meta.env.VITE_MAP_KEY,
         region: 'in',
         libraries: lib
     })
-    const [location, setLocation] = useState("");
-    const defaultDate = `${Currentdate.getFullYear()}-${(Currentdate.getMonth() + 1).toString().padStart(2, "0")}-${Currentdate.getDate().toString().padStart(2, "0")}`;
+    const [location, setLocation] = useState(dLocation);
+    let defaultDate = `${Currentdate.getFullYear()}-${(Currentdate.getMonth() + 1).toString().padStart(2, "0")}-${Currentdate.getDate().toString().padStart(2, "0")}`;
+    if(dDate){
+        defaultDate=dDate;
+    }
     const [date, setdate] = useState<string | null>(defaultDate);
     async function search() {
         if (!location) {
@@ -27,15 +30,16 @@ function Searchbox() {
         if (!date) {
             return toast.error('Please select a Date');
         }
+        console.log(date)
         navigate(`/viewgroup?q=${location}&date=${date}`)
     }
-
+    
 
     return (
         <div>
             <div className={mystyle.searchbox}>
                 {
-                    isLoaded ? <LocBar setLocation={setLocation} /> : (<div className={mystyle.loadingLoc}>
+                    isLoaded ? <LocBar setLocation={setLocation} location={location} /> : (<div className={mystyle.loadingLoc}>
                         <MdLocationPin size={20} />
                         Loading...
                     </div>)
