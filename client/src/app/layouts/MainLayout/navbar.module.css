@@ -13,9 +13,12 @@
     right: 0;
     top: 0;
     background-color: var(--clr-bg);
+
 }
 
 .hamburger {
+    --clr-active: var(--nav-neutral-active);
+    --clr-hover: var(--nav-neutral-hover);
     flex-shrink: 0;
     border-radius: 50%;
     cursor: pointer;
@@ -23,13 +26,6 @@
 
     position: relative;
 
-    &:focus-within {
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    &:hover {
-        background-color: var(--clr-bg-hover);
-    }
 }
 
 .fallbackWrapper {
@@ -76,19 +72,10 @@
     }
 }
 
-.inbox {
-    border-radius: 50%;
-    cursor: pointer;
-    padding: 10px;
-    flex-shrink: 0;
-    position: relative;
-}
-
-.inbox:hover {
-    background-color: var(--clr-bg-hover);
-}
 
 .navbtn {
+    --clr-hover: var(--primary-hover);
+    --clr-active: var(--primary-active);
     background-color: var(--primary);
     color: var(--secondaryFont);
     font-weight: 500;
@@ -97,17 +84,11 @@
     border-radius: 5px;
 
     flex-shrink: 0;
-
-    /*###LATER try this instead */
-    /* padding-right: .5em; */
-    /* color: var(--primary); */
 }
 
-.navbtn:hover {
-    background-color: var(--brighter-primary);
-}
 
-.createGroupBtn{
+
+.createGroupBtn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -188,22 +169,6 @@
     background-color: var(--clr-bg);
     color: var(--clr-font);
 
-    /* 
-    opacity: 0;
-    scale: .85;
-    transition: display allow-discrete, opacity ease-out, scale ease-out;
-    transition-duration: .15s;
-
-    &[open] {
-        opacity: 1;
-        scale: 1;
-
-        @starting-style {
-            opacity: 0;
-            scale: .85;
-        }
-    } */
-
 
     >div {
         display: flex;
@@ -220,15 +185,18 @@
 
 
 .closeDialogBtn {
+    --clr-hover: var(--dialog-hover);
+    --clr-active: var(--dialog-active);
     margin-left: auto;
     border-radius: 8px;
     background-color: var(--secondary-bg);
     transition: all .15s linear;
     padding: .5em;
 
-    &:hover {
-        background-color: var(--dialog-hover);
+    &:active {
+        scale: .95;
     }
+
 }
 
 .profileArea {
@@ -307,6 +275,10 @@
     gap: 1rem;
 
     >* {
+        --clr-active: var(--dialog-active);
+        --clr-hover: var(--dialog-hover);
+        --clr-disabled: var(--dialog-disabled);
+        --clr-font-disabled: var(--dialog-font-disabled);
         border-radius: 8px;
         padding: .5em 1.5em;
         background-color: var(--dialog-dark);
@@ -318,16 +290,11 @@
         font-size: 14px;
         justify-content: center;
 
-        &:hover {
-            /* background-color: var(--brighter-primary); */
-            background-color: var(--dialog-hover);
-        }
-
         &:active {
-            background-color: var(--dialog-dark);
             scale: .95;
         }
     }
+
 }
 
 .avatarDialog {

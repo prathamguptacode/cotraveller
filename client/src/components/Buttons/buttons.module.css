@@ -1,12 +1,10 @@
-.themeButton{
-    background-color: var(--clr-bg);
+.themeButton {
+    --clr-active: var(--nav-neutral-active);
+    --clr-hover:var(--nav-neutral-hover);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px;
     border-radius: 50%;
     flex-shrink: 0;
-}
-.themeButton:hover{
-    background-color: var(--clr-bg-hover);
 }

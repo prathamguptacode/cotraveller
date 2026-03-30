@@ -1,20 +1,19 @@
 import { Link } from 'react-router-dom'
 import styles from './sidebar.module.css'
-import { Home, Inbox, LogOut, MessageCircle, Search, Settings, Users } from 'lucide-react'
+import { Compass, Home, Inbox, MessageCircle, Search, Settings, Users } from 'lucide-react'
 import { MdOutlineFeedback } from 'react-icons/md'
 import { Suspense, type JSX } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { useMutation } from '@tanstack/react-query'
-import { api } from '@/api/axios'
-import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import ThreeDotLoader from '@/components/Loaders/ThreeDotLoader'
 import { useMainLayoutContext } from './useMainLayout'
 import SidebarChatsPreview from '@/features/chats/components/SidebarChatsPreview'
 import SidebarInboxPreview from '@/features/inbox/components/SidebarInboxPreview'
+import LogOutButton from '@/components/Buttons/LogOutButton'
+import type { SidebarTab } from './types'
 
 
-type SidebarTab = 'Groups' | 'Chats' | 'Inbox' | 'Search'
+
 
 
 
@@ -27,16 +26,11 @@ const Sidebar = () => {
         { name: 'Chats', icon: <MessageCircle /> },
         { name: 'Groups', icon: <Users /> },
         { name: 'Inbox', icon: <Inbox /> },
-        { name: 'Search', icon: <Search /> }
+        { name: 'Explore', icon: <Compass /> },
+        { name: 'Search', icon: <Search /> },
     ]
 
-    const { mutate: logout } = useMutation({
-        mutationFn: () => api.post('/auth/logout'),
-        onSuccess: () => window.location.reload(),
-        onError: () => toast.error("An error occurred", {
-            description: "Something went wrong !"
-        })
-    })
+
 
 
 
@@ -57,7 +51,7 @@ const Sidebar = () => {
                 <div className={styles.primarySidebarList}>
                     <Link to={'#'}><Settings /></Link>
                     <Link to={'/feedback'}><MdOutlineFeedback /></Link>
-                    {user && <button aria-label='Logout' onClick={() => logout()}><LogOut /></button>}
+                    <LogOutButton />
                 </div>
 
             </div>
