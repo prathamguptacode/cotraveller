@@ -9,9 +9,9 @@ type ToolTipProps = {
 export const ToolTip = ({ text, position = 'right' }: ToolTipProps) => {
     return (
         <span className='tooltip' style={{
-            left: position === 'right' ? '110%' : '',
+            left: position === 'right' ? '130%' : '',
             top: position === 'bottom' ? '130%' : '',
-            right: position === 'left' ? '110%' : '',
+            right: position === 'left' ? '130%' : '',
         }}>
             {text}
         </span>

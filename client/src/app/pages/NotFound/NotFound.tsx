@@ -1,20 +1,10 @@
 import mystyle from './NotFound.module.css'
 import { BiSolidError } from "react-icons/bi";
-import Navbar from '@/app/layouts/MainLayout/Navbar';
 import { Link } from 'react-router-dom';
 
 function NotFound() {
     return (
         <div className={mystyle.wrapper}>
-            <Navbar >
-                <Navbar.Hamburger />
-                <Navbar.Title />
-                <Navbar.ThemeButton />
-                <Navbar.Inbox />
-                <Navbar.LoginButton />
-                <Navbar.CreateGroupButton />
-                <Navbar.ProfileButton />
-            </Navbar>
             <div className={mystyle.errorpage}>
                 <div className={mystyle.can}>
                     <div className={mystyle.imgbx}>

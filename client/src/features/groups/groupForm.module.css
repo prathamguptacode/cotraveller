@@ -81,6 +81,7 @@
 }
 
 .backBtn {
+    --clr-hover: hsl(from var(--clr-bg) h s 40%);
     flex: 1;
     padding: 0.8rem 1.2rem;
     border-radius: 6px;
@@ -91,6 +92,9 @@
 }
 
 .nextBtn {
+    --clr-disabled: hsl(from var(--clr-bg) h s 50%);
+    --clr-hover: var(--brighter-primary);
+    --clr-active: var(--primary-active);
     flex: 1;
     padding: 0.8rem 1.2rem;
     border-radius: 6px;
@@ -100,13 +104,6 @@
     text-align: center;
 }
 
-.nextBtn:hover {
-    background-color: var(--brighter-primary);
-}
-
-.backBtn:hover {
-    background-color: hsl(from var(--clr-bg) h s 40%);
-}
 
 .dateSection {
     display: flex;
@@ -159,14 +156,6 @@ select {
     border: 1px solid var(--clr-border);
 }
 
-.disabledNextBtn {
-    background-color: hsl(from var(--clr-bg) h s 50%);
-    cursor: not-allowed;
-}
-
-.disabledNextBtn:hover {
-    background-color: hsl(from var(--clr-bg) h s 40%);
-}
 
 .groupForm3Content {
     padding: 1rem 0;
@@ -260,6 +249,8 @@ select {
 }
 
 .dot {
+    --clr-hover: var(--primary-hover);
+    --clr-active: var(--primary-active);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -286,6 +277,8 @@ select {
 }
 
 .inactive {
+    --clr-hover: hsl(from var(--clr-bg) h s 42%);
+    --clr-active: hsl(from var(--clr-bg) h s 45%);
     background-color: hsl(from var(--clr-bg) h s 40%);
     color: var(--comment-font);
 }

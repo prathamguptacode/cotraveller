@@ -1,7 +1,6 @@
 import styles from '../inbox.module.css'
-import { Check, MailCheck, X } from 'lucide-react'
+import { Check, MailCheck, Users, X } from 'lucide-react'
 import { api } from '@/api/axios'
-import { FaPeopleGroup } from 'react-icons/fa6'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { normalizeError } from '@/utils/normalizeError'
@@ -81,7 +80,7 @@ const SidebarInboxPreview = () => {
             return (
               <div key={request._id} className={styles.listItem}>
                 <div className={styles.avatarWrapper} >
-                  <FaPeopleGroup />
+                  <Users size={20} />
                 </div>
                 <div className={styles.detailsWrapper}>
                   <p className={styles.groupName}>{request.group.title}</p>

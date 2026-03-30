@@ -1,9 +1,9 @@
 import styles from '@/features/chats/chats.module.css'
-// import Sidebar from '@/features/chats/components/Sidebar'
 import ChatArea from '@/features/chats/components/ChatArea'
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import LoadingPage from './Extras/LoadingPage'
+import ThreeDotLoader from '@/components/Loaders/ThreeDotLoader'
+import NotFound from './NotFound/NotFound'
 
 
 const Chats = () => {
@@ -11,8 +11,8 @@ const Chats = () => {
         <>
             <div className={styles.wrapper}>
                 {/* <Sidebar /> */}
-                <ErrorBoundary fallback={<div>Error ho gaya hai, jaan bhi denge</div>}>
-                    <Suspense fallback={<LoadingPage />}>
+                <ErrorBoundary fallback={<div className={styles.chatAreaWrapper} style={{overflow:'hidden'}}><NotFound /></div>}>
+                    <Suspense fallback={<div className={styles.chatAreaWrapper}><ThreeDotLoader /></div>}>
                         <ChatArea />
                     </Suspense>
                 </ErrorBoundary>

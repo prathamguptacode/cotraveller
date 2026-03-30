@@ -7,8 +7,9 @@ export const useLastMessageObserver = (group: Group, setIsAtBottom: Dispatch<Set
     const queryClient = useQueryClient()
     const observerRef = useRef<IntersectionObserver>(null)
 
+
+
     useEffect(() => {
-        console.log('Creating a new observer')
         const observer = new IntersectionObserver(entries => {
             if (!entries[0].isIntersecting) setIsAtBottom(false)
             else {

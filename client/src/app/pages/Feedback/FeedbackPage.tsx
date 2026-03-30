@@ -53,10 +53,6 @@ function FeedbackPage() {
 
     return (
         <div className={mystyle.feedback}>
-            <Navbar>
-                <Navbar.Title />
-                <Navbar.ThemeButton />
-            </Navbar>
             <div className={mystyle.upperbx}>
                 <div className={mystyle.titleTile}>
                     <div className={mystyle.strip}></div>

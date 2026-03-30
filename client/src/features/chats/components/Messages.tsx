@@ -9,10 +9,12 @@ import { useAuth } from '@/hooks/useAuth'
 type MessagesProps = {
     messages: Message[],
     lastMessageRef: RefObject<HTMLDivElement | null>,
+    messagesRef: RefObject<HTMLDivElement | null>,
+    firstMessageRef: RefObject<HTMLDivElement | null>,
     conversationRecords: ConversationRecord[]
 }
 
-const Messages = ({ messages, lastMessageRef, conversationRecords }: MessagesProps) => {
+const Messages = ({ messages, lastMessageRef, conversationRecords, messagesRef, firstMessageRef }: MessagesProps) => {
     const { user } = useAuth()
 
     useEffect(() => {
@@ -30,7 +32,7 @@ const Messages = ({ messages, lastMessageRef, conversationRecords }: MessagesPro
 
 
     return (
-        <div className={styles.messages}>
+        <div ref={messagesRef} className={styles.messages}>
             {messages.map((message, i, arr) => {
                 const isMyMessage = message.author._id == user?._id
                 const timeDiff = i > 0 ? new Date(arr[i - 1].createdAt).getTime() - new Date(message.createdAt).getTime() : 0
@@ -38,7 +40,7 @@ const Messages = ({ messages, lastMessageRef, conversationRecords }: MessagesPro
 
 
                 return (
-                    <div ref={i === arr.length - 1 ? lastMessageRef : null} key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
+                    <div ref={i === arr.length - 1 ? lastMessageRef : (i === 0 ? firstMessageRef : null)} key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
                         {(!isMyMessage && !shouldHideName) && <div className={styles.messageAuthor}>
                             {message.author.fullName}
                         </div>}
@@ -56,6 +58,8 @@ const Messages = ({ messages, lastMessageRef, conversationRecords }: MessagesPro
                     </div>
                 )
             })}
+
+
         </div>
     )
 }

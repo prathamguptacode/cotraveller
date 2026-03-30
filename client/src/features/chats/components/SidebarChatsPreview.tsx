@@ -1,13 +1,12 @@
 import styles from '../sidebarChatsPreview.module.css'
 import { Link, NavLink } from 'react-router-dom'
 import { api } from '@/api/axios'
-import { FaPeopleGroup } from "react-icons/fa6";
 import type { Group } from '@/types/group.types'
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useSocket } from '@/hooks/useSocket';
 import { useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { MountainSnow } from 'lucide-react';
+import { MountainSnow, Users } from 'lucide-react';
 import clsx from 'clsx';
 import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout';
 
@@ -41,10 +40,9 @@ const SidebarChatsPreview = () => {
     }, [socket])
 
     useEffect(() => {
-
         if (groups.some(group => group.unreadMessagesCount > 0)) setNotifications(prev => ({ ...prev, Chats: true }))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [groups])
+        else setNotifications(prev => ({ ...prev, Chats: false }))
+    }, [groups, setNotifications])
 
 
 
@@ -63,7 +61,7 @@ const SidebarChatsPreview = () => {
                             <NavLink to={`/groups/${group._id}/chats`} key={group._id} className={({ isActive }) => clsx(isActive && styles.activeItem, styles.listItem)
                             }>
                                 <div className={styles.avatarWrapper} >
-                                    <FaPeopleGroup />
+                                    <Users size={20} />
                                 </div>
                                 <div className={styles.detailsWrapper}>
                                     <p className={styles.groupName}>{group.title}</p>

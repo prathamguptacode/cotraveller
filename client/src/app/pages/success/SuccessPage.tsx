@@ -1,7 +1,7 @@
 import Navbar from '@/app/layouts/MainLayout/Navbar';
 import mystyle from './success.module.css'
-import { FaPeopleGroup } from "react-icons/fa6";
 import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Users } from 'lucide-react';
 
 function SuccessPage() {
     const location = useLocation()
@@ -14,7 +14,7 @@ function SuccessPage() {
         </Navbar>
         <div className={mystyle.successbx}>
             <div className={mystyle.imgbx}>
-                <FaPeopleGroup size={280} />
+                <Users size={280} />
             </div>
             <div className={mystyle.conbx}>
                 <h2 className={mystyle.title}>Your travel group is ready!</h2>
