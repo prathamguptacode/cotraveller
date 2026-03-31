@@ -1,14 +1,16 @@
 import { useAuth } from '@/hooks/useAuth'
 import styles from '../groupInfo.module.css'
 import { getImgURL } from '@/lib/cloudinary'
-import { Locate, MapPin, Plane, X } from 'lucide-react'
+import { Bus, Car, Locate, LucideCarTaxiFront, Map, MapPin, Motorbike, Plane, Train, Users, X } from 'lucide-react'
 import clsx from 'clsx'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { api } from '@/api/axios'
 import type { Group } from '../types'
 import { EmailIcon, EmailShareButton, FacebookIcon, FacebookShareButton, LinkedinIcon, LinkedinShareButton, RedditIcon, RedditShareButton, WhatsappIcon, WhatsappShareButton, XIcon, XShareButton } from 'react-share'
+import { ChatsCircleIcon } from '@phosphor-icons/react'
 import { toast } from 'sonner'
+import { useState, type JSX } from 'react'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
@@ -28,6 +30,10 @@ const GroupInfoHero = () => {
         toast.success("Link copied to clipboard")
     }
 
+    const transportationIcon = { 'Airplane': <Plane />, 'Flight': <Plane />, 'Car': <Car />, 'Taxi': <LucideCarTaxiFront />, 'Train': <Train />, 'Railway': <Train />, 'Bus': <Bus />, 'Bike': <Motorbike />, 'Other': <Map /> } as Record<string, JSX.Element>
+
+
+    const [currentSection, setCurrentSection] = useState<'Comments' | 'Members'>('Comments')
 
 
     return (
@@ -120,33 +126,56 @@ const GroupInfoHero = () => {
                         </div>
                     </div>
 
-                    {/* <p className={styles.description}>
-                        We are a group of five looking for more people who really want to enjoy the cold and shivering winters of switzerland and behold the beauty of its lakes, we are looking forward to our next cotraveller :)
-                    </p> */}
+
                     <div className={styles.travelDetailsWrapper}>
-                        <span >
-                            <Locate /> Roorkee
+                        <span className={styles.travelDetails} >
+                            <Locate />
+                            <span>
+                                <h3>{group.intialLocation}</h3>
+                                <div>{new Intl.DateTimeFormat('en-gb', {
+                                    timeStyle: 'short',
+                                    hour12: true,
+                                    dateStyle: 'medium'
+                                }).format(new Date(group.travelDate))}</div>
+                            </span>
                         </span>
                         <div></div>
 
-                        <span >
-                            <Plane /> Flight
+                        <span className={styles.travelDetails}>
+                            {transportationIcon[group.mode]}
+                            <span>
+                                <h3>{group.mode}</h3>
+                            </span>
                         </span>
                         <div></div>
-                        <span >
-                            <MapPin /> Delhi
+                        <span className={styles.travelDetails} >
+                            <MapPin />
+                            <span>
+                                <h3>Las Vegas</h3>
+                                {/* <div>{new Intl.DateTimeFormat('en-gb', {
+                                    timeStyle: 'short',
+                                    hour12: true,
+                                    dateStyle: 'medium'
+                                }).format(new Date(group.travelDate))}</div> */}
+                            </span>
                         </span>
                     </div>
 
 
                 </div>
-                <div className={styles.commentsSection}>
-
+            </div>
+            <nav className={styles.sectionSwitchersWrapper}>
+                <div className={styles.sectionSwitchers}>
+                    <button onClick={() => setCurrentSection('Comments')} aria-label='Show comments section' className={clsx(styles.sectionSwitcher, currentSection == 'Comments' && styles.activeSectionSwitcher)}>
+                        <ChatsCircleIcon size={28} />
+                    </button>
+                    <button onClick={() => setCurrentSection('Members')} aria-label='show members section' className={clsx(styles.sectionSwitcher, currentSection == 'Members' && styles.activeSectionSwitcher)}>
+                        <Users size={28} />
+                    </button>
                 </div>
-            </div>
-            <div className={styles.membersArea}>
-
-            </div>
+                <div className={styles.activeSectionIndicator}></div>
+            </nav>
+            
         </div >
     )
 }

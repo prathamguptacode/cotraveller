@@ -263,7 +263,7 @@ html {
     --chats-border: hsl(210, 4%, 16%);
     --chats-popover-bg: hsl(217, 15%, 14%);
     --chats-popover-shadow: hsl(0, 0%, 5%);
-    --chats-popover-font-hover:hsl(0, 0%, 100%);
+    --chats-popover-font-hover: hsl(0, 0%, 100%);
 
     /* dialog */
     --dialog-border: hsl(225, 6%, 28%);
@@ -277,6 +277,9 @@ html {
     /* navbar */
     --nav-neutral-hover: hsl(225, 4%, 20%);
     --nav-neutral-active: hsl(225, 4%, 25%);
+
+    /* group */
+    --group-neutral-muted: hsl(208, 5%, 72%);
 }
 
 .disabledBtn {

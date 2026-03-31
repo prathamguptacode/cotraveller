@@ -1,5 +1,16 @@
+.fallbackWrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 100%;
+}
+
+
+
+
 .wrapper {
-    /* border: 1px solid aqua; */
     height: 100%;
     padding: 1.5rem;
     padding-top: 50px;
@@ -8,14 +19,11 @@
     max-width: 80%;
 
     display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .groupInfoAreaWrapper {
-    /* ###REMOVE LATER */
-    /* border: 1px solid aqua; */
-    height: 100%;
-    /* ----- */
-
     width: 700px;
     min-width: 0;
     margin-inline: auto;
@@ -132,33 +140,54 @@
 }
 
 .travelDetailsWrapper {
-    /* border: 1px solid aqua; */
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 14px;
+    gap: 1.5rem;
 
     >div {
         flex: 1;
-        flex-grow: 2;
+        flex-grow: .5;
         height: 2px;
         border: 1px dashed var(--clr-font);
 
     }
+}
+
+.travelDetails {
+    flex: 1;
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    justify-content: center;
+
 
     >span {
-        flex: 1;
-        flex-direction: column;
         display: flex;
-        gap: .25rem;
-        align-items: center;
+        flex-direction: column;
+
+        >div {
+            white-space: nowrap;
+        }
+    }
+
+    svg {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+    }
+
+    h3 {
+        font-weight: 600;
+        font-size: 1rem;
+        white-space: nowrap;
+        max-width: 20ch;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
-
-.membersArea {
-    /* border: 1px solid aqua; */
-    /* width: 250px; */
-}
 
 .shareMenu {
     position-anchor: --group-info;
@@ -250,4 +279,51 @@
     text-align: center;
     padding: .5rem 1rem;
     font-weight: 600;
+}
+
+
+/* footer sections */
+
+.sectionSwitchersWrapper {
+    border-bottom: .2px solid var(--clr-border);
+    margin-block: 2rem;
+}
+
+.sectionSwitchers {
+    margin-inline: auto;
+    display: flex;
+    justify-content: center;
+    gap: 10rem;
+    align-items: center;
+    max-width: 80%;
+}
+
+.sectionSwitcher {
+    color: var(--group-neutral-muted);
+    border-block-end: 2px solid transparent;
+    padding: .5rem 1rem;
+
+    position: relative
+}
+
+.activeSectionSwitcher {
+    anchor-name: --section-switcher;
+    color: var(--clr-font);
+}
+
+.activeSectionIndicator {
+    position: absolute;
+    position-anchor: --section-switcher;
+    inset: auto;
+    bottom: anchor(bottom);
+    left: anchor(left);
+    right: anchor(right);
+
+    transition: left, right;
+    transition-duration: .3s;
+    transition-behavior: ease-out;
+
+
+    height: 2px;
+    background-color: var(--clr-font);
 }
