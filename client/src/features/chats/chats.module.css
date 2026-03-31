@@ -1,8 +1,7 @@
 .wrapper {
     display: flex;
     /* ###LATER add dvh for phone support everywhere */
-    height: calc(100vh - 65px);
-    height: calc(100dvh - 65px);
+    height: 100%;
 }
 
 
@@ -258,8 +257,8 @@
     color: var(--clr-font);
     transition: all .3s linear;
 
-    &:hover{
-        >*{
+    &:hover {
+        >* {
             color: var(--chats-popover-font-hover);
         }
     }
