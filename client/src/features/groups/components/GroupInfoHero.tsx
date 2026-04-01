@@ -1,7 +1,7 @@
 import { useAuth } from '@/hooks/useAuth'
 import styles from '../groupInfo.module.css'
 import { getImgURL } from '@/lib/cloudinary'
-import { Bus, Car, Locate, LucideCarTaxiFront, Map, MapPin, Motorbike, Plane, Train, Users, X } from 'lucide-react'
+import { Bus, Calendar, Car, Locate, LucideCarTaxiFront, Map, MapPin, Motorbike, Plane, Train, Users, X } from 'lucide-react'
 import clsx from 'clsx'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { EmailIcon, EmailShareButton, FacebookIcon, FacebookShareButton, Linkedi
 import { ChatsCircleIcon } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { useState, type JSX } from 'react'
+import CommentsSection from './CommentsSection'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
@@ -129,14 +130,15 @@ const GroupInfoHero = () => {
 
                     <div className={styles.travelDetailsWrapper}>
                         <span className={styles.travelDetails} >
-                            <Locate />
+                            {/* <Locate /> */}
+                            {/* <Calendar /> */}
                             <span>
                                 <h3>{group.intialLocation}</h3>
-                                <div>{new Intl.DateTimeFormat('en-gb', {
+                                {/* <div>{new Intl.DateTimeFormat('en-gb', {
                                     timeStyle: 'short',
                                     hour12: true,
                                     dateStyle: 'medium'
-                                }).format(new Date(group.travelDate))}</div>
+                                }).format(new Date(group.travelDate))}</div> */}
                             </span>
                         </span>
                         <div></div>
@@ -149,7 +151,7 @@ const GroupInfoHero = () => {
                         </span>
                         <div></div>
                         <span className={styles.travelDetails} >
-                            <MapPin />
+                            {/* <MapPin /> */}
                             <span>
                                 <h3>Las Vegas</h3>
                                 {/* <div>{new Intl.DateTimeFormat('en-gb', {
@@ -161,6 +163,13 @@ const GroupInfoHero = () => {
                         </span>
                     </div>
 
+                    <div className={styles.descriptionWrapper}>
+                        <p className={styles.description}>
+                            honestly i'd love it if guardian slayer was a better bridge between sven and eman slayers because t3 sven is the first "challenge" to progression for slayers and then once you get past t3/t4 sven you're hit with a very easy t1 eman and then immediately afterwards you have the wall known as t2 eman and that's where you start realising you're needing to get into the midgame to continue, but if guardian is between sven and eman, you'll be better introduced to fishing as a skill than enid can teach you, and you're given something harder than sven but easier than eman slayer so you can gradually improve rather than hit the brick wall full speed
+                        </p>
+                        <input type="checkbox" id="toggleMoreContent" />
+                        <label htmlFor="toggleMoreContent" className={styles.toggleMoreContent} />
+                    </div>
 
                 </div>
             </div>
@@ -175,7 +184,10 @@ const GroupInfoHero = () => {
                 </div>
                 <div className={styles.activeSectionIndicator}></div>
             </nav>
-            
+            <div className={styles.sectionWrapper}>
+                {currentSection == 'Comments' ? <CommentsSection /> :
+                    currentSection == 'Members' ? <div>Nothing here yet</div> : <div>Nothing here yet</div>}
+            </div>
         </div >
     )
 }

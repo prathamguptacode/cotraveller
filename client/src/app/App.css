@@ -195,31 +195,31 @@ html {
 
     /* Old colors */
 
-    --clr-border: #80868b99;
+    --clr-border: hsla(207, 5%, 52%, 0.6);
     --in-border: hsla(207, 5%, 77%, 0.6);
 
-    --clr-bg-hover: #303134;
+    --clr-bg-hover: hsl(225, 4%, 20%);
 
     --group-hover: hsl(225, 6%, 18%);
 
-    --clr-bg: #202124;
+    --clr-bg: hsl(225, 6%, 13%);
 
-    --secondary-bg: #303133;
+    --secondary-bg: hsl(220, 3%, 19%);
     --primary: hsl(217, 89%, 76%);
     /* #669df7 */
 
     --brighter-primary: hsl(217, 90%, 80%);
     --link-color: #8ab4f8;
     --commentbg: hsl(225, 4%, 20%);
-    --clr-font: #e8eaed;
+    --clr-font: hsl(216, 12%, 92%);
 
     --dull-font: hsl(217, 41%, 78%);
     --comment-font: hsl(216, 12%, 72%);
 
-    --secondaryFont: rgb(32, 33, 36);
-    --opt-hover: #5E5F62;
+    --secondaryFont: hsl(225, 6%, 13%);
+    --opt-hover: hsl(225, 2%, 38%);
 
-    --toast-bg: #303133;
+    --toast-bg: hsl(220, 3%, 19%);
     --toast-color: hsl(0, 0%, 100%);
 
     --commentSP: hsl(216, 12%, 92%);
@@ -228,22 +228,22 @@ html {
 
 
     /* auth page color */
-    --primary-darker: #186ef8;
+    --primary-darker: hsl(217, 94%, 53%);
     --secondary-bg-lighter: hsl(220, 3%, 75%);
-    --expansion-bg: #161718;
+    --expansion-bg: hsl(210, 4%, 9%);
     --secondary-bg-darker: hsl(220, 3%, 9%);
     --secondary-bg-darkest: hsl(220, 3%, 6%);
-    --clr-non-complementary-font: #202124;
+    --clr-non-complementary-font: hsl(225, 6%, 13%);
     --clr-non-complementary-bg-800: hsl(0, 0%, 10%);
     --clr-complementary-bg-400: hsl(216, 3%, 85%);
 
     /*homepage sidebar */
-    --sidebar-bg: #303133;
+    --sidebar-bg: hsl(220, 3%, 19%);
     --sidebar-bg-hover: var(--clr-bg);
-    --sidebar-bg-active: #2e3133;
-    --sidebar-anchor-active: #609af6;
+    --sidebar-bg-active: hsl(204, 5%, 19%);
+    --sidebar-anchor-active: hsl(217, 89%, 67%);
     --sidebar-button-hover: hsl(225, 4%, 20%);
-    --discoverbg: rgba(138, 180, 248, 0.12);
+    --discoverbg: hsla(217, 89%, 76%, 0.12);
 
     /* sidebar-v2 */
     --sidebar-v2-bg: hsl(210, 4%, 9%);
@@ -280,6 +280,8 @@ html {
 
     /* group */
     --group-neutral-muted: hsl(208, 5%, 72%);
+    --group-neutral-hover: hsl(0, 0%, 25%);
+    --group-neutral-disabled: hsl(225, 6%, 18%);
 }
 
 .disabledBtn {
