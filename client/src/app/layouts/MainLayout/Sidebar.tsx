@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import styles from './sidebar.module.css'
 import { Compass, Home, Inbox, MessageCircle, Search, Settings, Users } from 'lucide-react'
 import { MdOutlineFeedback } from 'react-icons/md'
-import { Suspense, type JSX } from 'react'
+import { Suspense, useEffect, useState, type JSX } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useAuth } from '@/hooks/useAuth'
 import ThreeDotLoader from '@/components/Loaders/ThreeDotLoader'
@@ -11,15 +11,14 @@ import SidebarChatsPreview from '@/features/chats/components/SidebarChatsPreview
 import SidebarInboxPreview from '@/features/inbox/components/SidebarInboxPreview'
 import LogOutButton from '@/components/Buttons/LogOutButton'
 import type { SidebarTab } from './types'
-
-
-
-
+import { ListFilter } from 'lucide-react';
+import FilterSidebar from '@/features/filter/FilterSidebar'
 
 
 const Sidebar = () => {
     const { currentSidebarTab, setCurrentSidebarTab, sidebarIsHidden, setSidebarIsHidden } = useMainLayoutContext()
     const { user } = useAuth()
+    const location = useLocation();
 
 
     const sidebarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
@@ -30,7 +29,19 @@ const Sidebar = () => {
         { name: 'Search', icon: <Search /> },
     ]
 
-
+    if (location.pathname == "/viewgroup") {
+        sidebarTabs.push({
+            name: 'Filter', icon: <ListFilter />
+        })
+    }
+    useEffect(() => {
+        if (location.pathname == "/viewgroup") {
+            setSidebarIsHidden(false);
+            setCurrentSidebarTab('Filter');
+        } else {
+            setCurrentSidebarTab('Chats');
+        }
+    }, [location])
 
 
 
@@ -64,7 +75,7 @@ const Sidebar = () => {
                         <Suspense fallback={<div className={styles.fallbackWrapper}><ThreeDotLoader /></div>}>
                             {
                                 currentSidebarTab == 'Chats' ? <SidebarChatsPreview /> :
-                                    currentSidebarTab == 'Inbox' ? <SidebarInboxPreview /> :
+                                    currentSidebarTab == 'Inbox' ? <SidebarInboxPreview /> : currentSidebarTab == 'Filter' ? <FilterSidebar /> :
                                         <div className={styles.fallbackWrapper}>Coming Soon !</div>
                             }
                         </Suspense>

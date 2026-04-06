@@ -6,6 +6,9 @@ import { api } from '@/api/axios'
 import Group from '@/components/viewgroup/Group'
 import NoGroup from '../success/NoGroup'
 import { useQuery } from '@tanstack/react-query'
+import LoadingPage from '../Extras/LoadingPage'
+
+// ###fix the commentsss
 
 type Group = {
     _id: string,
@@ -27,8 +30,8 @@ function ViewGroup() {
     const [query] = useSearchParams()
     const location = query.get("q");
     const date = query.get("date");
-    const { data: groups } = useQuery({
-        queryKey: ["groups", location,date],
+    const { data: groups, isLoading } = useQuery({
+        queryKey: ["groups", location, date],
         queryFn: () => {
             return api.get<Groups>(`groups/viewgroupbyfilter?intialLocation=${location}&travelDate=${date}`)
         },
@@ -40,11 +43,13 @@ function ViewGroup() {
     return (
         <div className={mystyle.wrapper}>
             <Searchbox dLocation={location} dDate={date} />
-            <p>
-                {
-                groups && groups.length>0 ? groups.map(e=><Group element={e} />) : <NoGroup />
-                }
-            </p>
+            {isLoading ? <LoadingPage /> :
+                <div>
+                    {
+                        groups && groups.length > 0 ? groups.map(e => <Group element={e} />) : <NoGroup />
+                    }
+                </div>
+            }
         </div>
 
     )

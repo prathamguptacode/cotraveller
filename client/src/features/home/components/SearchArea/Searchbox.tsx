@@ -30,10 +30,10 @@ function Searchbox({dLocation, dDate}:{dLocation:string|null, dDate:string|null}
         if (!date) {
             return toast.error('Please select a Date');
         }
-        console.log(date)
         navigate(`/viewgroup?q=${location}&date=${date}`)
     }
     
+    // ###closing the location box 
 
     return (
         <div>
