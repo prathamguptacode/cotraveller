@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { normalizeError } from '@/utils/normalizeError'
 import { useEffect } from 'react'
 import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout'
+import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
 
 type InboxRequest = {
   _id: string,
@@ -69,11 +70,11 @@ const SidebarInboxPreview = () => {
 
   return (
     requests.length == 0 ?
-      <div className={styles.fallbackWrapper}>
+      <FallbackWrapper className={styles.fallbackWrapper}>
         {/* ###LATER Replace this fallback */}
         <MailCheck size={48} />
         Incoming Join Requests will appear here
-      </div> :
+      </FallbackWrapper> :
       <div className={styles.list}>
         {
           requests.map(request => {

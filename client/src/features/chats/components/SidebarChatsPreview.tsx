@@ -9,13 +9,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { MountainSnow, Users } from 'lucide-react';
 import clsx from 'clsx';
 import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout';
+import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
 
 
 
 const SidebarChatsPreview = () => {
     const socket = useSocket()
     const { user } = useAuth()
-    const { setNotifications } = useMainLayoutContext()
+    const { setNotifications, setSidebarIsHidden } = useMainLayoutContext()
     const queryClient = useQueryClient()
 
 
@@ -48,17 +49,20 @@ const SidebarChatsPreview = () => {
 
     return (
         groups.length == 0 ?
-            <div className={styles.fallbackWrapper}>
+            <FallbackWrapper className={styles.fallbackWrapper} >
                 {/* ###LATER Replace this fallback */}
                 <MountainSnow size={48} />
-                Find your first group now !
-                <Link to={`/viewgroup?q=VIT%20Chennai&mode=Airplane&lowerT=2025-12-20T00:00&upperT=2025-12-20T23:59&d=20&m=December&y=2025`} className={styles.redirectButton} >Go</Link>
-            </div> :
+                Find your first group now!
+                < Link to={`/viewgroup?q=VIT%20Chennai&mode=Airplane&lowerT=2025-12-20T00:00&upperT=2025-12-20T23:59&d=20&m=December&y=2025`
+                } className={styles.redirectButton} > Go</Link>
+            </FallbackWrapper > :
             <div className={styles.list}>
                 {
                     groups.map(group => {
                         return (
-                            <NavLink to={`/groups/${group._id}/chats`} key={group._id} className={({ isActive }) => clsx(isActive && styles.activeItem, styles.listItem)
+                            <NavLink onClick={() => {
+                                if (window.matchMedia("(max-width:768px)").matches) setSidebarIsHidden(true)
+                            }} to={`/groups/${group._id}/chats`} key={group._id} className={({ isActive }) => clsx(isActive && styles.activeItem, styles.listItem)
                             }>
                                 <div className={styles.avatarWrapper} >
                                     <Users size={20} />

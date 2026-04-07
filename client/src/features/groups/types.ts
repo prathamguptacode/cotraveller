@@ -27,5 +27,6 @@ export type Group = {
     title: string,
     content: string,
     mode: string,
-    intialLocation: string
+    intialLocation: string,
+    incomingRequests: string[],
 }

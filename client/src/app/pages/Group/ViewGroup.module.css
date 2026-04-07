@@ -53,3 +53,11 @@
         background-position: 0% 50%, 50% 50%, 100% 100%;
     }
 }
+
+
+@media (max-width:768px) {
+    .wrapper {
+        min-height: calc(100vh - 65px - 57px);
+        min-height: calc(100dvh - 65px - 57px);
+    }
+}
