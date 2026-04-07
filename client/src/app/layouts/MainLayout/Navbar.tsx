@@ -2,7 +2,7 @@ import mystyle from './navbar.module.css'
 import ThemeButton from '@/components/Buttons/ThemeButton';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, type ChangeEvent, type ReactNode, type RefObject } from "react";
-import { Camera, Plus, TextAlignJustify, X } from "lucide-react";
+import { ArrowLeft, Camera, Plus, TextAlignJustify, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
@@ -72,12 +72,13 @@ function Navbar({ children }: NavbarProps) {
 export default Navbar
 
 const NavbarHamburger = () => {
-    const { setSidebarIsHidden, notifications, hamburgerRef } = useMainLayoutContext()
+    const { setSidebarIsHidden, notifications, hamburgerRef, sidebarIsHidden } = useMainLayoutContext()
     const { user } = useAuth()
 
 
-    return user && <button ref={hamburgerRef} aria-label='hamburger menu' tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification)}>
+    return user && <button ref={hamburgerRef} aria-label='hamburger menu' tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification, !sidebarIsHidden && mystyle.mobileBackButton)}>
         <TextAlignJustify strokeWidth={2.5} size={20} />
+        <ArrowLeft strokeWidth={2.5} size={20} />
     </button>
 
 }
@@ -85,7 +86,11 @@ Navbar.Hamburger = NavbarHamburger
 
 
 
-const NavbarTitle = () => <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
+const NavbarTitle = () => {
+    return (
+        <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
+    )
+}
 Navbar.Title = NavbarTitle
 
 const NavbarThemeButton = () => <div className={mystyle.themebtn}><ThemeButton /></div>

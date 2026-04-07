@@ -9,9 +9,9 @@ import NotFound from './NotFound/NotFound'
 const Chats = () => {
     return (
         <>
-            <div className={styles.wrapper}>
+            <div data-mobile-nav-hidden='true' className={styles.wrapper}>
                 {/* <Sidebar /> */}
-                <ErrorBoundary fallback={<div className={styles.chatAreaWrapper} style={{overflow:'hidden'}}><NotFound /></div>}>
+                <ErrorBoundary fallback={<div className={styles.chatAreaWrapper} style={{ overflow: 'hidden' }}><NotFound /></div>}>
                     <Suspense fallback={<div className={styles.chatAreaWrapper}><ThreeDotLoader /></div>}>
                         <ChatArea />
                     </Suspense>

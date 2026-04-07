@@ -16,27 +16,29 @@ import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
-    const url = user && getImgURL(user.avatar.publicId, user.avatar.version, 600)
     const { setSidebarIsHidden } = useMainLayoutContext()
-
     const { groupId } = useParams() as { groupId: string }
+
+    const url = user && getImgURL(user.avatar.publicId, user.avatar.version, 600)
+
     const { data: group } = useSuspenseQuery({
         queryKey: ['groups', groupId],
         queryFn: () => api.get<{ group: Group }>(`/groups/${groupId}`),
         select: (res) => res.data.group
     })
 
-    const shareURL = new URL(location.pathname, location.origin).href
 
+    const shareURL = new URL(location.pathname, location.origin).href
     const copyShareLink = () => {
         navigator.clipboard.writeText(shareURL)
         toast.success("Link copied to clipboard")
     }
 
 
-    const [currentSection, setCurrentSection] = useState<'Comments' | 'Members'>('Comments')
-
-
+    const [currentSection, setCurrentSection] = useState<'Comments' | 'Members' | 'Travel Details'>(() => {
+        if (window.matchMedia("(max-width:1240px)").matches) return 'Travel Details'
+        return 'Comments'
+    })
     const [currentRightSidebarTab, setCurrentRightSidebarTab] = useState<'Travel Details' | 'Members'>('Travel Details')
 
     useEffect(() => {
@@ -82,7 +84,7 @@ const GroupInfoHero = () => {
 
                     <div className={styles.descriptionWrapper}>
                         <p className={styles.description}>
-                            honestly i'd love it if guardian slayer was a better bridge between sven and eman slayers because t3 sven is the first "challenge" to progression for slayers and then once you get past t3/t4 sven you're hit with a very easy t1 eman and then immediately afterwards you have the wall known as t2 eman and that's where you start realising you're needing to get into the midgame to continue, but if guardian is between sven and eman, you'll be better introduced to fishing as a skill than enid can teach you, and you're given something harder than sven but easier than eman slayer so you can gradually improve rather than hit the brick wall full speed
+                            {group.content}
                         </p>
                         <input type="checkbox" id="toggleMoreDescription" />
                         <label htmlFor="toggleMoreDescription" className={styles.toggleMoreContent} />
@@ -150,18 +152,24 @@ const GroupInfoHero = () => {
                 </div>
                 <nav className={styles.sectionSwitchersWrapper}>
                     <div className={styles.sectionSwitchers}>
+                        <button onClick={() => setCurrentSection('Travel Details')} aria-label='Show Travel Details' className={clsx(styles.sectionSwitcher, currentSection == 'Travel Details' && styles.activeSectionSwitcher)}>
+                            <Map size={24} />
+                        </button>
                         <button onClick={() => setCurrentSection('Comments')} aria-label='Show comments section' className={clsx(styles.sectionSwitcher, currentSection == 'Comments' && styles.activeSectionSwitcher)}>
-                            <ChatsCircleIcon size={28} />
+                            <ChatsCircleIcon size={24} />
                         </button>
                         <button onClick={() => setCurrentSection('Members')} aria-label='show members section' className={clsx(styles.sectionSwitcher, currentSection == 'Members' && styles.activeSectionSwitcher)}>
-                            <Users size={28} />
+                            <Users size={24} />
                         </button>
                     </div>
                     <div className={styles.activeSectionIndicator}></div>
                 </nav>
                 <div className={styles.sectionWrapper}>
                     {currentSection == 'Comments' ? <CommentsSection /> :
-                        currentSection == 'Members' ? <div>Nothing here yet</div> : <div>Nothing here yet</div>}
+                        currentSection == 'Members' ? <Members group={group} /> :
+                            currentSection == 'Travel Details' ? <TravelDetails group={group} /> :
+                                <div>Nothing here</div>
+                    }
                 </div>
             </div >
             <div className={styles.rightSidebar}>
@@ -198,8 +206,7 @@ const GroupInfoHero = () => {
 export default GroupInfoHero
 
 
-//   <TravelDetails group={group} />
-//                 
+
 type TravelDetailsProps = {
     group: Group
 }

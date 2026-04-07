@@ -126,7 +126,7 @@ input::-webkit-inner-spin-button {
 }
 
 body {
-    max-width: 1920px;
+    /* max-width: 1920px; */
     margin: auto;
     background-color: var(--clr-bg);
     color: var(--clr-font);

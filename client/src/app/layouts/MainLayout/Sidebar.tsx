@@ -14,6 +14,13 @@ import clsx from 'clsx'
 import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
 
 
+const sidebarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
+    { name: 'Chats', icon: <MessageCircle /> },
+    { name: 'Groups', icon: <Users /> },
+    { name: 'Inbox', icon: <Inbox /> },
+    { name: 'Explore', icon: <Compass /> },
+    { name: 'Search', icon: <Search /> },
+]
 
 
 
@@ -25,13 +32,6 @@ const Sidebar = () => {
     const { user } = useAuth()
 
 
-    const sidebarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
-        { name: 'Chats', icon: <MessageCircle /> },
-        { name: 'Groups', icon: <Users /> },
-        { name: 'Inbox', icon: <Inbox /> },
-        { name: 'Explore', icon: <Compass /> },
-        { name: 'Search', icon: <Search /> },
-    ]
 
     const location = useLocation()
 
@@ -40,7 +40,7 @@ const Sidebar = () => {
         const sidebarsDiv = sidebarsRef.current
         const hamburgerMenu = hamburgerRef.current
 
-        if (!sidebarsDiv?.parentElement || !hamburgerMenu || sidebarsDiv.parentElement.children[1].children[1].getAttribute('data-sidebar-type') !== 'overlay') return
+        if (!sidebarsDiv?.parentElement || !hamburgerMenu || sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay') return
 
         const eventHandler = (e: PointerEvent) => {
             const target = e.target

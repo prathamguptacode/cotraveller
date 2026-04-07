@@ -16,7 +16,7 @@ import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
 const SidebarChatsPreview = () => {
     const socket = useSocket()
     const { user } = useAuth()
-    const { setNotifications } = useMainLayoutContext()
+    const { setNotifications, setSidebarIsHidden } = useMainLayoutContext()
     const queryClient = useQueryClient()
 
 
@@ -60,7 +60,9 @@ const SidebarChatsPreview = () => {
                 {
                     groups.map(group => {
                         return (
-                            <NavLink to={`/groups/${group._id}/chats`} key={group._id} className={({ isActive }) => clsx(isActive && styles.activeItem, styles.listItem)
+                            <NavLink onClick={() => {
+                                if (window.matchMedia("(max-width:768px)").matches) setSidebarIsHidden(true)
+                            }} to={`/groups/${group._id}/chats`} key={group._id} className={({ isActive }) => clsx(isActive && styles.activeItem, styles.listItem)
                             }>
                                 <div className={styles.avatarWrapper} >
                                     <Users size={20} />
