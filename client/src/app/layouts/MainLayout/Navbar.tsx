@@ -72,11 +72,11 @@ function Navbar({ children }: NavbarProps) {
 export default Navbar
 
 const NavbarHamburger = () => {
-    const { setSidebarIsHidden, notifications } = useMainLayoutContext()
+    const { setSidebarIsHidden, notifications, hamburgerRef } = useMainLayoutContext()
     const { user } = useAuth()
 
 
-    return user && <button aria-label='hamburger menu' tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification)}>
+    return user && <button ref={hamburgerRef} aria-label='hamburger menu' tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification)}>
         <TextAlignJustify strokeWidth={2.5} size={20} />
     </button>
 

@@ -28,15 +28,6 @@
 
 }
 
-.fallbackWrapper {
-    flex: 1;
-    position: relative;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .notification::after {
     content: '';
     --dimension: 28%;

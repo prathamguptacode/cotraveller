@@ -1,5 +1,5 @@
 .sidebarsWrapper {
-    width: 430px;
+    width: 80px;
     background-color: var(--sidebar-v2-bg);
     overflow: hidden;
     flex-shrink: 0;
@@ -7,16 +7,61 @@
     height: calc(100vh - 65px);
     display: flex;
 
+}
 
+
+.sidebarsWrapper:has(+div>[data-sidebar-type='overlay']) {
+    &.visibleCtxSidebar {
+        width: 80px;
+
+        .contextualSidebar {
+            translate: 0;
+            opacity: 1;
+            pointer-events: all;
+        }
+    }
+
+
+
+    .contextualSidebar {
+        width: 350px;
+        position-anchor: --primary-sidebar;
+        position: absolute;
+        inset: auto;
+        left: anchor(right);
+        bottom: anchor(bottom);
+        top: anchor(top);
+
+
+        transition-property: translate, opacity;
+        transition-duration: .1s;
+        transition-behavior: linear;
+
+        z-index: 10;
+        translate: -100% 0;
+        opacity: 0;
+        pointer-events: none;
+
+    }
+}
+
+
+.visibleCtxSidebar {
+    width: 430px;
 }
 
 .primarySidebar {
+    background-color: var(--sidebar-v2-bg);
     width: 80px;
     flex-shrink: 0;
     padding: .5rem;
     display: grid;
     align-content: space-between;
     border-right: 1px solid var(--sidebar-v2-border);
+
+    position: relative;
+    anchor-name: --primary-sidebar;
+    z-index: 20;
 }
 
 
@@ -45,7 +90,7 @@
         position: relative;
         transition: all .15s ease-out;
 
-        
+
         &:active {
             scale: .95;
         }
@@ -54,6 +99,8 @@
 }
 
 .contextualSidebar {
+    all: unset;
+    background-color: var(--sidebar-v2-bg);
     flex-grow: 1;
     display: grid;
     grid-template-rows: auto 1fr;
@@ -92,15 +139,4 @@
         height: 100%;
         overflow-y: scroll;
     }
-}
-
-
-.fallbackWrapper {
-    flex: 1;
-    position: relative;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
 }

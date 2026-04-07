@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react"
-import type { Dispatch, SetStateAction } from "react"
+import type { Dispatch, RefObject, SetStateAction } from "react"
 import type { Notifications, SidebarTab } from "./types"
 
 type MainLayoutContextType = {
@@ -8,7 +8,8 @@ type MainLayoutContextType = {
     currentSidebarTab: SidebarTab,
     setCurrentSidebarTab: Dispatch<SetStateAction<SidebarTab>>,
     sidebarIsHidden: boolean,
-    setSidebarIsHidden: Dispatch<SetStateAction<boolean>>
+    setSidebarIsHidden: Dispatch<SetStateAction<boolean>>,
+    hamburgerRef: RefObject<HTMLButtonElement | null>
 }
 
 export const MainLayoutContext = createContext<MainLayoutContextType | null>(null)
