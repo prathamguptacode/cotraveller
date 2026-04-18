@@ -10,7 +10,7 @@ import { eventBus } from "@/events/eventBus";
 import JoinRequest from "@/models/JoinRequest";
 import ConversationRecord from "@/models/ConversationRecord";
 
-const allowedTags = ["Alcohol free", "Boys only", "Girls only", "Backpacking"] as const
+const allowedTags = ["no alcohol", "girls only", "budget friendly","pet friendly"] as const
 const allowedMode = ["Train", "Flight", "Taxi", "Car", "Bike", "Others"] as const
 
 const GroupSchema = z.object({
@@ -132,7 +132,7 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
     })
     pipeline.push({ $match: filter });
     if (tags && tags.length > 0) {
-        console.log(tags)
+        // console.log(tags)
         pipeline.push({
             $match: {
                 tags: { $in: tags }
@@ -179,6 +179,7 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
     pipeline.push({
         $unwind: "$ownerPop"
     })
+    // ### comment count here
     pipeline.push(
         {
             $project: {
@@ -190,75 +191,13 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
                 content: 1,
                 travelDate: 1,
                 incomingRequests: 1,
-                //   comments: 1,
+                comments: 1,
                 memberNumber: 1,
             }
         }
     )
     const groupData = await Group.aggregate(pipeline)
     res.success(200, { groups: groupData });
-
-    // const FilterSchema = z.objet({
-    //     mode: z.string(),
-    //     intialLocation: z.string(),
-    //     lowerTime: z.string(),
-    //     upperTime: z.string(),
-    // })
-    // const parsedData = FilterSchema.safeParse(req.body)
-    // if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
-
-    // const lowerTime = xss(parsedData.data.lowerTime)
-    // const upperTime = xss(parsedData.data.upperTime)
-    // const mode = xss(parsedData.data.mode)
-    // const intialLocation = xss(parsedData.data.intialLocation)
-
-    // // const utcTime = moment.tz(istTime, "Asia/Kolkata").utc().format();for converting time
-    // const utcLowerTime = moment.tz(lowerTime, "Asia/Kolkata").utc().toDate()
-    // const utcUpperTime = moment.tz(upperTime, "Asia/Kolkata").utc().toDate()
-    // const data = await Group.aggregate([
-    //     {
-    //         $match: {
-    //             mode: mode,
-    //             intialLocation: intialLocation,
-    //             travelDate: { $gte: utcLowerTime, $lte: utcUpperTime },
-
-    //             //if membernumber is reached
-    //             $expr: {
-    //                 $lt: [
-    //                     { $size: "$member" },
-    //                     "$memberNumber"
-    //                 ]
-    //             }
-
-    //         }
-    //     },
-    //     {
-    //         $lookup: {
-    //             from: 'users',
-    //             localField: 'owner',
-    //             foreignField: '_id',
-    //             as: "ownerPop"
-    //         }
-    //     },
-    //     {
-    //         $unwind: "$ownerPop"
-    //     },
-    //     {
-    //         $project: {
-    //             ownerPop: {
-    //                 fullName: 1
-    //             },
-    //             title: 1,
-    //             _id: 1,
-    //             content: 1,
-    //             travelDate: 1,
-    //             requests: 1,
-    //             comments: 1,
-    //         }
-    //     }
-
-    // ])
-    // res.success(200, { groups: data })
 }
 
 export const addRequest: RequestHandler = async (req, res) => {

@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
 import Searchbox from '@/features/home/components/SearchArea/Searchbox'
 import mystyle from './ViewGroup.module.css'
-import { data, useSearchParams } from 'react-router-dom'
+import { Navigate, useSearchParams } from 'react-router-dom'
 import { api } from '@/api/axios'
 import Group from '@/components/viewgroup/Group'
 import NoGroup from '../success/NoGroup'
@@ -30,7 +29,11 @@ function ViewGroup() {
     const [query] = useSearchParams()
     const location = query.get("q");
     const date = query.get("date");
-    const { data: groups, isLoading } = useQuery({
+    const time = query.get('time')
+    const members = query.get('members')
+    const travelMode = query.get('travelMode')
+    const tags = query.getAll('tags')
+    const { data: groups, isLoading, isError } = useQuery({
         queryKey: ["groups", location, date],
         queryFn: () => {
             return api.get<Groups>(`groups/viewgroupbyfilter?intialLocation=${location}&travelDate=${date}`)
@@ -39,6 +42,10 @@ function ViewGroup() {
             return data.data.groups
         },
     })
+    // u may wanna fix it
+    if (isError) {
+        return <Navigate to={'/error'} />
+    }
 
     return (
         <div className={mystyle.wrapper}>

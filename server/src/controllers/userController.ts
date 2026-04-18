@@ -316,3 +316,4 @@ export const removeAvatarController: RequestHandler = async (req, res) => {
 
     res.success(204, { result }, "Removal successful")
 }
+ 
