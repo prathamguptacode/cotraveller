@@ -10,7 +10,7 @@ import { eventBus } from "@/events/eventBus";
 import JoinRequest from "@/models/JoinRequest";
 import ConversationRecord from "@/models/ConversationRecord";
 
-const allowedTags = ["no alcohol", "girls only", "budget friendly","pet friendly"] as const
+const allowedTags = ["no alcohol", "girls only", "budget friendly", "pet friendly"] as const
 const allowedMode = ["Train", "Flight", "Taxi", "Car", "Bike", "Others"] as const
 
 const GroupSchema = z.object({
@@ -88,7 +88,10 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
         travelDate: z.string().optional(),
         travelTime: z.string().optional(),
         intialLocation: z.string().optional(),
-        tags: z.array(z.enum(allowedTags)).max(4).optional(),
+        tags: z.union([
+            z.enum(allowedTags),
+            z.array(z.enum(allowedTags)).max(4)
+        ]).transform((val) => (typeof val === "string" ? [val] : val)).optional(),
     })
     const validateData = filterSchema.safeParse(req.query);
     if (!validateData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data");
@@ -132,7 +135,6 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
     })
     pipeline.push({ $match: filter });
     if (tags && tags.length > 0) {
-        // console.log(tags)
         pipeline.push({
             $match: {
                 tags: { $in: tags }
@@ -193,6 +195,7 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
                 incomingRequests: 1,
                 comments: 1,
                 memberNumber: 1,
+                tags:1
             }
         }
     )
