@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import { addGroup, viewRequest, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup, addComment } from '../controllers/groupController'
+import { addGroup, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup, addComment, fetchGroupComments, deleteGroupComment } from '../controllers/groupController'
 import asyncHandler from '../middlewares/asyncHandler'
 import { viewGroup } from '../controllers/groupController'
 import { viewGroupByFilter } from '../controllers/groupController'
@@ -19,12 +19,16 @@ router.get('/live', groupnumber)
 
 router.get('/:groupId', asyncHandler(viewGroup))//we never have to use this route
 
+router.get('/:groupId/comments', asyncHandler(fetchGroupComments))
+
 router.use(authMiddleware)
 
 
 router.patch('/:groupId', asyncHandler(editGroup))
 
 router.post('/:groupId/comments', asyncHandler(addComment))
+
+router.delete('/:groupId/comments/:commentId', asyncHandler(deleteGroupComment))
 
 router.post('/:groupId/requests', asyncHandler(addRequest))
 

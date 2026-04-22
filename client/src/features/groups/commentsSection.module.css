@@ -19,7 +19,7 @@
 }
 
 .avatarWrapper {
-    --dim: 40px;
+    --dim: 36px;
     width: var(--dim);
     height: var(--dim);
 
@@ -54,6 +54,8 @@
     color: var(--clr-font);
     border: none;
     resize: none;
+
+    field-sizing: content;
 
     font-size: 14px;
 
@@ -165,8 +167,9 @@
 }
 
 .username {
-    font-weight: 700;
-    font-size: 13.5px;
+    font-weight: 600;
+    filter: brightness(1.5);
+    font-size: 13px;
 
     +span {
         font-size: 12px;
@@ -216,6 +219,8 @@
 }
 
 .interactionsWrapper {
+    margin-top: .25rem;
+
     font-size: 12px;
     display: flex;
     align-items: center;

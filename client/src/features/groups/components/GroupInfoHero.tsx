@@ -1,7 +1,7 @@
 import { useAuth } from '@/hooks/useAuth'
 import styles from '../groupInfo.module.css'
 import { getImgURL } from '@/lib/cloudinary'
-import { Bus, Car, DotIcon, LucideCarTaxiFront, Map, Motorbike, Plane, Train, Users, X } from 'lucide-react'
+import { Bus, Car, LucideCarTaxiFront, Map, Motorbike, Plane, Train, Users, X } from 'lucide-react'
 import clsx from 'clsx'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
@@ -13,11 +13,13 @@ import { toast } from 'sonner'
 import { useEffect, useState, type JSX } from 'react'
 import CommentsSection from './CommentsSection'
 import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout'
+import { useReadMore } from '../hooks/useReadMore'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
     const { setSidebarIsHidden } = useMainLayoutContext()
     const { groupId } = useParams() as { groupId: string }
+    const { paragraphRef, readMoreRef } = useReadMore()
 
     const url = user && getImgURL(user.avatar.publicId, user.avatar.version, 600)
 
@@ -28,11 +30,7 @@ const GroupInfoHero = () => {
     })
 
 
-    const shareURL = new URL(location.pathname, location.origin).href
-    const copyShareLink = () => {
-        navigator.clipboard.writeText(shareURL)
-        toast.success("Link copied to clipboard")
-    }
+
 
 
     const [currentSection, setCurrentSection] = useState<'Comments' | 'Members' | 'Travel Details'>(() => {
@@ -61,7 +59,25 @@ const GroupInfoHero = () => {
                             <h2 className={styles.title}>
                                 {group.title}
                             </h2>
-                            <div className={styles.tags}>
+                            <div className={styles.headerTravelDetails}>
+                                <span>From: {group.intialLocation}</span>
+                                <span>To: Las Vegas</span>
+                                <span>Departure: {new Intl.DateTimeFormat('en-gb', {
+                                    timeStyle: 'short',
+                                    hour12: true,
+                                    dateStyle: 'long'
+                                }).format(new Date(group.travelDate))} </span>
+                                <span>Mode: {group.mode}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div className={styles.descriptionWrapper}>
+                        <div className={styles.tags}>
                                 <span className={styles.tag}>
                                     Boys Only
                                 </span>
@@ -75,19 +91,11 @@ const GroupInfoHero = () => {
                                     Long Drive
                                 </span>
                             </div>
-                        </div>
-
-                    </div>
-
-
-
-
-                    <div className={styles.descriptionWrapper}>
-                        <p className={styles.description}>
-                            {group.content}
+                        <p ref={paragraphRef} className={styles.description}>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat aperiam, eos temporibus velit excepturi aliquid inventore suscipit cupiditate doloribus provident rerum, possimus aliquam quo laudantium. Eligendi obcaecati, nihil sunt sed, culpa enim quod eum quia rem ex delectus, aliquid dolorem explicabo optio cum recusandae unde. Tenetur alias deleniti numquam unde?
                         </p>
                         <input type="checkbox" id="toggleMoreDescription" />
-                        <label htmlFor="toggleMoreDescription" className={styles.toggleMoreContent} />
+                        <label ref={readMoreRef} htmlFor="toggleMoreDescription" className={styles.toggleMoreContent} />
                     </div>
                     <div className={styles.groupInteractionButtons}>
                         {group.member.some(e => e._id == user?._id) ?
@@ -96,55 +104,9 @@ const GroupInfoHero = () => {
                             <button aria-label='send request' disabled={group.incomingRequests.includes(user?._id ?? '')} className={clsx(styles.primaryButton, styles.groupInteractionButton)}>Send Request</button>
                         }
                         <button popoverTargetAction='show' popoverTarget='shareMenu' aria-label='share group link' className={clsx(styles.secondaryButton, styles.groupInteractionButton)}>Share</button>
-                        <div popover='auto' id='shareMenu' className={styles.shareMenu}>
-                            <header className={styles.shareMenuHeader}>
-                                Share <button popoverTarget='shareMenu' popoverTargetAction='hide'>
-                                    <X />
-                                </button>
-                            </header>
-                            <div className={styles.shareOptions}>
-                                <div>
-                                    <WhatsappShareButton aria-label='share link to Whatsapp' url={shareURL}>
-                                        <WhatsappIcon />
-                                    </WhatsappShareButton>
-                                    Whatsapp
-                                </div>
-                                <div>
-                                    <FacebookShareButton title={group.title} aria-label='share link to Facebook' url={shareURL}>
-                                        <FacebookIcon />
-                                    </FacebookShareButton>
-                                    Facebook
-                                </div>
-                                <div>
-                                    <XShareButton title={group.title} aria-label='share link to X' url={shareURL}>
-                                        <XIcon />
-                                    </XShareButton>
-                                    X
-                                </div>
-                                <div>
-                                    <EmailShareButton title={group.title} aria-label='share link to EmailShareButton' url={shareURL}>
-                                        <EmailIcon />
-                                    </EmailShareButton>
-                                    Email
-                                </div>
-                                <div>
-                                    <RedditShareButton title={group.title} aria-label='share link to Reddit' url={shareURL}>
-                                        <RedditIcon />
-                                    </RedditShareButton>
-                                    Reddit
-                                </div>
-                                <div>
-                                    <LinkedinShareButton title={group.title} aria-label='share link to Linkedin' url={shareURL}>
-                                        <LinkedinIcon />
-                                    </LinkedinShareButton>
-                                    Linkedin
-                                </div>
-                            </div>
-                            <div className={styles.copyLinkArea}>
-                                <input type="text" readOnly value={shareURL} />
-                                <button onClick={copyShareLink} className={styles.copyLinkButton}>Copy</button>
-                            </div>
-                        </div>
+
+                        <ShareMenuPopover title={group.title} />
+
                     </div>
 
 
@@ -186,16 +148,10 @@ const GroupInfoHero = () => {
                 </nav>
                 <div className={styles.sectionWrapper}>
                     <section className={styles.rightSidebarSection}>
-                        <header className={styles.rightSidebarHeader}>
-                            <h2 className={styles.rightSidebarHeading}>{currentRightSidebarTab}</h2>
-                        </header>
-
                         {currentRightSidebarTab === 'Travel Details' ?
                             <TravelDetails group={group} /> :
                             <Members group={group} />}
-
                     </section>
-
                 </div>
             </div>
         </div>
@@ -224,25 +180,26 @@ const TravelDetails = ({ group }: TravelDetailsProps) => {
         hour12: true,
     }).format(dateTime)
     return (
-        <div className={styles.travelDetailsArea}>
-            <div className={styles.travelLane}>
-                <DotIcon size={40} />
-                <div></div>
-                {transportationIcon[group.mode]}
-                <div></div>
-                <DotIcon size={40} />
-            </div>
-            <div className={styles.travelDetailsWrapper}>
-                <div className={styles.travelDetails}>
-                    <span>{group.intialLocation}</span>
-                    <span>{dateAndDay}</span>
-                    <span>{time}</span>
+        <>
+            <header className={styles.rightSidebarHeader}>
+                <div className={styles.rightSidebarHeading}>{dateAndDay}</div>
+                <div className={styles.rightSidebarHeading}>{time}</div>
+            </header>
+            <div className={styles.travelDetailsArea}>
+                <div className={styles.travelLane}>
+                    <div className={styles.travelDetails}>
+                        <span>{group.intialLocation}</span>
+                    </div>
+                    <div></div>
+                    {transportationIcon[group.mode]}
+                    <div></div>
+                    <div className={styles.travelDetails}>
+                        <span>Las Vegas</span>
+                    </div>
+
                 </div>
-                <div className={styles.travelDetails}>
-                    <span>Las Vegas</span>
-                </div>
             </div>
-        </div>
+        </>
     )
 }
 
@@ -252,18 +209,90 @@ type MembersProps = {
 }
 
 const Members = ({ group }: MembersProps) => {
-    const { user } = useAuth()
-    const url = user && getImgURL(user.avatar.publicId, user.avatar.version, 600)
     return (
         <div className={styles.members}>
-            <Link to={`/travellers/${group.member[0]._id}`} className={styles.member}>
-                <div className={styles.avatarWrapper}>
-                    {url ? <img src={url} /> : 'S'}
+            {group.member.map(member => {
+                const url = member.avatar.publicId && getImgURL(member.avatar.publicId, member.avatar.version, 600)
+
+                return (
+                    <Link key={member._id} to={`/travellers/${member._id}`} className={styles.member}>
+                        <div className={clsx(styles.avatarWrapper, !url && styles.emptyAvatar)}>
+                            {url ? <img src={url} alt='member-avatar' /> : member.fullName.charAt(0)}
+                        </div>
+                        <div className={styles.memberDetails}>
+                            <span>{member.fullName}</span>
+                            <span>{member.username}</span>
+                        </div>
+                    </Link>
+                )
+            })}
+
+        </div>
+    )
+}
+
+
+type ShareMenuPopoverProps = {
+    title: string
+}
+
+const ShareMenuPopover = ({ title }: ShareMenuPopoverProps) => {
+
+    const shareURL = new URL(location.pathname, location.origin).href
+    const copyShareLink = () => {
+        navigator.clipboard.writeText(shareURL)
+        toast.success("Link copied to clipboard")
+    }
+
+    return (
+        <div popover='auto' id='shareMenu' className={styles.shareMenu}>
+            <header className={styles.shareMenuHeader}>
+                Share <button popoverTarget='shareMenu' popoverTargetAction='hide'>
+                    <X />
+                </button>
+            </header>
+            <div className={styles.shareOptions}>
+                <div>
+                    <WhatsappShareButton aria-label='share link to Whatsapp' url={shareURL}>
+                        <WhatsappIcon />
+                    </WhatsappShareButton>
+                    Whatsapp
                 </div>
-                <div className={styles.memberDetails}>
-                    <span>Shubham Panjiyara</span>
+                <div>
+                    <FacebookShareButton title={title} aria-label='share link to Facebook' url={shareURL}>
+                        <FacebookIcon />
+                    </FacebookShareButton>
+                    Facebook
                 </div>
-            </Link>
+                <div>
+                    <XShareButton title={title} aria-label='share link to X' url={shareURL}>
+                        <XIcon />
+                    </XShareButton>
+                    X
+                </div>
+                <div>
+                    <EmailShareButton title={title} aria-label='share link to EmailShareButton' url={shareURL}>
+                        <EmailIcon />
+                    </EmailShareButton>
+                    Email
+                </div>
+                <div>
+                    <RedditShareButton title={title} aria-label='share link to Reddit' url={shareURL}>
+                        <RedditIcon />
+                    </RedditShareButton>
+                    Reddit
+                </div>
+                <div>
+                    <LinkedinShareButton title={title} aria-label='share link to Linkedin' url={shareURL}>
+                        <LinkedinIcon />
+                    </LinkedinShareButton>
+                    Linkedin
+                </div>
+            </div>
+            <div className={styles.copyLinkArea}>
+                <input type="text" readOnly value={shareURL} />
+                <button onClick={copyShareLink} className={styles.copyLinkButton}>Copy</button>
+            </div>
         </div>
     )
 }

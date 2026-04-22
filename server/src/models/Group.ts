@@ -54,16 +54,14 @@ const groupSchema = new mongoose.Schema({
         default: []
     },
 
+    // ###LATER remove messages field from GroupSchema
+
     messages: {
         type: [Schema.Types.ObjectId],
         ref: "Message",
         default: []
     },
-    comments: {
-        type: [Schema.Types.ObjectId],
-        ref: "Comment",
-        default: []
-    },
+
     tags: {
         type: [String],
         required: false
