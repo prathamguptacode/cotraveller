@@ -93,7 +93,7 @@ const ChatArea = () => {
     return () => {
       socket.off('RECEIVE_MESSAGE_ON_CLIENT', receiveMessage)
       socket.off('MESSAGE_READ_TO_CLIENT', refreshReadStatus)
-      //Join ChatRoom
+      //Leave ChatRoom
       socket.emit('LEAVE_ROOM', { roomId: groupId, userId: user?._id }, (res: { success: boolean }) => {
         if (!res.success) toast.error('Error disconnecting chatRoom')
       })

@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
         const { roomId, userId } = data
         const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId, memberId: userId }, { $set: { lastReadAt: new Date() } }, { returnDocument: 'after' })
         socket.to(roomId).emit('MESSAGE_READ_TO_CLIENT', { conversationRecord })
-        return { success: true }
+        cb({ success: true })
     })
 
     socket.on('LEAVE_ROOM', (data, cb) => {
