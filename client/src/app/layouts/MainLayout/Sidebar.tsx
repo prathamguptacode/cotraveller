@@ -28,7 +28,7 @@ const sidebarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
 const Sidebar = () => {
     const sidebarsRef = useRef<HTMLDivElement>(null)
 
-    const { currentSidebarTab, setCurrentSidebarTab, sidebarIsHidden, setSidebarIsHidden, hamburgerRef } = useMainLayoutContext()
+    const { currentSidebarTab, setCurrentSidebarTab, sidebarIsHidden, setSidebarIsHidden, hamburgerRef, notifications } = useMainLayoutContext()
     const { user } = useAuth()
 
 
@@ -73,8 +73,9 @@ const Sidebar = () => {
                 <div className={styles.primarySidebarList}>
                     <Link to={'/'}><Home /></Link>
                     {sidebarTabs.map(sidebarTab => {
+                        const hasNotifications = (sidebarTab.name == 'Chats' || sidebarTab.name == 'Inbox') && notifications[sidebarTab.name]
                         return (
-                            <button aria-label={sidebarTab.name} key={sidebarTab.name} onClick={() => {
+                            <button className={clsx(hasNotifications && styles.hasNotifications)} aria-label={sidebarTab.name} key={sidebarTab.name} onClick={() => {
                                 setSidebarIsHidden(false)
                                 setCurrentSidebarTab(sidebarTab.name)
                             }}>{sidebarTab.icon}</button>

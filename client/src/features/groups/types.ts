@@ -46,3 +46,10 @@ export type Group = {
     intialLocation: string,
     incomingRequests: string[],
 }
+
+
+export type JoinRequest = {
+    _id: string,
+    groupId: string,
+    requesterId: string
+}

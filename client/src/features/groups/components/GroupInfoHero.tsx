@@ -3,22 +3,24 @@ import styles from '../groupInfo.module.css'
 import { getImgURL } from '@/lib/cloudinary'
 import { Users } from 'lucide-react'
 import clsx from 'clsx'
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { api } from '@/api/axios'
-import type { Group } from '../types'
+import type { Group, JoinRequest } from '../types'
 import { ChatsCircleIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
 import CommentsSection from './CommentsSection'
 import { useReadMore } from '../hooks/useReadMore'
 import ShareMenuPopover from '@/components/Popovers/ShareMenuPopover'
+import { normalizeError } from '@/utils/normalizeError'
+import { toast } from 'sonner'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
     const { groupId } = useParams() as { groupId: string }
     const { paragraphRef, readMoreRef } = useReadMore()
+    const [currentSection, setCurrentSection] = useState<'Comments' | 'Members'>('Comments')
 
-    const url = user && getImgURL(user.avatar.publicId, user.avatar.version, 600)
 
     const { data: group } = useSuspenseQuery({
         queryKey: ['groups', groupId],
@@ -26,8 +28,30 @@ const GroupInfoHero = () => {
         select: (res) => res.data.group
     })
 
+    const { data: joinRequests, refetch: refetchJoinRequests } = useSuspenseQuery({
+        queryKey: ['groups', groupId, 'requests'],
+        queryFn: () => api.get<{ joinRequests: JoinRequest[] }>(`/groups/${groupId}/requests`),
+        select: (res) => res.data.joinRequests
+    })
 
-    const [currentSection, setCurrentSection] = useState<'Comments' | 'Members'>('Comments')
+    const { mutate: sendRequest, isPending: isSendingRequest } = useMutation({
+        mutationFn: () => api.post(`/groups/${groupId}/requests`),
+        onError: (error) => {
+            const err = normalizeError(error)
+            if (err.status < 500) toast.error("An error occurred !", {
+                description: err.message
+            })
+        },
+        onSuccess: () => toast.success("Request Sent"),
+        onSettled: () => refetchJoinRequests()
+    })
+
+
+
+
+    const url = user && getImgURL(user.avatar.publicId, user.avatar.version, 600)
+    const hasRequested = joinRequests.some(request => request.requesterId == user?._id)
+
 
 
     return (
@@ -85,7 +109,9 @@ const GroupInfoHero = () => {
                         {group.member.some(e => e._id == user?._id) ?
                             <Link className={clsx(styles.primaryButton, styles.groupInteractionButton)} to={`/groups/${groupId}/chats`}>Chat now</Link>
                             :
-                            <button aria-label='send request' disabled={group.incomingRequests.includes(user?._id ?? '')} className={clsx(styles.primaryButton, styles.groupInteractionButton)}>Send Request</button>
+                            <button onClick={() => user && sendRequest()} aria-label='send request' disabled={isSendingRequest || hasRequested} className={clsx(styles.primaryButton, styles.groupInteractionButton)}>
+                                {hasRequested ? 'Request Sent' : 'Send Request'}
+                            </button>
                         }
                         <button popoverTargetAction='show' popoverTarget='shareMenu' aria-label='share group link' className={clsx(styles.secondaryButton, styles.groupInteractionButton)}>Share</button>
 

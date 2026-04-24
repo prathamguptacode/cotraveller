@@ -61,6 +61,7 @@ const SidebarInboxPreview = () => {
 
   useEffect(() => {
     setNotifications(prev => ({ ...prev, Inbox: requests.length == 0 ? false : true }))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requests])
 
 

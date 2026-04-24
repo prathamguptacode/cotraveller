@@ -50,13 +50,14 @@ export const addGroup: RequestHandler = async (req, res) => {
     res.success(201, data, "Group Created Successfully")
 }
 
-export const viewGroup: RequestHandler = async (req, res) => {
+export const fetchGroupInfo: RequestHandler = async (req, res) => {
     const { groupId } = req.params
     if (typeof groupId !== 'string' || !groupId) return res.fail(400, "BAD_REQUEST")
 
-    const conversationRecords = await ConversationRecord.find({ roomId: groupId })
+    const conversationRecordsPromise = ConversationRecord.find({ roomId: groupId })
+    const groupPromise = Group.findById(groupId).populate({ path: 'member', select: 'fullName avatar username' })
 
-    const group = await Group.findById(groupId).populate({ path: 'member', select: 'fullName avatar username' })
+    const [conversationRecords, group] = await Promise.all([conversationRecordsPromise, groupPromise])
 
     res.success(200, { group, conversationRecords })
 
@@ -202,6 +203,13 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
     const groupData = await Group.aggregate(pipeline)
     res.success(200, { groups: groupData });
 
+}
+
+export const fetchGroupJoinRequests: RequestHandler = async (req, res) => {
+    const { groupId } = req.params
+    const joinRequests = await JoinRequest.find({ groupId })
+
+    res.success(200, { joinRequests })
 }
 
 export const addRequest: RequestHandler = async (req, res) => {

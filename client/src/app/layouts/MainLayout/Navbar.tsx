@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
 import { toast } from 'sonner';
 import { getImgURL } from '@/lib/cloudinary';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 import { normalizeError } from '@/utils/normalizeError';
 import Spinner from '@/components/Loaders/Spinner';
@@ -31,6 +31,16 @@ type NavbarProps = {
 function Navbar({ children }: NavbarProps) {
     const { setNotifications } = useMainLayoutContext()
     const eventSource = useEventSource()
+    const { user } = useAuth()
+
+    const { data: groupJoinRequestsCount } = useQuery({
+        queryKey: ['inbox', 'status'],
+        queryFn: () => api.get<{ groupJoinRequestsCount: number }>('/user/inbox/status'),
+        select: (res) => res.data.groupJoinRequestsCount,
+        refetchInterval: 1000 * 5 * 60,
+        enabled: !!user
+    })
+
 
     useEffect(() => {
         const eventListener = (message: { data: string }) => {
@@ -56,6 +66,11 @@ function Navbar({ children }: NavbarProps) {
         }
     }, [])
 
+
+    useEffect(() => {
+        if (!groupJoinRequestsCount) return
+        setNotifications(prev => ({ ...prev, Inbox: groupJoinRequestsCount > 0 }))
+    }, [groupJoinRequestsCount])
 
 
 

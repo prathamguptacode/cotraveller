@@ -13,7 +13,8 @@ const MainLayoutProvider = ({ children }: { children: ReactNode }) => {
         if (window.matchMedia("(max-width:768px)").matches) return true
         return false
     })
-    const [notifications, setNotifications] = useState<Notifications>({ Chats: false, Inbox: false, Groups: false, Explore: false })
+    const [notifications, setNotifications] = useState<Notifications>({ Chats: false, Inbox: false })
+
 
     const value = { notifications, setNotifications, currentSidebarTab, setCurrentSidebarTab, setSidebarIsHidden, sidebarIsHidden, hamburgerRef }
 

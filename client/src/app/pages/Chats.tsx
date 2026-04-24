@@ -10,7 +10,6 @@ const Chats = () => {
     return (
         <>
             <div data-mobile-nav-hidden='true' className={styles.wrapper}>
-                {/* <Sidebar /> */}
                 <ErrorBoundary fallback={<div className={styles.chatAreaWrapper} style={{ overflow: 'hidden' }}><NotFound /></div>}>
                     <Suspense fallback={<div className={styles.chatAreaWrapper}><ThreeDotLoader /></div>}>
                         <ChatArea />

@@ -1,8 +1,8 @@
 import express from 'express'
 const router = express.Router()
-import { addGroup, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup, addComment, fetchGroupComments, deleteGroupComment, toggleLikeOnGroupComment } from '../controllers/groupController'
+import { addGroup, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup, addComment, fetchGroupComments, deleteGroupComment, toggleLikeOnGroupComment, fetchGroupJoinRequests } from '../controllers/groupController'
 import asyncHandler from '../middlewares/asyncHandler'
-import { viewGroup } from '../controllers/groupController'
+import { fetchGroupInfo } from '../controllers/groupController'
 import { viewGroupByFilter } from '../controllers/groupController'
 import { addRequest } from '../controllers/groupController'
 import { authMiddleware } from '../middlewares/authMiddleware'
@@ -16,9 +16,11 @@ router.get('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))
 
 router.get('/live', groupnumber)
 
-router.get('/:groupId', asyncHandler(viewGroup))
+router.get('/:groupId', asyncHandler(fetchGroupInfo))
 
 router.get('/:groupId/comments', asyncHandler(fetchGroupComments))
+
+router.get('/:groupId/requests',asyncHandler(fetchGroupJoinRequests))
 
 
 
