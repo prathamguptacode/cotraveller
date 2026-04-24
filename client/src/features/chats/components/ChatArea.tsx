@@ -51,13 +51,14 @@ const ChatArea = () => {
   useLastMessageObserver(group, setIsAtBottom, setUnreadCount, lastMessageRef)
 
   useEffect(() => {
+
     //Join ChatRoom
     socket.emit('JOIN_ROOM', { roomId: groupId, userId: user?._id }, (res: { success: boolean }) => {
       if (!res.success) toast.error('Error connecting to chatRoom')
     })
 
     //Receive ChatRoom Message
-    const receiveMessage = (data: { message: Message }) => {
+    const receiveMessage = (data: { message: Message, roomId: string, group: Group }) => {
       queryClient.setQueryData<InfiniteData<ApiSuccess<{ messages: Message[] }>>>(messagesKeys.infinite(groupId), (prev) => {
         if (!prev) return prev
         const messages = [...prev.pages[0].data.messages]
@@ -92,6 +93,10 @@ const ChatArea = () => {
     return () => {
       socket.off('RECEIVE_MESSAGE_ON_CLIENT', receiveMessage)
       socket.off('MESSAGE_READ_TO_CLIENT', refreshReadStatus)
+      //Join ChatRoom
+      socket.emit('LEAVE_ROOM', { roomId: groupId, userId: user?._id }, (res: { success: boolean }) => {
+        if (!res.success) toast.error('Error disconnecting chatRoom')
+      })
     }
 
   }, [socket, groupId, queryClient, user?._id])
@@ -146,6 +151,7 @@ const ChatArea = () => {
 
   //Send Message in ChatRoom
   const sendMessage = () => {
+    console.log("Sending message to", groupId, group.title)
     socket.emit('SEND_MESSAGE_TO_SERVER', { text, roomId: groupId, userId: user?._id }, (res: { success: boolean, message: Message }) => {
       if (!res.success) return toast.error("Something went wrong!")
       queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })

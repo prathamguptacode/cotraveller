@@ -50,7 +50,8 @@ io.on('connection', (socket) => {
             if (!conversationRecord) return
 
             cb({ success: true, message })
-            socket.to(roomId).emit('RECEIVE_MESSAGE_ON_CLIENT', { message, conversationRecord })
+
+            socket.to(roomId).emit('RECEIVE_MESSAGE_ON_CLIENT', { message, conversationRecord, roomId, group })
             group.member.forEach(member => {
                 socket.to(`user_room_${member._id}`).emit('UPDATE_MESSAGE_ON_CLIENT', { message })
             })
@@ -69,6 +70,11 @@ io.on('connection', (socket) => {
         const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId, memberId: userId }, { $set: { lastReadAt: new Date() } }, { returnDocument: 'after' })
         socket.to(roomId).emit('MESSAGE_READ_TO_CLIENT', { conversationRecord })
         return { success: true }
+    })
+
+    socket.on('LEAVE_ROOM', (data, cb) => {
+        socket.leave(data.roomId)
+        cb({ success: true, message: data.roomId, id: socket.id })
     })
 
     socket.on('disconnect', () => {
