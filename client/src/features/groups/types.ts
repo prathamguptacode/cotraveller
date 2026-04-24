@@ -9,20 +9,36 @@ export type GroupFormSchema = z.infer<typeof groupFormSchema>
 // GroupInfo
 
 export type Comment = {
-    author: string,
-    comment: string
+    _id: string,
+    author: {
+        _id: string,
+        avatar: {
+            publicId: string,
+            version: number
+        },
+        username: string,
+        fullName: string
+    },
+    comment: string,
+    likes: string[],
+    createdAt: string,
+    updatedAt: string
 }
 
 export type Member = {
     _id: string,
-    fullName: string
+    fullName: string,
+    username: string,
+    avatar: {
+        publicId: string,
+        version: number
+    }
 }
 
 export type Group = {
     _id: string,
     requests: string[],
     member: Member[],
-    comments: Comment[],
     travelDate: string,
     title: string,
     content: string,

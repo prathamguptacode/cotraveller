@@ -1,4 +1,4 @@
-import mongoose, { HydratedDocument, mongo, Schema } from 'mongoose'
+import mongoose, { HydratedDocument, Schema } from 'mongoose'
 
 const userSchema = new mongoose.Schema({
     email: {

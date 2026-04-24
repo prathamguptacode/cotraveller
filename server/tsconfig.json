@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "module": "ESNext",
-        "moduleResolution": "node",
         "target": "ES2023",
         "strict": true,
         "esModuleInterop": true,
@@ -9,9 +8,8 @@
         "rootDir": "src",
         "sourceMap": true,
         "noEmitOnError": true,
-        "baseUrl": "src",
         "paths": {
-            "@/*":["*"]
+            "@/*":["./src/*"]
         }
     },
     "tsc-alias": {

@@ -5,10 +5,12 @@ import User, { UserType } from "../models/User";
 import { accecptedNotification, newMemberJoinedNotification, rejectedNotification, sendRequestNotification } from "../services/nodemailer";
 import { RequestHandler } from "express";
 import * as z from "zod";
-import commentSchema from "@/models/Comment";
+import commentSchema, { CommentType } from "@/models/Comment";
 import { eventBus } from "@/events/eventBus";
 import JoinRequest from "@/models/JoinRequest";
 import ConversationRecord from "@/models/ConversationRecord";
+import Comment from "@/models/Comment";
+import { Types } from "mongoose";
 
 const allowedTags = ["Alcohol free", "Boys only", "Girls only", "Backpacking"] as const
 const allowedMode = ["Train", "Flight", "Taxi", "Car", "Bike", "Others"] as const
@@ -50,9 +52,12 @@ export const addGroup: RequestHandler = async (req, res) => {
 
 export const viewGroup: RequestHandler = async (req, res) => {
     const { groupId } = req.params
+    if (typeof groupId !== 'string' || !groupId) return res.fail(400, "BAD_REQUEST")
+
     const conversationRecords = await ConversationRecord.find({ roomId: groupId })
 
-    const group = await Group.findById(groupId).populate({ path: 'member', select: 'fullName' }).populate({ path: 'comments', select: 'author comment' })
+    const group = await Group.findById(groupId).populate({ path: 'member', select: 'fullName avatar username' })
+
     res.success(200, { group, conversationRecords })
 
 }
@@ -190,7 +195,6 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
                 content: 1,
                 travelDate: 1,
                 incomingRequests: 1,
-                //   comments: 1,
                 memberNumber: 1,
             }
         }
@@ -198,67 +202,6 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
     const groupData = await Group.aggregate(pipeline)
     res.success(200, { groups: groupData });
 
-    // const FilterSchema = z.objet({
-    //     mode: z.string(),
-    //     intialLocation: z.string(),
-    //     lowerTime: z.string(),
-    //     upperTime: z.string(),
-    // })
-    // const parsedData = FilterSchema.safeParse(req.body)
-    // if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
-
-    // const lowerTime = xss(parsedData.data.lowerTime)
-    // const upperTime = xss(parsedData.data.upperTime)
-    // const mode = xss(parsedData.data.mode)
-    // const intialLocation = xss(parsedData.data.intialLocation)
-
-    // // const utcTime = moment.tz(istTime, "Asia/Kolkata").utc().format();for converting time
-    // const utcLowerTime = moment.tz(lowerTime, "Asia/Kolkata").utc().toDate()
-    // const utcUpperTime = moment.tz(upperTime, "Asia/Kolkata").utc().toDate()
-    // const data = await Group.aggregate([
-    //     {
-    //         $match: {
-    //             mode: mode,
-    //             intialLocation: intialLocation,
-    //             travelDate: { $gte: utcLowerTime, $lte: utcUpperTime },
-
-    //             //if membernumber is reached
-    //             $expr: {
-    //                 $lt: [
-    //                     { $size: "$member" },
-    //                     "$memberNumber"
-    //                 ]
-    //             }
-
-    //         }
-    //     },
-    //     {
-    //         $lookup: {
-    //             from: 'users',
-    //             localField: 'owner',
-    //             foreignField: '_id',
-    //             as: "ownerPop"
-    //         }
-    //     },
-    //     {
-    //         $unwind: "$ownerPop"
-    //     },
-    //     {
-    //         $project: {
-    //             ownerPop: {
-    //                 fullName: 1
-    //             },
-    //             title: 1,
-    //             _id: 1,
-    //             content: 1,
-    //             travelDate: 1,
-    //             requests: 1,
-    //             comments: 1,
-    //         }
-    //     }
-
-    // ])
-    // res.success(200, { groups: data })
 }
 
 export const addRequest: RequestHandler = async (req, res) => {
@@ -288,22 +231,6 @@ export const addRequest: RequestHandler = async (req, res) => {
 
     res.success(201, { group: updatedGroup }, "Request Sent Successfully")
 }
-
-//for homepage hamburger request seeing so that they can accept
-export const viewRequest: RequestHandler = async (req, res) => {
-    const userID = xss(req.body?.userID)
-    if (!userID) {
-        return res.fail(400, "INPUT_ERROR", "userID not found")
-    }
-    const tempUser = await User.findById(userID)
-    if (!tempUser) {
-        return res.fail(400, "INPUT_ERROR", "No such user")
-    }
-    const group = await Group.find({ member: userID })
-    res.success(200, group)
-}
-
-
 
 export const acceptIncomingRequestController: RequestHandler = async (req, res) => {
     const requestId = req.params.requestId
@@ -382,11 +309,50 @@ export const groupnumber: RequestHandler = async (req, res) => {
 export const addComment: RequestHandler = async (req, res) => {
     const userId = req.user._id
     const { groupId } = req.params
+
     const parsedData = z.object({ comment: z.string({ error: "Invalid Comment" }).min(1, { error: "Comment cannot be empty" }) }).safeParse(req.body)
     if (!parsedData.success) return res.fail(400, "INPUT_ERROR", parsedData.error.issues[0].message)
     const commentText = xss(parsedData.data.comment)
 
-    const comment = await commentSchema.create({ comment: commentText, author: userId, targetGroup: groupId })
-    await Group.updateOne({ _id: groupId }, { $push: { comments: comment._id } })
+    const comment = await commentSchema.create({ comment: commentText, author: userId, group: groupId })
     res.success(201, { comment }, "Comment added successfully")
+}
+
+export const fetchGroupComments: RequestHandler = async (req, res) => {
+    const { groupId } = req.params
+    if (typeof groupId !== 'string' || !groupId) return res.fail(400, "BAD_REQUEST")
+    const comments = await Comment.find({ group: groupId }).sort({ createdAt: -1 }).populate({ path: 'author', select: 'avatar fullName username' })
+
+    return res.success(200, { comments })
+}
+
+export const deleteGroupComment: RequestHandler = async (req, res) => {
+    const { commentId } = req.params
+    const user = req.user
+
+    const comment = await Comment.findById<Omit<CommentType, 'group'> & { group: { owner: Types.ObjectId } }>(commentId).populate({ path: 'group', select: 'owner' })
+    if (!comment) return res.fail(404, "NOT_FOUND", "Comment does not exist")
+    console.log(comment.author == user._id)
+    if (!user._id.equals(comment.author) && !user._id.equals(comment.group.owner)) return res.fail(403, "FORBIDDEN", "An error occurred")
+
+    await Comment.deleteOne({ _id: commentId })
+
+    return res.sendStatus(204)
+}
+
+export const toggleLikeOnGroupComment: RequestHandler = async (req, res) => {
+    const { commentId } = req.params
+    const user = req.user
+
+    const comment = await Comment.findById(commentId)
+    if (!comment) return res.fail(404, "NOT_FOUND", "Comment does not exist")
+
+    if (comment.likes.includes(user._id)) await Comment.updateOne({ _id: commentId }, { $pull: { likes: user._id } })
+    else {
+        comment.likes.push(user._id)
+        await comment.save()
+        console.log(comment)
+    }
+
+    return res.success()
 }

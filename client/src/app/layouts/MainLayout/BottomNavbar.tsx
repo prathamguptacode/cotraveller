@@ -48,15 +48,21 @@ const BottomNavbar = () => {
       }
       checker(target)
 
-      if (!navbar.contains(target) && !hamburgerMenu.contains(target)) setSidebarIsHidden(true)
+      if (!navbar.contains(target) && !hamburgerMenu.contains(target) || !window.matchMedia("(max-width:768px)").matches) setSidebarIsHidden(true)
     }
 
     window.addEventListener('click', eventHandler)
 
     return () => window.removeEventListener('click', eventHandler)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname])
+  }, [])
 
+  useEffect(() => {
+    if (!window.matchMedia("(max-width:768px)").matches) return
+    setSidebarIsHidden(true)
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname])
 
 
 
