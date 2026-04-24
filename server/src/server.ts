@@ -34,7 +34,6 @@ io.on('connection', (socket) => {
 
     socket.on('JOIN_ROOM', (data, cb) => {
         socket.join(data.roomId)
-        // console.log(`User ${data.userId}, has connected to room ${data.roomId} on socket ${socket.id}`)
         cb({ success: true, message: data.roomId, id: socket.id })
     })
 
@@ -65,10 +64,11 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('MESSAGE_READ_TO_SERVER', async (data: { roomId: string, userId: string, readAt: number }) => {
-        const { roomId, userId, readAt } = data
-        const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId, memberId: userId }, { $set: { lastReadAt: new Date(readAt) } }, { returnDocument: 'after' })
+    socket.on('MESSAGE_READ_TO_SERVER', async (data, cb) => {
+        const { roomId, userId } = data
+        const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId, memberId: userId }, { $set: { lastReadAt: new Date() } }, { returnDocument: 'after' })
         socket.to(roomId).emit('MESSAGE_READ_TO_CLIENT', { conversationRecord })
+        return { success: true }
     })
 
     socket.on('disconnect', () => {

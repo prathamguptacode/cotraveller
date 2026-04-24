@@ -40,6 +40,7 @@ const Sidebar = () => {
         const sidebarsDiv = sidebarsRef.current
         const hamburgerMenu = hamburgerRef.current
 
+        
         if (!sidebarsDiv?.parentElement || !hamburgerMenu || sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay' || window.matchMedia("(max-width:768px)").matches) return
 
         const eventHandler = (e: PointerEvent) => {

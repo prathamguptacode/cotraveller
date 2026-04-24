@@ -10,6 +10,7 @@ import { MountainSnow, Users } from 'lucide-react';
 import clsx from 'clsx';
 import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout';
 import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
+import { toast } from 'sonner'
 
 
 
@@ -25,7 +26,9 @@ const SidebarChatsPreview = () => {
     const { data: groups } = useSuspenseQuery({
         queryKey: ['groups'],
         staleTime: Infinity,
-        queryFn: () => api.get<{ groups: Group[] }>('/user/groups'),
+        queryFn: () => {
+            return api.get<{ groups: Group[] }>('/user/groups')
+        },
         select: (res) => res.data.groups
     })
 
@@ -35,7 +38,7 @@ const SidebarChatsPreview = () => {
             if (!res.success) console.debug('Socket connection for All chats failed')
         }))
 
-        socket.on('UPDATE_MESSAGE_ON_CLIENT', () => queryClient.invalidateQueries({ queryKey: ['groups'] })
+        socket.on('UPDATE_MESSAGE_ON_CLIENT', () => queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
         )
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket])

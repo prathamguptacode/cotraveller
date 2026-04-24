@@ -23,11 +23,12 @@ const Messages = ({ messages, lastMessageRef, conversationRecords, messagesRef, 
     }, [])
 
     const lastReadByEveryoneAt = useMemo(() => {
-        let temp: Date = conversationRecords[0].lastReadAt
+        let temp = new Date(conversationRecords[0].lastReadAt).getTime()
         conversationRecords.forEach(record => {
-            if (record.memberId != user?._id) temp = record.lastReadAt < temp ? record.lastReadAt : temp
+            const readAt = new Date(record.lastReadAt).getTime()
+            if (record.memberId != user?._id) temp = readAt < temp ? readAt : temp
         })
-        return new Date(temp)
+        return temp
     }, [conversationRecords, user])
 
 
@@ -52,7 +53,7 @@ const Messages = ({ messages, lastMessageRef, conversationRecords, messagesRef, 
                                 {getFormattedTime(message.createdAt)}
                             </div>
                             <div className={styles.messageSeenState}>
-                                <CheckCheck size={16} className={clsx(lastReadByEveryoneAt > new Date(message.createdAt) && styles.seen)} />
+                                <CheckCheck size={16} className={clsx(lastReadByEveryoneAt >= new Date(message.createdAt).getTime() && styles.seen)} />
                             </div>
                         </div>
                     </div>
