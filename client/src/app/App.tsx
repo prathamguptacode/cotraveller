@@ -4,7 +4,6 @@ import LoadingBar, { type LoadingBarRef } from 'react-top-loading-bar'
 import { useEffect, useRef } from "react"
 import { loaderEvent } from "../api/mitt"
 import { Toaster } from "sonner"
-// import { CheckCircle, Info, XCircle } from "lucide-react"
 import { useTheme } from "@/hooks/useTheme"
 
 
@@ -33,16 +32,14 @@ function App() {
 
   return (
     <>
-      <Router />
-      <LoadingBar color="var(--primary)" shadow={false} ref={ref} height={3} className="top-loading-bar" />
       <Toaster duration={3000}
-        // icons={{ success: <CheckCircle size={32} color="green" />, error: <XCircle size={32} color="red" />, info: <Info size={32} color="yellow" /> }}
         icons={{ success: null, error: null, close: null, info: null, loading: null, warning: null }}
-
-        // position="top-right"
-        position="bottom-left"
+        position={window.matchMedia("(max-width:768px)").matches ? "bottom-center" : "bottom-left"}
         theme={theme === 'dark' ? 'light' : 'dark'}
       />
+      <Router />
+      <LoadingBar color="var(--primary)" shadow={false} ref={ref} height={3} className="top-loading-bar" />
+
     </>
   )
 }

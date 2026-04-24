@@ -20,6 +20,7 @@ export type Comment = {
         fullName: string
     },
     comment: string,
+    likes: string[],
     createdAt: string,
     updatedAt: string
 }

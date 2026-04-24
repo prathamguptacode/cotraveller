@@ -1,10 +1,8 @@
 .wrapper {
-    /* border: 1px solid aqua; */
     height: 100%;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-
 }
 
 .heading {
@@ -38,6 +36,10 @@
         width: 100%;
         height: 100%;
     }
+}
+
+.emptyAvatar {
+    border: 1px solid var(--primary);
 }
 
 .commentInputWrapper {
@@ -89,13 +91,11 @@
 }
 
 .commentButtons {
-    /* display: flex; */
     display: none;
     justify-content: flex-end;
     align-items: center;
     gap: 1rem;
 
-    /* visibility: hidden; */
 
     >* {
         padding: .75em 1em;
@@ -106,7 +106,6 @@
 }
 
 .buttonsVisible {
-    /* visibility: visible; */
     display: flex;
 }
 
@@ -135,13 +134,15 @@
 
     min-height: 40vh;
     min-height: 40dvh;
+    padding-bottom: 5rem;
 }
 
 .comment {
-    /* border: 1px solid red; */
     display: flex;
     gap: 1rem;
     align-items: flex-start;
+
+    position: relative;
 }
 
 .contentWrapper {
@@ -177,13 +178,42 @@
     }
 }
 
-.commentOptions {
+.commentOptionsBtn {
     margin-left: auto;
 
     &:hover {
         filter: brightness(2);
     }
 }
+
+.commentOptions {
+    padding-block: .25rem;
+    border: none;
+    border-radius: 8px;
+
+    background-color: var(--dialog-dark);
+    color: var(--clr-font);
+    font-size: 14px;
+
+    inset: auto;
+    left: anchor(left);
+    top: calc(anchor(bottom) + 5px);
+
+
+}
+
+.commentOption {
+    --clr-hover: var(--group-neutral-hover);
+
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+
+    padding: .5em 1.5em;
+    border-radius: 8px;
+
+}
+
 
 .content {
     --lines: 4;
@@ -236,6 +266,29 @@
 
 .likeButton {
     border-radius: 50%;
-    --clr-hover: var(--group-neutral-hover);
+
     padding: .5em;
+    transition: scale .15s ease-in-out;
+
+    &:hover {
+        scale: 1.05;
+    }
+}
+
+.liked {
+    color: red;
+    fill: red;
+}
+
+@media (width>768px) {
+    .likeButton {
+        --clr-hover: var(--group-neutral-hover);
+    }
+}
+
+@media (max-width:768px) {
+    .commentOptions {
+        left: unset;
+        right: anchor(right);
+    }
 }

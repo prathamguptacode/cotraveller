@@ -1,23 +1,20 @@
 import { useAuth } from '@/hooks/useAuth'
 import styles from '../groupInfo.module.css'
 import { getImgURL } from '@/lib/cloudinary'
-import { Bus, Car, LucideCarTaxiFront, Map, Motorbike, Plane, Train, Users, X } from 'lucide-react'
+import { Users } from 'lucide-react'
 import clsx from 'clsx'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { api } from '@/api/axios'
 import type { Group } from '../types'
-import { EmailIcon, EmailShareButton, FacebookIcon, FacebookShareButton, LinkedinIcon, LinkedinShareButton, RedditIcon, RedditShareButton, WhatsappIcon, WhatsappShareButton, XIcon, XShareButton } from 'react-share'
 import { ChatsCircleIcon } from '@phosphor-icons/react'
-import { toast } from 'sonner'
-import { useEffect, useState, type JSX } from 'react'
+import { useState } from 'react'
 import CommentsSection from './CommentsSection'
-import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout'
 import { useReadMore } from '../hooks/useReadMore'
+import ShareMenuPopover from '@/components/Popovers/ShareMenuPopover'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
-    const { setSidebarIsHidden } = useMainLayoutContext()
     const { groupId } = useParams() as { groupId: string }
     const { paragraphRef, readMoreRef } = useReadMore()
 
@@ -30,19 +27,7 @@ const GroupInfoHero = () => {
     })
 
 
-
-
-
-    const [currentSection, setCurrentSection] = useState<'Comments' | 'Members' | 'Travel Details'>(() => {
-        if (window.matchMedia("(max-width:1240px)").matches) return 'Travel Details'
-        return 'Comments'
-    })
-    const [currentRightSidebarTab, setCurrentRightSidebarTab] = useState<'Travel Details' | 'Members'>('Travel Details')
-
-    useEffect(() => {
-        setSidebarIsHidden(true)
-    }, [])
-
+    const [currentSection, setCurrentSection] = useState<'Comments' | 'Members'>('Comments')
 
 
     return (
@@ -61,7 +46,6 @@ const GroupInfoHero = () => {
                             </h2>
                             <div className={styles.headerTravelDetails}>
                                 <span>From: {group.intialLocation}</span>
-                                <span>To: Las Vegas</span>
                                 <span>Departure: {new Intl.DateTimeFormat('en-gb', {
                                     timeStyle: 'short',
                                     hour12: true,
@@ -78,19 +62,19 @@ const GroupInfoHero = () => {
 
                     <div className={styles.descriptionWrapper}>
                         <div className={styles.tags}>
-                                <span className={styles.tag}>
-                                    Boys Only
-                                </span>
-                                <span className={styles.tag}>
-                                    No Alchohol
-                                </span>
-                                <span className={styles.tag}>
-                                    No Loud Music
-                                </span>
-                                <span className={styles.tag}>
-                                    Long Drive
-                                </span>
-                            </div>
+                            <span className={styles.tag}>
+                                Boys Only
+                            </span>
+                            <span className={styles.tag}>
+                                No Alchohol
+                            </span>
+                            <span className={styles.tag}>
+                                No Loud Music
+                            </span>
+                            <span className={styles.tag}>
+                                Long Drive
+                            </span>
+                        </div>
                         <p ref={paragraphRef} className={styles.description}>
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat aperiam, eos temporibus velit excepturi aliquid inventore suscipit cupiditate doloribus provident rerum, possimus aliquam quo laudantium. Eligendi obcaecati, nihil sunt sed, culpa enim quod eum quia rem ex delectus, aliquid dolorem explicabo optio cum recusandae unde. Tenetur alias deleniti numquam unde?
                         </p>
@@ -114,9 +98,6 @@ const GroupInfoHero = () => {
                 </div>
                 <nav className={styles.sectionSwitchersWrapper}>
                     <div className={styles.sectionSwitchers}>
-                        <button onClick={() => setCurrentSection('Travel Details')} aria-label='Show Travel Details' className={clsx(styles.sectionSwitcher, currentSection == 'Travel Details' && styles.activeSectionSwitcher)}>
-                            <Map size={24} />
-                        </button>
                         <button onClick={() => setCurrentSection('Comments')} aria-label='Show comments section' className={clsx(styles.sectionSwitcher, currentSection == 'Comments' && styles.activeSectionSwitcher)}>
                             <ChatsCircleIcon size={24} />
                         </button>
@@ -128,29 +109,19 @@ const GroupInfoHero = () => {
                 </nav>
                 <div className={styles.sectionWrapper}>
                     {currentSection == 'Comments' ? <CommentsSection /> :
-                        currentSection == 'Members' ? <Members group={group} /> :
-                            currentSection == 'Travel Details' ? <TravelDetails group={group} /> :
-                                <div>Nothing here</div>
+                        currentSection == 'Members' &&
+                        <>
+                            <h3 className={styles.membersHeading}>Members</h3>
+                            <Members group={group} />
+                        </>
                     }
                 </div>
             </div >
             <div className={styles.rightSidebar}>
-                <nav className={styles.sectionSwitchersWrapper}>
-                    <div className={styles.sectionSwitchers}>
-                        <button onClick={() => setCurrentRightSidebarTab('Travel Details')} aria-label='Show travel details' className={clsx(styles.sectionSwitcher, currentRightSidebarTab == 'Travel Details' && styles.activeSectionSwitcher)}>
-                            <Map size={24} />
-                        </button>
-                        <button onClick={() => setCurrentRightSidebarTab('Members')} aria-label='show members section' className={clsx(styles.sectionSwitcher, currentRightSidebarTab == 'Members' && styles.activeSectionSwitcher)}>
-                            <Users size={24} />
-                        </button>
-                    </div>
-                    <div className={styles.activeSectionIndicator}></div>
-                </nav>
+                <h3>Members</h3>
                 <div className={styles.sectionWrapper}>
                     <section className={styles.rightSidebarSection}>
-                        {currentRightSidebarTab === 'Travel Details' ?
-                            <TravelDetails group={group} /> :
-                            <Members group={group} />}
+                        <Members group={group} />
                     </section>
                 </div>
             </div>
@@ -163,45 +134,6 @@ export default GroupInfoHero
 
 
 
-type TravelDetailsProps = {
-    group: Group
-}
-
-const TravelDetails = ({ group }: TravelDetailsProps) => {
-    const transportationIcon = { 'Airplane': <Plane />, 'Flight': <Plane />, 'Car': <Car />, 'Taxi': <LucideCarTaxiFront />, 'Train': <Train />, 'Railway': <Train />, 'Bus': <Bus />, 'Bike': <Motorbike />, 'Other': <Map /> } as Record<string, JSX.Element>
-
-    const dateTime = new Date(group.travelDate)
-    const dateAndDay = new Intl.DateTimeFormat('en-gb', {
-        dateStyle: 'full',
-    }).format(dateTime)
-
-    const time = new Intl.DateTimeFormat('en-gb', {
-        timeStyle: 'short',
-        hour12: true,
-    }).format(dateTime)
-    return (
-        <>
-            <header className={styles.rightSidebarHeader}>
-                <div className={styles.rightSidebarHeading}>{dateAndDay}</div>
-                <div className={styles.rightSidebarHeading}>{time}</div>
-            </header>
-            <div className={styles.travelDetailsArea}>
-                <div className={styles.travelLane}>
-                    <div className={styles.travelDetails}>
-                        <span>{group.intialLocation}</span>
-                    </div>
-                    <div></div>
-                    {transportationIcon[group.mode]}
-                    <div></div>
-                    <div className={styles.travelDetails}>
-                        <span>Las Vegas</span>
-                    </div>
-
-                </div>
-            </div>
-        </>
-    )
-}
 
 
 type MembersProps = {
@@ -232,67 +164,3 @@ const Members = ({ group }: MembersProps) => {
 }
 
 
-type ShareMenuPopoverProps = {
-    title: string
-}
-
-const ShareMenuPopover = ({ title }: ShareMenuPopoverProps) => {
-
-    const shareURL = new URL(location.pathname, location.origin).href
-    const copyShareLink = () => {
-        navigator.clipboard.writeText(shareURL)
-        toast.success("Link copied to clipboard")
-    }
-
-    return (
-        <div popover='auto' id='shareMenu' className={styles.shareMenu}>
-            <header className={styles.shareMenuHeader}>
-                Share <button popoverTarget='shareMenu' popoverTargetAction='hide'>
-                    <X />
-                </button>
-            </header>
-            <div className={styles.shareOptions}>
-                <div>
-                    <WhatsappShareButton aria-label='share link to Whatsapp' url={shareURL}>
-                        <WhatsappIcon />
-                    </WhatsappShareButton>
-                    Whatsapp
-                </div>
-                <div>
-                    <FacebookShareButton title={title} aria-label='share link to Facebook' url={shareURL}>
-                        <FacebookIcon />
-                    </FacebookShareButton>
-                    Facebook
-                </div>
-                <div>
-                    <XShareButton title={title} aria-label='share link to X' url={shareURL}>
-                        <XIcon />
-                    </XShareButton>
-                    X
-                </div>
-                <div>
-                    <EmailShareButton title={title} aria-label='share link to EmailShareButton' url={shareURL}>
-                        <EmailIcon />
-                    </EmailShareButton>
-                    Email
-                </div>
-                <div>
-                    <RedditShareButton title={title} aria-label='share link to Reddit' url={shareURL}>
-                        <RedditIcon />
-                    </RedditShareButton>
-                    Reddit
-                </div>
-                <div>
-                    <LinkedinShareButton title={title} aria-label='share link to Linkedin' url={shareURL}>
-                        <LinkedinIcon />
-                    </LinkedinShareButton>
-                    Linkedin
-                </div>
-            </div>
-            <div className={styles.copyLinkArea}>
-                <input type="text" readOnly value={shareURL} />
-                <button onClick={copyShareLink} className={styles.copyLinkButton}>Copy</button>
-            </div>
-        </div>
-    )
-}

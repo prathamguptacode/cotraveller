@@ -332,9 +332,27 @@ export const deleteGroupComment: RequestHandler = async (req, res) => {
 
     const comment = await Comment.findById<Omit<CommentType, 'group'> & { group: { owner: Types.ObjectId } }>(commentId).populate({ path: 'group', select: 'owner' })
     if (!comment) return res.fail(404, "NOT_FOUND", "Comment does not exist")
-    if (user._id != comment.author && user._id != comment.group.owner) return res.fail(403, "FORBIDDEN", "Unauthorized action")
+    console.log(comment.author == user._id)
+    if (!user._id.equals(comment.author) && !user._id.equals(comment.group.owner)) return res.fail(403, "FORBIDDEN", "An error occurred")
 
     await Comment.deleteOne({ _id: commentId })
 
     return res.sendStatus(204)
+}
+
+export const toggleLikeOnGroupComment: RequestHandler = async (req, res) => {
+    const { commentId } = req.params
+    const user = req.user
+
+    const comment = await Comment.findById(commentId)
+    if (!comment) return res.fail(404, "NOT_FOUND", "Comment does not exist")
+
+    if (comment.likes.includes(user._id)) await Comment.updateOne({ _id: commentId }, { $pull: { likes: user._id } })
+    else {
+        comment.likes.push(user._id)
+        await comment.save()
+        console.log(comment)
+    }
+
+    return res.success()
 }

@@ -40,7 +40,7 @@ const Sidebar = () => {
         const sidebarsDiv = sidebarsRef.current
         const hamburgerMenu = hamburgerRef.current
 
-        if (!sidebarsDiv?.parentElement || !hamburgerMenu || sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay') return
+        if (!sidebarsDiv?.parentElement || !hamburgerMenu || sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay' || window.matchMedia("(max-width:768px)").matches) return
 
         const eventHandler = (e: PointerEvent) => {
             const target = e.target
@@ -57,7 +57,8 @@ const Sidebar = () => {
             }
             checker(target)
 
-            if (!sidebarsDiv.contains(target) && !hamburgerMenu.contains(target)) setSidebarIsHidden(true)
+            if (!sidebarsDiv.contains(target) && !hamburgerMenu.contains(target) && !window.matchMedia("(max-width:768px)").matches) setSidebarIsHidden(true)
+
         }
 
         window.addEventListener('click', eventHandler)

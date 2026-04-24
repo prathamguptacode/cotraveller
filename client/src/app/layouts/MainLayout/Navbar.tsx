@@ -73,10 +73,9 @@ export default Navbar
 
 const NavbarHamburger = () => {
     const { setSidebarIsHidden, notifications, hamburgerRef, sidebarIsHidden } = useMainLayoutContext()
-    const { user } = useAuth()
 
 
-    return user && <button ref={hamburgerRef} aria-label='hamburger menu' tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification, !sidebarIsHidden && mystyle.mobileBackButton)}>
+    return <button ref={hamburgerRef} aria-label='hamburger menu' tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification, !sidebarIsHidden && mystyle.mobileBackButton)}>
         <TextAlignJustify strokeWidth={2.5} size={20} />
         <ArrowLeft strokeWidth={2.5} size={20} />
     </button>

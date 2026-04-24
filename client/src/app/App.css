@@ -5,6 +5,7 @@
 input,
 button {
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* 2. Remove default margin */
@@ -118,7 +119,6 @@ input::-webkit-inner-spin-button {
     margin: 0;
     /* Optional: Removes any default margin */
 }
-
 
 
 #root {
