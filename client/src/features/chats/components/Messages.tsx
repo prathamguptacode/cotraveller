@@ -23,10 +23,10 @@ const Messages = ({ messages, lastMessageRef, conversationRecords, messagesRef, 
     }, [])
 
     const lastReadByEveryoneAt = useMemo(() => {
-        let temp = new Date(conversationRecords[0].lastReadAt).getTime()
+        let temp = Infinity
         conversationRecords.forEach(record => {
             const readAt = new Date(record.lastReadAt).getTime()
-            if (record.memberId != user?._id) temp = readAt < temp ? readAt : temp
+            if (record.memberId != user?._id) temp = Math.min(readAt, temp)
         })
         return temp
     }, [conversationRecords, user])

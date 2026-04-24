@@ -76,11 +76,11 @@ const ChatArea = () => {
     const refreshReadStatus = (data: { conversationRecord: ConversationRecord }) => {
       queryClient.setQueryData<ApiSuccess<{ group: Group, conversationRecords: ConversationRecord[] }>>(['groups', groupId], (prev) => {
         if (!prev) return prev
-        const conversationRecords = prev.data.conversationRecords.map(record => {
+        const newConversationRecords = prev.data.conversationRecords.map(record => {
           if (record.memberId == data.conversationRecord.memberId) return { ...record, lastReadAt: data.conversationRecord.lastReadAt }
           return record
         })
-        return { ...prev, data: { ...prev.data, conversationRecords } }
+        return { ...prev, data: { ...prev.data, conversationRecords: newConversationRecords } }
       })
       queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
     }

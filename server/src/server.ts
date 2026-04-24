@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
             const group = await Group.findOneAndUpdate({ _id: roomId }, { $push: { messages: baseMessage._id } }, { returnDocument: 'after' })
             if (!group) return
 
-            const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId: group._id, memberId: userId }, { $set: { lastReadAt: new Date(Date.now()) } }, { returnDocument: 'after' })
+            const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId: group._id, memberId: userId }, { $set: { lastReadAt: new Date() } }, { returnDocument: 'after' })
             if (!conversationRecord) return
 
             cb({ success: true, message })
