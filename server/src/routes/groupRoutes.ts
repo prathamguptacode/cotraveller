@@ -1,12 +1,13 @@
 import express from 'express'
 const router = express.Router()
-import { addGroup, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup, addComment, fetchGroupComments, deleteGroupComment, toggleLikeOnGroupComment, fetchGroupJoinRequests } from '../controllers/groupController'
+import { addGroup, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup, addComment, fetchGroupComments, deleteGroupComment, toggleLikeOnGroupComment, fetchGroupJoinRequests, leaveGroupController } from '../controllers/groupController'
 import asyncHandler from '../middlewares/asyncHandler'
 import { fetchGroupInfo } from '../controllers/groupController'
 import { viewGroupByFilter } from '../controllers/groupController'
 import { addRequest } from '../controllers/groupController'
 import { authMiddleware } from '../middlewares/authMiddleware'
 import Group from '@/models/Group'
+import { isObjectIdOrHexString } from 'mongoose'
 
 
 
@@ -20,7 +21,7 @@ router.get('/:groupId', asyncHandler(fetchGroupInfo))
 
 router.get('/:groupId/comments', asyncHandler(fetchGroupComments))
 
-router.get('/:groupId/requests',asyncHandler(fetchGroupJoinRequests))
+router.get('/:groupId/requests', asyncHandler(fetchGroupJoinRequests))
 
 
 
@@ -28,11 +29,12 @@ router.use(authMiddleware)
 
 
 router.patch('/:groupId', asyncHandler(editGroup))
+router.delete('/:groupId/members/me', asyncHandler(leaveGroupController))
+
 
 router.post('/:groupId/comments', asyncHandler(addComment))
 router.delete('/:groupId/comments/:commentId', asyncHandler(deleteGroupComment))
 router.patch('/:groupId/comments/:commentId/likes', asyncHandler(toggleLikeOnGroupComment))
-
 
 
 router.post('/:groupId/requests', asyncHandler(addRequest))
@@ -41,6 +43,7 @@ router.delete('/:groupId/requests/:requestId', asyncHandler(declineIncomingReque
 
 
 router.param('groupId', async (req, res, next, groupId) => {
+    if (!isObjectIdOrHexString(groupId)) return
     try {
         const group = await Group.findById(groupId)
         if (!group) return res.fail(404, "GROUP_NOT_FOUND", "The group does not exist")

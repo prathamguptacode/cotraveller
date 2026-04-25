@@ -86,7 +86,7 @@ const BottomNavbar = () => {
           <h2>{currentSidebarTab}</h2>
         </div>
         <div className={styles.ctxSidebarList}>
-          {user ? <ErrorBoundary resetKeys={[currentSidebarTab,sidebarIsHidden]} fallback={<FallbackWrapper children={'Something went wrong !'} />}>
+          {user ? <ErrorBoundary resetKeys={[currentSidebarTab, sidebarIsHidden]} fallback={<FallbackWrapper children={'Something went wrong !'} />}>
             <Suspense key={currentSidebarTab} fallback={<FallbackWrapper />}>
               {
                 currentSidebarTab == 'Chats' ? <SidebarChatsPreview /> :

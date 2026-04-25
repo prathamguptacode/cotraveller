@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
 import { toast } from 'sonner';
 import { getImgURL } from '@/lib/cloudinary';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 import { normalizeError } from '@/utils/normalizeError';
 import Spinner from '@/components/Loaders/Spinner';
@@ -32,6 +32,7 @@ function Navbar({ children }: NavbarProps) {
     const { setNotifications } = useMainLayoutContext()
     const eventSource = useEventSource()
     const { user } = useAuth()
+    const queryClient = useQueryClient()
 
     const { data: groupJoinRequestsCount } = useQuery({
         queryKey: ['inbox', 'status'],
@@ -57,6 +58,7 @@ function Navbar({ children }: NavbarProps) {
                     description: "Someone wants to join your group"
                 })
                 setNotifications(prev => ({ ...prev, Inbox: true }))
+                queryClient.invalidateQueries({ queryKey: ['inbox'], exact: true })
             }
         }
         eventSource.addEventListener('message', eventListener)
@@ -181,10 +183,9 @@ const NavbarProfileButton = () => {
 
     const { mutate: removeAvatar, isPending: isRemovingAvatar } = useMutation({
         mutationFn: () => api.delete('/user/avatar'),
-        onSuccess: (res) => {
+        onSuccess: () => {
             updateUser(prev => prev && ({ ...prev, avatar: { publicId: '', version: 0 } }))
             toast.success('Removal successful')
-            console.log(res)
         },
         onError: (error) => {
             const err = normalizeError(error)

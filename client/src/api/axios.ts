@@ -60,7 +60,7 @@ rawAxios.interceptors.response.use(res => {
         else if (err.status === 401) {
             console.warn("ERROR:401:UNAUTHORIZED, Logging out")
             toast.error("Unauthorized", {
-                description: "Loggin out..",
+                description: "Logging out..",
                 duration: 1500
             })
             return unAuthApi.post('/auth/logout')

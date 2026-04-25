@@ -151,7 +151,6 @@ const ChatArea = () => {
 
   //Send Message in ChatRoom
   const sendMessage = () => {
-    console.log("Sending message to", groupId, group.title)
     socket.emit('SEND_MESSAGE_TO_SERVER', { text, roomId: groupId, userId: user?._id }, (res: { success: boolean, message: Message }) => {
       if (!res.success) return toast.error("Something went wrong!")
       queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
@@ -168,7 +167,7 @@ const ChatArea = () => {
 
   return (
     <div className={styles.chatAreaWrapper}>
-      <ChatHeader group={group} groupId={groupId} />
+      <ChatHeader group={group} />
       <Messages firstMessageRef={firstMessageRef} messagesRef={messagesRef} key={groupId} lastMessageRef={lastMessageRef} messages={messages} conversationRecords={conversationRecords} />
       <MessageComposer sendMessage={sendMessage} setText={setText} text={text} />
       <ScrollToBottomButton lastMessageRef={lastMessageRef} unreadCount={unreadCount} isAtBottom={isAtBottom} />
