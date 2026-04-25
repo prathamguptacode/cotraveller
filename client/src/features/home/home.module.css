@@ -2,12 +2,12 @@
     max-width: 1024px;
     margin: auto;
 
+
+
     >* {
         margin-inline: 1rem;
     }
 }
-
-
 
 .homeBtn {
     border-radius: 10px;
@@ -29,7 +29,7 @@
 }
 
 .bannerTitle {
-    font-size: 56px;
+    font-size: 52px;
     font-weight: 500;
     line-height: 64px;
     letter-spacing: -1.5px;
@@ -43,11 +43,12 @@
 }
 
 
+/* Bottom */
 
 .discoverbx {
     display: flex;
     gap: 12px;
-    margin: 28px auto;
+    margin-block: 2rem 4rem;
     padding: 16px;
     background-color: var(--discoverbg);
     justify-content: space-between;

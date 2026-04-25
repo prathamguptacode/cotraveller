@@ -1,15 +1,17 @@
 /* LiveGroups */
 
 .liveGroupsWrapper {
-    margin: 24px auto;
+    margin-block-end: 4rem;
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
 .liveGroupsTitle {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 500;
+
+    margin-block-end: .5rem;
 }
 
 
@@ -23,15 +25,17 @@
 /* LiveGroup */
 
 .liveGroupWrapper {
-    font-size: 18px;
-    font-weight: 400;
-    border: 1px solid var(--clr-border);
-    transition: all 0.2s ease;
+    flex: 1;
+
     display: flex;
     justify-content: space-between;
-    padding: 24px 28px;
-    border-radius: 10px;
-    flex: 1;
+
+    font-size: 18px;
+    padding: 1.5rem;
+
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+
 }
 
 .liveGroupHeading {
