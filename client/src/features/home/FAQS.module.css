@@ -25,7 +25,7 @@
     transition: all 0.4s ease;
     height: 0px;
     white-space: pre-line;
-
+    line-height: 1.5;
 }
 
 .arrowbx {
