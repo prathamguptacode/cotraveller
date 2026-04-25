@@ -1,18 +1,19 @@
 .wrapper {
     display: flex;
     margin-top: 65px;
-    /* margin-bottom: 57px; */
 }
 
 .heroWrapper {
     flex-grow: 1;
     margin-inline-start: auto;
-    /* padding-inline: 1rem; */
     container-type: inline-size;
 
     height: calc(100vh - 65px);
     height: calc(100dvh - 65px);
+
+
     overflow-y: scroll;
+    scroll-behavior: smooth;
 }
 
 

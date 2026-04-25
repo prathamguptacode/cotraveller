@@ -1,23 +1,23 @@
 .wrapper {
-    margin: 16px auto;
-    max-width: 1140px;
+    padding-bottom: 10rem;
     color: var(--clr-font);
 }
 
 .title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
-    padding: 8px 0;
+    margin-block-end: .5rem;
+
 }
 
 .qbox {
-    border-bottom: 1px solid var(--clr-border);
-    padding: 8px 0;
+    border-bottom: .5px solid var(--clr-border);
+    padding: 1em;
 }
 
 .question {
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .ans {
@@ -25,6 +25,7 @@
     transition: all 0.4s ease;
     height: 0px;
     white-space: pre-line;
+    line-height: 1.5;
 }
 
 .arrowbx {

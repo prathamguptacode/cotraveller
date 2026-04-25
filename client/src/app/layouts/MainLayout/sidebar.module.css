@@ -23,8 +23,6 @@
             }
         }
 
-
-
         .contextualSidebar {
             width: 350px;
             position-anchor: --primary-sidebar;
@@ -211,6 +209,42 @@
 
         >* {
             padding: .5rem;
+        }
+    }
+
+
+    @media(max-width:1200px) {
+        .sidebarsWrapper {
+            &.visibleCtxSidebar {
+                width: 80px;
+
+                .contextualSidebar {
+                    translate: 0;
+                    opacity: 1;
+                    pointer-events: all;
+                }
+            }
+
+            .contextualSidebar {
+                width: 350px;
+                position-anchor: --primary-sidebar;
+                position: absolute;
+                inset: auto;
+                left: anchor(right);
+                bottom: anchor(bottom);
+                top: anchor(top);
+
+
+                transition-property: translate, opacity;
+                transition-duration: .1s;
+                transition-behavior: linear;
+
+                z-index: 10;
+                translate: -100% 0;
+                opacity: 0;
+                pointer-events: none;
+
+            }
         }
     }
 
