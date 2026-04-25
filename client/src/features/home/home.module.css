@@ -1,7 +1,10 @@
 .wrapper {
     max-width: 1024px;
     margin: auto;
-    padding-inline: 1rem;
+
+    >* {
+        margin-inline: 1rem;
+    }
 }
 
 
@@ -18,17 +21,24 @@
 
 
 .banner {
+    max-width: 1248px;
     margin-inline: auto;
-    padding-bottom: 44px;
+    margin-bottom: 44px;
     min-height: 150px;
+    position: relative;
 }
 
 .bannerTitle {
+    font-size: 56px;
+    font-weight: 500;
+    line-height: 64px;
+    letter-spacing: -1.5px;
     text-align: center;
-    margin-top: -100px;
-    font-size: 48px;
-    font-weight: 600;
-    position: relative;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 1;
 }
 
@@ -96,6 +106,7 @@
         max-width: 100%;
     } */
 
+
     .bottomWrapper {
         margin: .5rem;
     }
@@ -111,25 +122,21 @@
     }
 
     .banner {
-        padding: 0;
-        position: relative;
+        margin-bottom: 0;
+    }
+
+    .bannerTitle {
+        font-size: 48px;
     }
 
 
+}
+
+@media (max-width:720px) {
     .bannerTitle {
-        font-size: 32px;
-        position: absolute;
-        bottom: 1rem;
-        left: 50%;
-        translate: -50% 0;
-        width: 100%;
+        font-size: 36px;
+        line-height: 44px;
     }
 }
 
 
-
-@media (max-width:480px) {
-    .bannerTitle {
-        font-size: 28px;
-    }
-}

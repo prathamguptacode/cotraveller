@@ -11,7 +11,7 @@ function Banner() {
   return (
     <div className={mystyle.banner}>
       {theme == 'dark' ? <img src={darkBanner} alt="banner svg" /> : <img src={lightBanner} alt='banner light svg' />}
-      <div className={mystyle.bannerTitle}>Welcome {user && user.fullName.split(' ')[0]}!</div>
+      <div role='heading' className={mystyle.bannerTitle}>Welcome {user && user.fullName.split(' ')[0]}!</div>
     </div>
   )
 }

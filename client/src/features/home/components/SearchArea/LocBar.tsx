@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import usePlace from 'use-places-autocomplete';
 import mystyle from './search.module.css'
-import { MdLocationPin } from "react-icons/md";
+import { MapPin } from 'lucide-react';
 
 // const historyCards: {
 //     index: number,
@@ -70,7 +70,7 @@ function LocBar({ setLocation, location }: { setLocation: React.Dispatch<React.S
     useEffect(() => {
         if (location) {
             if (locationIn.current) {
-                setValue(location,false)
+                setValue(location, false)
             }
         }
     }, [])
@@ -78,7 +78,7 @@ function LocBar({ setLocation, location }: { setLocation: React.Dispatch<React.S
     return (
         <div className={mystyle.locationcamp} onClick={handleClklocationcamp}>
             <div className={mystyle.locationBox}>
-                <MdLocationPin size={28} />
+                <MapPin />
                 <input type="text" value={value} placeholder='From Where?' ref={locationIn} className={mystyle.locationInput} onChange={handleChange} disabled={!ready} />
             </div>
             <div className={mystyle.suggestion}>
@@ -90,7 +90,7 @@ function LocBar({ setLocation, location }: { setLocation: React.Dispatch<React.S
                         {
                             data.map((item, index) => <li className={mystyle.suggestionTab} key={index} onClick={() => handleSelect(item)}>
                                 <div className={mystyle.suggestionIcon}>
-                                    <MdLocationPin size={24} />
+                                    <MapPin />
                                 </div>
                                 <div>
                                     <div className={mystyle.mainLoc}>

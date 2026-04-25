@@ -1,11 +1,11 @@
 import mystyle from './search.module.css'
 import { IoMdSearch } from "react-icons/io";
 import { useLoadScript, type Libraries } from '@react-google-maps/api'
-import { MdLocationPin } from "react-icons/md";
 import LocBar from './LocBar';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { MapPin } from 'lucide-react';
 
 const lib: Libraries = ["places"]
 const Currentdate = new Date();
@@ -43,29 +43,28 @@ function Searchbox({ dLocation, dDate }: { dLocation: string | null, dDate: stri
     // ###closing the location box 
 
     return (
-        <div>
+        <>
             <div className={mystyle.searchbox}>
                 {
                     isLoaded ? <LocBar setLocation={setLocation} location={location} /> : (<div className={mystyle.loadingLoc}>
-                        <MdLocationPin size={20} />
+                        <MapPin />
                         Loading...
                     </div>)
                 }
                 <div className={mystyle.dateIn}>
                     <div>
-                        Departure Date:
+                        Departure
                     </div>
                     <input type="date" defaultValue={defaultDate} onChange={(e) => setdate(e.target.value)} />
                 </div>
             </div>
-
             <div className={mystyle.btnbox}>
                 <button aria-label='Search' className={mystyle.searchbtn} onClick={search}>
                     <IoMdSearch size="20px" />
                     Find groups
                 </button>
             </div>
-        </div>
+        </>
     )
 }
 
