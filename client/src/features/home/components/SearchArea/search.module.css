@@ -1,6 +1,5 @@
 .searchbox {
     background-color: var(--secondary-bg);
-    max-width: 1140px;
     margin: auto;
     padding: 20px 16px;
     border-radius: 4px;
@@ -9,7 +8,14 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
+
     border-radius: 14px;
+
+    >*{
+        min-width: fit-content;
+        flex: 1;
+    }
 }
 
 .btnbox {
@@ -166,26 +172,7 @@ ul {
 
 
 
-@media (max-width:1108px) {
-    /* .searchbox {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        grid-template-rows: 1fr 1fr;
-        grid-template-areas:
-            "from from from mode mode mode"
-            "date date month month year year"
-        ;
-    } */
-}
 
-@media (width < 1000px) {
-    .searchbox {
-        max-width: 900px;
-    }
-
-
-
-}
 
 @media(max-width:768px) {
 
@@ -204,18 +191,4 @@ ul {
         }
     }
 
-}
-
-@media (width<375px) {
-    .searchbox {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        grid-template-rows: 1fr 1fr 1fr;
-        grid-template-areas:
-            "from from from from from from"
-            "mode mode mode mode mode mode"
-            "date date month month year year"
-
-        ;
-    }
 }

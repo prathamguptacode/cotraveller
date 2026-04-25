@@ -1,5 +1,5 @@
 .wrapper {
-    max-width: 972px;
+    max-width: 1024px;
     margin: auto;
     padding-inline: 1rem;
 }
@@ -18,7 +18,7 @@
 
 
 .banner {
-    max-width: 1920px;
+    margin-inline: auto;
     padding-bottom: 44px;
     min-height: 150px;
 }
@@ -39,7 +39,6 @@
     gap: 12px;
     margin: 28px auto;
     padding: 16px;
-    max-width: 1140px;
     background-color: var(--discoverbg);
     justify-content: space-between;
     align-items: center;
@@ -76,9 +75,9 @@
 
 
 @media (max-width:1108px) {
-    .wrapper {
+    /* .wrapper {
         max-width: 768px;
-    }
+    } */
 }
 
 
@@ -93,9 +92,9 @@
 
 @media (max-width:768px) {
 
-    .wrapper {
+    /* .wrapper {
         max-width: 100%;
-    }
+    } */
 
     .bottomWrapper {
         margin: .5rem;

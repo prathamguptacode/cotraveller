@@ -1,7 +1,6 @@
 /* LiveGroups */
 
 .liveGroupsWrapper {
-    max-width: 1140px;
     margin: 24px auto;
     display: flex;
     flex-direction: column;

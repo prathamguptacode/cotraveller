@@ -6,6 +6,10 @@ input,
 button {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 /* 2. Remove default margin */
@@ -126,7 +130,6 @@ input::-webkit-inner-spin-button {
 }
 
 body {
-    /* max-width: 1920px; */
     margin: auto;
     background-color: var(--clr-bg);
     color: var(--clr-font);
