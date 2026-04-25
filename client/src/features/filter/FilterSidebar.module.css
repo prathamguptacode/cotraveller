@@ -1,0 +1,111 @@
+.member {
+    /* border: 2px solid red; */
+    padding: 12px;
+}
+
+.memberHeading {
+    font-size: 17px;
+    font-weight: 500;
+    padding: 12px 0;
+}
+
+.memberbox {
+    display: flex;
+    gap: 4px;
+    border: 2px solid rgb(56, 56, 56);
+    border-radius: 8px;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+.memberMinus,
+.memberPlus {
+    all: unset;
+    flex-shrink: 0;
+    padding: 16px;
+    cursor: pointer;
+}
+
+.memberMinus:hover,
+.memberPlus:hover,
+.modeIcon:hover {
+    background-color: hsl(0, 0%, 20%);
+}
+
+.travelMode {
+    padding: 12px;
+}
+
+.modeHeading {
+    font-size: 17px;
+    font-weight: 500;
+    padding: 12px 0;
+}
+
+.modeBox {
+    display: block;
+    width: 100%;
+    border: 2px solid rgb(56, 56, 56);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 12px;
+    anchor-name: --modeBtn;
+}
+
+.modeIcon {
+    padding: 16px;
+}
+
+
+.modeDrop:popover-open {
+    all: unset;
+    position-anchor: --modeBtn;
+    top: anchor(top);
+    left: anchor(left);
+    background-color: hsl(0, 0%, 15%);
+    border-radius: 8px;
+    width: anchor-size(width);
+    overflow: hidden;
+}
+
+.options {
+    width: 100%;
+    padding: 12px;
+}
+
+.options:hover {
+    background-color: hsl(0, 0%, 25%);
+}
+
+.time {
+    padding: 12px;
+    padding-bottom: 0;
+}
+
+.timeHeading {
+    font-size: 17px;
+    font-weight: 500;
+    padding: 4px 0;
+}
+
+.timePicker {
+    width: 100%;
+}
+
+.tags {
+    padding: 12px;
+}
+
+.tagHeading {
+    font-size: 17px;
+    font-weight: 500;
+    padding: 14px 0;
+}
+.tagBox{
+}
+.tag{
+    cursor: pointer;
+}

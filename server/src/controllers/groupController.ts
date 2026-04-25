@@ -12,7 +12,7 @@ import ConversationRecord from "@/models/ConversationRecord";
 import Comment from "@/models/Comment";
 import { startSession, Types } from "mongoose";
 
-const allowedTags = ["Alcohol free", "Boys only", "Girls only", "Backpacking"] as const
+const allowedTags = ["no alcohol", "girls only", "budget friendly", "pet friendly"] as const
 const allowedMode = ["Train", "Flight", "Taxi", "Car", "Bike", "Others"] as const
 
 const GroupSchema = z.object({
@@ -94,7 +94,10 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
         travelDate: z.string().optional(),
         travelTime: z.string().optional(),
         intialLocation: z.string().optional(),
-        tags: z.array(z.enum(allowedTags)).max(4).optional(),
+        tags: z.union([
+            z.enum(allowedTags),
+            z.array(z.enum(allowedTags)).max(4)
+        ]).transform((val) => (typeof val === "string" ? [val] : val)).optional(),
     })
     const validateData = filterSchema.safeParse(req.query);
     if (!validateData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data");
@@ -183,6 +186,7 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
     pipeline.push({
         $unwind: "$ownerPop"
     })
+    // ### comment count here
     pipeline.push(
         {
             $project: {
@@ -194,7 +198,9 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
                 content: 1,
                 travelDate: 1,
                 incomingRequests: 1,
+                comments: 1,
                 memberNumber: 1,
+                tags: 1
             }
         }
     )
@@ -303,7 +309,7 @@ export const declineIncomingRequestController: RequestHandler = async (req, res)
 export const leaveGroupController: RequestHandler = async (req, res) => {
     const userId = req.user._id
     const { groupId } = req.params as { groupId: string }
-    
+
     const session = await startSession()
     try {
         await session.withTransaction(async () => {

@@ -1,66 +1,62 @@
-import { useEffect, useState } from 'react'
 import Searchbox from '@/features/home/components/SearchArea/Searchbox'
 import mystyle from './ViewGroup.module.css'
-import { useSearchParams } from 'react-router-dom'
+import { Navigate, useSearchParams } from 'react-router-dom'
 import { api } from '@/api/axios'
 import Group from '@/components/viewgroup/Group'
 import NoGroup from '../success/NoGroup'
-import { loaderEvent } from '@/api/mitt'
-import { Modes, Months, type Mode, type Month } from '@/types/constants.types'
+import { useQuery } from '@tanstack/react-query'
+import LoadingPage from '../Extras/LoadingPage'
+
+// ###fix the commentsss
+
+type Group = {
+    _id: string,
+    title: string,
+    content: string,
+    memberNumber: 3,
+    travelDate: string,
+    incomingRequests: string[],
+    ownerPop: {
+        fullName: string
+    }
+}
+
+type Groups = {
+    groups: Group[],
+}
 
 function ViewGroup() {
-
-    const [groupData, setGroupData] = useState([])
-    const [localLoader, setLocalLoader] = useState(true)
-
     const [query] = useSearchParams()
     const location = query.get("q");
-    const mode = query.get("mode");
-    const d = query.get("d");
-    const m = query.get("m");
-    const y = query.get("y");
-    const isMonth = (m: string): m is Month => Months.includes(m as Month)
-    const isMode = (mode: string): mode is Mode => Modes.includes(mode as Mode)
-    if (!location || !mode || !d || !m || !y || !isMonth(m) || !isMode(mode)) return <NoGroup />
-
-
-    useEffect(() => {
-        const location = query.get("q");
-        const mode = query.get("mode");
-        const lowerT = query.get("lowerT");
-        const upperT = query.get("upperT");
-        (async () => {
-            setLocalLoader(true)
-            loaderEvent.emit('startLoading')
-            const body = {
-                mode: mode,
-                lowerTime: lowerT,
-                upperTime: upperT,
-                intialLocation: location
-            }
-            try {
-                const res = await api.post<{ groups: [] }>("/groups/viewgroupbyfilter", body)
-
-                setGroupData(res.data.groups)
-                setLocalLoader(false)
-            } catch (error) {
-                //something went wrong page
-                console.error(error)
-            } finally {
-                loaderEvent.emit('stopLoading')
-            }
-        })()
-    }, [query])
+    const date = query.get("date");
+    const time = query.get('time')
+    const members = query.get('members')
+    const travelMode = query.get('travelMode')
+    const tags = query.getAll('tags')
+    const { data: groups, isLoading, isError } = useQuery({
+        queryKey: ["groups", location, date],
+        queryFn: () => {
+            return api.get<Groups>(`groups/viewgroupbyfilter?intialLocation=${location}&travelDate=${date}`)
+        },
+        select(data) {
+            return data.data.groups
+        },
+    })
+    // u may wanna fix it
+    if (isError) {
+        return <Navigate to={'/error'} />
+    }
 
     return (
         <div className={mystyle.wrapper}>
-            <Searchbox l={location} md={mode} d={d} m={m} y={y} w="1920px" />
-            <div className={mystyle.groupSection} >
-                {localLoader ? <div className={mystyle.loader} /> : groupData.length == 0 ? <NoGroup /> : groupData.map(element => {
-                    return <Group element={element} />
-                })}
-            </div>
-
+            <Searchbox dLocation={location} dDate={date} />
+            {isLoading ? <LoadingPage /> :
+                <div>
+                    {
+                        groups && groups.length > 0 ? groups.map(e => <Group element={e} />) : <NoGroup />
+                    }
+                </div>
+            }
         </div>
 
     )

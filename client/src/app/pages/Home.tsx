@@ -10,7 +10,7 @@ const Home = () => {
     <>
       <Banner />
       <main className={styles.wrapper}>
-        <Searchbox />
+        <Searchbox dLocation={null} dDate={null}/>
         <div className={styles.bottomWrapper}>
           <DiscoverBox />
           <LiveGroups />

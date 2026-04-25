@@ -1,194 +1,69 @@
-import { useState } from 'react'
 import mystyle from './search.module.css'
-import clsx from 'clsx'
-import { FaLocationDot } from "react-icons/fa6";
-import { FaPaperPlane } from "react-icons/fa";
 import { IoMdSearch } from "react-icons/io";
-import LocationDrop from './LocationDrop';
-import ModeDrop from './ModeDrop';
-import DateDrop from './DateDrop';
-import MonthDrop from './MonthDrop';
-import YearDrop from './YearDrop';
-import { IoMdAirplane } from "react-icons/io";
-import { FaTrainSubway } from "react-icons/fa6";
-import { FaTaxi } from "react-icons/fa";
+import { useLoadScript, type Libraries } from '@react-google-maps/api'
+import { MdLocationPin } from "react-icons/md";
+import LocBar from './LocBar';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
 import { toast } from 'sonner';
-import { useNavigate } from "react-router-dom";
-import type { Mode, Month } from '@/types/constants.types';
 
-type SearchboxProps = {
-    l?: string,
-    md?: Mode,
-    d?: string,
-    m?: Month | 'Month ?',
-    y?: string,
-    w?: string,
-    tempMargin?: string
-}
+const lib: Libraries = ["places"]
+const Currentdate = new Date();
 
-function Searchbox({ l = 'Where from ?', md = 'Transport?', d = 'Date ?', m = 'Month ?', y = 'Year ?', w = "", tempMargin = "" }: SearchboxProps) {
-
-    const navigate = useNavigate()
-
-    const [location, setLocation] = useState(l)
-    const [mode, setMode] = useState<Mode>(md)
-    const [date, setDate] = useState(d)
-    const [month, setMonth] = useState<Month | 'Month ?'>(m)
-    const [year, setYear] = useState(y)
-    //###fix date issue
-
-    const [locationDropDis, setLocationDropDis] = useState(0)
-    const [modeDropDis, setModeDropDis] = useState(0)
-    const [dateDropDis, setDateDropDis] = useState(0)
-    const [monthDropDis, setMonthDropDis] = useState(0)
-    const [yearDropDis, setYearDropDis] = useState(0)
-
-
-    function showL() {
-        setLocationDropDis(prev => (prev === 0 ? 1 : 0))
+function Searchbox({ dLocation, dDate }: { dLocation: string | null, dDate: string | null }) {
+    const navigate = useNavigate();
+    const { isLoaded } = useLoadScript({
+        googleMapsApiKey: import.meta.env.VITE_MAP_KEY,
+        region: 'in',
+        libraries: lib
+    })
+    const [location, setLocation] = useState(dLocation);
+    let defaultDate = `${Currentdate.getFullYear()}-${(Currentdate.getMonth() + 1).toString().padStart(2, "0")}-${Currentdate.getDate().toString().padStart(2, "0")}`;
+    if (dDate) {
+        defaultDate = dDate;
     }
-    function hidL() {
-        setLocationDropDis(0)
-    }
-    function showT() {
-        setModeDropDis(prev => (prev === 0 ? 1 : 0))
-    }
-    function hidT() {
-        setModeDropDis(0)
-    }
-    function showD() {
-        setDateDropDis(prev => (prev === 0 ? 1 : 0))
-    }
-    function hidD() {
-        setDateDropDis(0)
-    }
-    function showM() {
-        setMonthDropDis(prev => (prev === 0 ? 1 : 0))
-    }
-    function hidM() {
-        setMonthDropDis(0)
-    }
-    function showY() {
-        setYearDropDis(prev => (prev === 0 ? 1 : 0))
-    }
-    function hidY() {
-        setYearDropDis(0)
-    }
-
+    const [date, setdate] = useState<string | null>(defaultDate);
+    const [query] = useSearchParams();
     async function search() {
-        if (location == "Where from?") {
-            toast.error('please enter Location!', {
-                style: {
-                    borderRadius: '10px',
-                    background: 'var(--toast-bg)',
-                    color: 'var(--toast-color)',
-                    padding: "  6px 40px"
-                },
-            }
-            );
-            return
+        if (!location) {
+            return toast.error('Please select a Location');
         }
-        if (mode == "Transport?") {
-            toast.error('please enter the Transport!', {
-                style: {
-                    borderRadius: '10px',
-                    background: 'var(--toast-bg)',
-                    color: 'var(--toast-color)',
-                    padding: "  6px 40px",
-                },
-            }
-            );
-            return
+        if (!date) {
+            return toast.error('Please select a Date');
         }
-        if (date == "Date?") {
-            toast.error('please enter the Date!', {
-                style: {
-                    borderRadius: '10px',
-                    background: 'var(--toast-bg)',
-                    color: 'var(--toast-color)',
-                    padding: "  6px 40px"
-                },
-            }
-            );
-            return
-        }
-        if (month == "Month ?") {
-            toast.error('please enter the Month!', {
-                style: {
-                    borderRadius: '10px',
-                    background: 'var(--toast-bg)',
-                    color: 'var(--toast-color)',
-                    padding: "  6px 40px"
-                },
-            }
-            );
-            return
-        }
-        if (year == "Year?") {
-            toast.error('please enter the Year!', {
-                style: {
-                    borderRadius: '10px',
-                    background: 'var(--toast-bg)',
-                    color: 'var(--toast-color)',
-                    padding: "  6px 40px"
-                },
-            }
-            );
-            return
-        }
-        let monthNum = '0';
-        if (month == "January") monthNum = '01'
-        if (month == "February") monthNum = '02'
-        if (month == "March") monthNum = '03'
-        if (month == "April") monthNum = '04'
-        if (month == "May") monthNum = '05'
-        if (month == "June") monthNum = '06'
-        if (month == "July") monthNum = '07'
-        if (month == "August") monthNum = '08'
-        if (month == "September") monthNum = '09'
-        if (month == "October") monthNum = '10'
-        if (month == "November") monthNum = '11'
-        if (month == "December") monthNum = '12'
-        const lowerTime = `${year}-${monthNum}-${date}T00:00`
-        const upperTime = `${year}-${monthNum}-${date}T23:59`
-        navigate(`/viewgroup?q=${location}&mode=${mode}&lowerT=${lowerTime}&upperT=${upperTime}&d=${date}&m=${month}&y=${year}`)
+        const time = query.get('time')
+        const members = query.get('members')
+        const travelMode = query.get('travelMode')
+        const tags = query.getAll('tags')
+
+        navigate(`/viewgroup?q=${location}&date=${date}&members=${members}&time=${time}&travelMode=${travelMode}&tags=${tags[0]}&tags=${tags[1]}&tags=${tags[2]}&tags=${tags[3]}`)
+
     }
 
+    // ###closing the location box 
 
     return (
         <div>
-            <div className={mystyle.searchbox} style={{ maxWidth: w, marginTop: tempMargin }}>
-                <div className={clsx(mystyle.location, mystyle.inhover)} tabIndex={0} style={{ gridArea: 'from' }} onClick={showL} onBlur={hidL}>
-                    <FaLocationDot />
-                    <div>{location}</div>
-                    {locationDropDis ? <LocationDrop setLocation={setLocation} /> : null}
-                </div>
-                <div className={clsx(mystyle.mode, mystyle.inhover)} tabIndex={0} style={{ gridArea: 'mode' }} onClick={showT} onBlur={hidT}>
-                    {(mode == "Transport?") ? <FaPaperPlane /> : null}
-                    {(mode == "Airplane") ? <IoMdAirplane size="22px" /> : null}
-                    {(mode == "Railway") ? <FaTrainSubway /> : null}
-                    {(mode == "Taxi") ? <FaTaxi /> : null}
-                    <div>{mode}</div>
-                    {modeDropDis ? <ModeDrop setMode={setMode} /> : null}
-                </div>
-                <div className={clsx(mystyle.date, mystyle.inhover)} tabIndex={0} style={{ gridArea: 'date' }} onClick={showD} onBlur={hidD}>{date}
-                    {dateDropDis ? <DateDrop setDate={setDate} /> : null}
-                </div>
-                <div className={clsx(mystyle.month, mystyle.inhover)} tabIndex={0} style={{ gridArea: 'month' }} onClick={showM} onBlur={hidM}>{month}
-                    {monthDropDis ? <MonthDrop setMonth={setMonth} /> : null}
-                </div>
-                <div className={clsx(mystyle.year, mystyle.inhover)} tabIndex={0} style={{ gridArea: 'year' }} onClick={showY} onBlur={hidY}>{year}
-                    {yearDropDis ? <YearDrop setYear={setYear} /> : null}
+            <div className={mystyle.searchbox}>
+                {
+                    isLoaded ? <LocBar setLocation={setLocation} location={location} /> : (<div className={mystyle.loadingLoc}>
+                        <MdLocationPin size={20} />
+                        Loading...
+                    </div>)
+                }
+                <div className={mystyle.dateIn}>
+                    <div>
+                        Departure Date:
+                    </div>
+                    <input type="date" defaultValue={defaultDate} onChange={(e) => setdate(e.target.value)} />
                 </div>
             </div>
-
 
             <div className={mystyle.btnbox}>
                 <button aria-label='Search' className={mystyle.searchbtn} onClick={search}>
                     <IoMdSearch size="20px" />
                     Find groups
                 </button>
-
             </div>
         </div>
     )

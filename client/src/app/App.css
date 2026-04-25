@@ -274,6 +274,10 @@ html {
     --dialog-font-disabled: hsl(210, 4%, 20%);
     --dialog-darker: hsl(210, 4%, 9%);
 
+    /* suggestion */
+    --suggestionbox: hsl(0, 0%, 22%);
+    --suggestionSecondoryfont: rgb(157, 155, 155);
+    --suggestionHover: hsl(0, 0%, 32%);
     /* navbar */
     --nav-neutral-hover: hsl(225, 4%, 20%);
     --nav-neutral-active: hsl(225, 4%, 25%);

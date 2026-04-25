@@ -10,17 +10,12 @@ import SidebarChatsPreview from '@/features/chats/components/SidebarChatsPreview
 import SidebarInboxPreview from '@/features/inbox/components/SidebarInboxPreview'
 import LogOutButton from '@/components/Buttons/LogOutButton'
 import type { SidebarTab } from './types'
+import { ListFilter } from 'lucide-react';
+import FilterSidebar from '@/features/filter/FilterSidebar'
 import clsx from 'clsx'
 import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
 
 
-const sidebarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
-    { name: 'Chats', icon: <MessageCircle /> },
-    { name: 'Groups', icon: <Users /> },
-    { name: 'Inbox', icon: <Inbox /> },
-    { name: 'Explore', icon: <Compass /> },
-    { name: 'Search', icon: <Search /> },
-]
 
 
 
@@ -30,17 +25,37 @@ const Sidebar = () => {
 
     const { currentSidebarTab, setCurrentSidebarTab, sidebarIsHidden, setSidebarIsHidden, hamburgerRef, notifications } = useMainLayoutContext()
     const { user } = useAuth()
+    const location = useLocation();
 
 
+    const sidebarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
+        { name: 'Chats', icon: <MessageCircle /> },
+        { name: 'Groups', icon: <Users /> },
+        { name: 'Inbox', icon: <Inbox /> },
+        { name: 'Explore', icon: <Compass /> },
+        { name: 'Search', icon: <Search /> },
+    ]
 
-    const location = useLocation()
+    if (location.pathname == "/viewgroup") {
+        sidebarTabs.push({
+            name: 'Filter', icon: <ListFilter />
+        })
+    }
+    useEffect(() => {
+        if (location.pathname == "/viewgroup") {
+            setSidebarIsHidden(false);
+            setCurrentSidebarTab('Filter');
+        } else {
+            setCurrentSidebarTab('Chats');
+        }
+    }, [location.pathname])
 
     useEffect(() => {
 
         const sidebarsDiv = sidebarsRef.current
         const hamburgerMenu = hamburgerRef.current
 
-        
+
         if (!sidebarsDiv?.parentElement || !hamburgerMenu || sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay' || window.matchMedia("(max-width:768px)").matches) return
 
         const eventHandler = (e: PointerEvent) => {
@@ -95,14 +110,13 @@ const Sidebar = () => {
                     <h2>{currentSidebarTab}</h2>
                 </div>
                 <div className={styles.ctxSidebarList}>
-                    {user ? <ErrorBoundary resetKeys={[currentSidebarTab,sidebarIsHidden]} fallback={<FallbackWrapper children={'Something went wrong !'} />}>
+                    {user ? <ErrorBoundary resetKeys={[currentSidebarTab, sidebarIsHidden]} fallback={<FallbackWrapper children={'Something went wrong !'} />}>
                         <Suspense key={currentSidebarTab} fallback={<FallbackWrapper />}>
                             {
                                 currentSidebarTab == 'Chats' ? <SidebarChatsPreview /> :
-                                    currentSidebarTab == 'Inbox' ? <SidebarInboxPreview /> :
+                                    currentSidebarTab == 'Inbox' ? <SidebarInboxPreview /> : currentSidebarTab == 'Filter' ? <FilterSidebar /> :
                                         <FallbackWrapper>Coming Soon !</FallbackWrapper>
                             }
-
                         </Suspense>
                     </ErrorBoundary> :
                         <FallbackWrapper>Login to view</FallbackWrapper>
