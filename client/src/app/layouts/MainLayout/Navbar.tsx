@@ -2,13 +2,13 @@ import mystyle from './navbar.module.css'
 import ThemeButton from '@/components/Buttons/ThemeButton';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, type ChangeEvent, type ReactNode, type RefObject } from "react";
-import { Camera, Plus, TextAlignJustify, X } from "lucide-react";
+import { ArrowLeft, Camera, Plus, TextAlignJustify, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
 import { toast } from 'sonner';
 import { getImgURL } from '@/lib/cloudinary';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 import { normalizeError } from '@/utils/normalizeError';
 import Spinner from '@/components/Loaders/Spinner';
@@ -31,6 +31,17 @@ type NavbarProps = {
 function Navbar({ children }: NavbarProps) {
     const { setNotifications } = useMainLayoutContext()
     const eventSource = useEventSource()
+    const { user } = useAuth()
+    const queryClient = useQueryClient()
+
+    const { data: groupJoinRequestsCount } = useQuery({
+        queryKey: ['inbox', 'status'],
+        queryFn: () => api.get<{ groupJoinRequestsCount: number }>('/user/inbox/status'),
+        select: (res) => res.data.groupJoinRequestsCount,
+        refetchInterval: 1000 * 5 * 60,
+        enabled: !!user
+    })
+
 
     useEffect(() => {
         const eventListener = (message: { data: string }) => {
@@ -47,6 +58,7 @@ function Navbar({ children }: NavbarProps) {
                     description: "Someone wants to join your group"
                 })
                 setNotifications(prev => ({ ...prev, Inbox: true }))
+                queryClient.invalidateQueries({ queryKey: ['inbox'], exact: true })
             }
         }
         eventSource.addEventListener('message', eventListener)
@@ -56,6 +68,11 @@ function Navbar({ children }: NavbarProps) {
         }
     }, [])
 
+
+    useEffect(() => {
+        if (!groupJoinRequestsCount) return
+        setNotifications(prev => ({ ...prev, Inbox: groupJoinRequestsCount > 0 }))
+    }, [groupJoinRequestsCount])
 
 
 
@@ -72,12 +89,12 @@ function Navbar({ children }: NavbarProps) {
 export default Navbar
 
 const NavbarHamburger = () => {
-    const { setSidebarIsHidden, notifications } = useMainLayoutContext()
-    const { user } = useAuth()
+    const { setSidebarIsHidden, notifications, hamburgerRef, sidebarIsHidden } = useMainLayoutContext()
 
 
-    return user && <button aria-label='hamburger menu' tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification)}>
+    return <button ref={hamburgerRef} aria-label='hamburger menu' tabIndex={0} onClick={() => setSidebarIsHidden(prev => !prev)} className={clsx(mystyle.hamburger, Object.values(notifications).some(e => e) && mystyle.notification, !sidebarIsHidden && mystyle.mobileBackButton)}>
         <TextAlignJustify strokeWidth={2.5} size={20} />
+        <ArrowLeft strokeWidth={2.5} size={20} />
     </button>
 
 }
@@ -85,7 +102,11 @@ Navbar.Hamburger = NavbarHamburger
 
 
 
-const NavbarTitle = () => <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
+const NavbarTitle = () => {
+    return (
+        <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
+    )
+}
 Navbar.Title = NavbarTitle
 
 const NavbarThemeButton = () => <div className={mystyle.themebtn}><ThemeButton /></div>
@@ -162,10 +183,9 @@ const NavbarProfileButton = () => {
 
     const { mutate: removeAvatar, isPending: isRemovingAvatar } = useMutation({
         mutationFn: () => api.delete('/user/avatar'),
-        onSuccess: (res) => {
+        onSuccess: () => {
             updateUser(prev => prev && ({ ...prev, avatar: { publicId: '', version: 0 } }))
             toast.success('Removal successful')
-            console.log(res)
         },
         onError: (error) => {
             const err = normalizeError(error)

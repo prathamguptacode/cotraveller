@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { normalizeError } from '@/utils/normalizeError'
 import { useEffect } from 'react'
 import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout'
+import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
 
 type InboxRequest = {
   _id: string,
@@ -37,29 +38,24 @@ const SidebarInboxPreview = () => {
 
   const acceptRequestMutation = useMutation({
     mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.post(`/groups/${groupId}/requests/${requestId}`),
-    onSuccess: () => refetchInbox(),
     onError: (error) => {
       const err = normalizeError(error)
-      if (err.status < 500) toast.error('An error occurred', {
-        description: err.message
-      })
-      refetchInbox()
-    }
+      if (err.status < 500) toast.error(err.message)
+    },
+    onSettled: () => refetchInbox()
   })
   const rejectRequestMutation = useMutation({
     mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.delete(`/groups/${groupId}/requests/${requestId}`),
-    onSuccess: () => refetchInbox(),
     onError: (error) => {
       const err = normalizeError(error)
-      if (err.status < 500) toast.error('An error occurred', {
-        description: err.message
-      })
-      refetchInbox()
-    }
+      if (err.status < 500) toast.error(err.message)
+    },
+    onSettled: () => refetchInbox()
   })
 
   useEffect(() => {
     setNotifications(prev => ({ ...prev, Inbox: requests.length == 0 ? false : true }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requests])
 
 
@@ -69,11 +65,11 @@ const SidebarInboxPreview = () => {
 
   return (
     requests.length == 0 ?
-      <div className={styles.fallbackWrapper}>
+      <FallbackWrapper className={styles.fallbackWrapper}>
         {/* ###LATER Replace this fallback */}
         <MailCheck size={48} />
         Incoming Join Requests will appear here
-      </div> :
+      </FallbackWrapper> :
       <div className={styles.list}>
         {
           requests.map(request => {

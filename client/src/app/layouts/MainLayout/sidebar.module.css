@@ -1,106 +1,242 @@
-.sidebarsWrapper {
-    width: 430px;
-    background-color: var(--sidebar-v2-bg);
-    overflow: hidden;
-    flex-shrink: 0;
+    .sidebarsWrapper {
+        width: 80px;
+        background-color: var(--sidebar-v2-bg);
+        overflow: hidden;
+        flex-shrink: 0;
 
-    height: calc(100vh - 65px);
-    display: flex;
-
-
-}
-
-.primarySidebar {
-    width: 80px;
-    flex-shrink: 0;
-    padding: .5rem;
-    display: grid;
-    align-content: space-between;
-    border-right: 1px solid var(--sidebar-v2-border);
-}
+        height: calc(100vh - 65px);
+        height: calc(100dvh - 65px);
+        display: flex;
 
 
-.primarySidebarList {
-    display: grid;
-    place-content: center;
-    align-content: start;
-
-    &:first-child {
-        padding-bottom: .5rem;
-        border-bottom: 1px solid var(--sidebar-v2-border);
     }
 
 
+    .sidebarsWrapper:has(~div>[data-sidebar-type='overlay']) {
+        &.visibleCtxSidebar {
+            width: 80px;
 
-    svg {
-        width: 24px;
-        height: 24px;
+            .contextualSidebar {
+                translate: 0;
+                opacity: 1;
+                pointer-events: all;
+            }
+        }
+
+
+
+        .contextualSidebar {
+            width: 350px;
+            position-anchor: --primary-sidebar;
+            position: absolute;
+            inset: auto;
+            left: anchor(right);
+            bottom: anchor(bottom);
+            top: anchor(top);
+
+
+            transition-property: translate, opacity;
+            transition-duration: .1s;
+            transition-behavior: linear;
+
+            z-index: 10;
+            translate: -100% 0;
+            opacity: 0;
+            pointer-events: none;
+
+        }
     }
 
-    >* {
-        --clr-active: var(--sidebar-v2-bg-active);
-        --clr-hover: var(--sidebar-v2-bg-hover);
-        padding: 1em;
-        border-radius: 15px;
+
+    .visibleCtxSidebar {
+        width: 430px;
+    }
+
+    .primarySidebar {
+        background-color: var(--sidebar-v2-bg);
+        width: 80px;
+        flex-shrink: 0;
+        padding: .5rem;
+        display: grid;
+        align-content: space-between;
+        border-right: 1px solid var(--sidebar-v2-border);
+
         position: relative;
-        transition: all .15s ease-out;
+        anchor-name: --primary-sidebar;
+        z-index: 20;
+    }
 
-        
-        &:active {
-            scale: .95;
+
+    .primarySidebarList {
+        display: grid;
+        place-content: center;
+        align-content: start;
+
+        &:first-child {
+            padding-bottom: .5rem;
+            border-bottom: 1px solid var(--sidebar-v2-border);
+        }
+
+
+
+        svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        >* {
+            --clr-active: var(--sidebar-v2-bg-active);
+            --clr-hover: var(--sidebar-v2-bg-hover);
+            padding: 1em;
+            border-radius: 15px;
+            position: relative;
+            transition: all .15s ease-out;
+
+
+            &:active {
+                scale: .95;
+            }
+
+        }
+    }
+
+    .contextualSidebar {
+        all: unset;
+        background-color: var(--sidebar-v2-bg);
+        flex-grow: 1;
+        display: grid;
+        grid-template-rows: auto 1fr;
+
+        >* {
+            padding: .5rem;
         }
 
     }
-}
 
-.contextualSidebar {
-    flex-grow: 1;
-    display: grid;
-    grid-template-rows: auto 1fr;
+    .ctxSidebarHeader {
+        border-block: 1px solid var(--sidebar-v2-border);
 
-    >* {
-        padding: .5rem;
+        >h2 {
+            font-size: 14px;
+            font-weight: 400;
+            text-align: center;
+
+            border-radius: 8px;
+            width: 90%;
+
+            padding: .5em;
+            margin: auto;
+
+            background-color: var(--sidebar-v2-bg-600);
+            color: var(--sidebar-v2-font);
+            border: .5px solid var(--sidebar-v2-border);
+        }
+
     }
 
-}
+    .ctxSidebarList {
+        overflow: hidden;
 
-.ctxSidebarHeader {
-    border-block: 1px solid var(--sidebar-v2-border);
-
-    >h2 {
-        font-size: 14px;
-        font-weight: 400;
-        text-align: center;
-
-        border-radius: 8px;
-        width: 90%;
-
-        padding: .5em;
-        margin: auto;
-
-        background-color: var(--sidebar-v2-bg-600);
-        color: var(--sidebar-v2-font);
-        border: .5px solid var(--sidebar-v2-border);
+        >div {
+            height: 100%;
+            overflow-y: scroll;
+        }
     }
 
-}
-
-.ctxSidebarList {
-    overflow: hidden;
-
-    >div {
-        height: 100%;
-        overflow-y: scroll;
+    .hasNotifications::after {
+        flex-shrink: 0;
+        content: '';
+        --dimension: 24%;
+        position: absolute;
+        pointer-events: none;
+        right: 15%;
+        bottom: 20%;
+        width: var(--dimension);
+        height: var(--dimension);
+        border-radius: 50%;
+        background-color: var(--primary);
     }
-}
 
 
-.fallbackWrapper {
-    flex: 1;
-    position: relative;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* Bottom Navbar */
+    .bottomNavbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        anchor-name: --bottom-navbar;
+        z-index: 15;
 
-}
+        background-color: var(--sidebar-v2-bg);
+        border-block-start: 1px solid var(--sidebar-v2-border);
+
+        justify-content: space-evenly;
+
+
+
+        display: none;
+
+        >* {
+            padding: 1rem;
+            position: relative;
+        }
+    }
+
+    .mobileNavigationPanel {
+        all: unset;
+        background-color: var(--sidebar-v2-bg);
+        display: grid;
+        grid-template-rows: auto 1fr;
+
+        width: 100vw;
+        position-anchor: --bottom-navbar;
+        position: fixed;
+        inset: auto;
+        bottom: anchor(top);
+        top: 65px;
+        overflow: hidden;
+        height: calc(100vh - 65px - 57px);
+        height: calc(100dvh - 65px - 57px);
+
+
+        transition-property: translate, opacity;
+        transition-duration: .1s;
+        transition-behavior: linear;
+
+        z-index: 20;
+        translate: -100% 0;
+        opacity: 0;
+        pointer-events: none;
+
+        >* {
+            padding: .5rem;
+        }
+    }
+
+
+
+    @media(max-width:768px) {
+        .bottomNavbar:has(~div [data-mobile-nav-hidden='true'])>*:not(:last-child) {
+            display: none;
+        }
+
+
+        .bottomNavbar {
+            display: flex;
+        }
+
+
+        .sidebarsWrapper {
+            display: none;
+        }
+
+
+
+        .visibleMobileNavPanel {
+            translate: 0;
+            opacity: 1;
+            pointer-events: all;
+        }
+
+    }

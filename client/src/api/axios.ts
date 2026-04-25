@@ -1,4 +1,4 @@
-import axios, { AxiosError, type AxiosRequestConfig} from 'axios'
+import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
 import { useToken } from '../hooks/useToken'
 import type { ApiError, ApiSuccess } from '@/types/api.types'
 
@@ -32,7 +32,7 @@ rawAxios.interceptors.response.use(res => {
         data: res.data.data,
         message: res.data.message
     }
-    return response as any
+    return response as never
 },
     async err => {
         const { updateAccessToken } = useToken()
@@ -52,6 +52,7 @@ rawAxios.interceptors.response.use(res => {
                 originalRequest.headers['authorization'] = `Bearer ${accessToken}`
                 return rawAxios(originalRequest)
 
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
                 console.warn("Failed to refresh token")
             }
@@ -59,17 +60,13 @@ rawAxios.interceptors.response.use(res => {
         else if (err.status === 401) {
             console.warn("ERROR:401:UNAUTHORIZED, Logging out")
             toast.error("Unauthorized", {
-                description: "Loggin out..",
+                description: "Logging out..",
                 duration: 1500
             })
             return unAuthApi.post('/auth/logout')
         }
         else if (err.status >= 500) {
             console.warn('ERROR:500:INTERNAL_ERROR, Something went wrong !')
-            toast.error("Internal Error", {
-                description: "Something went wrong !",
-                duration: 1500
-            })
         }
         return Promise.reject(err)
     }
@@ -114,22 +111,22 @@ type ApiAxiosInstance = {
     get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiSuccess<T>>
     post<T>(
         url: string,
-        body?: any,
+        body?: unknown,
         config?: AxiosRequestConfig
     ): Promise<ApiSuccess<T>>
     put<T>(
         url: string,
-        body?: any,
+        body?: unknown,
         config?: AxiosRequestConfig
     ): Promise<ApiSuccess<T>>
     put<T>(
         url: string,
-        body?: any,
+        body?: unknown,
         config?: AxiosRequestConfig
     ): Promise<ApiSuccess<T>>,
     patch<T>(
         url: string,
-        body?: any,
+        body?: unknown,
         config?: AxiosRequestConfig
     ): Promise<ApiSuccess<T>>,
     delete<T>(

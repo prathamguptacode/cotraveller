@@ -26,16 +26,12 @@
 
     position: relative;
 
+    >svg:last-child {
+        display: none;
+    }
+
 }
 
-.fallbackWrapper {
-    flex: 1;
-    position: relative;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
 .notification::after {
     content: '';
@@ -352,7 +348,17 @@
     }
 }
 
+@media(max-width:768px) {
+    .mobileBackButton {
+        >svg:last-child {
+            display: block;
+        }
 
+        >svg:first-child {
+            display: none;
+        }
+    }
+}
 
 
 @media (max-width:800px) {

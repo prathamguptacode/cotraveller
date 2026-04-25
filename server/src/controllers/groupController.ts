@@ -5,10 +5,12 @@ import User, { UserType } from "../models/User";
 import { accecptedNotification, newMemberJoinedNotification, rejectedNotification, sendRequestNotification } from "../services/nodemailer";
 import { RequestHandler } from "express";
 import * as z from "zod";
-import commentSchema from "@/models/Comment";
+import commentSchema, { CommentType } from "@/models/Comment";
 import { eventBus } from "@/events/eventBus";
 import JoinRequest from "@/models/JoinRequest";
 import ConversationRecord from "@/models/ConversationRecord";
+import Comment from "@/models/Comment";
+import { startSession, Types } from "mongoose";
 
 const allowedTags = ["no alcohol", "girls only", "budget friendly", "pet friendly"] as const
 const allowedMode = ["Train", "Flight", "Taxi", "Car", "Bike", "Others"] as const
@@ -48,11 +50,15 @@ export const addGroup: RequestHandler = async (req, res) => {
     res.success(201, data, "Group Created Successfully")
 }
 
-export const viewGroup: RequestHandler = async (req, res) => {
-    const { groupId } = req.params
-    const conversationRecords = await ConversationRecord.find({ roomId: groupId })
+export const fetchGroupInfo: RequestHandler = async (req, res) => {
+    const { groupId } = req.params as { groupId: string }
 
-    const group = await Group.findById(groupId).populate({ path: 'member', select: 'fullName' }).populate({ path: 'comments', select: 'author comment' })
+
+    const conversationRecordsPromise = ConversationRecord.find({ roomId: groupId })
+    const groupPromise = Group.findById(groupId).populate({ path: 'member', select: 'fullName avatar username' })
+
+    const [conversationRecords, group] = await Promise.all([conversationRecordsPromise, groupPromise])
+
     res.success(200, { group, conversationRecords })
 
 }
@@ -61,7 +67,7 @@ export const editGroup: RequestHandler = async (req, res) => {
     const userId = req.user._id;
     if (!req.body) return res.fail(400, "INPUT_ERROR", "Invalid input data");
     req.body.owner = req.user._id.toString();
-    const { groupId } = req.params
+    const { groupId } = req.params as { groupId: string }
     //checking user is owner?
     const group = await Group.findById(groupId)
     if (!group) return res.fail(404, "GROUP_NOT_FOUND", "The requested group does not exist")
@@ -145,7 +151,6 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
         let flag = 0;
         if (travelTime) {
             flag = 1;
-            console.log(travelTime)
             const dateString = `${travelDate}T${travelTime}`;
             const date = new Date(dateString);
             date.setHours(date.getHours() - 2);
@@ -195,18 +200,26 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
                 incomingRequests: 1,
                 comments: 1,
                 memberNumber: 1,
-                tags:1
+                tags: 1
             }
         }
     )
     const groupData = await Group.aggregate(pipeline)
     res.success(200, { groups: groupData });
+
+}
+
+export const fetchGroupJoinRequests: RequestHandler = async (req, res) => {
+    const { groupId } = req.params as { groupId: string }
+    const joinRequests = await JoinRequest.find({ groupId })
+
+    res.success(200, { joinRequests })
 }
 
 export const addRequest: RequestHandler = async (req, res) => {
     const user = req.user
     const userId = user._id
-    const { groupId } = req.params
+    const { groupId } = req.params as { groupId: string }
 
     const group = await Group.findById<Omit<GroupType, 'member'> & { member: UserType[] }>(groupId).populate({ path: 'member', select: 'fullName email' })
     if (!group) return res.fail(404, "GROUP_NOT_FOUND", "The group does not exist")
@@ -231,22 +244,6 @@ export const addRequest: RequestHandler = async (req, res) => {
     res.success(201, { group: updatedGroup }, "Request Sent Successfully")
 }
 
-//for homepage hamburger request seeing so that they can accept
-export const viewRequest: RequestHandler = async (req, res) => {
-    const userID = xss(req.body?.userID)
-    if (!userID) {
-        return res.fail(400, "INPUT_ERROR", "userID not found")
-    }
-    const tempUser = await User.findById(userID)
-    if (!tempUser) {
-        return res.fail(400, "INPUT_ERROR", "No such user")
-    }
-    const group = await Group.find({ member: userID })
-    res.success(200, group)
-}
-
-
-
 export const acceptIncomingRequestController: RequestHandler = async (req, res) => {
     const requestId = req.params.requestId
     const groupId = req.params.groupId
@@ -254,10 +251,10 @@ export const acceptIncomingRequestController: RequestHandler = async (req, res) 
 
 
     const group = await Group.findOne<Omit<GroupType, 'member'> & { member: UserType[] }>({ _id: groupId, incomingRequests: requestId }).populate({ path: 'member', select: 'email' }).select('member title')
-    if (!group) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
+    if (!group) return res.fail(404, "RESOURCE_NOT_FOUND", "Request is no longer available")
 
     const joinRequest = await JoinRequest.findById(requestId)
-    if (!joinRequest) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
+    if (!joinRequest) return res.fail(404, "RESOURCE_NOT_FOUND", "Request is no longer available")
 
     //Checking if group-sizeLimit allows more members
     if (group.memberNumber >= group.member.length) return res.fail(403, 'MEMBER_LIMIT', 'Group already has maximum possible members')
@@ -272,7 +269,7 @@ export const acceptIncomingRequestController: RequestHandler = async (req, res) 
     await Group.updateOne({ _id: groupId }, { $pull: { incomingRequests: requestId }, $push: { member: joinRequest.requesterId } })
     await JoinRequest.deleteOne({ _id: joinRequest._id })
 
-    await ConversationRecord.create({ memberId: joinRequest.requesterId, roomId: groupId })
+    if (!await ConversationRecord.exists({ memberId: joinRequest.requesterId })) await ConversationRecord.create({ memberId: joinRequest.requesterId, roomId: groupId })
 
     //Send notification to all members of the group about acceptance as well as to the user being accepted
     const previousMemberEmails = group.member.map(obj => obj.email)
@@ -291,10 +288,10 @@ export const declineIncomingRequestController: RequestHandler = async (req, res)
     if (typeof groupId !== 'string' || typeof requestId !== 'string') return res.fail(400, "INVALID_REQUEST_PARAMS", "Group ID and Request ID must be strings")
 
     const group = await Group.findOne({ _id: groupId, incomingRequests: requestId })
-    if (!group) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
+    if (!group) return res.fail(404, "RESOURCE_NOT_FOUND", "Request is no longer available")
 
     const joinRequest = await JoinRequest.findById(requestId)
-    if (!joinRequest) return res.fail(404, "RESOURCE_NOT_FOUND", "The associated group or request does not exist")
+    if (!joinRequest) return res.fail(404, "RESOURCE_NOT_FOUND", "Request is no longer available")
 
 
     //Updating db for removed request
@@ -307,6 +304,27 @@ export const declineIncomingRequestController: RequestHandler = async (req, res)
     rejectedNotification(user.email, user.fullName, group.title)
 
     res.sendStatus(204)
+}
+
+export const leaveGroupController: RequestHandler = async (req, res) => {
+    const userId = req.user._id
+    const { groupId } = req.params as { groupId: string }
+
+    const session = await startSession()
+    try {
+        await session.withTransaction(async () => {
+            await Group.findOneAndUpdate({ _id: groupId }, { $pull: { member: userId } }, { session })
+            await User.findOneAndUpdate({ _id: userId }, { $pull: { memberGroup: groupId } }, { session })
+        })
+
+        return res.success(204)
+    } catch (error) {
+        console.error("Group Leave Transaction failed")
+        return res.fail()
+    } finally {
+        await session.endSession()
+    }
+
 }
 
 export const groupnumber: RequestHandler = async (req, res) => {
@@ -323,12 +341,49 @@ export const groupnumber: RequestHandler = async (req, res) => {
 
 export const addComment: RequestHandler = async (req, res) => {
     const userId = req.user._id
-    const { groupId } = req.params
+    const { groupId } = req.params as { groupId: string }
+
     const parsedData = z.object({ comment: z.string({ error: "Invalid Comment" }).min(1, { error: "Comment cannot be empty" }) }).safeParse(req.body)
     if (!parsedData.success) return res.fail(400, "INPUT_ERROR", parsedData.error.issues[0].message)
     const commentText = xss(parsedData.data.comment)
 
-    const comment = await commentSchema.create({ comment: commentText, author: userId, targetGroup: groupId })
-    await Group.updateOne({ _id: groupId }, { $push: { comments: comment._id } })
+    const comment = await commentSchema.create({ comment: commentText, author: userId, group: groupId })
     res.success(201, { comment }, "Comment added successfully")
+}
+
+export const fetchGroupComments: RequestHandler = async (req, res) => {
+    const { groupId } = req.params as { groupId: string }
+    const comments = await Comment.find({ group: groupId }).sort({ createdAt: -1 }).populate({ path: 'author', select: 'avatar fullName username' })
+
+    return res.success(200, { comments })
+}
+
+export const deleteGroupComment: RequestHandler = async (req, res) => {
+    const { commentId } = req.params
+    const user = req.user
+
+    const comment = await Comment.findById<Omit<CommentType, 'group'> & { group: { owner: Types.ObjectId } }>(commentId).populate({ path: 'group', select: 'owner' })
+    if (!comment) return res.fail(404, "NOT_FOUND", "Comment does not exist")
+
+    if (!user._id.equals(comment.author) && !user._id.equals(comment.group.owner)) return res.fail(403, "FORBIDDEN", "An error occurred")
+
+    await Comment.deleteOne({ _id: commentId })
+
+    return res.sendStatus(204)
+}
+
+export const toggleLikeOnGroupComment: RequestHandler = async (req, res) => {
+    const { commentId } = req.params
+    const user = req.user
+
+    const comment = await Comment.findById(commentId)
+    if (!comment) return res.fail(404, "NOT_FOUND", "Comment does not exist")
+
+    if (comment.likes.includes(user._id)) await Comment.updateOne({ _id: commentId }, { $pull: { likes: user._id } })
+    else {
+        comment.likes.push(user._id)
+        await comment.save()
+    }
+
+    return res.success()
 }

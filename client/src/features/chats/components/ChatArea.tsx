@@ -51,13 +51,14 @@ const ChatArea = () => {
   useLastMessageObserver(group, setIsAtBottom, setUnreadCount, lastMessageRef)
 
   useEffect(() => {
+
     //Join ChatRoom
     socket.emit('JOIN_ROOM', { roomId: groupId, userId: user?._id }, (res: { success: boolean }) => {
       if (!res.success) toast.error('Error connecting to chatRoom')
     })
 
     //Receive ChatRoom Message
-    const receiveMessage = (data: { message: Message }) => {
+    const receiveMessage = (data: { message: Message, roomId: string, group: Group }) => {
       queryClient.setQueryData<InfiniteData<ApiSuccess<{ messages: Message[] }>>>(messagesKeys.infinite(groupId), (prev) => {
         if (!prev) return prev
         const messages = [...prev.pages[0].data.messages]
@@ -66,18 +67,22 @@ const ChatArea = () => {
       })
       if (!document.hasFocus()) return
 
-      socket.emit('MESSAGE_READ_TO_SERVER', { roomId: groupId, userId: user?._id, readAt: Date.now() })
+      socket.emit('MESSAGE_READ_TO_SERVER', { roomId: groupId, userId: user?._id }, (res: { success: boolean }) => {
+        if (!res.success) return console.debug("Focus Callback failed")
+        queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
+      })
     }
+
     const refreshReadStatus = (data: { conversationRecord: ConversationRecord }) => {
       queryClient.setQueryData<ApiSuccess<{ group: Group, conversationRecords: ConversationRecord[] }>>(['groups', groupId], (prev) => {
         if (!prev) return prev
-        const conversationRecords = prev.data.conversationRecords.map(record => {
-          //updating the conversationRecord for whatever user's record is received in data from socket
+        const newConversationRecords = prev.data.conversationRecords.map(record => {
           if (record.memberId == data.conversationRecord.memberId) return { ...record, lastReadAt: data.conversationRecord.lastReadAt }
           return record
         })
-        return { ...prev, data: { ...prev.data, conversationRecords } }
+        return { ...prev, data: { ...prev.data, conversationRecords: newConversationRecords } }
       })
+      queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
     }
 
     socket.on('RECEIVE_MESSAGE_ON_CLIENT', receiveMessage)
@@ -88,6 +93,10 @@ const ChatArea = () => {
     return () => {
       socket.off('RECEIVE_MESSAGE_ON_CLIENT', receiveMessage)
       socket.off('MESSAGE_READ_TO_CLIENT', refreshReadStatus)
+      //Leave ChatRoom
+      socket.emit('LEAVE_ROOM', { roomId: groupId, userId: user?._id }, (res: { success: boolean }) => {
+        if (!res.success) toast.error('Error disconnecting chatRoom')
+      })
     }
 
   }, [socket, groupId, queryClient, user?._id])
@@ -96,8 +105,11 @@ const ChatArea = () => {
 
   useEffect(() => {
     const event = () => {
-      socket.emit('MESSAGE_READ_TO_SERVER', { roomId: groupId, userId: user?._id, readAt: Date.now() })
-      queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
+      socket.emit('MESSAGE_READ_TO_SERVER', { roomId: groupId, userId: user?._id }, (res: { success: boolean }) => {
+        if (!res.success) return console.debug("Focus Callback failed")
+        queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
+      })
+
     }
     event()
     window.addEventListener('focus', event)
@@ -140,7 +152,7 @@ const ChatArea = () => {
   //Send Message in ChatRoom
   const sendMessage = () => {
     socket.emit('SEND_MESSAGE_TO_SERVER', { text, roomId: groupId, userId: user?._id }, (res: { success: boolean, message: Message }) => {
-      if (!res.success) return console.error('umm message error hua')
+      if (!res.success) return toast.error("Something went wrong!")
       queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
 
       queryClient.setQueryData<InfiniteData<ApiSuccess<{ messages: Message[] }>>>(messagesKeys.infinite(groupId), (prev) => {
@@ -155,7 +167,7 @@ const ChatArea = () => {
 
   return (
     <div className={styles.chatAreaWrapper}>
-      <ChatHeader group={group} groupId={groupId} />
+      <ChatHeader group={group} />
       <Messages firstMessageRef={firstMessageRef} messagesRef={messagesRef} key={groupId} lastMessageRef={lastMessageRef} messages={messages} conversationRecords={conversationRecords} />
       <MessageComposer sendMessage={sendMessage} setText={setText} text={text} />
       <ScrollToBottomButton lastMessageRef={lastMessageRef} unreadCount={unreadCount} isAtBottom={isAtBottom} />

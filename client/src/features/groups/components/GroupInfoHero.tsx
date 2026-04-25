@@ -1,91 +1,192 @@
-import mystyle from '../groupInfo.module.css'
-import { FaUser } from 'react-icons/fa6'
-import MembersDisplay from './MembersDisplay'
-import clsx from 'clsx'
-import { Link } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
-import type { Group } from '../types'
-import { useMutation } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { normalizeError } from '@/utils/normalizeError'
-import { useState } from 'react'
+import styles from '../groupInfo.module.css'
+import { getImgURL } from '@/lib/cloudinary'
+import { Users } from 'lucide-react'
+import clsx from 'clsx'
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
+import { Link, useParams } from 'react-router-dom'
 import { api } from '@/api/axios'
-import { getFormattedTime } from '../utils'
+import type { Group, JoinRequest } from '../types'
+import { ChatsCircleIcon } from '@phosphor-icons/react'
+import { useState } from 'react'
+import CommentsSection from './CommentsSection'
+import { useReadMore } from '../hooks/useReadMore'
+import ShareMenuPopover from '@/components/Popovers/ShareMenuPopover'
+import { normalizeError } from '@/utils/normalizeError'
+import { toast } from 'sonner'
+
+const GroupInfoHero = () => {
+    const { user } = useAuth()
+    const { groupId } = useParams() as { groupId: string }
+    const { paragraphRef, readMoreRef } = useReadMore()
+    const [currentSection, setCurrentSection] = useState<'Comments' | 'Members'>('Comments')
 
 
-type GroupInfoHeroProps = {
-  group: Group,
-}
+    const { data: group } = useSuspenseQuery({
+        queryKey: ['groups', groupId],
+        queryFn: () => api.get<{ group: Group }>(`/groups/${groupId}`),
+        select: (res) => res.data.group
+    })
+
+    const { data: joinRequests, refetch: refetchJoinRequests } = useSuspenseQuery({
+        queryKey: ['groups', groupId, 'requests'],
+        queryFn: () => api.get<{ joinRequests: JoinRequest[] }>(`/groups/${groupId}/requests`),
+        select: (res) => res.data.joinRequests
+    })
+
+    const { mutate: sendRequest, isPending: isSendingRequest } = useMutation({
+        mutationFn: () => api.post(`/groups/${groupId}/requests`),
+        onError: (error) => {
+            const err = normalizeError(error)
+            if (err.status < 500) toast.error("An error occurred !", {
+                description: err.message
+            })
+        },
+        onSuccess: () => toast.success("Request Sent"),
+        onSettled: () => refetchJoinRequests()
+    })
 
 
-const GroupInfoHero = ({ group }: GroupInfoHeroProps) => {
-  const { user } = useAuth()
-  const [hasRequested, setHasRequested] = useState(group.requests?.includes(user?._id ?? ''))
+
+
+    const url = user && getImgURL(user.avatar.publicId, user.avatar.version, 600)
+    const hasRequested = joinRequests.some(request => request.requesterId == user?._id)
 
 
 
-  const { mutate: sendRequest } = useMutation({
-    mutationFn: () => {
-      //Optimistic update
-      setHasRequested(true)
-      return api.post(`/groups/${group._id}/requests`)
-    },
-    onSuccess: () => {
-      toast.success("Request Sent", {
-        description: `Your request was sent to ${group.title}`
-      })
-    },
-    onError: (error) => {
-      const err = normalizeError(error)
-      toast.error("An error occurred", {
-        description: err.message
-      })
-      //Reverting optimistic update
-      setHasRequested(false)
-    }
-  })
+    return (
+        <div data-sidebar-type='overlay' className={styles.wrapper}>
+            <div className={styles.main}>
+                <div className={styles.heroWrapper}>
+
+                    <div className={styles.header}>
+                        <div style={{ fontSize: '48px' }} className={styles.avatarWrapper}>
+                            {/* ###LATER CHANGE */}
+                            {url ? <img src={url} alt="group-avatar" /> : group.title.charAt(0)}
+                        </div>
+                        <div className={styles.headerDetails}>
+                            <h2 className={styles.title}>
+                                {group.title}
+                            </h2>
+                            <div className={styles.headerTravelDetails}>
+                                <span>From: {group.intialLocation}</span>
+                                <span>Departure: {new Intl.DateTimeFormat('en-gb', {
+                                    timeStyle: 'short',
+                                    hour12: true,
+                                    dateStyle: 'long'
+                                }).format(new Date(group.travelDate))} </span>
+                                <span>Mode: {group.mode}</span>
+                            </div>
+                        </div>
+
+                    </div>
 
 
-  const copyLink = async () => {
-    const url = window.location.href;
-    await navigator.clipboard.writeText(url)
-    toast.success('Link copied to your clipboard')
-  }
 
-  return (
-    <div className={mystyle.hero}>
-      <div className={mystyle.profile}>
-        <FaUser />
-      </div>
-      <div className={mystyle.infoWrapper}>
-        <div className={mystyle.parent}>
-          <div className={mystyle.can}>
-            <h2 className={mystyle.title}>
-              {group.title}
-            </h2>
-            <p className={mystyle.content}>{group.content}</p>
-            <div className={mystyle.detail}>
-              <p className={mystyle.time}>Date & Time: {getFormattedTime(group.travelDate)}</p>
-              <p className={mystyle.transport}>Transport: {group.mode}</p>
-              <p className={mystyle.college}>College: {group.intialLocation}</p>
+
+                    <div className={styles.descriptionWrapper}>
+                        <div className={styles.tags}>
+                            <span className={styles.tag}>
+                                Boys Only
+                            </span>
+                            <span className={styles.tag}>
+                                No Alchohol
+                            </span>
+                            <span className={styles.tag}>
+                                No Loud Music
+                            </span>
+                            <span className={styles.tag}>
+                                Long Drive
+                            </span>
+                        </div>
+                        <p ref={paragraphRef} className={styles.description}>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat aperiam, eos temporibus velit excepturi aliquid inventore suscipit cupiditate doloribus provident rerum, possimus aliquam quo laudantium. Eligendi obcaecati, nihil sunt sed, culpa enim quod eum quia rem ex delectus, aliquid dolorem explicabo optio cum recusandae unde. Tenetur alias deleniti numquam unde?
+                        </p>
+                        <input type="checkbox" id="toggleMoreDescription" />
+                        <label ref={readMoreRef} htmlFor="toggleMoreDescription" className={styles.toggleMoreContent} />
+                    </div>
+                    <div className={styles.groupInteractionButtons}>
+                        {group.member.some(e => e._id == user?._id) ?
+                            <Link className={clsx(styles.primaryButton, styles.groupInteractionButton)} to={`/groups/${groupId}/chats`}>Chat now</Link>
+                            :
+                            <button onClick={() => user && sendRequest()} aria-label='send request' disabled={isSendingRequest || hasRequested} className={clsx(styles.primaryButton, styles.groupInteractionButton)}>
+                                {hasRequested ? 'Request Sent' : 'Send Request'}
+                            </button>
+                        }
+                        <button popoverTargetAction='show' popoverTarget='shareMenu' aria-label='share group link' className={clsx(styles.secondaryButton, styles.groupInteractionButton)}>Share</button>
+
+                        <ShareMenuPopover title={group.title} />
+
+                    </div>
+
+
+
+                </div>
+                <nav className={styles.sectionSwitchersWrapper}>
+                    <div className={styles.sectionSwitchers}>
+                        <button onClick={() => setCurrentSection('Comments')} aria-label='Show comments section' className={clsx(styles.sectionSwitcher, currentSection == 'Comments' && styles.activeSectionSwitcher)}>
+                            <ChatsCircleIcon size={24} />
+                        </button>
+                        <button onClick={() => setCurrentSection('Members')} aria-label='show members section' className={clsx(styles.sectionSwitcher, currentSection == 'Members' && styles.activeSectionSwitcher)}>
+                            <Users size={24} />
+                        </button>
+                    </div>
+                    <div className={styles.activeSectionIndicator}></div>
+                </nav>
+                <div className={styles.sectionWrapper}>
+                    {currentSection == 'Comments' ? <CommentsSection /> :
+                        currentSection == 'Members' &&
+                        <>
+                            <h3 className={styles.membersHeading}>Members</h3>
+                            <Members group={group} />
+                        </>
+                    }
+                </div>
+            </div >
+            <div className={styles.rightSidebar}>
+                <h3>Members</h3>
+                <div className={styles.sectionWrapper}>
+                    <section className={styles.rightSidebarSection}>
+                        <Members group={group} />
+                    </section>
+                </div>
             </div>
-          </div>
-          <MembersDisplay group={group} />
         </div>
-        <div className={mystyle.btnbox}>
-          <button aria-label='Share' className={mystyle.sharebtn} onClick={copyLink}>Share</button>
-          {
-            group.member.some(e => e._id === user?._id) ?
-              <Link to={`/groups/${group._id}/chats`} className={mystyle.groupbtn}>Chat now</Link> :
-              <button aria-label='Send Request' onClick={() => sendRequest()} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>
-                {hasRequested ? 'Request Sent' : 'Send Request'}
-              </button>
-          }
 
-        </div>
-      </div>
-    </div>
-  )
+    )
 }
 
 export default GroupInfoHero
+
+
+
+
+
+type MembersProps = {
+    group: Group
+}
+
+const Members = ({ group }: MembersProps) => {
+    return (
+        <div className={styles.members}>
+            {group.member.map(member => {
+                const url = member.avatar.publicId && getImgURL(member.avatar.publicId, member.avatar.version, 600)
+
+                return (
+                    <Link key={member._id} to={`/travellers/${member._id}`} className={styles.member}>
+                        <div className={clsx(styles.avatarWrapper, !url && styles.emptyAvatar)}>
+                            {url ? <img src={url} alt='member-avatar' /> : member.fullName.charAt(0)}
+                        </div>
+                        <div className={styles.memberDetails}>
+                            <span>{member.fullName}</span>
+                            <span>{member.username}</span>
+                        </div>
+                    </Link>
+                )
+            })}
+
+        </div>
+    )
+}
+
+
