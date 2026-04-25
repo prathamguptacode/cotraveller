@@ -52,11 +52,6 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
                             $and: [{ $expr: { $eq: ['$memberId', '$$userId'] } }, { $expr: { $eq: ['$roomId', '$$groupId'] } }]
                         }
                     },
-                    // {
-                    //     $project: {
-                    //         lastReadAt: 1
-                    //     }
-                    // }
                 ],
                 as: 'conversationRecord'
             }
@@ -216,40 +211,14 @@ export const fetchIncomingRequestsController: RequestHandler = async (req, res) 
 
 }
 
-// ###CHANGE all necessary shit to ACID instead of one by one
-// export const fetchOutgoingRequestsController: RequestHandler = async (req, res) => {
-//     const user = req.user
-//     const outbox = await User.aggregate([
-//         {
-//             $match: { _id: user._id }
-//         },
-//         {
-//             $project: {
-//                 requests: 1
-//             }
-//         },
-//         {
-//             $lookup: {
-//                 from: 'groups',
-//                 let: { requests: '$requests' },
-//                 pipeline: [
-//                     {
-//                         $match: { $expr: { $in: ['$_id', '$$requests'] } }
-//                     },
-//                     {
-//                         $project: {
-//                             title: 1,
-//                             memberNumber: 1,
-//                         }
-//                     }
-//                 ],
-//                 as: 'groups'
-//             }
-//         }
-//     ])
+export const fetchInboxStatusController: RequestHandler = async (req, res) => {
+    const user = req.user
 
-//     res.success(200, { groups: outbox[0].groups })
-// }
+    const groupJoinRequestsCount = await JoinRequest.countDocuments({ groupId: { $in: user.groups } })
+
+    res.success(200, { groupJoinRequestsCount })
+}
+
 
 export const deleteOutgoingRequestController: RequestHandler = async (req, res) => {
     const user = req.user

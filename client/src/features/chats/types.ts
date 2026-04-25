@@ -20,6 +20,6 @@ export type Message = {
 export type ConversationRecord = {
     memberId: string,
     roomId: string,
-    lastReadAt: Date
+    lastReadAt: string
 }
 

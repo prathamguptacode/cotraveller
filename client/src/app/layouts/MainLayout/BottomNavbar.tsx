@@ -20,7 +20,7 @@ const bottomNavbarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
 ]
 
 const BottomNavbar = () => {
-  const { setSidebarIsHidden, setCurrentSidebarTab, currentSidebarTab, sidebarIsHidden, hamburgerRef } = useMainLayoutContext()
+  const { setSidebarIsHidden, setCurrentSidebarTab, currentSidebarTab, sidebarIsHidden, hamburgerRef, notifications } = useMainLayoutContext()
   const { user } = useAuth()
   const location = useLocation()
 
@@ -60,7 +60,7 @@ const BottomNavbar = () => {
   useEffect(() => {
     if (!window.matchMedia("(max-width:768px)").matches) return
     setSidebarIsHidden(true)
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname])
 
@@ -70,8 +70,9 @@ const BottomNavbar = () => {
     <nav ref={navRef} className={styles.bottomNavbar}>
       <Link to={'/'}><Home /></Link>
       {bottomNavbarTabs.map(tab => {
+        const hasNotifications = (tab.name == 'Chats' || tab.name == 'Inbox') && notifications[tab.name]
         return (
-          <button aria-label={tab.name} key={tab.name} onClick={() => {
+          <button className={clsx(hasNotifications && styles.hasNotifications)} aria-label={tab.name} key={tab.name} onClick={() => {
             setSidebarIsHidden(false)
             setCurrentSidebarTab(tab.name)
           }}>{tab.icon}</button>
@@ -85,8 +86,8 @@ const BottomNavbar = () => {
           <h2>{currentSidebarTab}</h2>
         </div>
         <div className={styles.ctxSidebarList}>
-          {user ? <ErrorBoundary fallback={<FallbackWrapper children={'Something went wrong !'} />}>
-            <Suspense fallback={<FallbackWrapper />}>
+          {user ? <ErrorBoundary resetKeys={[currentSidebarTab, sidebarIsHidden]} fallback={<FallbackWrapper children={'Something went wrong !'} />}>
+            <Suspense key={currentSidebarTab} fallback={<FallbackWrapper />}>
               {
                 currentSidebarTab == 'Chats' ? <SidebarChatsPreview /> :
                   currentSidebarTab == 'Inbox' ? <SidebarInboxPreview /> :

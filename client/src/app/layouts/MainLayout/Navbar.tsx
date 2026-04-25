@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { useEventSource } from "@/hooks/useEventSource";
 import { toast } from 'sonner';
 import { getImgURL } from '@/lib/cloudinary';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/axios';
 import { normalizeError } from '@/utils/normalizeError';
 import Spinner from '@/components/Loaders/Spinner';
@@ -31,6 +31,17 @@ type NavbarProps = {
 function Navbar({ children }: NavbarProps) {
     const { setNotifications } = useMainLayoutContext()
     const eventSource = useEventSource()
+    const { user } = useAuth()
+    const queryClient = useQueryClient()
+
+    const { data: groupJoinRequestsCount } = useQuery({
+        queryKey: ['inbox', 'status'],
+        queryFn: () => api.get<{ groupJoinRequestsCount: number }>('/user/inbox/status'),
+        select: (res) => res.data.groupJoinRequestsCount,
+        refetchInterval: 1000 * 5 * 60,
+        enabled: !!user
+    })
+
 
     useEffect(() => {
         const eventListener = (message: { data: string }) => {
@@ -47,6 +58,7 @@ function Navbar({ children }: NavbarProps) {
                     description: "Someone wants to join your group"
                 })
                 setNotifications(prev => ({ ...prev, Inbox: true }))
+                queryClient.invalidateQueries({ queryKey: ['inbox'], exact: true })
             }
         }
         eventSource.addEventListener('message', eventListener)
@@ -56,6 +68,11 @@ function Navbar({ children }: NavbarProps) {
         }
     }, [])
 
+
+    useEffect(() => {
+        if (!groupJoinRequestsCount) return
+        setNotifications(prev => ({ ...prev, Inbox: groupJoinRequestsCount > 0 }))
+    }, [groupJoinRequestsCount])
 
 
 
@@ -166,10 +183,9 @@ const NavbarProfileButton = () => {
 
     const { mutate: removeAvatar, isPending: isRemovingAvatar } = useMutation({
         mutationFn: () => api.delete('/user/avatar'),
-        onSuccess: (res) => {
+        onSuccess: () => {
             updateUser(prev => prev && ({ ...prev, avatar: { publicId: '', version: 0 } }))
             toast.success('Removal successful')
-            console.log(res)
         },
         onError: (error) => {
             const err = normalizeError(error)

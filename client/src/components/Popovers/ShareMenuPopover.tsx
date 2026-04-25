@@ -4,12 +4,14 @@ import { EmailIcon, EmailShareButton, FacebookIcon, FacebookShareButton, Linkedi
 import { X } from "lucide-react"
 
 type ShareMenuPopoverProps = {
-    title: string
+    title: string,
+    shareURL?: string,
+    popoverId?: string
 }
 
-const ShareMenuPopover = ({ title }: ShareMenuPopoverProps) => {
+const ShareMenuPopover = ({ title, shareURL = new URL(location.pathname, location.origin).href, popoverId = 'shareMenu' }: ShareMenuPopoverProps) => {
 
-    const shareURL = new URL(location.pathname, location.origin).href
+
     const copyShareLink = () => {
         try {
             navigator.clipboard.writeText(shareURL)
@@ -22,9 +24,9 @@ const ShareMenuPopover = ({ title }: ShareMenuPopoverProps) => {
 
 
     return (
-        <div popover='auto' id='shareMenu' className={styles.shareMenu}>
+        <div popover='auto' id={popoverId} className={styles.shareMenu}>
             <header className={styles.shareMenuHeader}>
-                Share <button popoverTarget='shareMenu' popoverTargetAction='hide'>
+                Share <button popoverTarget={popoverId} popoverTargetAction='hide'>
                     <X />
                 </button>
             </header>

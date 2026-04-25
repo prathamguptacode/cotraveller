@@ -143,6 +143,20 @@
         }
     }
 
+    .hasNotifications::after {
+        flex-shrink: 0;
+        content: '';
+        --dimension: 24%;
+        position: absolute;
+        pointer-events: none;
+        right: 15%;
+        bottom: 20%;
+        width: var(--dimension);
+        height: var(--dimension);
+        border-radius: 50%;
+        background-color: var(--primary);
+    }
+
 
 
     /* Bottom Navbar */
@@ -165,6 +179,7 @@
 
         >* {
             padding: 1rem;
+            position: relative;
         }
     }
 

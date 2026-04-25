@@ -15,11 +15,9 @@ router.get('/', authMiddleware, (req, res) => {
     const prev = sseRegistry.get(userId)
     if (!prev) sseRegistry.set(userId, new Set([res]))
     else sseRegistry.set(userId, new Set([...prev, res]))
-    // console.log('Hi user', userId)
     keepAliveConnection(req, res)
 
     req.on('close', () => {
-        // console.log("Bye user", userId)
         sseRegistry.delete(userId)
     })
 })

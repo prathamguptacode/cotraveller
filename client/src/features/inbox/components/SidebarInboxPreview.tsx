@@ -38,29 +38,24 @@ const SidebarInboxPreview = () => {
 
   const acceptRequestMutation = useMutation({
     mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.post(`/groups/${groupId}/requests/${requestId}`),
-    onSuccess: () => refetchInbox(),
     onError: (error) => {
       const err = normalizeError(error)
-      if (err.status < 500) toast.error('An error occurred', {
-        description: err.message
-      })
-      refetchInbox()
-    }
+      if (err.status < 500) toast.error(err.message)
+    },
+    onSettled: () => refetchInbox()
   })
   const rejectRequestMutation = useMutation({
     mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.delete(`/groups/${groupId}/requests/${requestId}`),
-    onSuccess: () => refetchInbox(),
     onError: (error) => {
       const err = normalizeError(error)
-      if (err.status < 500) toast.error('An error occurred', {
-        description: err.message
-      })
-      refetchInbox()
-    }
+      if (err.status < 500) toast.error(err.message)
+    },
+    onSettled: () => refetchInbox()
   })
 
   useEffect(() => {
     setNotifications(prev => ({ ...prev, Inbox: requests.length == 0 ? false : true }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requests])
 
 

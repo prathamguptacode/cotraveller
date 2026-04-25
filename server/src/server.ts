@@ -34,7 +34,6 @@ io.on('connection', (socket) => {
 
     socket.on('JOIN_ROOM', (data, cb) => {
         socket.join(data.roomId)
-        // console.log(`User ${data.userId}, has connected to room ${data.roomId} on socket ${socket.id}`)
         cb({ success: true, message: data.roomId, id: socket.id })
     })
 
@@ -47,11 +46,12 @@ io.on('connection', (socket) => {
             const group = await Group.findOneAndUpdate({ _id: roomId }, { $push: { messages: baseMessage._id } }, { returnDocument: 'after' })
             if (!group) return
 
-            const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId: group._id, memberId: userId }, { $set: { lastReadAt: new Date(Date.now()) } }, { returnDocument: 'after' })
+            const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId: group._id, memberId: userId }, { $set: { lastReadAt: new Date() } }, { returnDocument: 'after' })
             if (!conversationRecord) return
 
             cb({ success: true, message })
-            socket.to(roomId).emit('RECEIVE_MESSAGE_ON_CLIENT', { message, conversationRecord })
+
+            socket.to(roomId).emit('RECEIVE_MESSAGE_ON_CLIENT', { message, conversationRecord, roomId, group })
             group.member.forEach(member => {
                 socket.to(`user_room_${member._id}`).emit('UPDATE_MESSAGE_ON_CLIENT', { message })
             })
@@ -65,10 +65,16 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('MESSAGE_READ_TO_SERVER', async (data: { roomId: string, userId: string, readAt: number }) => {
-        const { roomId, userId, readAt } = data
-        const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId, memberId: userId }, { $set: { lastReadAt: new Date(readAt) } }, { returnDocument: 'after' })
+    socket.on('MESSAGE_READ_TO_SERVER', async (data, cb) => {
+        const { roomId, userId } = data
+        const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId, memberId: userId }, { $set: { lastReadAt: new Date() } }, { returnDocument: 'after' })
         socket.to(roomId).emit('MESSAGE_READ_TO_CLIENT', { conversationRecord })
+        cb({ success: true })
+    })
+
+    socket.on('LEAVE_ROOM', (data, cb) => {
+        socket.leave(data.roomId)
+        cb({ success: true, message: data.roomId, id: socket.id })
     })
 
     socket.on('disconnect', () => {

@@ -15,7 +15,6 @@ export const useLastMessageObserver = (group: Group, setIsAtBottom: Dispatch<Set
             else {
                 setIsAtBottom(true)
                 setUnreadCount(0)
-                queryClient.invalidateQueries({ queryKey: ['groups'], exact: true })
             }
         }, { threshold: 0 })
         observerRef.current = observer

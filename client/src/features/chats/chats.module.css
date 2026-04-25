@@ -2,6 +2,7 @@
     display: flex;
     /* ###LATER add dvh for phone support everywhere */
     height: 100%;
+    overflow-x: hidden;
 }
 
 
@@ -95,6 +96,7 @@
 
 
 .chatAreaWrapper {
+    min-width: 0;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -296,6 +298,7 @@
 }
 
 .messages {
+    overflow-x: hidden;
     flex: 1;
     overflow-y: auto;
     padding: .5rem 1rem;
@@ -312,7 +315,7 @@
 
 .message {
     background-color: var(--clr-bg);
-    width: fit-content;
+
     padding: .4em 1.2em;
     border-radius: 10px;
 
@@ -320,6 +323,7 @@
     flex-direction: column;
     gap: .15rem;
 
+    align-self: flex-start;
     max-width: 95%;
 }
 
@@ -346,9 +350,7 @@
 
 .messageDetails {
     display: flex;
-    gap: .4rem;
-
-
+    flex-wrap: wrap;
 
 
     >* {
@@ -359,8 +361,10 @@
 
 }
 
+
 .messageText {
-    margin-right: .5rem;
+    word-break: break-word;
+    margin-right: 1rem;
     text-align: justify;
 
 }
@@ -369,11 +373,13 @@
     flex-shrink: 0;
     font-size: .8em;
     color: var(--secondary-bg-lighter);
+    margin-left: auto;
 }
 
 .messageSeenState {
     flex-shrink: 0;
     display: none;
+    margin-left: .5rem;
 }
 
 

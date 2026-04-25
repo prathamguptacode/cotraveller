@@ -1,28 +1,29 @@
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import styles from '../chats.module.css'
 import type { Group } from '../types'
 import { ToolTip } from '@/components/Accessibility/ToolTip'
 import { DoorOpen, MoreVertical, Pencil, Share2, Users } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import { toast } from 'sonner'
+import ShareMenuPopover from '@/components/Popovers/ShareMenuPopover'
+import { useMutation } from '@tanstack/react-query'
+import { api } from '@/api/axios'
+import { normalizeError } from '@/utils/normalizeError'
 
 type ChatHeaderProps = {
     group: Group,
-    groupId: string,
 }
 
 
 
-const ChatHeader = ({ group, groupId }: ChatHeaderProps) => {
+const ChatHeader = ({ group }: ChatHeaderProps) => {
     const { user } = useAuth()
+    const { groupId } = useParams() as { groupId: string }
 
-    const copyInviteLink = async () => {
-        const url = document.location.origin + `/groups/${groupId}`
-        await navigator.clipboard.writeText(url)
-        toast.success('Link copied to your clipboard')
-    }
-
-    // ###LATER add functionality to exit group button
+    const { mutate: leaveGroup, isPending: isLeaving } = useMutation({
+        mutationFn: () => api.delete(`/groups/${groupId}/members/me`),
+        onError: (error) => normalizeError(error),
+        onSuccess: () => window.location.href = '/'
+    })
 
     return (
         <div className={styles.chatAreaHeader}>
@@ -41,16 +42,12 @@ const ChatHeader = ({ group, groupId }: ChatHeaderProps) => {
                     })}
                 </Link>
             </div>
-            {/* {user?._id == group?.owner && < Link to={`/groups/${groupId}/edit`} state={{ allowed: true }} aria-label='Edit Group' className={clsx(styles.groupOptions, styles.listItem)} >
-                <RiPencilFill size={20} />
-                <ToolTip position='left' text='Edit Group' />
-            </Link>} */}
+
             <button popoverTarget='moreOptionsPopover' className={styles.moreOptions} aria-label='more options'>
                 <MoreVertical size={20} />
                 <ToolTip position='left' text='More Options' />
             </button>
             <div id='moreOptionsPopover' className={styles.moreOptionsPopover} popover='auto'>
-
                 <div className={styles.moreOptionsList}>
 
                     <Link to={`/groups/${groupId}`} className={styles.moreOptionsListItem}>
@@ -74,7 +71,7 @@ const ChatHeader = ({ group, groupId }: ChatHeaderProps) => {
                         </div>
                     </Link>}
 
-                    <button onClick={copyInviteLink} className={styles.moreOptionsListItem}>
+                    <button popoverTarget='shareMenu' className={styles.moreOptionsListItem}>
                         <div>
                             <Share2 />
                         </div>
@@ -83,8 +80,9 @@ const ChatHeader = ({ group, groupId }: ChatHeaderProps) => {
                             <h3>Share Invite Link</h3>
                         </div>
                     </button>
+                    <ShareMenuPopover shareURL={document.location.origin + `/groups/${groupId}`} title={group.title} />
 
-                    <button className={styles.moreOptionsListItem}>
+                    <button onClick={() => leaveGroup()} disabled={isLeaving} className={styles.moreOptionsListItem}>
                         <div>
                             <DoorOpen />
                         </div>

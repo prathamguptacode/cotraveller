@@ -28,7 +28,7 @@ const sidebarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
 const Sidebar = () => {
     const sidebarsRef = useRef<HTMLDivElement>(null)
 
-    const { currentSidebarTab, setCurrentSidebarTab, sidebarIsHidden, setSidebarIsHidden, hamburgerRef } = useMainLayoutContext()
+    const { currentSidebarTab, setCurrentSidebarTab, sidebarIsHidden, setSidebarIsHidden, hamburgerRef, notifications } = useMainLayoutContext()
     const { user } = useAuth()
 
 
@@ -40,6 +40,7 @@ const Sidebar = () => {
         const sidebarsDiv = sidebarsRef.current
         const hamburgerMenu = hamburgerRef.current
 
+        
         if (!sidebarsDiv?.parentElement || !hamburgerMenu || sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay' || window.matchMedia("(max-width:768px)").matches) return
 
         const eventHandler = (e: PointerEvent) => {
@@ -73,8 +74,9 @@ const Sidebar = () => {
                 <div className={styles.primarySidebarList}>
                     <Link to={'/'}><Home /></Link>
                     {sidebarTabs.map(sidebarTab => {
+                        const hasNotifications = (sidebarTab.name == 'Chats' || sidebarTab.name == 'Inbox') && notifications[sidebarTab.name]
                         return (
-                            <button aria-label={sidebarTab.name} key={sidebarTab.name} onClick={() => {
+                            <button className={clsx(hasNotifications && styles.hasNotifications)} aria-label={sidebarTab.name} key={sidebarTab.name} onClick={() => {
                                 setSidebarIsHidden(false)
                                 setCurrentSidebarTab(sidebarTab.name)
                             }}>{sidebarTab.icon}</button>
@@ -93,8 +95,8 @@ const Sidebar = () => {
                     <h2>{currentSidebarTab}</h2>
                 </div>
                 <div className={styles.ctxSidebarList}>
-                    {user ? <ErrorBoundary fallback={<FallbackWrapper children={'Something went wrong !'} />}>
-                        <Suspense fallback={<FallbackWrapper />}>
+                    {user ? <ErrorBoundary resetKeys={[currentSidebarTab,sidebarIsHidden]} fallback={<FallbackWrapper children={'Something went wrong !'} />}>
+                        <Suspense key={currentSidebarTab} fallback={<FallbackWrapper />}>
                             {
                                 currentSidebarTab == 'Chats' ? <SidebarChatsPreview /> :
                                     currentSidebarTab == 'Inbox' ? <SidebarInboxPreview /> :
