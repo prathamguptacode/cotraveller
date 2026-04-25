@@ -55,13 +55,13 @@ function Searchbox({ dLocation, dDate }: { dLocation: string | null, dDate: stri
                     <div>
                         Departure
                     </div>
-                    <input type="date" defaultValue={defaultDate} onChange={(e) => setdate(e.target.value)} />
+                    <input className={mystyle.dateInput} type="date" defaultValue={defaultDate} onChange={(e) => setdate(e.target.value)} />
                 </div>
             </div>
             <div className={mystyle.btnbox}>
                 <button aria-label='Search' className={mystyle.searchbtn} onClick={search}>
-                    <IoMdSearch size="20px" />
-                    Find groups
+                    <IoMdSearch size={24} />
+                    Find Groups
                 </button>
             </div>
         </>

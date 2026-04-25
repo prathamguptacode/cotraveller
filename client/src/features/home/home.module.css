@@ -84,32 +84,7 @@
 }
 
 
-@media (max-width:1108px) {
-    /* .wrapper {
-        max-width: 768px;
-    } */
-}
-
-
-
-@media (max-width:640px) {
-    .wrapper {
-        margin: .5rem;
-    }
-}
-
-
-
-@media (max-width:768px) {
-
-    /* .wrapper {
-        max-width: 100%;
-    } */
-
-
-    .bottomWrapper {
-        margin: .5rem;
-    }
+@container (max-width:768px) {
 
     .discoverbx {
         flex-direction: column;
@@ -132,11 +107,16 @@
 
 }
 
-@media (max-width:720px) {
+@container (max-width:720px) {
     .bannerTitle {
         font-size: 36px;
-        line-height: 44px;
     }
 }
 
 
+@container(max-width:480px) {
+    .bannerTitle {
+        font-size: 32px;
+        line-height: 44px;
+    }
+}

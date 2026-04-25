@@ -3,7 +3,7 @@
     padding: 20px 16px;
     padding-bottom: 44px;
 
-    border-radius: 8px;
+    border-radius: 15px;
 
     display: flex;
     gap: 12px;
@@ -14,7 +14,10 @@
 
     >* {
         min-width: fit-content;
-        flex: 1;
+    }
+
+    svg {
+        color: hsl(210, 6%, 63%);
     }
 }
 
@@ -25,16 +28,18 @@
 }
 
 .searchbtn {
-    padding: 12px 28px;
-    background-color: var(--primary);
-    border-radius: 24px;
-    color: var(--secondaryFont);
-    font-weight: 500;
-    flex-shrink: 0;
+    padding: .5em 1em;
     margin-top: -20px;
+    border-radius: 50px;
+
+    background-color: var(--primary);
+    color: var(--secondaryFont);
+
+    font-size: 14px;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: .5rem;
 }
 
 .searchbtn:hover {
@@ -45,8 +50,8 @@
     flex-shrink: 0;
     flex-grow: 1;
     padding: 16px;
-    border: 2px solid var(--clr-border);
-    border-radius: 14px;
+    border: 1px solid var(--clr-border);
+    border-radius: 15px;
     cursor: not-allowed;
     display: flex;
     gap: 8px;
@@ -62,10 +67,11 @@
     }
 }
 
-.locationBox {
+/* .locationBox {
+    flex: 1;
     display: flex;
     gap: .5rem;
-}
+} */
 
 .loadingLoc,
 .locationcamp,
@@ -76,33 +82,28 @@
     border-radius: 5px;
     border: 1px solid var(--clr-border);
 
+    transition: all 0.2s ease;
+    position: relative;
+
 
     display: flex;
     align-items: center;
+    gap: .5rem;
+
 }
 
 
 .loadingLoc {
-    gap: 10px;
-
     background: var(--secondary-bg);
-    transition: all 0.2s ease;
 }
 
-.locationcamp {
-    transition: all 0.2s ease;
-    position: relative;
+.dateInput {
+    flex: 1;
+
+    &::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
 }
-
-.dateIn {
-
-    transition: all 0.2s ease;
-    position: relative;
-
-    justify-content: space-between;
-}
-
-
 
 .loadingLoc:hover,
 .locationcamp:hover,
@@ -165,31 +166,11 @@ ul {
 
 
 
-@media(max-width:768px) {
+@container(max-width:768px) {
     .searchbox {
         background-color: var(--clr-bg);
         margin-inline: auto;
 
-        box-shadow: 0 1px 4px 0 hsl(0 0% 0% / .5);
+        box-shadow: 0 4px 5px 0 hsl(0 0% 0% / .3);
     }
 }
-
-/* 
-@media(max-width:768px) {
-
-    .searchbox,
-    .searchbtn {
-        position: relative;
-    }
-} */
-/* 
-@media (max-width:480px) {
-    .searchbox>* {
-        font-size: 14px;
-
-        >svg {
-            width: 12px;
-        }
-    }
-
-} */

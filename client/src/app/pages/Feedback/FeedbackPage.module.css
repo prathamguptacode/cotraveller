@@ -41,7 +41,7 @@
 }
 .ques{
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 400;
 }
 .inbx {
   font-size: 16px;
@@ -70,7 +70,7 @@
 .mysubmit{
     background-color: var(--primary);
     color: var(--secondaryFont);
-    font-weight: 500;
+    font-weight: 400;
     padding: 8px 28px;
     border-radius: 10px;
 }

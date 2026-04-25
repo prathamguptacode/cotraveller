@@ -101,7 +101,7 @@
         padding: .75em 1em;
         font-size: 14px;
         border-radius: 50px;
-        font-weight: 500;
+        font-weight: 400;
     }
 }
 
@@ -230,7 +230,7 @@
 .toggleMoreContent {
     margin-block-start: .1rem;
     color: var(--group-neutral-muted);
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
     width: fit-content;
     font-size: 14px;

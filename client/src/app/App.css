@@ -125,6 +125,13 @@ input::-webkit-inner-spin-button {
 }
 
 
+*:has(>svg),
+svg {
+    flex-shrink: 0;
+}
+
+
+
 #root {
     margin: auto;
 }
@@ -198,7 +205,7 @@ html {
 
     /* Old colors */
 
-    --clr-border: hsla(207, 5%, 52%, 0.6);
+    --clr-border: hsl(213, 5%, 39%);
     --in-border: hsla(207, 5%, 77%, 0.6);
 
     --clr-bg-hover: hsl(225, 4%, 20%);

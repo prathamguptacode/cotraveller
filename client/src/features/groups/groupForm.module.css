@@ -44,7 +44,7 @@
 
 .error {
     font-size: 0.8rem;
-    font-weight: 500;
+    font-weight: 400;
     color: rgb(234, 81, 81);
     padding: 4px 0;
 }
@@ -87,7 +87,7 @@
     border-radius: 6px;
     background-color: hsl(from var(--clr-bg) h s 30%);
     color: var(--clr-font);
-    font-weight: 500;
+    font-weight: 400;
     text-align: center;
 }
 
@@ -100,7 +100,7 @@
     border-radius: 6px;
     background-color: var(--primary);
     color: var(--secondaryFont);
-    font-weight: 500;
+    font-weight: 400;
     text-align: center;
 }
 
@@ -200,7 +200,7 @@ select {
 
 .value {
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .grid {
@@ -225,7 +225,7 @@ select {
 
 .startOverBtn {
     color: hsl(from var(--primary) h s 65%);
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
 }
 
@@ -259,7 +259,7 @@ select {
     width: 40px;
     border-radius: 50%;
     color: var(--secondaryFont);
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
     flex-shrink: 0;
 }
