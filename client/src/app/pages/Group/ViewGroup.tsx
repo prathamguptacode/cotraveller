@@ -3,7 +3,7 @@ import mystyle from './ViewGroup.module.css'
 import { Navigate, useSearchParams } from 'react-router-dom'
 import { api } from '@/api/axios'
 import Group from '@/components/viewgroup/Group'
-import NoGroup from '../success/NoGroup'
+import NoGroup from '../Extras/NoGroup'
 import { useQuery } from '@tanstack/react-query'
 import LoadingPage from '../Extras/LoadingPage'
 
