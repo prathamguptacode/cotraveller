@@ -29,10 +29,12 @@ function ViewGroup() {
     const [query] = useSearchParams()
     const location = query.get("q");
     const date = query.get("date");
-    const time = query.get('time')
-    const members = query.get('members')
-    const travelMode = query.get('travelMode')
-    const tags = query.getAll('tags')
+    
+    // const time = query.get('time')
+    // const members = query.get('members')
+    // const travelMode = query.get('travelMode')
+    // const tags = query.getAll('tags')
+
     const { data: groups, isLoading, isError } = useQuery({
         queryKey: ["groups", location, date],
         queryFn: () => {

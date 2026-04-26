@@ -16,17 +16,11 @@ import clsx from 'clsx'
 import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
 
 
-
-
-
-
 const Sidebar = () => {
     const sidebarsRef = useRef<HTMLDivElement>(null)
-
     const { currentSidebarTab, setCurrentSidebarTab, sidebarIsHidden, setSidebarIsHidden, hamburgerRef, notifications } = useMainLayoutContext()
     const { user } = useAuth()
     const location = useLocation();
-
 
     const sidebarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
         { name: 'Chats', icon: <MessageCircle /> },
@@ -45,8 +39,9 @@ const Sidebar = () => {
         if (location.pathname == "/viewgroup") {
             setSidebarIsHidden(false);
             setCurrentSidebarTab('Filter');
-        } else {
-            setCurrentSidebarTab('Chats');
+        }
+        else if (currentSidebarTab == 'Filter') {
+            setCurrentSidebarTab('Chats')
         }
     }, [location.pathname])
 
