@@ -187,10 +187,11 @@
         display: grid;
         grid-template-rows: auto 1fr;
 
-        width: 100vw;
+        width: min(480px, 100vw);
         position-anchor: --bottom-navbar;
         position: fixed;
         inset: auto;
+        left: anchor(left);
         bottom: anchor(top);
         top: 65px;
         overflow: hidden;

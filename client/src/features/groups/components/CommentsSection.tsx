@@ -10,11 +10,12 @@ import { Link, useParams } from 'react-router-dom'
 import { api } from '@/api/axios'
 import { normalizeError } from '@/utils/normalizeError'
 import { toast } from 'sonner'
-import { useReadMore } from '../hooks/useReadMore'
 import moment from 'moment-timezone'
 import type { ApiSuccess } from '@/types/api.types'
 import { useAnimation, motion } from 'framer-motion'
 import Avatar from '@/components/ui/Avatar'
+import ExpandableText from '@/components/ui/ExpandableText'
+import AvatarWrapper from '@/components/ui/AvatarWrapper'
 
 
 
@@ -23,7 +24,7 @@ const CommentsSection = () => {
     const { user } = useAuth()
     const { groupId } = useParams() as { groupId: string }
 
-    const url = user && getImgURL(user.avatar.publicId, user.avatar.version, 400)
+    const avatarURL = user && getImgURL(user.avatar, 400)
 
     const { data: comments, refetch: refetchComments } = useSuspenseQuery({
         queryKey: ['groups', groupId, 'comments'],
@@ -60,9 +61,9 @@ const CommentsSection = () => {
             </header>
             <div className={styles.commentInputArea}>
 
-                <div className={clsx(styles.avatarWrapper, (user && !url) && styles.emptyAvatar)}>
-                    {user ? url ? <img src={url} alt="user-avatar" /> : user?.fullName.charAt(0) : <User2 />}
-                </div>
+                <AvatarWrapper avatarURL={avatarURL} className={clsx(styles.avatarWrapper, (user && !avatarURL) && styles.emptyAvatar)}>
+                    {user ? avatarURL ? <img src={avatarURL} alt="user-avatar" /> : user?.fullName.charAt(0) : <User2 />}
+                </AvatarWrapper>
 
                 <div className={styles.commentInputWrapper}>
 
@@ -109,7 +110,6 @@ type CommentProps = {
 const Comment = ({ comment, refetchComments, index }: CommentProps) => {
     const { user } = useAuth()
     const { groupId } = useParams() as { groupId: string }
-    const { paragraphRef, readMoreRef } = useReadMore()
     const queryClient = useQueryClient()
     const [likeHasToggled, setLikeHasToggled] = useState(false)
     const controls = useAnimation()
@@ -190,11 +190,7 @@ const Comment = ({ comment, refetchComments, index }: CommentProps) => {
                     }
 
                 </div>
-                <p ref={paragraphRef} className={styles.content}>
-                    {comment.comment}
-                </p>
-                <input type="checkbox" id={`toggleMoreContent-for-${comment._id}`} style={{ display: 'none' }} />
-                <label ref={readMoreRef} role='button' htmlFor={`toggleMoreContent-for-${comment._id}`} className={styles.toggleMoreContent} />
+                <ExpandableText className={styles.content} text={comment.comment} inputId={`toggleMoreContent-for-${comment._id}`} />
                 <div className={styles.interactionsWrapper}>
                     <motion.button animate={controls} onClick={debounceLike} className={styles.likeButton} aria-label='like'>
                         <Heart className={clsx(comment.likes.includes(user?._id ?? '') && styles.liked)} size={16} />

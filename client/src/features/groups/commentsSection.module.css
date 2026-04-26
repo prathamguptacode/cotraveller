@@ -132,16 +132,7 @@
     flex-grow: 1;
     display: grid;
     row-gap: .25rem;
-
-    &:has(>input:checked) {
-        .content {
-            --lines: unset;
-        }
-
-        .toggleMoreContent::after {
-            content: 'Show less';
-        }
-    }
+    font-size: 14px;
 }
 
 .contentHeader {
@@ -197,38 +188,8 @@
 
 }
 
-
 .content {
     --lines: 4;
-    font-size: 14px;
-    white-space: pre-wrap;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    line-clamp: var(--lines);
-    -webkit-line-clamp: var(--lines);
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.toggleMoreContent {
-    margin-block-start: .1rem;
-    color: var(--group-neutral-muted);
-    font-weight: 400;
-    cursor: pointer;
-    width: fit-content;
-    font-size: 14px;
-
-    &:hover {
-        text-decoration: underline;
-    }
-
-    &:active {
-        text-decoration: none;
-    }
-
-    &::after {
-        content: 'Read more';
-    }
 }
 
 .interactionsWrapper {

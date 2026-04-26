@@ -7,9 +7,10 @@ import { normalizeError } from '@/utils/normalizeError'
 import { useEffect } from 'react'
 import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout'
 import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
-import { getImgURL } from '@/lib/cloudinary'
-import clsx from 'clsx'
 import Avatar from '@/components/ui/Avatar'
+import { Link } from 'react-router-dom'
+import moment from 'moment-timezone'
+import ExpandableText from '@/components/ui/ExpandableText'
 
 type InboxRequest = {
   _id: string,
@@ -74,22 +75,14 @@ const SidebarInboxPreview = () => {
   return (
     requests.length == 0 ?
       <FallbackWrapper className={styles.fallbackWrapper}>
-        {/* ###LATER Replace this fallback */}
         <MailCheck size={48} />
         Incoming Join Requests will appear here
       </FallbackWrapper> :
-      <div className={styles.list}>
+      <div className={styles.cards}>
         {
           requests.map(request => {
             return (
-              <div key={request._id} className={styles.listItem}>
-                <Avatar avatar={request.requester.avatar} imgSize={400} alt='requester-avatar' title={request.requester.fullName} className={styles.avatarWrapper} />
-                <div className={styles.detailsWrapper}>
-                  <p className={styles.groupName}>{request.requester.fullName}</p>
-                  <p className={styles.lastMessage}>{request.group.title} </p>
-                </div>
-
-              </div>
+              <RequestCard request={request} key={request._id} />
             )
           })
         }
@@ -99,6 +92,44 @@ const SidebarInboxPreview = () => {
 }
 
 export default SidebarInboxPreview
+
+
+type RequestCardProps = {
+  request: InboxRequest
+}
+
+
+const RequestCard = ({ request }: RequestCardProps) => {
+  const { requester, group } = request
+
+  return (
+    <div className={styles.card}>
+      <Link to={`/travellers/${requester._id}`} className={styles.requesterDetails}>
+        <Avatar avatar={requester.avatar} imgSize={400} alt='requester-avatar' title={requester.fullName} className={styles.avatarWrapper} />
+        <span className={styles.requesterName}>{requester.fullName}</span>
+      </Link>
+      <div className={styles.cardHero}>
+        <div>
+          <ExpandableText text={'Hey, I would like to join your trip !  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque vitae delectus quia natus consequuntur cumque labore repudiandae facilis dignissimos impedit? sadasd'} className={styles.requestNote} inputId={`note-toggle-for-${request._id}`} />
+        </div>
+        <div className={styles.heroFooter}>
+          <span className={styles.groupName}>{group.title}</span>
+          <span className={styles.requestAge}>{moment.duration(new Date().getTime() - new Date(request.createdAt).getTime()).humanize()}</span>
+        </div>
+      </div>
+
+
+    </div>
+  )
+}
+
+
+
+
+
+
+
+
 
 
 

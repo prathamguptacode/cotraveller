@@ -9,16 +9,15 @@ import type { Group, JoinRequest } from '../types'
 import { ChatsCircleIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
 import CommentsSection from './CommentsSection'
-import { useReadMore } from '../hooks/useReadMore'
 import ShareMenuPopover from '@/components/Popovers/ShareMenuPopover'
 import { normalizeError } from '@/utils/normalizeError'
 import { toast } from 'sonner'
 import Avatar from '@/components/ui/Avatar'
+import ExpandableText from '@/components/ui/ExpandableText'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
     const { groupId } = useParams() as { groupId: string }
-    const { paragraphRef, readMoreRef } = useReadMore()
     const [currentSection, setCurrentSection] = useState<'Comments' | 'Members'>('Comments')
 
 
@@ -93,11 +92,7 @@ const GroupInfoHero = () => {
                                 Long Drive
                             </span>
                         </div>
-                        <p ref={paragraphRef} className={styles.description}>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat aperiam, eos temporibus velit excepturi aliquid inventore suscipit cupiditate doloribus provident rerum, possimus aliquam quo laudantium. Eligendi obcaecati, nihil sunt sed, culpa enim quod eum quia rem ex delectus, aliquid dolorem explicabo optio cum recusandae unde. Tenetur alias deleniti numquam unde?
-                        </p>
-                        <input type="checkbox" id="toggleMoreDescription" />
-                        <label ref={readMoreRef} htmlFor="toggleMoreDescription" className={styles.toggleMoreContent} />
+                        <ExpandableText text={group.content} inputId='toggleMoreDescription' className={styles.description} />
                     </div>
                     <div className={styles.groupInteractionButtons}>
                         {group.member.some(e => e._id == user?._id) ?
