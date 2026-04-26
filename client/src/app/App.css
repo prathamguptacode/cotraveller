@@ -212,9 +212,10 @@ html {
 
     --group-hover: hsl(225, 6%, 18%);
 
-    --clr-bg: hsl(225, 6%, 13%);
+    --clr-bg: #202124;
+    /* Let --clr-bg be in hex form and = #202124 */
 
-    --secondary-bg:hsl(225, 4%, 22%);
+    --secondary-bg: hsl(225, 4%, 22%);
     --primary: hsl(217, 89%, 76%);
     /* #669df7 */
 

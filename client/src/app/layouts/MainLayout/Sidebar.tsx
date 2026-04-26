@@ -7,7 +7,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { useAuth } from '@/hooks/useAuth'
 import { useMainLayoutContext } from './useMainLayout'
 import SidebarChatsPreview from '@/features/chats/components/SidebarChatsPreview'
-import SidebarInboxPreview from '@/features/inbox/components/SidebarInboxPreview'
+import SidebarInboxPreview from '@/features/inbox/SidebarInboxPreview'
 import LogOutButton from '@/components/Buttons/LogOutButton'
 import type { SidebarTab } from './types'
 import { ListFilter } from 'lucide-react';

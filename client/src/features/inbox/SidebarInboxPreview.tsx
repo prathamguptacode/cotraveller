@@ -1,4 +1,4 @@
-import styles from '../inbox.module.css'
+import styles from './inbox.module.css'
 import { MailCheck } from 'lucide-react'
 import { api } from '@/api/axios'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
