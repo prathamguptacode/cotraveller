@@ -1,5 +1,5 @@
 import styles from '../inbox.module.css'
-import { Check, MailCheck, Users, X } from 'lucide-react'
+import { MailCheck } from 'lucide-react'
 import { api } from '@/api/axios'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -7,6 +7,9 @@ import { normalizeError } from '@/utils/normalizeError'
 import { useEffect } from 'react'
 import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout'
 import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
+import { getImgURL } from '@/lib/cloudinary'
+import clsx from 'clsx'
+import Avatar from '@/components/ui/Avatar'
 
 type InboxRequest = {
   _id: string,
@@ -17,9 +20,14 @@ type InboxRequest = {
   },
   requester: {
     _id: string,
-    fullName: string
+    fullName: string,
+    avatar: {
+      publicId: string,
+      version: number
+    }
   },
-  readBy: string[]
+  readBy: string[],
+  createdAt: string
 }
 
 
@@ -75,25 +83,12 @@ const SidebarInboxPreview = () => {
           requests.map(request => {
             return (
               <div key={request._id} className={styles.listItem}>
-                <div className={styles.avatarWrapper} >
-                  <Users size={20} />
-                </div>
+                <Avatar avatar={request.requester.avatar} imgSize={400} alt='requester-avatar' title={request.requester.fullName} className={styles.avatarWrapper} />
                 <div className={styles.detailsWrapper}>
-                  <p className={styles.groupName}>{request.group.title}</p>
-                  <p className={styles.lastMessage}>{request.requester.fullName} </p>
+                  <p className={styles.groupName}>{request.requester.fullName}</p>
+                  <p className={styles.lastMessage}>{request.group.title} </p>
                 </div>
-                <div className={styles.choicesWrapper}>
-                  <button aria-label='Accept Request' onClick={() => {
-                    acceptRequestMutation.mutate({ groupId: request.group._id, requestId: request._id })
-                  }}>
-                    <Check color='#2A903B' />
-                  </button>
-                  <button aria-label='Decline Request' onClick={() => {
-                    rejectRequestMutation.mutate({ groupId: request.group._id, requestId: request._id })
-                  }}>
-                    <X color='#EE2D3E' />
-                  </button>
-                </div>
+
               </div>
             )
           })
@@ -104,3 +99,19 @@ const SidebarInboxPreview = () => {
 }
 
 export default SidebarInboxPreview
+
+
+
+
+{/* <div className={styles.choicesWrapper}>
+                  <button aria-label='Accept Request' onClick={() => {
+                    acceptRequestMutation.mutate({ groupId: request.group._id, requestId: request._id })
+                  }}>
+                    <Check color='#2A903B' />
+                  </button>
+                  <button aria-label='Decline Request' onClick={() => {
+                    rejectRequestMutation.mutate({ groupId: request.group._id, requestId: request._id })
+                  }}>
+                    <X color='#EE2D3E' />
+                  </button>
+                </div> */}

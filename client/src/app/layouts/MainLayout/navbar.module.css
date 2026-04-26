@@ -101,32 +101,10 @@
 
 .avatarWrapper {
     --dim: 40px;
-    border-radius: 50%;
-    border: 1px solid var(--clr-border);
     outline-offset: 1px;
     outline: 2px solid var(--primary);
-    overflow: hidden;
-
-    position: relative;
-
-
-    width: var(--dim);
-    height: var(--dim);
 
     font-size: 20px;
-    font-weight: 400;
-
-    flex-shrink: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-
-    >img {
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-    }
 }
 
 .spinnerWrapper {

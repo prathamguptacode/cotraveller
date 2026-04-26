@@ -14,6 +14,7 @@ import { useReadMore } from '../hooks/useReadMore'
 import moment from 'moment-timezone'
 import type { ApiSuccess } from '@/types/api.types'
 import { useAnimation, motion } from 'framer-motion'
+import Avatar from '@/components/ui/Avatar'
 
 
 
@@ -113,9 +114,6 @@ const Comment = ({ comment, refetchComments, index }: CommentProps) => {
     const [likeHasToggled, setLikeHasToggled] = useState(false)
     const controls = useAnimation()
 
-    const url = comment.author.avatar.publicId && getImgURL(comment.author.avatar.publicId, comment.author.avatar.version, 400)
-
-
 
     const { mutate: deleteComment, isPending: isDeleting } = useMutation({
         mutationFn: () => api.delete(`/groups/${groupId}/comments/${comment._id}`),
@@ -174,9 +172,7 @@ const Comment = ({ comment, refetchComments, index }: CommentProps) => {
 
     return (
         <div className={styles.comment}>
-            <div className={clsx(styles.avatarWrapper, !url && styles.emptyAvatar)}>
-                {url ? <img src={url} alt="comment-author-avatar" /> : comment.author?.fullName.charAt(0)}
-            </div>
+            <Avatar avatar={comment.author.avatar} imgSize={400} title={comment.author.fullName} alt='commenter-avatar' className={styles.avatarWrapper} />
             <div className={styles.contentWrapper}>
                 <div className={styles.contentHeader}>
                     <span className={styles.username}>{comment?.author.username}</span>

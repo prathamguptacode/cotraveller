@@ -1,6 +1,5 @@
 import { useAuth } from '@/hooks/useAuth'
 import styles from '../groupInfo.module.css'
-import { getImgURL } from '@/lib/cloudinary'
 import { Users } from 'lucide-react'
 import clsx from 'clsx'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
@@ -14,6 +13,7 @@ import { useReadMore } from '../hooks/useReadMore'
 import ShareMenuPopover from '@/components/Popovers/ShareMenuPopover'
 import { normalizeError } from '@/utils/normalizeError'
 import { toast } from 'sonner'
+import Avatar from '@/components/ui/Avatar'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
@@ -47,9 +47,6 @@ const GroupInfoHero = () => {
     })
 
 
-
-
-    const url = user && getImgURL(user.avatar.publicId, user.avatar.version, 600)
     const hasRequested = joinRequests.some(request => request.requesterId == user?._id)
 
 
@@ -60,10 +57,7 @@ const GroupInfoHero = () => {
                 <div className={styles.heroWrapper}>
 
                     <div className={styles.header}>
-                        <div style={{ fontSize: '48px' }} className={styles.avatarWrapper}>
-                            {/* ###LATER CHANGE */}
-                            {url ? <img src={url} alt="group-avatar" /> : group.title.charAt(0)}
-                        </div>
+                        <Avatar avatar={{ publicId: '', version: 0 }} imgSize={400} title={group.title} className={styles.avatarWrapper} alt='group-avatar' />
                         <div className={styles.headerDetails}>
                             <h2 className={styles.title}>
                                 {group.title}
@@ -170,13 +164,9 @@ const Members = ({ group }: MembersProps) => {
     return (
         <div className={styles.members}>
             {group.member.map(member => {
-                const url = member.avatar.publicId && getImgURL(member.avatar.publicId, member.avatar.version, 600)
-
                 return (
                     <Link key={member._id} to={`/travellers/${member._id}`} className={styles.member}>
-                        <div className={clsx(styles.avatarWrapper, !url && styles.emptyAvatar)}>
-                            {url ? <img src={url} alt='member-avatar' /> : member.fullName.charAt(0)}
-                        </div>
+                        <Avatar avatar={member.avatar} imgSize={400} title={member.fullName} className={styles.avatarWrapper} alt='member-avatar' />
                         <div className={styles.memberDetails}>
                             <span>{member.fullName}</span>
                             <span>{member.username}</span>

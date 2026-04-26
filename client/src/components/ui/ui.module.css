@@ -1,0 +1,25 @@
+.avatarWrapper {
+    width: var(--dim);
+    height: var(--dim);
+
+    border-radius: 50%;
+    overflow: hidden;
+
+    flex-shrink: 0;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+
+.emptyAvatar {
+    border: 1px solid var(--clr-border);
+}

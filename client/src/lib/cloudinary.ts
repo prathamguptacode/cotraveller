@@ -11,7 +11,8 @@ const cld = new Cloudinary({
 })
 
 
-export const getImgURL = (publicId: string, version: number, width: number) => {
-    const url = cld.image(publicId).resize(fill().width(width)).delivery(quality(qAuto())).delivery(format(fAuto())).setVersion(version).toURL()
+export const getImgURL = (avatar: { publicId: string, version: number }, width: number) => {
+    const { publicId, version } = avatar
+    const url = publicId ? cld.image(publicId).resize(fill().width(width)).delivery(quality(qAuto())).delivery(format(fAuto())).setVersion(version).toURL() : ''
     return url
 }

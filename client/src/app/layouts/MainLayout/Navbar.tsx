@@ -14,6 +14,7 @@ import { normalizeError } from '@/utils/normalizeError';
 import Spinner from '@/components/Loaders/Spinner';
 import { useMainLayoutContext } from './useMainLayout';
 import LogOutButton from '@/components/Buttons/LogOutButton';
+import AvatarWrapper from '@/components/ui/AvatarWrapper';
 
 
 
@@ -147,7 +148,7 @@ const NavbarProfileButton = () => {
     }
 
 
-    const url = user?.avatar.publicId && getImgURL(user.avatar.publicId, user.avatar.version, 400)
+    const avatarURL = user && getImgURL(user.avatar, 400)
     const firstLetter = user?.fullName.charAt(0)
 
 
@@ -250,15 +251,15 @@ const NavbarProfileButton = () => {
 
     return user &&
         <>
-            <button onClick={() => openDialog(profileDialogRef)} className={mystyle.avatarWrapper} aria-label="View your profile">
-                {url ? <img src={url} alt="user-avatar" /> : firstLetter}
-                {
-                    (uploadAvatarMutation.isPending || isRemovingAvatar) &&
-                    <div className={mystyle.spinnerWrapper}>
-                        <Spinner className={clsx(mystyle.spinner)} />
-                    </div>
-                }
-            </button>
+            <AvatarWrapper asChild avatarURL={avatarURL} className={mystyle.avatarWrapper}>
+                <button onClick={() => openDialog(profileDialogRef)} aria-label="View your profile">
+                    {avatarURL ? <img src={avatarURL} alt="user-avatar" /> : firstLetter}
+                    {(uploadAvatarMutation.isPending || isRemovingAvatar) &&
+                        <div className={mystyle.spinnerWrapper}>
+                            <Spinner className={clsx(mystyle.spinner)} />
+                        </div>}
+                </button>
+            </AvatarWrapper>
 
             <dialog ref={profileDialogRef} className={mystyle.profileDialog}>
                 <div>
@@ -267,18 +268,19 @@ const NavbarProfileButton = () => {
                     </button>
                     <div className={mystyle.profileArea}>
                         <div className={mystyle.profileHeader}>
-                            <button disabled={uploadAvatarMutation.isPending || isRemovingAvatar} onClick={() => openDialog(avatarDialogRef)} aria-label='change profile picture' className={mystyle.avatarWrapper}>
-                                {url ?
-                                    <img src={url} alt="user-avatar" />
-                                    : firstLetter}
-                                {
-                                    (uploadAvatarMutation.isPending || isRemovingAvatar) &&
-                                    <div className={mystyle.spinnerWrapper}>
-                                        <Spinner className={clsx(mystyle.spinner)} />
-                                    </div>
-                                }
-
-                            </button>
+                            <AvatarWrapper asChild avatarURL={avatarURL} className={mystyle.avatarWrapper}>
+                                <button disabled={uploadAvatarMutation.isPending || isRemovingAvatar} onClick={() => openDialog(avatarDialogRef)} aria-label='change profile picture' >
+                                    {avatarURL ?
+                                        <img src={avatarURL} alt="user-avatar" />
+                                        : firstLetter}
+                                    {
+                                        (uploadAvatarMutation.isPending || isRemovingAvatar) &&
+                                        <div className={mystyle.spinnerWrapper}>
+                                            <Spinner className={clsx(mystyle.spinner)} />
+                                        </div>
+                                    }
+                                </button>
+                            </AvatarWrapper>
                             <div className={mystyle.profileHeaderDetails}>
                                 <h2>{user.username}</h2>
                                 <span>{user.fullName}</span>
@@ -305,7 +307,7 @@ const NavbarProfileButton = () => {
                         <div className={mystyle.profileFooter}>
                             <LogOutButton iconSize={20}>Log out</LogOutButton>
                             <button disabled={uploadAvatarMutation.isPending || isRemovingAvatar} onClick={() => openDialog(avatarDialogRef)} aria-label='change profile picture'>
-                                <Camera size={20} /> {url ? 'Change' : 'Add'} Photo
+                                <Camera size={20} /> {avatarURL ? 'Change' : 'Add'} Photo
                             </button>
                         </div>
                         <dialog ref={avatarDialogRef} className={mystyle.avatarDialog}>

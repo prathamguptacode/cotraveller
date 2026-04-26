@@ -116,24 +116,12 @@
 
 .avatarWrapper {
     --dim: 38px;
-    width: var(--dim);
-    height: var(--dim);
-    border-radius: 50%;
-    border: .2px solid var(--clr-border);
-    overflow: hidden;
-    flex-shrink: 0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    img {
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-    }
 }
 
+
+.emptyAvatar {
+    border: 1px solid var(--clr-border);
+}
 
 .groupDetails {
     display: flex;
