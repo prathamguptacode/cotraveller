@@ -71,11 +71,11 @@ const FAQ = ({ id, handleToggleAnswer, faq, shownAnswer }: FAQProps) => {
         <div className={clsx(mystyle.qbox, shownAnswer === id && mystyle.open)}>
             <div className={mystyle.arrowbx}>
                 <div className={mystyle.question}>{faq.question}</div>
-                <button onClick={() => handleToggleAnswer(id)} aria-label='Show Answer' className={mystyle.arrow}  >
+                <a href={`#${id}`} onClick={() => handleToggleAnswer(id)} aria-label='Show Answer' className={mystyle.arrow}  >
                     <IoIosArrowDown size={20} />
-                </button>
+                </a>
             </div>
-            <p className={mystyle.ans} >
+            <p id={id} className={mystyle.ans} >
                 {faq.answer}
             </p>
         </div>

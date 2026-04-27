@@ -6,6 +6,10 @@ input,
 button {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 /* 2. Remove default margin */
@@ -121,12 +125,18 @@ input::-webkit-inner-spin-button {
 }
 
 
+*:has(>svg),
+svg {
+    flex-shrink: 0;
+}
+
+
+
 #root {
     margin: auto;
 }
 
 body {
-    /* max-width: 1920px; */
     margin: auto;
     background-color: var(--clr-bg);
     color: var(--clr-font);
@@ -195,7 +205,7 @@ html {
 
     /* Old colors */
 
-    --clr-border: hsla(207, 5%, 52%, 0.6);
+    --clr-border: hsl(213, 5%, 39%);
     --in-border: hsla(207, 5%, 77%, 0.6);
 
     --clr-bg-hover: hsl(225, 4%, 20%);
@@ -204,7 +214,7 @@ html {
 
     --clr-bg: hsl(225, 6%, 13%);
 
-    --secondary-bg: hsl(220, 3%, 19%);
+    --secondary-bg:hsl(225, 4%, 22%);
     --primary: hsl(217, 89%, 76%);
     /* #669df7 */
 

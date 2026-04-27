@@ -51,7 +51,8 @@ const Sidebar = () => {
         const hamburgerMenu = hamburgerRef.current
 
 
-        if (!sidebarsDiv?.parentElement || !hamburgerMenu || sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay' || window.matchMedia("(max-width:768px)").matches) return
+        if (!sidebarsDiv?.parentElement || !hamburgerMenu || window.matchMedia("(max-width:768px)").matches) return
+        if (sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay' && !window.matchMedia("(max-width:1200px)").matches) return
 
         const eventHandler = (e: PointerEvent) => {
             const target = e.target

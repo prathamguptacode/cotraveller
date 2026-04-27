@@ -1,15 +1,24 @@
 .searchbox {
     background-color: var(--secondary-bg);
-    max-width: 1140px;
-    margin: auto;
     padding: 20px 16px;
-    border-radius: 4px;
     padding-bottom: 44px;
 
+    border-radius: 8px;
+
     display: flex;
-    align-items: center;
     gap: 12px;
-    border-radius: 14px;
+    flex-wrap: wrap;
+
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .3), 0 4px 8px 3px rgba(0, 0, 0, .15);
+
+
+    >* {
+        min-width: fit-content;
+    }
+
+    svg {
+        color: hsl(210, 6%, 63%);
+    }
 }
 
 .btnbox {
@@ -19,16 +28,18 @@
 }
 
 .searchbtn {
-    padding: 12px 28px;
-    background-color: var(--primary);
-    border-radius: 24px;
-    color: var(--secondaryFont);
-    font-weight: 500;
-    flex-shrink: 0;
+    padding: .5em 1em;
     margin-top: -20px;
+    border-radius: 50px;
+
+    background-color: var(--primary);
+    color: var(--secondaryFont);
+
+    font-size: 14px;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: .5rem;
 }
 
 .searchbtn:hover {
@@ -39,8 +50,8 @@
     flex-shrink: 0;
     flex-grow: 1;
     padding: 16px;
-    border: 2px solid var(--clr-border);
-    border-radius: 14px;
+    border: 1px solid var(--clr-border);
+    border-radius: 15px;
     cursor: not-allowed;
     display: flex;
     gap: 8px;
@@ -49,59 +60,49 @@
 
 
 .locationInput {
-    width: 100%;
-    font-size: 18px;
+    flex: 1;
+
+    &::placeholder {
+        color: var(--clr-font);
+    }
 }
 
-.locationBox {
+/* .locationBox {
+    flex: 1;
     display: flex;
-    gap: 8px;
+    gap: .5rem;
+} */
+
+.loadingLoc,
+.locationcamp,
+.dateIn {
+    flex: 1;
+
+    padding: .75em 1.5em;
+    border-radius: 5px;
+    border: 1px solid var(--clr-border);
+
+    transition: all 0.2s ease;
+    position: relative;
+
+
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
 }
 
 
 .loadingLoc {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    padding: 14px 16px;
-    border-radius: 10px;
-    border: 1px solid var(--clr-border);
-
     background: var(--secondary-bg);
-    transition: all 0.2s ease;
 }
 
-.locationcamp {
+.dateInput {
     flex: 1;
 
-    padding: 14px 16px;
-    border-radius: 10px;
-    border: 1px solid var(--clr-border);
-
-    background: var(--secondary-bg);
-    transition: all 0.2s ease;
-    position: relative;
-
-    height: 56px;
-
-}
-
-.dateIn {
-    flex: 1;
-    padding: 14px 16px;
-    border-radius: 10px;
-    border: 1px solid var(--clr-border);
-    background: var(--secondary-bg);
-    transition: all 0.2s ease;
-    position: relative;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    /* gap: 16px; */
-    justify-content: space-between;
-    font-size: 18px;
+    &::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
 }
 
 .loadingLoc:hover,
@@ -165,57 +166,12 @@ ul {
 
 
 
-
-@media (max-width:1108px) {
-    /* .searchbox {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        grid-template-rows: 1fr 1fr;
-        grid-template-areas:
-            "from from from mode mode mode"
-            "date date month month year year"
-        ;
-    } */
-}
-
-@media (width < 1000px) {
+@container(max-width:768px) {
     .searchbox {
-        max-width: 900px;
-    }
+        background-color: var(--clr-bg);
+        margin-inline: auto;
 
-
-
-}
-
-@media(max-width:768px) {
-
-    .searchbox,
-    .searchbtn {
-        position: relative;
-    }
-}
-
-@media (max-width:480px) {
-    .searchbox>* {
-        font-size: 14px;
-
-        >svg {
-            width: 12px;
-        }
-    }
-
-}
-
-@media (width<375px) {
-    .searchbox {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        grid-template-rows: 1fr 1fr 1fr;
-        grid-template-areas:
-            "from from from from from from"
-            "mode mode mode mode mode mode"
-            "date date month month year year"
-
-        ;
+        border-radius: 15px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .3), 0 2px 6px -6px rgba(0, 0, 0, .15);
     }
 }

@@ -10,7 +10,7 @@ function DiscoverBox() {
     <div className={mystyle.discoverbx}>
       <div>
         <div className={mystyle.discoverTitle}>Your next trip starts with one search.</div>
-        <div className={mystyle.discoverContent}>Find travellers heading to the same destination, connect instantly, and join plans that match your vibe.</div>
+        <div className={mystyle.discoverContent}>Find your vibe, meet your people, and travel together.</div>
       </div>
       <Link to={discoverURL} aria-label='Explore' className={clsx(mystyle.discoverBtn, mystyle.inhover)}>Explore</Link>
     </div>
