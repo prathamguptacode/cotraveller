@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import mystyle from './FilterSidebar.module.css'
 import { LuPlus } from "react-icons/lu";
 import { LuMinus } from "react-icons/lu";
@@ -12,102 +12,120 @@ import Chip from '@mui/material/Chip';
 import { HandCoins, PawPrint, Venus, WineOff } from 'lucide-react';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
 import { useSearchParams } from 'react-router-dom';
+import { z } from 'zod'
+import dayjs from 'dayjs';
 
-
+const querySchema = z.object({
+  location: z.string(),
+  date: z.string(),
+  members: z.coerce.number().refine(val => (val >= 2 && val <= 5) || val == 32).nullable(),
+  mode: z.enum(["Train", "Flight", "Taxi", "Car", "Bike"]).nullable(),
+  tags: z.array(z.enum(["no alcohol", "girls only", "budget friendly", "pet friendly"])),
+  time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/).nullable()
+})
 
 function FilterSidebar() {
+  const [query, setQuery] = useSearchParams();
+  const membersQ = query.get('members')
+  const locationQ = query.get("q");
+  const dateQ = query.get("date");
+  const modeQ = query.get("mode");
+  const tagsQ = query.getAll("tags");
+  const timeQ = query.get("time")
 
-  const [member, setMember] = useState(1);
-  const [travelMode, setTravelMode] = useState('Any mode');
-  const [time, setTime] = useState<PickerValue | null>(null)
-  const [noalcohol, setNoalcohol] = useState<string | null>(null);
-  const [girlsonly, setGirlsonly] = useState<string | null>(null);
-  const [budgetfriendly, setBudgetfriendly] = useState<string | null>(null);
-  const [petfriendly, setPetfriendly] = useState<string | null>(null);
+  // automatically captures error
+  const validateQuery = querySchema.parse({ location: locationQ, date: dateQ, members: membersQ, mode: modeQ, tags: tagsQ, time: timeQ })
+  const { members, mode, time } = validateQuery
+
+  const [tags, setTags] = useState({
+    noalcohol: validateQuery.tags.includes("no alcohol"),
+    girlsonly: validateQuery.tags.includes("girls only"),
+    budgetfriendly: validateQuery.tags.includes("budget friendly"),
+    petfriendly: validateQuery.tags.includes("pet friendly")
+  })
+  useEffect(() => {
+    const value = [tags.noalcohol ? "no alcohol" : null, tags.girlsonly ? "girls only" : null, tags.budgetfriendly ? "budget friendly" : null, tags.petfriendly ? "pet friendly" : null];
+    query.delete("tags")
+    value.forEach((e) => {
+      if (e) {
+        query.append("tags", e)
+      }
+    })
+    return setQuery(query)
+  }, [tags])
 
   function handlePlus() {
-    if (member < 5) {
-      return setMember(prev => prev + 1)
+    if (!members) {
+      query.set("members", "2")
+      return setQuery(query)
     }
-    if (member >= 5) {
-      return setMember(32)
+    if (members < 5) {
+      query.set("members", `${members + 1}`)
+      return setQuery(query)
+    }
+    if (members == 5) {
+      query.set("members", "32")
+      return setQuery(query)
     }
   }
   function handleMinus() {
-    if (member == 32) {
-      return setMember(5)
+    if (!members) {
+      return
     }
-    if (member > 1) {
-      setMember(prev => prev - 1)
+    if (members == 32) {
+      query.set("members", "5")
+      return setQuery(query)
+    }
+    if (members > 2) {
+      query.set("members", `${members - 1}`)
+      return setQuery(query)
+    }
+    if (members == 2) {
+      query.delete("members")
+      return setQuery(query)
     }
   }
-
-  
-  const [query, setQuery] = useSearchParams();
-  useEffect(() => {
-    const q = query.get('q');
-    const date = query.get('date')
-    const travelMode = query.get('travelMode')
-    const time = query.get('time')
-    // const tags = query.get('tags')
-    if (member == 1) {
-      return setQuery(`q=${q}&date=${date}&travelMode=${travelMode}&time=${time}&members=null&tags=${noalcohol}&tags=${girlsonly}&tags=${budgetfriendly}&tags=${petfriendly}`)
+  function setTravelMode(e: string) {
+    if (e != "Any mode") {
+      query.set("mode", e)
+      return setQuery(query)
     }
-    setQuery(`q=${q}&date=${date}&travelMode=${travelMode}&time=${time}&members=${member}&tags=${noalcohol}&tags=${girlsonly}&tags=${budgetfriendly}&tags=${petfriendly}`)
-  }, [member])
-  useEffect(() => {
-    const q = query.get('q');
-    const date = query.get('date')
-    const time = query.get('time')
-    const members = query.get('members')
-    if (travelMode != 'Any mode') {
-      return setQuery(`q=${q}&date=${date}&time=${time}&members=${members}&travelMode=${travelMode}&tags=${noalcohol}&tags=${girlsonly}&tags=${budgetfriendly}&tags=${petfriendly}`)
+    query.delete("mode")
+    return setQuery(query)
+  }
+  function setTime(e: PickerValue) {
+    if (e) {
+      query.set("time", `${e.hour().toString().padStart(2, "0")}:${e.minute().toString().padStart(2, "0")}`)
+      return setQuery(query)
     }
-    setQuery(`q=${q}&date=${date}&time=${time}&members=${members}&travelMode=null&tags=${noalcohol}&tags=${girlsonly}&tags=${budgetfriendly}&tags=${petfriendly}`)
-  }, [travelMode])
-  useEffect(() => {
-    const q = query.get('q');
-    const date = query.get('date')
-    const members = query.get('members')
-    const travelMode = query.get('travelMode')
-    if (time?.isValid()) {
-      const hour = time.hour().toString().padStart(2, "0")
-      const min = time.minute().toString().padStart(2, "0")
-      return setQuery(`q=${q}&date=${date}&travelMode=${travelMode}&members=${members}&time=${hour}T${min}&tags=${noalcohol}&tags=${girlsonly}&tags=${budgetfriendly}&tags=${petfriendly}`)
-    }
-    return setQuery(`q=${q}&date=${date}&travelMode=${travelMode}&members=${members}&time=null&tags=${noalcohol}&tags=${girlsonly}&tags=${budgetfriendly}&tags=${petfriendly}`)
-  }, [time])
-  useEffect(() => {
-    const q = query.get('q');
-    const date = query.get('date')
-    const time = query.get('time')
-    const members = query.get('members')
-    const travelMode = query.get('travelMode')
-    setQuery(`q=${q}&date=${date}&time=${time}&members=${members}&travelMode=${travelMode}&tags=${noalcohol}&tags=${girlsonly}&tags=${budgetfriendly}&tags=${petfriendly}`)
-  }, [noalcohol, girlsonly, budgetfriendly, petfriendly])
-
-
-
+    query.delete("time")
+    return setQuery(query)
+  }
+  let queryTime: dayjs.Dayjs | null = null;
+  if (time) {
+    const dfTime = time.split(':')
+    queryTime = dayjs().hour(Number(dfTime[0])).minute(Number(dfTime[1]))
+  }
 
   return (
     <div className={mystyle.wrapper}>
       <div className={mystyle.member}>
         <div className={mystyle.memberHeading}>Members</div>
         <div className={mystyle.memberbox}>
-          <button className={mystyle.memberMinus} onClick={handleMinus}><LuMinus /></button>
+          <button className={mystyle.memberMinus} onClick={handleMinus} ><LuMinus /></button>
           <div>
             {
-              member == 1 ? <div>Any</div> : member == 32 ? <div>6+</div> : <div>{member}</div>
+              members ? members >= 6 ? '6+' : members : 'Any'
             }
           </div>
-          <button className={mystyle.memberPlus} onClick={handlePlus}><LuPlus /></button>
+          <button className={mystyle.memberPlus} onClick={handlePlus} ><LuPlus /></button>
         </div>
       </div>
 
       <div className={mystyle.travelMode}>
         <div className={mystyle.modeHeading}>Travel mode</div>
         <button className={mystyle.modeBox} popoverTarget="modeList">
-          {travelMode}
+          {mode ? mode : 'Any mode'}
           <div className={mystyle.modeIcon}>
             <LuChevronDown />
           </div>
@@ -129,7 +147,7 @@ function FilterSidebar() {
         <div className={mystyle.timebox}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['TimePicker']}>
-              <TimePicker onAccept={(e) => setTime(e)} className={mystyle.timePicker} label="Departure Time" slotProps={{ field: { clearable: true }, textField: { sx: { borderRadius: '8px', fieldset: { borderRadius: '8px' }, } } }} />
+              <TimePicker defaultValue={queryTime} onAccept={(e) => setTime(e)} className={mystyle.timePicker} label="Departure Time" slotProps={{ field: { clearable: true }, textField: { sx: { borderRadius: '8px', fieldset: { borderRadius: '8px' }, } } }} />
             </DemoContainer>
           </LocalizationProvider>
         </div>
@@ -140,13 +158,13 @@ function FilterSidebar() {
         <div className={mystyle.tagBox}>
           <Stack direction="row" spacing={1.2} useFlexGap sx={{ flexWrap: 'wrap' }}>
 
-            <Chip onClick={() => noalcohol ? setNoalcohol(null) : setNoalcohol("no alcohol")} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="No Alcohol" variant={noalcohol ? "filled" : "outlined"} color="primary" icon={<WineOff />} />
+            <Chip onClick={() => tags.noalcohol ? setTags({ ...tags, noalcohol: false }) : setTags({ ...tags, noalcohol: true })} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="No Alcohol" variant={tags.noalcohol ? "filled" : "outlined"} color="primary" icon={<WineOff />} />
 
-            <Chip onClick={() => girlsonly ? setGirlsonly(null) : setGirlsonly("girls only")} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="Girls Only" variant={girlsonly ? "filled" : "outlined"} color="primary" icon={<Venus />} />
+            <Chip onClick={() => tags.girlsonly ? setTags({ ...tags, girlsonly: false }) : setTags({ ...tags, girlsonly: true })} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="Girls Only" variant={tags.girlsonly ? "filled" : "outlined"} color="primary" icon={<Venus />} />
 
-            <Chip onClick={() => budgetfriendly ? setBudgetfriendly(null) : setBudgetfriendly("budget friendly")} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="Budget Friendly" variant={budgetfriendly ? "filled" : "outlined"} color="primary" icon={<HandCoins />} />
+            <Chip onClick={() => tags.budgetfriendly ? setTags({ ...tags, budgetfriendly: false }) : setTags({ ...tags, budgetfriendly: true })} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="Budget Friendly" variant={tags.budgetfriendly ? "filled" : "outlined"} color="primary" icon={<HandCoins />} />
 
-            <Chip onClick={() => petfriendly ? setPetfriendly(null) : setPetfriendly("pet friendly")} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="Pet Friendly" variant={petfriendly ? "filled" : "outlined"} color="primary" icon={<PawPrint />} />
+            <Chip onClick={() => tags.petfriendly ? setTags({ ...tags, petfriendly: false }) : setTags({ ...tags, petfriendly: true })} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="Pet Friendly" variant={tags.petfriendly ? "filled" : "outlined"} color="primary" icon={<PawPrint />} />
 
           </Stack>
         </div>
