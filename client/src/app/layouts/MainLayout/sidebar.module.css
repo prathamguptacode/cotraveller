@@ -82,7 +82,8 @@
             height: 24px;
         }
 
-        >* {
+        >button,
+        >a {
             --clr-active: var(--sidebar-v2-bg-active);
             --clr-hover: var(--sidebar-v2-bg-hover);
             padding: 1em;

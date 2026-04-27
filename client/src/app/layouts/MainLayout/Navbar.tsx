@@ -305,15 +305,15 @@ const NavbarProfileButton = () => {
                         </div>
 
                         <div className={mystyle.profileFooter}>
-                            <LogOutButton iconSize={20}>Log out</LogOutButton>
+                            <LogOutButton >Log out</LogOutButton>
                             <button disabled={uploadAvatarMutation.isPending || isRemovingAvatar} onClick={() => openDialog(avatarDialogRef)} aria-label='change profile picture'>
                                 <Camera size={20} /> {avatarURL ? 'Change' : 'Add'} Photo
                             </button>
                         </div>
                         <dialog ref={avatarDialogRef} className={mystyle.avatarDialog}>
                             <div>
-                                <h2>Change Profile Photo</h2>
-                                <div>
+                                <h2 className={mystyle.avatarDialogHeading}>Change Profile Photo</h2>
+                                <div className={mystyle.changeAvatarOptions}>
                                     <input ref={inputRef} onChange={uploadAvatar} id='avatarInput' accept='image/*' type="file" style={{ display: 'none' }} />
                                     <label role='button' style={{ color: 'var(--primary-darker)' }} htmlFor='avatarInput'>Upload Photo</label>
                                     <button onClick={() => {
@@ -322,7 +322,7 @@ const NavbarProfileButton = () => {
                                         })
                                         closeDialog(avatarDialogRef)
                                         removeAvatar()
-                                    }} style={{ color: 'rgb(240, 28, 28)' }}>Remove Current Photo</button>
+                                    }} style={{ color: 'hsl(0, 88%, 57%)' }}>Remove Current Photo</button>
                                     <button onClick={() => closeDialog(avatarDialogRef)}>Cancel</button>
                                 </div>
                             </div>

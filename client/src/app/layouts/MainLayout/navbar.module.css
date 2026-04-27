@@ -77,7 +77,7 @@
     font-weight: 400;
 
     padding: .5em 1em;
-    border-radius: 5px;
+    border-radius: 50px;
 
     flex-shrink: 0;
 }
@@ -89,7 +89,6 @@
     justify-content: center;
     align-items: center;
     gap: .25rem;
-    border-radius: 50px;
 }
 
 .plusBtn {
@@ -248,7 +247,7 @@
     align-items: center;
     gap: 1rem;
 
-    >* {
+    >button {
         --clr-active: var(--dialog-active);
         --clr-hover: var(--dialog-hover);
         --clr-disabled: var(--dialog-disabled);
@@ -289,40 +288,35 @@
     >div {
         display: flex;
         flex-direction: column;
-
-        >h2 {
-            padding: 1em;
-            text-align: center;
-        }
-
-        >div {
-            display: flex;
-            flex-direction: column;
-
-
-            >* {
-                text-align: center;
-                padding: .5em 1.5em;
-                cursor: pointer;
-                border-top: .5px solid var(--dialog-border);
-
-
-
-
-                &:hover {
-                    background-color: var(--secondary-bg);
-                }
-
-                &:active {
-                    background-color: var(--clr-bg);
-                }
-            }
-        }
     }
+}
 
 
-    &::backdrop {
-        backdrop-filter: blur(1px);
+&::backdrop {
+    backdrop-filter: blur(1px);
+}
+
+
+
+.avatarDialogHeading {
+    padding: 1em;
+    text-align: center;
+}
+
+.changeAvatarOptions {
+    display: flex;
+    flex-direction: column;
+
+    >button,
+    >[role='button'] {
+        --clr-hover: var(--secondary-bg);
+        --clr-active:var(--clr-bg);
+
+        text-align: center;
+        padding: .5em 1.5em;
+        border-top: .5px solid var(--dialog-border);
+        
+        cursor: pointer;
     }
 }
 

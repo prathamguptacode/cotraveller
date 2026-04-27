@@ -57,7 +57,12 @@ const Sidebar = () => {
 
 
         if (!sidebarsDiv?.parentElement || !hamburgerMenu || window.matchMedia("(max-width:768px)").matches) return
-        if (sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay' && !window.matchMedia("(max-width:1200px)").matches) return
+        try {
+            if (sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay' && !window.matchMedia("(max-width:1200px)").matches) return
+        } catch {
+            return
+        }
+
 
         const eventHandler = (e: PointerEvent) => {
             const target = e.target
