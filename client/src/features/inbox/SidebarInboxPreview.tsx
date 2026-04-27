@@ -11,6 +11,7 @@ import Avatar from '@/components/ui/Avatar'
 import { Link } from 'react-router-dom'
 import moment from 'moment-timezone'
 import ExpandableText from '@/components/ui/ExpandableText'
+import clsx from 'clsx'
 
 type InboxRequest = {
   _id: string,
@@ -43,25 +44,6 @@ const SidebarInboxPreview = () => {
     select: (res) => res.data.requests
   })
 
-
-
-  const acceptRequestMutation = useMutation({
-    mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.post(`/groups/${groupId}/requests/${requestId}`),
-    onError: (error) => {
-      const err = normalizeError(error)
-      if (err.status < 500) toast.error(err.message)
-    },
-    onSettled: () => refetchInbox()
-  })
-  const rejectRequestMutation = useMutation({
-    mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.delete(`/groups/${groupId}/requests/${requestId}`),
-    onError: (error) => {
-      const err = normalizeError(error)
-      if (err.status < 500) toast.error(err.message)
-    },
-    onSettled: () => refetchInbox()
-  })
-
   useEffect(() => {
     setNotifications(prev => ({ ...prev, Inbox: requests.length == 0 ? false : true }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,7 +64,7 @@ const SidebarInboxPreview = () => {
         {
           requests.map(request => {
             return (
-              <RequestCard request={request} key={request._id} />
+              <RequestCard refetchInbox={refetchInbox} request={request} key={request._id} />
             )
           })
         }
@@ -95,12 +77,35 @@ export default SidebarInboxPreview
 
 
 type RequestCardProps = {
-  request: InboxRequest
+  request: InboxRequest,
+  refetchInbox: () => void
 }
 
 
-const RequestCard = ({ request }: RequestCardProps) => {
+const RequestCard = ({ request, refetchInbox }: RequestCardProps) => {
   const { requester, group } = request
+
+
+  const { mutate: acceptRequest, isPending: isAccepting } = useMutation({
+    mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.post(`/groups/${groupId}/requests/${requestId}`),
+    onError: (error) => {
+      const err = normalizeError(error)
+      if (err.status < 500) toast.error(err.message)
+    },
+    onSuccess: () => toast.success("Request accepted"),
+    onSettled: () => refetchInbox()
+  })
+  const { mutate: rejectRequest, isPending: isRejecting } = useMutation({
+    mutationFn: ({ groupId, requestId }: { groupId: string, requestId: string }) => api.delete(`/groups/${groupId}/requests/${requestId}`),
+    onError: (error) => {
+      const err = normalizeError(error)
+      if (err.status < 500) toast.error(err.message)
+    },
+    onSuccess: () => toast.success("Request declined"),
+    onSettled: () => refetchInbox()
+  })
+
+  const isPending = isAccepting || isRejecting
 
   return (
     <div className={styles.card}>
@@ -109,12 +114,19 @@ const RequestCard = ({ request }: RequestCardProps) => {
         <span className={styles.requesterName}>{requester.fullName}</span>
       </Link>
       <div className={styles.cardHero}>
-        <div>
-          <ExpandableText text={'Hey, I would like to join your trip !  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque vitae delectus quia natus consequuntur cumque labore repudiandae facilis dignissimos impedit? sadasd'} className={styles.requestNote} inputId={`note-toggle-for-${request._id}`} />
+        <div aria-label='request-note-and-read-more-wrapper'>
+          <ExpandableText text={'Hey, I would like to join your trip !'} className={styles.requestNote} inputId={`note-toggle-for-${request._id}`} />
+        </div>
+        <div className={styles.choicesWrapper}>
+          <span>Accept join request?</span>
+          <div className={styles.choices}>
+            <button disabled={isPending} onClick={() => rejectRequest({ groupId: group._id, requestId: request._id })} aria-label='reject' className={clsx(styles.choice, styles.reject)}>Reject</button>
+            <button disabled={isPending} onClick={() => acceptRequest({ groupId: group._id, requestId: request._id })} aria-label='accept' className={clsx(styles.choice, styles.accept)}>Accept</button>
+          </div>
         </div>
         <div className={styles.heroFooter}>
           <span className={styles.groupName}>{group.title}</span>
-          <span className={styles.requestAge}>{moment.duration(new Date().getTime() - new Date(request.createdAt).getTime()).humanize()}</span>
+          <span className={styles.requestAge}>{moment.duration(new Date().getTime() - new Date(request.createdAt).getTime()).humanize()} ago</span>
         </div>
       </div>
 

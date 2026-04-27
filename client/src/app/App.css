@@ -203,6 +203,8 @@ html {
     --primary-hover: hsl(217, 89%, 80%);
     --primary-active: hsl(217, 89%, 72%);
 
+    --red-destructive: lab(63.7053% 60.745 31.3109);
+
     /* Old colors */
 
     --clr-border: hsl(213, 5%, 39%);
