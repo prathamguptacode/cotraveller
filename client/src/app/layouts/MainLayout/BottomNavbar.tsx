@@ -8,7 +8,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
 import { useAuth } from '@/hooks/useAuth'
 import SidebarChatsPreview from '@/features/chats/components/SidebarChatsPreview'
-import SidebarInboxPreview from '@/features/inbox/components/SidebarInboxPreview'
+import SidebarInboxPreview from '@/features/inbox/SidebarInboxPreview'
 import clsx from 'clsx'
 
 

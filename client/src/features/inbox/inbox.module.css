@@ -4,10 +4,14 @@
 }
 
 
-.list {
+.cards {
     overflow-y: auto;
     margin-bottom: 1rem;
     flex-shrink: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
 
     &::-webkit-scrollbar {
         display: none;
@@ -15,100 +19,163 @@
 }
 
 
-.listItem {
+
+.card {
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all .15s linear;
+
+    /* 
+    &:hover {
+        background-color: var(--sidebar-bg-hover);
+    } */
+
+    /* &:active {
+        background-color: var(--sidebar-bg-active);
+
+        .cardHero {
+            background-color: var(--sidebar-bg-active);
+        }
+    } */
+}
+
+
+.requesterDetails {
     display: flex;
     align-items: center;
     gap: .5rem;
-    padding: .8rem 1rem;
-    padding-right: 0;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-
-.listItem:hover {
-    background-color: var(--sidebar-bg-hover);
-
-    .choicesWrapper>a {
-        opacity: 1;
-        pointer-events: all;
-    }
-}
-
-.activeItem {
-    background-color: var(--sidebar-bg-active);
-
-    &:hover {
-        background-color: var(--sidebar-bg-active);
-    }
+    padding: 1rem .75rem .5rem;
 }
 
 .avatarWrapper {
-    --dim: 48px;
-    width: var(--dim);
-    height: var(--dim);
-    border: 1px solid var(--clr-border);
-    flex-shrink: 0;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    img {
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-    }
-
+    --dim: 36px;
 }
 
-.detailsWrapper {
+
+.requesterName {
+    flex: 1;
+    font-weight: 500;
+}
+
+.mutedText {
+    color: hsl(0, 0%, 60%);
+    font-size: 12px;
+}
+
+.cardHero {
+    padding: 1rem;
+
     display: flex;
     flex-direction: column;
-    gap: .3rem;
+    gap: 1rem;
+
+    background-color: var(--sidebar-bg-hover);
+    border-radius: 10px;
+    transition: all .15s linear;
 }
 
-.detailsWrapper>p {
+.requestNote {
+    --lines: 2;
+
+    &~label {
+        margin-top: .25rem;
+        font-size: 12px;
+    }
+}
+
+.heroFooter {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    margin-top: .5rem;
+}
+
+
+.groupName {
+    min-width: 0;
+    flex: 1;
+
+    --lines: 1;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
+    -webkit-line-clamp: var(--lines);
+    line-clamp: var(--lines);
+
     overflow: hidden;
     text-overflow: ellipsis;
+
+
+    text-transform: capitalize;
+    font-weight: 500;
+    color: var(--primary);
 }
 
-.lastMessage {
+.requestAge {
+    color: hsl(0, 0%, 60%);
+    display: flex;
+    gap: .25rem;
+
     font-size: 12px;
 }
 
 
-
 .choicesWrapper {
-    margin-left: auto;
-    margin-right: 1rem;
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: .5rem;
-    flex-shrink: 0;
+}
 
-    >a {
-        pointer-events: none;
-        opacity: 0;
+.choices {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+
+.choice {
+    min-width: fit-content;
+    flex: 1;
+
+    padding: .5em 1em;
+    border-radius: 8px;
+
+    transition: all .15s linear;
+
+    &:disabled {
+        opacity: .5;
+    }
+}
+
+.reject {
+    --clr-hover: hsl(from var(--red-destructive) h s l / .3);
+    --clr-active: hsl(from var(--red-destructive) h s l / .2);
+    --clr-disabled: hsl(from var(--red-destructive) h s l / .2);
+    ;
+    --clr-font-disabled: var(--red-destructive);
+    background-color: hsl(from var(--red-destructive) h s l / .2);
+    color: var(--red-destructive);
+}
+
+.accept {
+    --clr-hover: hsl(120 63% 41% / .3);
+    --clr-active: hsl(120 63% 41% / .2);
+    --clr-disabled: hsl(120 63% 41% / .2);
+    background-color: hsl(120 63% 41% / .2);
+
+}
+
+
+
+
+@media(max-width:768px) {
+    .cards {
+        padding-inline: 1rem;
+        gap: 1rem;
     }
 
-
-
-    >* {
-        border-radius: 50%;
-        padding: .5rem;
-
-        &:hover {
-            background-color: var(--sidebar-button-hover);
-        }
-
-        &:active {
-            scale: .96;
-        }
+    .requesterDetails {
+        padding-bottom: 1rem;
     }
-
 }

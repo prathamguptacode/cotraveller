@@ -7,7 +7,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { useAuth } from '@/hooks/useAuth'
 import { useMainLayoutContext } from './useMainLayout'
 import SidebarChatsPreview from '@/features/chats/components/SidebarChatsPreview'
-import SidebarInboxPreview from '@/features/inbox/components/SidebarInboxPreview'
+import SidebarInboxPreview from '@/features/inbox/SidebarInboxPreview'
 import LogOutButton from '@/components/Buttons/LogOutButton'
 import type { SidebarTab } from './types'
 import { ListFilter } from 'lucide-react';
@@ -52,7 +52,12 @@ const Sidebar = () => {
 
 
         if (!sidebarsDiv?.parentElement || !hamburgerMenu || window.matchMedia("(max-width:768px)").matches) return
-        if (sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay' && !window.matchMedia("(max-width:1200px)").matches) return
+        try {
+            if (sidebarsDiv.parentElement.children[2].children[1].getAttribute('data-sidebar-type') !== 'overlay' && !window.matchMedia("(max-width:1200px)").matches) return
+        } catch {
+            return
+        }
+
 
         const eventHandler = (e: PointerEvent) => {
             const target = e.target

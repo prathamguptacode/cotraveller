@@ -2,12 +2,15 @@ import { Link, useParams } from 'react-router-dom'
 import styles from '../chats.module.css'
 import type { Group } from '../types'
 import { ToolTip } from '@/components/Accessibility/ToolTip'
-import { DoorOpen, MoreVertical, Pencil, Share2, Users } from 'lucide-react'
+import { DoorOpen, MoreVertical, Pencil, Share2 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import ShareMenuPopover from '@/components/Popovers/ShareMenuPopover'
 import { useMutation } from '@tanstack/react-query'
 import { api } from '@/api/axios'
 import { normalizeError } from '@/utils/normalizeError'
+import Avatar from '@/components/ui/Avatar'
+import { getImgURL } from '@/lib/cloudinary'
+import AvatarWrapper from '@/components/ui/AvatarWrapper'
 
 type ChatHeaderProps = {
     group: Group,
@@ -25,11 +28,18 @@ const ChatHeader = ({ group }: ChatHeaderProps) => {
         onSuccess: () => window.location.href = '/'
     })
 
+    const avatarURL = getImgURL({ publicId: '', version: 0 }, 400)
+
     return (
         <div className={styles.chatAreaHeader}>
-            <Link to={`/groups/${groupId}`} className={styles.avatarWrapper}>
-                <Users size={20} />
-            </Link>
+            <AvatarWrapper asChild avatarURL={avatarURL} className={styles.avatarWrapper}>
+                <Link to={`/groups/${groupId}`}>
+                    {avatarURL ?
+                        <img src={avatarURL} alt='group-avatar' /> :
+                        group.title.charAt(0).toUpperCase()
+                    }
+                </Link>
+            </AvatarWrapper>
             <div className={styles.groupDetails}>
                 <h3>
                     <Link to={`/groups/${groupId}`}>{group?.title}</Link>
@@ -51,9 +61,7 @@ const ChatHeader = ({ group }: ChatHeaderProps) => {
                 <div className={styles.moreOptionsList}>
 
                     <Link to={`/groups/${groupId}`} className={styles.moreOptionsListItem}>
-                        <div className={styles.avatarWrapper} >
-                            <Users />
-                        </div>
+                        <Avatar avatar={{ publicId: '', version: 0 }} imgSize={200} title={group.title} className={styles.avatarWrapper} alt='group-avatar' />
                         <div>
                             <h3>View Profile</h3>
                             <span>{group.title}</span>

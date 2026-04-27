@@ -82,7 +82,8 @@
             height: 24px;
         }
 
-        >* {
+        >button,
+        >a {
             --clr-active: var(--sidebar-v2-bg-active);
             --clr-hover: var(--sidebar-v2-bg-hover);
             padding: 1em;
@@ -187,10 +188,11 @@
         display: grid;
         grid-template-rows: auto 1fr;
 
-        width: 100vw;
+        width: min(480px, 100vw);
         position-anchor: --bottom-navbar;
         position: fixed;
         inset: auto;
+        left: anchor(left);
         bottom: anchor(top);
         top: 65px;
         overflow: hidden;
