@@ -6,6 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { MapPin } from 'lucide-react';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Box from '@mui/material/Box';
+import dayjs from 'dayjs';
+import type { PickerValue } from '@mui/x-date-pickers/internals';
+
 
 const lib: Libraries = ["places"]
 const Currentdate = new Date();
@@ -33,6 +41,12 @@ function Searchbox({ dLocation, dDate }: { dLocation: string | null, dDate: stri
         navigate(`/viewgroup?q=${location}&date=${date}`)
     }
 
+    function dateSet(e: PickerValue) {
+        if (e) {
+            setdate(`${e.year()}-${(e.month() + 1).toString().padStart(2, "0")}-${e.date().toString().padStart(2, "0")}`)
+        }
+    }
+
     // ###closing the location box 
 
     return (
@@ -44,11 +58,25 @@ function Searchbox({ dLocation, dDate }: { dLocation: string | null, dDate: stri
                         Loading...
                     </div>)
                 }
-                <div className={mystyle.dateIn}>
+                {/* <div className={mystyle.dateIn}>
                     <div>
                         Departure
                     </div>
                     <input className={mystyle.dateInput} type="date" defaultValue={defaultDate} onChange={(e) => setdate(e.target.value)} />
+                </div> */}
+                <div className={mystyle.test}>
+
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs} >
+
+                        <DemoContainer components={['DatePicker']} sx={{ p: 0, overflow: 'visible', width: 1 }}>
+                            <DatePicker defaultValue={dayjs(defaultDate)} format='DD/MM/YYYY' label='Departure' sx={{ width: 1 }} onChange={e => dateSet(e)} />
+                        </DemoContainer>
+
+                    </LocalizationProvider>
+
+
+
                 </div>
             </div>
             <div className={mystyle.btnbox}>

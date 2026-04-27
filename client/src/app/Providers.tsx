@@ -14,7 +14,9 @@ const Providers = ({ children }: { children: ReactNode }) => {
         palette: {
             mode: 'dark',
             primary:{
-                main: '#8bb5f8'
+                main: '#8bb5f8',
+                dark: '#8bb5f8'
+                // main: '#8bb5f8'
             }
         },
     });
