@@ -7,15 +7,15 @@
     background-color: var(--clr-bg);
 }
 
-/* HTML: <div class="loader"></div> */
+
 .loader {
     width: 60px;
     aspect-ratio: 2.5;
 
-    /* your color */
+
     --c: #8AB4F8;
 
-    /* simple solid dots */
+
     --_g: no-repeat radial-gradient(circle closest-side, var(--c) 90%, #0000);
 
     background:

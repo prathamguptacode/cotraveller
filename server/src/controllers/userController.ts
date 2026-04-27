@@ -168,6 +168,7 @@ export const fetchIncomingRequestsController: RequestHandler = async (req, res) 
                     {
                         $project: {
                             fullName: 1,
+                            avatar: 1,
                         }
                     }
                 ],
@@ -200,11 +201,6 @@ export const fetchIncomingRequestsController: RequestHandler = async (req, res) 
         },
         {
             $sort: { createdAt: -1 }
-        },
-        {
-            $project: {
-                createdAt: 0
-            }
         }
     ])
     res.success(200, { requests })
@@ -285,4 +281,3 @@ export const removeAvatarController: RequestHandler = async (req, res) => {
 
     res.success(204, { result }, "Removal successful")
 }
- 

@@ -1,6 +1,6 @@
 .themeButton {
     --clr-active: var(--nav-neutral-active);
-    --clr-hover:var(--nav-neutral-hover);
+    --clr-hover: var(--nav-neutral-hover);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -8,3 +8,5 @@
     border-radius: 50%;
     flex-shrink: 0;
 }
+
+/* LogOut Button */

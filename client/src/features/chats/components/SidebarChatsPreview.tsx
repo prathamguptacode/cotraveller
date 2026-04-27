@@ -6,11 +6,11 @@ import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useSocket } from '@/hooks/useSocket';
 import { useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { MountainSnow, Users } from 'lucide-react';
+import { MountainSnow } from 'lucide-react';
 import clsx from 'clsx';
 import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout';
 import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
-import { toast } from 'sonner'
+import Avatar from '@/components/ui/Avatar'
 
 
 
@@ -56,7 +56,7 @@ const SidebarChatsPreview = () => {
                 {/* ###LATER Replace this fallback */}
                 <MountainSnow size={48} />
                 Find your first group now!
-                < Link to={`/viewgroup?q=VIT%20Chennai&mode=Airplane&lowerT=2025-12-20T00:00&upperT=2025-12-20T23:59&d=20&m=December&y=2025`
+                <Link to={`/viewgroup?q=VIT%20Chennai&mode=Airplane&lowerT=2025-12-20T00:00&upperT=2025-12-20T23:59&d=20&m=December&y=2025`
                 } className={styles.redirectButton} > Go</Link>
             </FallbackWrapper > :
             <div className={styles.list}>
@@ -67,9 +67,7 @@ const SidebarChatsPreview = () => {
                                 if (window.matchMedia("(max-width:768px)").matches) setSidebarIsHidden(true)
                             }} to={`/groups/${group._id}/chats`} key={group._id} className={({ isActive }) => clsx(isActive && styles.activeItem, styles.listItem)
                             }>
-                                <div className={styles.avatarWrapper} >
-                                    <Users size={20} />
-                                </div>
+                                <Avatar avatar={{ publicId: '', version: 0 }} imgSize={400} title={group.title} className={styles.avatarWrapper} alt='group-avatar' />
                                 <div className={styles.detailsWrapper}>
                                     <p className={styles.groupName}>{group.title}</p>
                                     {group.lastMessage && <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>}

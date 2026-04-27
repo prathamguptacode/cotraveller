@@ -9,6 +9,7 @@ export const useReadMore = () => {
         const readMoreButton = readMoreRef.current
         if (!paragraph || !readMoreButton) return
         if (paragraph.scrollHeight <= paragraph.clientHeight) readMoreButton.style.display = 'none'
+        else readMoreButton.style.display = 'block'
     }, [])
 
     return { paragraphRef, readMoreRef }

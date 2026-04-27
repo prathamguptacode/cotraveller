@@ -3,7 +3,7 @@ import ChatArea from '@/features/chats/components/ChatArea'
 import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import ThreeDotLoader from '@/components/Loaders/ThreeDotLoader'
-import NotFound from './NotFound/NotFound'
+import NotFound from './Extras/NotFound'
 import { useParams } from 'react-router-dom'
 
 

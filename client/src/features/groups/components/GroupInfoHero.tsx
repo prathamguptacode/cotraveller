@@ -1,6 +1,5 @@
 import { useAuth } from '@/hooks/useAuth'
 import styles from '../groupInfo.module.css'
-import { getImgURL } from '@/lib/cloudinary'
 import { Users } from 'lucide-react'
 import clsx from 'clsx'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
@@ -10,15 +9,15 @@ import type { Group, JoinRequest } from '../types'
 import { ChatsCircleIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
 import CommentsSection from './CommentsSection'
-import { useReadMore } from '../hooks/useReadMore'
 import ShareMenuPopover from '@/components/Popovers/ShareMenuPopover'
 import { normalizeError } from '@/utils/normalizeError'
 import { toast } from 'sonner'
+import Avatar from '@/components/ui/Avatar'
+import ExpandableText from '@/components/ui/ExpandableText'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
     const { groupId } = useParams() as { groupId: string }
-    const { paragraphRef, readMoreRef } = useReadMore()
     const [currentSection, setCurrentSection] = useState<'Comments' | 'Members'>('Comments')
 
 
@@ -47,9 +46,6 @@ const GroupInfoHero = () => {
     })
 
 
-
-
-    const url = user && getImgURL(user.avatar.publicId, user.avatar.version, 600)
     const hasRequested = joinRequests.some(request => request.requesterId == user?._id)
 
 
@@ -60,10 +56,7 @@ const GroupInfoHero = () => {
                 <div className={styles.heroWrapper}>
 
                     <div className={styles.header}>
-                        <div style={{ fontSize: '48px' }} className={styles.avatarWrapper}>
-                            {/* ###LATER CHANGE */}
-                            {url ? <img src={url} alt="group-avatar" /> : group.title.charAt(0)}
-                        </div>
+                        <Avatar avatar={{ publicId: '', version: 0 }} imgSize={400} title={group.title} className={styles.avatarWrapper} alt='group-avatar' />
                         <div className={styles.headerDetails}>
                             <h2 className={styles.title}>
                                 {group.title}
@@ -99,11 +92,7 @@ const GroupInfoHero = () => {
                                 Long Drive
                             </span>
                         </div>
-                        <p ref={paragraphRef} className={styles.description}>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat aperiam, eos temporibus velit excepturi aliquid inventore suscipit cupiditate doloribus provident rerum, possimus aliquam quo laudantium. Eligendi obcaecati, nihil sunt sed, culpa enim quod eum quia rem ex delectus, aliquid dolorem explicabo optio cum recusandae unde. Tenetur alias deleniti numquam unde?
-                        </p>
-                        <input type="checkbox" id="toggleMoreDescription" />
-                        <label ref={readMoreRef} htmlFor="toggleMoreDescription" className={styles.toggleMoreContent} />
+                        <ExpandableText text={group.content} inputId='toggleMoreDescription' className={styles.description} />
                     </div>
                     <div className={styles.groupInteractionButtons}>
                         {group.member.some(e => e._id == user?._id) ?
@@ -170,13 +159,9 @@ const Members = ({ group }: MembersProps) => {
     return (
         <div className={styles.members}>
             {group.member.map(member => {
-                const url = member.avatar.publicId && getImgURL(member.avatar.publicId, member.avatar.version, 600)
-
                 return (
                     <Link key={member._id} to={`/travellers/${member._id}`} className={styles.member}>
-                        <div className={clsx(styles.avatarWrapper, !url && styles.emptyAvatar)}>
-                            {url ? <img src={url} alt='member-avatar' /> : member.fullName.charAt(0)}
-                        </div>
+                        <Avatar avatar={member.avatar} imgSize={400} title={member.fullName} className={styles.avatarWrapper} alt='member-avatar' />
                         <div className={styles.memberDetails}>
                             <span>{member.fullName}</span>
                             <span>{member.username}</span>

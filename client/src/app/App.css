@@ -199,10 +199,15 @@ html {
 
 :root.dark {
 
+
     /* basic colors */
     --primary-hover: hsl(217, 89%, 80%);
     --primary-active: hsl(217, 89%, 72%);
 
+    --red-destructive: lab(63.7053% 60.745 31.3109);
+
+    --bg-invert: hsl(0, 0%, 95%);
+    --bg-invert-hover: hsl(0, 0%, 90%);
     /* Old colors */
 
     --clr-border: hsl(213, 5%, 39%);
@@ -212,9 +217,10 @@ html {
 
     --group-hover: hsl(225, 6%, 18%);
 
-    --clr-bg: hsl(225, 6%, 13%);
+    --clr-bg: #202124;
+    /* Let --clr-bg be in hex form and = #202124 */
 
-    --secondary-bg:hsl(225, 4%, 22%);
+    --secondary-bg: hsl(225, 4%, 22%);
     --primary: hsl(217, 89%, 76%);
     /* #669df7 */
 
@@ -277,12 +283,15 @@ html {
 
     /* dialog */
     --dialog-border: hsl(225, 6%, 28%);
+    --dialog-border-darker: hsl(225, 6%, 18%);
     --dialog-dark: hsl(210, 4%, 19%);
     --dialog-hover: hsl(210, 4%, 22%);
     --dialog-active: hsl(210, 4%, 25%);
     --dialog-disabled: hsl(210, 4%, 50%);
     --dialog-font-disabled: hsl(210, 4%, 20%);
     --dialog-darker: hsl(210, 4%, 9%);
+    --dialog-font-muted: lab(66.128% -.0000298023 .0000119209);
+    --dialog-bg-muted: hsl(210, 4%, 12%);
 
     /* suggestion */
     --suggestionbox: hsl(0, 0%, 22%);
