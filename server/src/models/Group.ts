@@ -22,8 +22,6 @@ const groupSchema = new mongoose.Schema({
     member: {
         type: [Schema.Types.ObjectId],
         ref: 'User',
-        //should be unique
-        //add owner to it at first place
     },
     vehicleNumber: String,
     mode: {
@@ -65,6 +63,16 @@ const groupSchema = new mongoose.Schema({
     tags: {
         type: [String],
         required: false
+    },
+    avatar: {
+        type: {
+            publicId: String,
+            version: Number
+        },
+        default: {
+            publicId: '',
+            version: 0
+        }
     }
     // const toIST = (date) => moment(date).tz("Asia/Kolkata"); for timezone converstion
     // const istDate = moment.tz(req.body.travelDate, "Asia/Kolkata").toDate(); for telling backend it is ist

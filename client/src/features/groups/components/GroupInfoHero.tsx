@@ -2,24 +2,27 @@ import { useAuth } from '@/hooks/useAuth'
 import styles from '../groupInfo.module.css'
 import { Users } from 'lucide-react'
 import clsx from 'clsx'
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { api } from '@/api/axios'
 import type { Group, JoinRequest } from '../types'
 import { ChatsCircleIcon } from '@phosphor-icons/react'
-import { useState } from 'react'
+import { useRef, useState, type ChangeEvent, type RefObject } from 'react'
 import CommentsSection from './CommentsSection'
 import ShareMenuPopover from '@/components/Popovers/ShareMenuPopover'
 import { normalizeError } from '@/utils/normalizeError'
 import { toast } from 'sonner'
-import Avatar from '@/components/ui/Avatar'
 import ExpandableText from '@/components/ui/ExpandableText'
 import ProfileDialog from '@/components/Dialogs/ProfileDialog/ProfileDialog'
+import AvatarWrapper from '@/components/ui/AvatarWrapper'
+import Spinner from '@/components/Loaders/Spinner'
+import { getImgURL } from '@/lib/cloudinary'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
     const { groupId } = useParams() as { groupId: string }
     const [currentSection, setCurrentSection] = useState<'Comments' | 'Members'>('Comments')
+    const queryClient = useQueryClient()
 
 
     const { data: group } = useSuspenseQuery({
@@ -48,8 +51,84 @@ const GroupInfoHero = () => {
 
 
     const hasRequested = joinRequests.some(request => request.requesterId == user?._id)
+    const avatarURL = getImgURL(group.avatar, 600)
+    const firstLetter = group.title.charAt(0).toUpperCase()
 
+    const inputRef = useRef<HTMLInputElement>(null)
+    const avatarDialogRef = useRef<HTMLDialogElement>(null)
 
+    const openDialog = (dialogRef: RefObject<HTMLDialogElement | null>) => {
+        const dialog = dialogRef.current
+        if (dialog) dialog.showModal()
+    }
+
+    const closeDialog = (dialogRef: RefObject<HTMLDialogElement | null>) => {
+        const dialog = dialogRef.current
+        if (dialog) dialog.close()
+    }
+
+    const resetFile = () => {
+        const input = inputRef.current
+        if (!input) return
+        input.value = ''
+    }
+
+    const { mutate: uploadAvatarMutate, isPending: isUploadingAvatar } = useMutation({
+        mutationFn: (formData: FormData) => api.patch<{ publicId: string, version: number }>(`/groups/${groupId}/avatar`, formData),
+        onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: ['groups', groupId], exact: true })
+            toast.success(`Photo ${group.avatar.publicId ? 'Changed' : 'Added'}`)
+        },
+        onError: (error) => {
+            const err = normalizeError(error)
+            if (err.status >= 500) return
+            toast.error('An error occurred', {
+                description: err.message
+            })
+        },
+        onSettled: () => {
+            resetFile()
+        }
+    })
+
+    const { mutate: removeAvatar, isPending: isRemovingAvatar } = useMutation({
+        mutationFn: () => api.delete(`/groups/${groupId}/avatar`),
+        onSuccess: () => {
+            queryClient.refetchQueries({ queryKey: ['groups', groupId], exact: true })
+            toast.success('Removal successful')
+        },
+        onError: (error) => {
+            const err = normalizeError(error)
+            if (err.status >= 500) return
+            toast.error('An error occurred', {
+                description: err.message
+            })
+        },
+    })
+
+    const uploadAvatar = (e: ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files
+        if (!files || !files[0] || !files[0].type.startsWith('image/')) return toast.error('An error occurred', {
+            description: "File is invalid/empty"
+        })
+
+        const file = files[0]
+
+        if (file.size > 8 * 1024 * 1024) {
+            resetFile()
+            return toast.error('An error occurred', {
+                description: "File cannot be larger than 8 Mb"
+            })
+        }
+
+        closeDialog(avatarDialogRef)
+        
+        const formData = new FormData()
+        formData.append('group-avatar', file)
+        uploadAvatarMutate(formData)
+    }
+
+    const isUpdatingAvatar = isUploadingAvatar || isRemovingAvatar
 
     return (
         <div data-sidebar-type='overlay' className={styles.wrapper}>
@@ -57,7 +136,33 @@ const GroupInfoHero = () => {
                 <div className={styles.heroWrapper}>
 
                     <div className={styles.header}>
-                        <Avatar avatar={{ publicId: '', version: 0 }} imgSize={400} title={group.title} className={styles.avatarWrapper} alt='group-avatar' />
+                        <AvatarWrapper asChild avatarURL={''} className={styles.avatarWrapper}>
+                            <button onClick={() => openDialog(avatarDialogRef)} >
+                                {avatarURL ? <img src={avatarURL} alt="group-avatar" /> : firstLetter}
+                                {isUpdatingAvatar &&
+                                    <div className={styles.spinnerWrapper}>
+                                        <Spinner className={clsx(styles.spinner)} />
+                                    </div>}
+                            </button>
+                        </AvatarWrapper>
+                        <dialog ref={avatarDialogRef} className={styles.avatarDialog}>
+                            <div>
+                                <h2 className={styles.avatarDialogHeading}>Change Profile Photo</h2>
+                                <div className={styles.changeAvatarOptions}>
+                                    <input ref={inputRef} onChange={uploadAvatar} id='group-avatar-input' accept='image/*' type="file" style={{ display: 'none' }} />
+                                    <label role='button' style={{ color: 'var(--primary-darker)' }} htmlFor='group-avatar-input'>Upload Photo</label>
+                                    <button onClick={() => {
+                                        if (!group.avatar.publicId) return toast.error("Nothing to remove", {
+                                            description: "You do not have an avatar"
+                                        })
+                                        closeDialog(avatarDialogRef)
+                                        removeAvatar()
+                                    }} style={{ color: 'hsl(0, 88%, 57%)' }}>Remove Current Photo</button>
+                                    <button onClick={() => closeDialog(avatarDialogRef)}>Cancel</button>
+                                </div>
+                            </div>
+                        </dialog>
+
                         <div className={styles.headerDetails}>
                             <h2 className={styles.title}>
                                 {group.title}
@@ -160,15 +265,7 @@ const Members = ({ group }: MembersProps) => {
     return (
         <div className={styles.members}>
             {group.member.map(member => {
-                console.log(member)
                 return (
-                    // <Link key={member._id} to={`/travellers/${member._id}`} className={styles.member}>
-                    //     <Avatar avatar={member.avatar} imgSize={400} title={member.fullName} className={styles.avatarWrapper} alt='member-avatar' />
-                    //     <div className={styles.memberDetails}>
-                    //         <span>{member.fullName}</span>
-                    //         <span>{member.username}</span>
-                    //     </div>
-                    // </Link>
                     <ProfileDialog avatarClassName={styles.avatarWrapper} user={member} key={member._id} className={styles.member}>
                         <div className={styles.memberDetails}>
                             <span>{member.fullName}</span>

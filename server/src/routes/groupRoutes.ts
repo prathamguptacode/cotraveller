@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import { addGroup, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup, addComment, fetchGroupComments, deleteGroupComment, toggleLikeOnGroupComment, fetchGroupJoinRequests, leaveGroupController } from '../controllers/groupController'
+import { addGroup, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup, addComment, fetchGroupComments, deleteGroupComment, toggleLikeOnGroupComment, fetchGroupJoinRequests, leaveGroupController, uploadAvatarController, removeAvatarController } from '../controllers/groupController'
 import asyncHandler from '../middlewares/asyncHandler'
 import { fetchGroupInfo } from '../controllers/groupController'
 import { viewGroupByFilter } from '../controllers/groupController'
@@ -8,6 +8,7 @@ import { addRequest } from '../controllers/groupController'
 import { authMiddleware } from '../middlewares/authMiddleware'
 import Group from '@/models/Group'
 import { isObjectIdOrHexString } from 'mongoose'
+import { checkMagicBytes, checkMulterUploadPath, multerUploadImage } from '@/middlewares/multer'
 
 
 
@@ -29,6 +30,9 @@ router.use(authMiddleware)
 
 
 router.patch('/:groupId', asyncHandler(editGroup))
+router.route('/:groupId/avatar')
+    .patch(asyncHandler(checkMulterUploadPath), multerUploadImage.single('group-avatar'), asyncHandler(checkMagicBytes), asyncHandler(uploadAvatarController))
+    .delete(asyncHandler(removeAvatarController))
 router.delete('/:groupId/members/me', asyncHandler(leaveGroupController))
 
 

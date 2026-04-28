@@ -11,6 +11,9 @@ import JoinRequest from "@/models/JoinRequest";
 import ConversationRecord from "@/models/ConversationRecord";
 import Comment from "@/models/Comment";
 import { startSession, Types } from "mongoose";
+import cloudinary from "@/config/cloudinary";
+import env from "@/config/env";
+import fs from 'fs/promises'
 
 const allowedTags = ["no alcohol", "girls only", "budget friendly", "pet friendly"] as const
 const allowedMode = ["Train", "Flight", "Taxi", "Car", "Bike", "Others"] as const
@@ -386,4 +389,74 @@ export const toggleLikeOnGroupComment: RequestHandler = async (req, res) => {
     }
 
     return res.success()
+}
+
+export const uploadAvatarController: RequestHandler = async (req, res) => {
+    const file = req.file
+    const user = req.user
+    const { groupId } = req.params as { groupId: string }
+    const group = await Group.findById(groupId)
+    if (!group) return res.fail(404, "GROUP_NOT_FOUND", "Group does not exist")
+    if (!file) return res.fail(400, "BAD_REQUEST", "File is invalid/empty")
+
+    if (!group.member.includes(user._id)) return res.fail(403, "FORBIDDEN", "You cannot do that")
+
+
+    let options: {} | {
+        public_id: string,
+        invalidate: true,
+        overwrite: true
+    } = {}
+
+    if (group.avatar.publicId) options = {
+        public_id: group.avatar.publicId,
+        invalidate: true,
+        overwrite: true
+    }
+
+    try {
+        const { public_id: publicId, version } = await cloudinary.uploader.upload(file.path, {
+            asset_folder: env.MODE,
+            use_filename: true,
+            unique_filename: true,
+            resource_type: 'auto',
+            ...options
+
+        })
+
+        await Group.updateOne({ _id: groupId }, { $set: { avatar: { publicId, version } } })
+        return res.success(201, { publicId, version }, "Group Avatar upload successful")
+    } catch (error) {
+        console.error("Error uploading group avatar to cloudinary", error)
+        return res.fail()
+    } finally {
+        try {
+            await fs.unlink(file.path)
+        } catch (error) {
+            console.error("File was not unlinked")
+        }
+    }
+
+
+}
+
+
+export const removeAvatarController: RequestHandler = async (req, res) => {
+    const { groupId } = req.params as { groupId: string }
+    const user = req.user
+    const group = await Group.findById(groupId)
+    if (!group) return res.fail(404, "GROUP_NOT_FOUND", "Group does not exist")
+    if (!group.member.includes(user._id)) return res.fail(403, "FORBIDDEN", "You cannot do that")
+
+
+    const { publicId } = group.avatar
+    if (!publicId) return res.fail(404, "RESOURCE_NOT_FOUND", "You do not have an avatar")
+
+    const result = await cloudinary.uploader.destroy(publicId, {
+        invalidate: true,
+    })
+
+    await Group.updateOne({ _id: groupId }, { $set: { avatar: { publicId: '', version: 0 } } })
+
+    res.success(204, { result }, "Removal successful")
 }

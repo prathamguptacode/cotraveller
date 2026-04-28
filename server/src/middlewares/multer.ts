@@ -36,6 +36,9 @@ export const checkMagicBytes: RequestHandler = async (req, res, next) => {
     const file = req.file
     if (!file) return res.fail(400, "BAD_REQUEST", "File is invalid/empty")
     const response = await fileTypeFromFile(file.path)
-    if (!response?.mime.startsWith('image/')) return res.fail(400, "BAD_REQUEST", "Invalid File type")
+    if (!response?.mime.startsWith('image/')) {
+        await fs.unlink(file.path)
+        return res.fail(400, "BAD_REQUEST", "Invalid File type")
+    }
     next()
 }
