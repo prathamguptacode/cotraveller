@@ -155,7 +155,7 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
         if (travelTime) {
             flag = 1;
             const dateString = `${travelDate}T${travelTime}`;
-            const date = new Date(dateString);
+            const date = moment.tz(dateString, "Asia/Kolkata").toDate()
             date.setHours(date.getHours() - 2);
             const lowerTime = new Date(date);
             date.setHours(date.getHours() + 4);
@@ -168,9 +168,9 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
         }
         if (!flag) {
             const lowerTimeString = `${travelDate}T00:00`;
-            const lowerTime = new Date(lowerTimeString);
+            const lowerTime = moment.tz(lowerTimeString, "Asia/Kolkata").toDate();
             const upperTimeString = `${travelDate}T23:59`;
-            const upperTime = new Date(upperTimeString);
+            const upperTime = moment.tz(upperTimeString, "Asia/Kolkata").toDate();
             pipeline.push({
                 $match: {
                     travelDate: { $gte: lowerTime, $lte: upperTime }
