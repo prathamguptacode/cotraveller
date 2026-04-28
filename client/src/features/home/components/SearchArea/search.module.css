@@ -1,4 +1,5 @@
 .searchbox {
+    font-family: 'roboto';
     background-color: var(--secondary-bg);
     padding: 20px 16px;
     padding-bottom: 44px;
@@ -17,7 +18,7 @@
     }
 
     svg {
-        color: hsl(210, 6%, 63%);
+        color: hsl(0, 0%, 92%);
     }
 }
 
@@ -82,7 +83,7 @@
     border-radius: 5px;
     border: 1px solid var(--clr-border);
 
-    transition: all 0.2s ease;
+    transition: all 0.1s ease;
     position: relative;
 
 
@@ -108,7 +109,8 @@
 .loadingLoc:hover,
 .locationcamp:hover,
 .dateIn:hover {
-    border-color: var(--primary);
+    border-color: hsl(0, 0%, 99%);
+    /* border-color: var(--primary); */
     background: rgba(0, 0, 0, 0.02);
 }
 
@@ -132,7 +134,7 @@ ul {
 }
 
 .mainLoc {
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .secondaryLoc {
@@ -174,4 +176,10 @@ ul {
         border-radius: 15px;
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .3), 0 2px 6px -6px rgba(0, 0, 0, .15);
     }
+}
+
+.test{
+
+    flex: 1;
+
 }
