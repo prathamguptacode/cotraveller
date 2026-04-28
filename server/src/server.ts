@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
             const group = await Group.findOneAndUpdate({ _id: roomId }, { $push: { messages: baseMessage._id } }, { returnDocument: 'after' })
             if (!group) return
 
-            const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId: group._id, memberId: userId }, { $set: { lastReadAt: new Date() } }, { returnDocument: 'after' })
+            const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId: group._id, memberId: userId }, { $set: { lastReadAt: new Date() } }, { returnDocument: 'after', upsert: true, setDefaultsOnInsert: true })
             if (!conversationRecord) return
 
             cb({ success: true, message })
@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
 
     socket.on('MESSAGE_READ_TO_SERVER', async (data, cb) => {
         const { roomId, userId } = data
-        const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId, memberId: userId }, { $set: { lastReadAt: new Date() } }, { returnDocument: 'after' })
+        const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId, memberId: userId }, { $set: { lastReadAt: new Date() } }, { returnDocument: 'after', upsert: true, setDefaultsOnInsert: true })
         socket.to(roomId).emit('MESSAGE_READ_TO_CLIENT', { conversationRecord })
         cb({ success: true })
     })
