@@ -10,11 +10,11 @@ import { z } from 'zod'
 import { useEffect } from 'react'
 
 // ###fix the commentsss
-type Group = {
+type GroupT = {
     _id: string,
     title: string,
     content: string,
-    memberNumber: 3,
+    memberNumber: number,
     travelDate: string,
     incomingRequests: string[],
     ownerPop: {
@@ -23,7 +23,7 @@ type Group = {
 }
 
 type Groups = {
-    groups: Group[],
+    groups: GroupT[],
 }
 
 const querySchema = z.object({
@@ -78,7 +78,7 @@ function ViewGroup() {
         select(data) {
             return data.data.groups
         },
-        enabled: validateQuery.success
+        enabled: validateQuery.success,
     })
     useEffect(() => {
         if (validateQuery.success) {
@@ -101,7 +101,7 @@ function ViewGroup() {
             {isLoading ? <LoadingPage /> :
                 <div>
                     {
-                        groups && groups.length > 0 ? groups.map(e => <Group element={e} />) : <NoGroup />
+                        groups && groups.length > 0 ? groups.map(group => <Group group={group} />) : <NoGroup />
                     }
                 </div>
             }

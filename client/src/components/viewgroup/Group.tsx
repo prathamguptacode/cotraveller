@@ -1,13 +1,13 @@
-import { useState } from 'react'
 import mystyle from './Group.module.css'
-import { callAuthApi } from '@/api/axios';
+import { api } from '@/api/axios';
 import { useAuth } from '@/hooks/useAuth';
-import clsx from 'clsx'
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import { normalizeError } from '@/utils/normalizeError';
 
 type GroupProps = {
-    element: {
+    group: {
         _id: string;
         title: string;
         content: string;
@@ -15,53 +15,48 @@ type GroupProps = {
             fullName: string;
         };
         travelDate: string;
-        comments?: Array<unknown>;
-        incomingRequests: Array<string>;
+        incomingRequests: string[];
     };
 };
 
-function Group({ element }: GroupProps) {
-    const title = element.title;
-    const content = element.content;
-    const members = element.ownerPop.fullName;
-    const time = (element.travelDate);
-    const commentNum = element.comments?.length;
-    const timeZ = new Date(time)
-    const timeInd = timeZ.toLocaleTimeString("en-IN", {
+type JoinRequest = {
+    _id: string,
+    groupId: string,
+    requesterId: string
+}
+
+function Group({ group }: GroupProps) {
+    const { title, content, travelDate, _id: groupId } = group
+    const members = group.ownerPop.fullName; //###FIX this , why is value of members = owner's name?
+    const timeInd = new Date(travelDate).toLocaleTimeString("en-IN", {
         timeZone: "Asia/Kolkata",
         hour: "2-digit",
         minute: "2-digit",
         hour12: true
     })
-    const id = element._id;
 
-    const navigate = useNavigate()
+    //###Font sizes are not good, need great improvements
 
     const { user } = useAuth()
-    const [hasRequested, setHasRequested] = useState<boolean | undefined>(element?.incomingRequests.includes(user?._id ?? ''))
-    const sendRequest = async () => {
-        if (!user) {
-            return navigate('/login')
-        }
-        const { status, data } = await callAuthApi('post', '/groups/addRequest', { groupID: element._id })
-        if (status == 201) setHasRequested(true)
-        else {
-            setHasRequested(false)
-            if (data.message == 'member cannot send the request') {
-                return toast.error('you are a member of this group', {
-                    style: {
-                        borderRadius: '10px',
-                        background: 'var(--toast-bg)',
-                        color: 'var(--toast-color)',
-                    }
-                })
-            }
-        }
-    }
+    const { data: joinRequests, refetch: refetchJoinRequests } = useSuspenseQuery({
+        queryKey: ['groups', groupId, 'requests'],
+        queryFn: () => api.get<{ joinRequests: JoinRequest[] }>(`/groups/${groupId}/requests`),
+        select: (res) => res.data.joinRequests
+    })
 
-    function nav() {
-        navigate(`/groups/${id}`)
-    }
+    const { mutate: sendRequest, isPending: isSendingRequest } = useMutation({
+        mutationFn: () => api.post(`/groups/${groupId}/requests`),
+        onError: (error) => {
+            const err = normalizeError(error)
+            if (err.status < 500) toast.error("An error occurred !", {
+                description: err.message
+            })
+        },
+        onSuccess: () => toast.success("Request Sent"),
+        onSettled: () => refetchJoinRequests()
+    })
+
+    const hasRequested = joinRequests.some(request => request.requesterId == user?._id)
 
 
 
@@ -77,11 +72,11 @@ function Group({ element }: GroupProps) {
                     <div className={mystyle.title}>{title}</div>
                     <div className={mystyle.content}>{content}</div>
                     <div className={mystyle.time}>Time: {timeInd}</div>
-                    <div className={mystyle.comments}>{commentNum ? commentNum : "0"} {commentNum == 1 ? 'comment' : 'comments'}</div>
+                    {/* <div className={mystyle.comments}>{commentNum ? commentNum : "0"} {commentNum == 1 ? 'comment' : 'comments'}</div> */}
                 </div>
                 <div className={mystyle.btnbox}>
-                    <button aria-label='Send Request' onClick={sendRequest} className={clsx(mystyle.groupbtn, hasRequested && mystyle.requested)}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
-                    <button aria-label='More info' className={mystyle.groupbtn} onClick={nav}>More info</button>
+                    <button aria-label='Send Request' onClick={() => user && sendRequest()} className={mystyle.groupbtn} disabled={isSendingRequest || hasRequested}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
+                    <Link to={`/groups/${groupId}`} aria-label='More info' className={mystyle.groupbtn}>More info</Link>
                 </div>
             </div>
             <div className={mystyle.line}></div>
