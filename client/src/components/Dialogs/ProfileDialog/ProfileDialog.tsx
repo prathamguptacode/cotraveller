@@ -4,7 +4,6 @@ import { getImgURL } from '@/lib/cloudinary'
 import AvatarWrapper from '@/components/ui/AvatarWrapper'
 import { X } from 'lucide-react'
 import Avatar from '@/components/ui/Avatar'
-import LogOutButton from '@/components/Buttons/LogOutButton'
 
 type ProfileDialogProps = {
     user: {
@@ -103,8 +102,8 @@ const ProfileDialog = ({ user, className, children, avatarClassName }: ProfileDi
                         </div>
 
                         <div className={styles.profileFooter}>
-                            <LogOutButton>Log out</LogOutButton>
-                            <button>Log karu?</button>
+                            <button>Coming Soon</button>
+                            <button>Coming Soon</button>
                         </div>
                     </div >
                 </div>

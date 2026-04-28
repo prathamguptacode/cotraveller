@@ -14,6 +14,7 @@ import { normalizeError } from '@/utils/normalizeError'
 import { toast } from 'sonner'
 import Avatar from '@/components/ui/Avatar'
 import ExpandableText from '@/components/ui/ExpandableText'
+import ProfileDialog from '@/components/Dialogs/ProfileDialog/ProfileDialog'
 
 const GroupInfoHero = () => {
     const { user } = useAuth()
@@ -133,7 +134,7 @@ const GroupInfoHero = () => {
                 </div>
             </div >
             <div className={styles.rightSidebar}>
-                <h3>Members</h3>
+                <h3 className={styles.rightSidebarHeading}>Members</h3>
                 <div className={styles.sectionWrapper}>
                     <section className={styles.rightSidebarSection}>
                         <Members group={group} />
@@ -159,14 +160,21 @@ const Members = ({ group }: MembersProps) => {
     return (
         <div className={styles.members}>
             {group.member.map(member => {
+                console.log(member)
                 return (
-                    <Link key={member._id} to={`/travellers/${member._id}`} className={styles.member}>
-                        <Avatar avatar={member.avatar} imgSize={400} title={member.fullName} className={styles.avatarWrapper} alt='member-avatar' />
+                    // <Link key={member._id} to={`/travellers/${member._id}`} className={styles.member}>
+                    //     <Avatar avatar={member.avatar} imgSize={400} title={member.fullName} className={styles.avatarWrapper} alt='member-avatar' />
+                    //     <div className={styles.memberDetails}>
+                    //         <span>{member.fullName}</span>
+                    //         <span>{member.username}</span>
+                    //     </div>
+                    // </Link>
+                    <ProfileDialog avatarClassName={styles.avatarWrapper} user={member} key={member._id} className={styles.member}>
                         <div className={styles.memberDetails}>
                             <span>{member.fullName}</span>
                             <span>{member.username}</span>
                         </div>
-                    </Link>
+                    </ProfileDialog>
                 )
             })}
 

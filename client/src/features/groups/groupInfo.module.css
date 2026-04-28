@@ -224,29 +224,26 @@
     gap: .5rem;
 
     padding-inline: .5rem;
-    /* border-left: .5px solid var(--clr-border); */
 
     .sectionSwitchersWrapper {
         margin-block: 0;
         display: block;
     }
 
-    h3 {
-        text-align: center;
-        font-size: 16px;
-        font-weight: 400;
 
-        border-radius: 8px;
-        background-color: var(--dialog-darker);
-
-        /* width: 90%; */
-        padding: .5em;
-        /* margin-inline: auto; */
-    }
 
 }
 
+.rightSidebarHeading {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 400;
 
+    border-radius: 8px;
+    background-color: var(--dialog-darker);
+
+    padding: .5em;
+}
 
 .rightSidebarSection {
     /* border: 1px solid red; */
