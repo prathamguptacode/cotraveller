@@ -68,12 +68,12 @@ const BottomNavbar = () => {
 
   return (
     <nav ref={navRef} className={styles.bottomNavbar}>
-      <Link to={'/'}><Home /></Link>
+      <Link onClick={() => setSidebarIsHidden(true)} to={'/'}><Home /></Link>
       {bottomNavbarTabs.map(tab => {
         const hasNotifications = (tab.name == 'Chats' || tab.name == 'Inbox') && notifications[tab.name]
         return (
           <button className={clsx(hasNotifications && styles.hasNotifications)} aria-label={tab.name} key={tab.name} onClick={() => {
-            setSidebarIsHidden(false)
+            setSidebarIsHidden((prev) => currentSidebarTab == tab.name ? !prev : false)
             setCurrentSidebarTab(tab.name)
           }}>{tab.icon}</button>
         )

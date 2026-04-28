@@ -93,7 +93,7 @@ const Sidebar = () => {
                         const hasNotifications = (sidebarTab.name == 'Chats' || sidebarTab.name == 'Inbox') && notifications[sidebarTab.name]
                         return (
                             <button className={clsx(hasNotifications && styles.hasNotifications)} aria-label={sidebarTab.name} key={sidebarTab.name} onClick={() => {
-                                setSidebarIsHidden(false)
+                                setSidebarIsHidden((prev) => currentSidebarTab == sidebarTab.name ? !prev : false)
                                 setCurrentSidebarTab(sidebarTab.name)
                             }}>{sidebarTab.icon}</button>
                         )

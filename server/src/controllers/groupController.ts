@@ -55,7 +55,7 @@ export const fetchGroupInfo: RequestHandler = async (req, res) => {
 
 
     const conversationRecordsPromise = ConversationRecord.find({ roomId: groupId })
-    const groupPromise = Group.findById(groupId).populate({ path: 'member', select: 'fullName avatar username' })
+    const groupPromise = Group.findById(groupId).populate({ path: 'member', select: 'fullName avatar username email memberGroup createdAt' })
 
     const [conversationRecords, group] = await Promise.all([conversationRecordsPromise, groupPromise])
 

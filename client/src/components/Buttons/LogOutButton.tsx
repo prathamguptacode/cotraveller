@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { DoorOpen } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 import { toast } from 'sonner'
-import AlertDialog from '../Dialogs/AlertDialog'
+import AlertDialog from '../Dialogs/AlertDialog/AlertDialog'
 
 
 type LogOutButtonProps = {

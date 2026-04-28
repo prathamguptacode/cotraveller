@@ -164,6 +164,10 @@ const NavbarProfileButton = () => {
     }
 
 
+
+
+    // 
+
     const uploadAvatarMutation = useMutation({
         mutationFn: (formData: FormData) => api.patch<{ publicId: string, version: number }>('/user/avatar', formData),
         onSuccess: (res) => {
@@ -220,7 +224,7 @@ const NavbarProfileButton = () => {
     }
 
 
-
+    // 
 
 
 

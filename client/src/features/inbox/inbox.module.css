@@ -24,19 +24,9 @@
     border-radius: 10px;
     font-size: 14px;
     transition: all .15s linear;
-
-    /* 
-    &:hover {
-        background-color: var(--sidebar-bg-hover);
-    } */
-
-    /* &:active {
-        background-color: var(--sidebar-bg-active);
-
-        .cardHero {
-            background-color: var(--sidebar-bg-active);
-        }
-    } */
+    
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -109,6 +99,15 @@
     text-transform: capitalize;
     font-weight: 500;
     color: var(--primary);
+
+    &:hover,
+    &:active {
+        text-decoration: underline;
+    }
+
+    &:active {
+        color: var(--clr-font);
+    }
 }
 
 .requestAge {

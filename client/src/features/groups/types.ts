@@ -32,7 +32,10 @@ export type Member = {
     avatar: {
         publicId: string,
         version: number
-    }
+    },
+    email:string,
+    memberGroup:string[],
+    createdAt:string
 }
 
 export type Group = {

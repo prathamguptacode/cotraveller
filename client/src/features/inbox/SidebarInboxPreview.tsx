@@ -7,11 +7,11 @@ import { normalizeError } from '@/utils/normalizeError'
 import { useEffect } from 'react'
 import { useMainLayoutContext } from '@/app/layouts/MainLayout/useMainLayout'
 import FallbackWrapper from '@/components/Loaders/FallbackWrapper'
-import Avatar from '@/components/ui/Avatar'
 import { Link } from 'react-router-dom'
 import moment from 'moment-timezone'
 import ExpandableText from '@/components/ui/ExpandableText'
 import clsx from 'clsx'
+import ProfileDialog from '@/components/Dialogs/ProfileDialog/ProfileDialog'
 
 type InboxRequest = {
   _id: string,
@@ -26,7 +26,11 @@ type InboxRequest = {
     avatar: {
       publicId: string,
       version: number
-    }
+    },
+    username: string,
+    email: string,
+    memberGroup: string[],
+    createdAt: string
   },
   readBy: string[],
   createdAt: string
@@ -109,10 +113,9 @@ const RequestCard = ({ request, refetchInbox }: RequestCardProps) => {
 
   return (
     <div className={styles.card}>
-      <Link to={`/travellers/${requester._id}`} className={styles.requesterDetails}>
-        <Avatar avatar={requester.avatar} imgSize={400} alt='requester-avatar' title={requester.fullName} className={styles.avatarWrapper} />
+      <ProfileDialog avatarClassName={styles.avatarWrapper} className={styles.requesterDetails} user={requester}>
         <span className={styles.requesterName}>{requester.fullName}</span>
-      </Link>
+      </ProfileDialog>
       <div className={styles.cardHero}>
         <div aria-label='request-note-and-read-more-wrapper'>
           <ExpandableText text={'Hey, I would like to join your trip !'} className={styles.requestNote} inputId={`note-toggle-for-${request._id}`} />
@@ -125,7 +128,7 @@ const RequestCard = ({ request, refetchInbox }: RequestCardProps) => {
           </div>
         </div>
         <div className={styles.heroFooter}>
-          <span className={styles.groupName}>{group.title}</span>
+          <Link to={`/groups/${group._id}`} className={styles.groupName}>{group.title}</Link>
           <span className={styles.requestAge}>{moment.duration(new Date().getTime() - new Date(request.createdAt).getTime()).humanize()} ago</span>
         </div>
       </div>

@@ -169,6 +169,10 @@ export const fetchIncomingRequestsController: RequestHandler = async (req, res) 
                         $project: {
                             fullName: 1,
                             avatar: 1,
+                            email: 1,
+                            createdAt: 1,
+                            username: 1,
+                            memberGroup: 1
                         }
                     }
                 ],
