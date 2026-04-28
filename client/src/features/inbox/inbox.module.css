@@ -24,19 +24,9 @@
     border-radius: 10px;
     font-size: 14px;
     transition: all .15s linear;
-
-    /* 
-    &:hover {
-        background-color: var(--sidebar-bg-hover);
-    } */
-
-    /* &:active {
-        background-color: var(--sidebar-bg-active);
-
-        .cardHero {
-            background-color: var(--sidebar-bg-active);
-        }
-    } */
+    
+    display: flex;
+    flex-direction: column;
 }
 
 
