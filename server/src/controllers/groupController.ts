@@ -414,24 +414,30 @@ export const uploadAvatarController: RequestHandler = async (req, res) => {
         overwrite: true
     }
 
-    const { public_id: publicId, version } = await cloudinary.uploader.upload(file.path, {
-        asset_folder: env.MODE,
-        use_filename: true,
-        unique_filename: true,
-        resource_type: 'auto',
-        ...options
-
-    })
-
-    await Group.updateOne({ _id: groupId }, { $set: { avatar: { publicId, version } } })
-
     try {
-        await fs.unlink(file.path)
+        const { public_id: publicId, version } = await cloudinary.uploader.upload(file.path, {
+            asset_folder: env.MODE,
+            use_filename: true,
+            unique_filename: true,
+            resource_type: 'auto',
+            ...options
+
+        })
+
+        await Group.updateOne({ _id: groupId }, { $set: { avatar: { publicId, version } } })
+        return res.success(201, { publicId, version }, "Group Avatar upload successful")
     } catch (error) {
-        console.error("File was not unlinked")
+        console.error("Error uploading group avatar to cloudinary", error)
+        return res.fail()
+    } finally {
+        try {
+            await fs.unlink(file.path)
+        } catch (error) {
+            console.error("File was not unlinked")
+        }
     }
 
-    return res.success(201, { publicId, version }, "Group Avatar upload successful")
+
 }
 
 
