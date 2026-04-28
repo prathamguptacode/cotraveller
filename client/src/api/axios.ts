@@ -1,6 +1,6 @@
-import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
+import axios, { type AxiosRequestConfig } from 'axios'
 import { useToken } from '../hooks/useToken'
-import type { ApiError, ApiSuccess } from '@/types/api.types'
+import type { ApiSuccess } from '@/types/api.types'
 
 import { toast } from 'sonner'
 
@@ -52,7 +52,7 @@ rawAxios.interceptors.response.use(res => {
                 originalRequest.headers['authorization'] = `Bearer ${accessToken}`
                 return rawAxios(originalRequest)
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
                 console.warn("Failed to refresh token")
             }
@@ -73,39 +73,6 @@ rawAxios.interceptors.response.use(res => {
 )
 
 
-
-
-
-type ApiMethod = 'get' | 'post' | 'delete' | 'patch' | 'put'
-
-export const callAuthApi = async<T>(method: ApiMethod, route: string, body = {}): Promise<ApiSuccess<T> | ApiError> => {
-    try {
-        const { status, data } = await rawAxios[method]<{ success: true, data: T, message: string }>(route, body)
-        return {
-            status,
-            data: {
-                success: true,
-                data: data.data,
-                message: data.message
-            }
-        }
-    } catch (error) {
-        console.error(error)
-        if (error instanceof AxiosError && error.response) {
-            const { status, data } = error.response
-            return {
-                status,
-                data: {
-                    success: false,
-                    code: data.code,
-                    message: data.message
-                }
-            }
-
-        }
-        return { status: 500, data: { success: false, code: "INTERNAL_ERROR", message: "Something went wrong !" } }
-    }
-}
 
 type ApiAxiosInstance = {
     get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiSuccess<T>>
