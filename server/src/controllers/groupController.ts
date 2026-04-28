@@ -272,7 +272,7 @@ export const acceptIncomingRequestController: RequestHandler = async (req, res) 
     await Group.updateOne({ _id: groupId }, { $pull: { incomingRequests: requestId }, $push: { member: joinRequest.requesterId } })
     await JoinRequest.deleteOne({ _id: joinRequest._id })
 
-    if (!await ConversationRecord.exists({ memberId: joinRequest.requesterId })) await ConversationRecord.create({ memberId: joinRequest.requesterId, roomId: groupId })
+    if (!await ConversationRecord.exists({ memberId: joinRequest.requesterId, roomId: groupId })) await ConversationRecord.create({ memberId: joinRequest.requesterId, roomId: groupId })
 
     //Send notification to all members of the group about acceptance as well as to the user being accepted
     const previousMemberEmails = group.member.map(obj => obj.email)

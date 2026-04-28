@@ -2,7 +2,6 @@ import { RequestHandler } from "express"
 import Group from "../models/Group"
 import User from "../models/User"
 import JoinRequest from "@/models/JoinRequest"
-import ConversationRecord from "@/models/ConversationRecord"
 import cloudinary from "@/config/cloudinary"
 import env from "@/config/env"
 import fs from 'fs/promises'
@@ -18,9 +17,6 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
             $project: {
                 memberGroup: 1
             }
-        },
-        {
-            $unwind: '$memberGroup'
         },
         {
             $lookup: {
@@ -57,7 +53,10 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
             }
         },
         {
-            $unwind: '$conversationRecord'
+            $unwind: {
+                path: '$conversationRecord',
+                preserveNullAndEmptyArrays: true
+            }
         },
         {
             $lookup: {
