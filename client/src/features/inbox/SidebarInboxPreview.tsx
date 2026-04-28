@@ -125,7 +125,7 @@ const RequestCard = ({ request, refetchInbox }: RequestCardProps) => {
           </div>
         </div>
         <div className={styles.heroFooter}>
-          <span className={styles.groupName}>{group.title}</span>
+          <Link to={`/groups/${group._id}`} className={styles.groupName}>{group.title}</Link>
           <span className={styles.requestAge}>{moment.duration(new Date().getTime() - new Date(request.createdAt).getTime()).humanize()} ago</span>
         </div>
       </div>

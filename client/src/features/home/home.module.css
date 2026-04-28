@@ -30,11 +30,10 @@
 
 .bannerTitle {
     font-size: 52px;
-    font-weight: 500;
     line-height: 64px;
     letter-spacing: -1.5px;
     text-align: center;
-
+    font-weight: 500;
     position: absolute;
     left: 0;
     right: 0;
@@ -102,6 +101,8 @@
     }
 
     .bannerTitle {
+        font-family: Roboto;
+        font-weight: 400;
         font-size: 48px;
     }
 

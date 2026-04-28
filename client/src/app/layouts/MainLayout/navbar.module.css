@@ -309,14 +309,19 @@
 
     >button,
     >[role='button'] {
-        --clr-hover: var(--secondary-bg);
-        --clr-active:var(--clr-bg);
-
         text-align: center;
         padding: .5em 1.5em;
         border-top: .5px solid var(--dialog-border);
-        
+
         cursor: pointer;
+
+        &:hover {
+            background-color: var(--secondary-bg);
+        }
+
+        &:active {
+            background-color: var(--clr-bg);
+        }
     }
 }
 

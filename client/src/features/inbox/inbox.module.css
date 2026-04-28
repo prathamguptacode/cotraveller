@@ -109,6 +109,15 @@
     text-transform: capitalize;
     font-weight: 500;
     color: var(--primary);
+
+    &:hover,
+    &:active {
+        text-decoration: underline;
+    }
+
+    &:active {
+        color: var(--clr-font);
+    }
 }
 
 .requestAge {
