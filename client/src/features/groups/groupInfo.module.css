@@ -46,6 +46,77 @@
     border: 1px solid var(--primary);
 }
 
+.spinnerWrapper {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    inset: 0;
+
+    background-color: hsl(from var(--clr-bg) h s l / .6);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    --uib-color: var(--clr-font);
+    --uib-size: 25%;
+
+}
+
+.avatarDialog {
+    border: none;
+    width: 400px;
+
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: var(--dialog-darker);
+    border-radius: 15px;
+    color: var(--clr-font);
+
+
+
+
+    >div {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
+
+.avatarDialogHeading {
+    padding: 1em;
+    text-align: center;
+}
+
+.changeAvatarOptions {
+    display: flex;
+    flex-direction: column;
+
+    >button,
+    >[role='button'] {
+        text-align: center;
+        padding: .5em 1.5em;
+        border-top: .5px solid var(--dialog-border);
+
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--secondary-bg);
+        }
+
+        &:active {
+            background-color: var(--clr-bg);
+        }
+    }
+}
+
+
 .header {
     display: flex;
     align-items: center;
