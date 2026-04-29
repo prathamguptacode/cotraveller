@@ -3,7 +3,7 @@ import styles from '../commentsSection.module.css'
 import { getImgURL } from '@/lib/cloudinary'
 import { useEffect, useState } from 'react'
 import clsx from 'clsx'
-import { EllipsisVertical, Heart, Trash2, User2 } from 'lucide-react'
+import { EllipsisVertical, Flag, Heart, Trash2, User2 } from 'lucide-react'
 import type { Comment } from '../types'
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
@@ -177,18 +177,21 @@ const Comment = ({ comment, refetchComments, index }: CommentProps) => {
                 <div className={styles.contentHeader}>
                     <span className={styles.username}>{comment?.author.username}</span>
                     <span>{moment.duration(new Date().getTime() - new Date(comment.createdAt).getTime()).humanize()} ago</span>
-                    {comment.author._id === user?._id &&
-                        <>
-                            <button popoverTarget={`comment-options-for-${comment._id}`} className={styles.commentOptionsBtn}><EllipsisVertical size={20} /></button>
-                            <div className={styles.commentOptions} popover='auto' id={`comment-options-for-${comment._id}`}>
-                                <button popoverTarget={`comment-options-for-${comment._id}`} popoverTargetAction='hide' disabled={isDeleting} onClick={() => deleteComment()} className={styles.commentOption}>
-                                    <Trash2 />
-                                    <span>Delete</span>
-                                </button>
-                            </div>
-                        </>
-                    }
-
+                    <button popoverTarget={`comment-options-for-${comment._id}`} className={styles.commentOptionsBtn}>
+                        <EllipsisVertical size={20} />
+                    </button>
+                    <div className={styles.commentOptions} popover='auto' id={`comment-options-for-${comment._id}`}>
+                        {comment.author._id === user?._id ?
+                            <button popoverTarget={`comment-options-for-${comment._id}`} popoverTargetAction='hide' disabled={isDeleting} onClick={() => deleteComment()} className={styles.commentOption}>
+                                <Trash2 />
+                                <span>Delete</span>
+                            </button> :
+                            <Link to={'/feedback'} popoverTarget={`comment-options-for-${comment._id}`} popoverTargetAction='hide' className={styles.commentOption}>
+                                <Flag />
+                                <span>Report</span>
+                            </Link>
+                        }
+                    </div>
                 </div>
                 <ExpandableText className={styles.content} text={comment.comment} inputId={`toggleMoreContent-for-${comment._id}`} />
                 <div className={styles.interactionsWrapper}>

@@ -6,5 +6,9 @@ export type Group = {
         text: string,
         createdAt: Date
     },
-    unreadMessagesCount: number
+    unreadMessagesCount: number,
+    avatar:{
+        publicId:string,
+        version:number
+    }
 }

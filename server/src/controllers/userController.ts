@@ -31,7 +31,8 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
                 memberGroup: {
                     title: 1,
                     _id: 1,
-                    messages: 1
+                    messages: 1,
+                    avatar: 1
                 }
             }
         },
@@ -137,7 +138,8 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
                 unreadMessagesCount: { $ifNull: ['$unreadMessages.unreadMessagesCount', 0] },
                 _id: 1,
                 title: 1,
-                lastMessage: 1
+                lastMessage: 1,
+                avatar:1
             }
         },
         {
