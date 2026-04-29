@@ -2,7 +2,6 @@ import { RequestHandler } from "express"
 import Group from "../models/Group"
 import User from "../models/User"
 import JoinRequest from "@/models/JoinRequest"
-import ConversationRecord from "@/models/ConversationRecord"
 import cloudinary from "@/config/cloudinary"
 import env from "@/config/env"
 import fs from 'fs/promises'
@@ -20,9 +19,6 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
             }
         },
         {
-            $unwind: '$memberGroup'
-        },
-        {
             $lookup: {
                 from: 'groups',
                 localField: 'memberGroup',
@@ -35,7 +31,8 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
                 memberGroup: {
                     title: 1,
                     _id: 1,
-                    messages: 1
+                    messages: 1,
+                    avatar: 1
                 }
             }
         },
@@ -57,7 +54,10 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
             }
         },
         {
-            $unwind: '$conversationRecord'
+            $unwind: {
+                path: '$conversationRecord',
+                preserveNullAndEmptyArrays: true
+            }
         },
         {
             $lookup: {
@@ -138,7 +138,8 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
                 unreadMessagesCount: { $ifNull: ['$unreadMessages.unreadMessagesCount', 0] },
                 _id: 1,
                 title: 1,
-                lastMessage: 1
+                lastMessage: 1,
+                avatar:1
             }
         },
         {

@@ -67,7 +67,7 @@ const SidebarChatsPreview = () => {
                                 if (window.matchMedia("(max-width:768px)").matches) setSidebarIsHidden(true)
                             }} to={`/groups/${group._id}/chats`} key={group._id} className={({ isActive }) => clsx(isActive && styles.activeItem, styles.listItem)
                             }>
-                                <Avatar avatar={{ publicId: '', version: 0 }} imgSize={400} title={group.title} className={styles.avatarWrapper} alt='group-avatar' />
+                                <Avatar avatar={group.avatar} imgSize={400} title={group.title} className={styles.avatarWrapper} alt='group-avatar' />
                                 <div className={styles.detailsWrapper}>
                                     <p className={styles.groupName}>{group.title}</p>
                                     {group.lastMessage && <p className={styles.lastMessage}>{group.lastMessage.author} : {group.lastMessage.text}</p>}

@@ -4,7 +4,11 @@ export type Group = {
     messages: Message[],
     member: { _id: string, fullName: string }[],
     owner: string,
-    unreadMessagesCount: number
+    unreadMessagesCount: number,
+    avatar: {
+        publicId: string,
+        version: number
+    }
 }
 
 export type Message = {

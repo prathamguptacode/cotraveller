@@ -28,7 +28,7 @@ const ChatHeader = ({ group }: ChatHeaderProps) => {
         onSuccess: () => window.location.href = '/'
     })
 
-    const avatarURL = getImgURL({ publicId: '', version: 0 }, 400)
+    const avatarURL = getImgURL(group.avatar, 400)
 
     return (
         <div className={styles.chatAreaHeader}>
@@ -61,7 +61,7 @@ const ChatHeader = ({ group }: ChatHeaderProps) => {
                 <div className={styles.moreOptionsList}>
 
                     <Link to={`/groups/${groupId}`} className={styles.moreOptionsListItem}>
-                        <Avatar avatar={{ publicId: '', version: 0 }} imgSize={200} title={group.title} className={styles.avatarWrapper} alt='group-avatar' />
+                        <Avatar avatar={group.avatar} imgSize={200} title={group.title} className={styles.avatarWrapper} alt='group-avatar' />
                         <div>
                             <h3>View Profile</h3>
                             <span>{group.title}</span>
