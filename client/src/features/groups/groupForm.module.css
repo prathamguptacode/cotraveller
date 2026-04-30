@@ -292,7 +292,7 @@ select {
 }
 
 .transport {
-    padding: 0.4rem 0;
+    padding-bottom: 0.4rem;
 }
 
 .modeBox {
@@ -308,13 +308,18 @@ select {
 }
 
 .modeBox:hover,
-.memberbox:hover {
+.memberbox:hover,
+.loadingLocation:hover {
     background-color: hsl(from var(--clr-bg) h s 22%);
     border: 1px solid #ffffff;
 }
 
 .modeIcon {
     padding: 18px;
+}
+
+.modeIcon:hover {
+    background-color: hsl(from var(--clr-bg) h s 29%);
 }
 
 .modeDrop:popover-open {
@@ -326,6 +331,8 @@ select {
     border-radius: 8px;
     width: anchor-size(width);
     overflow: hidden;
+    height: 250px;
+    overflow-y: scroll;
 }
 
 .options {
@@ -366,14 +373,29 @@ select {
 
 .memberMinus,
 .memberPlus {
-    background-color: hsl(from var(--clr-bg) h s 30%);
+    background-color: hsl(from var(--clr-bg) h s 29%);
 }
 
 .memberMinus:hover,
 .memberPlus:hover {
-    background-color: hsl(from var(--clr-bg) h s 40%);
+    background-color: hsl(from var(--clr-bg) h s 35%);
 }
 
-.people{
-    padding: 0.4rem 0;
+.people {
+    padding-bottom: 0.4rem;
+}
+
+.location {
+    padding-bottom: 0.4rem;
+}
+
+.loadingLocation {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid var(--clr-border);
+    background-color: hsl(from var(--clr-bg) h s 22%);
+    border-radius: 4px;
+    padding: 18px;
+    cursor: not-allowed;
 }

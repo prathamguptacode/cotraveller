@@ -11,11 +11,19 @@ import { LuChevronDown, LuMinus, LuPlus } from 'react-icons/lu';
 import { Car, Footprints, Motorbike, Plane } from 'lucide-react';
 import { IoMdTrain } from "react-icons/io";
 import { FaTaxi } from "react-icons/fa6";
+import { useLoadScript, type Libraries } from '@react-google-maps/api'
+import Location from './search/Location';
 
-
+const lib: Libraries = ["places"]
 const GroupFormStep2 = () => {
 
-    const { register, formState: { errors }, control, watch } = useGroupForm()
+    const { isLoaded } = useLoadScript({
+        googleMapsApiKey: import.meta.env.VITE_MAP_KEY,
+        region: 'in',
+        libraries: lib
+    })
+
+    const { formState: { errors }, control } = useGroupForm()
 
     const date = new Date();
     const year = date.getFullYear();
@@ -25,8 +33,6 @@ const GroupFormStep2 = () => {
     const hour = date.getHours().toString().padStart(2, '0');
     const time = date.getMinutes().toString().padStart(2, '0');
     const myTimeHtml = `${hour}:${time}`
-
-    console.log(watch('memberNumber'))
 
     return (
         <div className={mystyle.groupForm2}>
@@ -90,6 +96,36 @@ const GroupFormStep2 = () => {
                     </div>
                 </div>
 
+
+
+                <div className={mystyle.locationSelection}>
+                    <div className={mystyle.location}>Inital Location</div>
+                    {/* <select className={mystyle.locationSelect} {...register('intialLocation')} defaultValue={'Delhi'}>
+                        <option value="" disabled>
+                            Select your location
+                        </option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Chennai">Chennai</option>
+                    </select> */}
+                    <Controller control={control} name='intialLocation'
+                        render={({ field: { onChange, value } }) => (
+                            <div>
+                                {
+                                    isLoaded ? <div><Location location={value} setLocation={onChange} /></div> : (<div className={mystyle.loadingLocation}>
+                                        {/* <MapPin /> */}
+                                        Loading...
+                                    </div>)
+                                }
+                            </div>
+                        )} />
+                    <div className={mystyle.error}>
+                        {errors.intialLocation?.message}
+                    </div>
+                </div>
+
+
                 <div className={mystyle.transportSection}>
                     <div className={mystyle.transport}>
                         Primary Transport Method
@@ -118,27 +154,6 @@ const GroupFormStep2 = () => {
                         )} />
                     <div className={mystyle.error}>
                         {errors.mode?.message}
-                    </div>
-                </div>
-
-                <div className={mystyle.locationSelection}>
-                    <div className={mystyle.location}>Inital Location</div>
-                    {/* <select className={mystyle.locationSelect} {...register('intialLocation')} defaultValue={'Delhi'}>
-                        <option value="" disabled>
-                            Select your location
-                        </option>
-                        <option value="Delhi">Delhi</option>
-                        <option value="Mumbai">Mumbai</option>
-                        <option value="Kolkata">Kolkata</option>
-                        <option value="Chennai">Chennai</option>
-                    </select> */}
-                    <Controller control={control} name='intialLocation'
-                        render={({ field: { onChange, value } }) => (
-                            <div>
-                            </div>
-                        )} />
-                    <div className={mystyle.error}>
-                        {errors.intialLocation?.message}
                     </div>
                 </div>
 
