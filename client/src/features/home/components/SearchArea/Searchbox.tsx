@@ -69,7 +69,7 @@ function Searchbox({ dLocation, dDate }: { dLocation: string | null, dDate: stri
                     <LocalizationProvider dateAdapter={AdapterDayjs} >
 
                         <DemoContainer components={['DatePicker']} sx={{ p: 0, overflow: 'visible', width: 1 }}>
-                            <DatePicker defaultValue={dayjs(defaultDate)} format='DD/MM/YYYY' label='Departure' sx={{ width: 1 }} onChange={e => dateSet(e)} />
+                            <DatePicker disablePast defaultValue={dayjs(defaultDate)} format='DD/MM/YYYY' label='Departure' sx={{ width: 1 }} onChange={e => dateSet(e)} />
                         </DemoContainer>
 
                     </LocalizationProvider>
