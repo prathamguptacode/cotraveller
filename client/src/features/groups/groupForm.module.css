@@ -214,8 +214,8 @@ select {
 }
 
 .note {
-    margin-top: 10px;
-    padding: 16px;
+    /* margin-top: 10px; */
+    padding: 12px 16px;
     border-radius: 12px;
     background: hsl(from var(--clr-bg) h s 22%);
     color: #9ca3af;
