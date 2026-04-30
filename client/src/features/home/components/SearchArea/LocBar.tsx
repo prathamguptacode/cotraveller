@@ -78,8 +78,8 @@ function LocBar({ setLocation, location }: { setLocation: React.Dispatch<React.S
     return (
         <div className={mystyle.locationcamp} onClick={handleClklocationcamp}>
             {/* <div className={mystyle.locationBox}> */}
-                <MapPin size={20} />
-                <input type="text" value={value} placeholder='From Where?' ref={locationIn} className={mystyle.locationInput} onChange={handleChange} disabled={!ready} />
+            <MapPin size={20} />
+            <input type="text" value={value} placeholder='From Where?' ref={locationIn} className={mystyle.locationInput} onChange={handleChange} disabled={!ready} />
             {/* </div> */}
             <div className={mystyle.suggestion}>
 
