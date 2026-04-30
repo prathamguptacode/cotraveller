@@ -13,6 +13,7 @@ import { IoMdTrain } from "react-icons/io";
 import { FaTaxi } from "react-icons/fa6";
 import { useLoadScript, type Libraries } from '@react-google-maps/api'
 import Location from './search/Location';
+import { useLocation } from 'react-router-dom';
 
 const lib: Libraries = ["places"]
 const GroupFormStep2 = () => {
@@ -34,6 +35,8 @@ const GroupFormStep2 = () => {
     const time = date.getMinutes().toString().padStart(2, '0');
     const myTimeHtml = `${hour}:${time}`
 
+    const pageUrl = useLocation();
+
     return (
         <div className={mystyle.groupForm2}>
             <div>
@@ -52,15 +55,23 @@ const GroupFormStep2 = () => {
                             control={control}
                             name="travelDate"
                             defaultValue={myDateHtml}
-                            render={({ field: { onChange } }) => (
+                            render={({ field: { onChange, value } }) => (
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DemoContainer components={['DatePicker']} sx={{ p: '0.4rem 0', overflow: 'visible', width: 1 }}>
+                                        {/* ###bad logic but solve the problem */}
                                         <div className={mystyle.dateInputMui}>
-                                            <DatePicker disablePast format='DD/MM/YYYY' defaultValue={dayjs(myDateHtml)} sx={{ width: 1 }} onChange={(e) => {
-                                                if (e) {
-                                                    onChange(`${e.year()}-${(e.month() + 1).toString().padStart(2, "0")}-${e.date().toString().padStart(2, "0")}`)
-                                                }
-                                            }} />
+                                            {
+                                                (pageUrl.pathname == '/groups/create') ?
+                                                    <DatePicker disablePast format='DD/MM/YYYY' defaultValue={dayjs(value)} sx={{ width: 1 }} onChange={(e) => {
+                                                        if (e) {
+                                                            onChange(`${e.year()}-${(e.month() + 1).toString().padStart(2, "0")}-${e.date().toString().padStart(2, "0")}`)
+                                                        }
+                                                    }} /> : <DatePicker format='DD/MM/YYYY' defaultValue={dayjs(value)} sx={{ width: 1 }} onChange={(e) => {
+                                                        if (e) {
+                                                            onChange(`${e.year()}-${(e.month() + 1).toString().padStart(2, "0")}-${e.date().toString().padStart(2, "0")}`)
+                                                        }
+                                                    }} />
+                                            }
                                         </div>
                                     </DemoContainer>
                                 </LocalizationProvider>
@@ -76,11 +87,11 @@ const GroupFormStep2 = () => {
                         <Controller control={control}
                             name="travelTime"
                             defaultValue={myTimeHtml}
-                            render={({ field: { onChange } }) => (
+                            render={({ field: { onChange, value } }) => (
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DemoContainer components={['TimePicker']} sx={{ p: '0.4rem 0', overflow: 'visible', width: 1 }}>
                                         <div className={mystyle.dateInputMui}>
-                                            <TimePicker defaultValue={dayjs(date)} sx={{ width: 1 }} onChange={(e) => {
+                                            <TimePicker defaultValue={dayjs(value, "HH:mm")} sx={{ width: 1 }} onChange={(e) => {
                                                 if (e) {
                                                     onChange(`${e.hour().toString().padStart(2, "0")}:${e.minute().toString().padStart(2, "0")}`)
                                                 }
