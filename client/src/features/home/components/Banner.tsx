@@ -1,0 +1,19 @@
+import mystyle from '../home.module.css'
+import darkBanner from '@/assets/darkBanner.svg'
+import { useAuth } from '@/hooks/useAuth'
+import { useTheme } from '@/hooks/useTheme'
+import lightBanner from '@/assets/lightBanner.svg'
+
+function Banner() {
+  const { user } = useAuth()
+  const { theme } = useTheme()
+
+  return (
+    <div className={mystyle.banner}>
+      {theme == 'dark' ? <img src={darkBanner} alt="banner svg" /> : <img src={lightBanner} alt='banner light svg' />}
+      <div role='heading' className={mystyle.bannerTitle}>Welcome {user && user.fullName.split(' ')[0]}!</div>
+    </div>
+  )
+}
+
+export default Banner

@@ -1,5 +1,5 @@
 import xss from "xss";
-import feedback from "../models/feedback";
+import feedback from "../models/Feedback";
 import { RequestHandler } from "express";
 
 export const feedbackController: RequestHandler = async (req, res) => {

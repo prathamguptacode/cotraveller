@@ -1,0 +1,71 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import ProtectedRoutes from './routes/Protected.Routes'
+import AntiProtectedRoutes from './routes/AntiProtected.Routes'
+import Home from './pages/Home'
+import ViewGroup from './pages/Group/ViewGroup'
+import AuthLayout from './layouts/Auth/AuthLayout'
+import Signup from './pages/Signup'
+import Login from './pages/Login'
+import VerifyOTP from './pages/VerifyOTP'
+import CreateGroup from './pages/CreateGroup'
+import MainLayout from './layouts/MainLayout/MainLayout'
+import SuccessPage from './pages/Extras/SuccessPage'
+import Chats from './pages/Chats'
+import NotFound from './pages/Extras/NotFound'
+import FeedbackPage from './pages/Feedback/FeedbackPage'
+import EditGroup from './pages/EditGroup'
+import GroupInfo from './pages/GroupInfo'
+
+
+
+
+
+
+
+const Router = () => {
+    return (
+        <BrowserRouter>
+            <Routes>
+
+                <Route path='/' element={<MainLayout />}>
+                    <Route index element={<Home />} />
+                    <Route path='viewgroup' element={<ViewGroup />} />
+
+                    <Route path='/groups'>
+                        <Route path=':groupId'>
+                            <Route index element={<GroupInfo />} />
+
+                            <Route element={<ProtectedRoutes />}>
+                                <Route path='edit' element={<EditGroup />} />
+                                <Route path='chats' element={<Chats />} />
+                            </Route>
+                        </Route>
+
+                        <Route element={<ProtectedRoutes />}>
+                            <Route path='create' element={<CreateGroup />} />
+                            <Route path='success' element={<SuccessPage />} />
+                        </Route>
+                    </Route>
+                </Route>
+
+
+
+
+
+                <Route element={<AntiProtectedRoutes />} >
+                    <Route element={<AuthLayout />} >
+                        <Route path='/signup' element={<Signup />} />
+                        <Route path='/login' element={<Login />} />
+                        <Route path='/signup/verify' element={<VerifyOTP />} />
+                    </Route>
+                </Route>
+
+                <Route path='/feedback' element={<FeedbackPage />} />
+                <Route path='*' element={<NotFound />} />
+
+            </Routes>
+        </BrowserRouter>
+    )
+}
+
+export default Router

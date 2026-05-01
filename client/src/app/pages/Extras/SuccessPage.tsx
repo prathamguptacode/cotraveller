@@ -1,0 +1,30 @@
+import Navbar from '@/app/layouts/MainLayout/Navbar';
+import mystyle from './success.module.css'
+import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Users } from 'lucide-react';
+
+function SuccessPage() {
+    const location = useLocation()
+
+
+    return location.state?.click ? <div className={mystyle.success}>
+        <Navbar>
+            <Navbar.Title />
+            <Navbar.ThemeButton />
+        </Navbar>
+        <div className={mystyle.successbx}>
+            <div className={mystyle.imgbx}>
+                <Users size={280} />
+            </div>
+            <div className={mystyle.conbx}>
+                <h2 className={mystyle.title}>Your travel group is ready!</h2>
+                <p className={mystyle.con}>Get ready for the perfect people to join your journey.</p>
+                <Link to={'/'} className={mystyle.homebtn} >Back to Home</Link>
+            </div>
+        </div>
+    </div> :
+        <Navigate to={'/'} replace />
+
+}
+
+export default SuccessPage

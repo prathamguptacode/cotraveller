@@ -7,7 +7,7 @@ import { sendOtp } from '../services/nodemailer'
 import { generateAccessToken, generateRefreshToken, generateUni8Array } from '../utils/generateToken'
 import { CustomError } from '../utils/CustomError'
 import OtpRequestLimit from '../models/OtpRequestLimit'
-import * as cookies from '../libs/cookies'
+import * as cookies from '../lib/cookies'
 import * as jose from 'jose'
 import { RequestHandler } from 'express'
 
@@ -77,7 +77,7 @@ export const otpVerificationController: RequestHandler = async (req, res) => {
     if (!otpUUID) return res.fail(410, "SESSION_EXPIRED", "Otp session expired, please re-signup")
 
     const token = await OtpSession.findOne({ otpUUID })
-    if (!token) return res.fail(400, "SESSION_EXPIRED", "Otp session expired, please re-signup")
+    if (!token) return res.fail(410, "SESSION_EXPIRED", "Otp session expired, please re-signup")
 
     //Extracting OtpSession data
     const { otpHash, email, fullName, passwordHash, username, attempts } = token
@@ -93,7 +93,7 @@ export const otpVerificationController: RequestHandler = async (req, res) => {
 
     //Updating attempts now so that, only updated if hash veification doesnt throw
     await OtpSession.updateOne({ otpUUID }, { $inc: { attempts: 1 } })
-    if (!isValid) return res.fail(400, "INVALID_OTP", "OTP did not match, please retry")
+    if (!isValid) return res.fail(400, "INCORRECT_OTP", "Incorrect OTP")
 
     //Creating new user
     if (await User.exists({ $or: [{ email }, { username }] })) return res.fail(409, "USER_EXISTS", "User already exists")
@@ -116,7 +116,7 @@ export const otpVerificationController: RequestHandler = async (req, res) => {
     })
 
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(201, { user: { fullName, username, email, _id: user._id }, accessToken }, "Signup Successful")
+    res.success(201, { user, accessToken }, "Signup Successful")
 
 }
 
@@ -139,8 +139,9 @@ export const loginController: RequestHandler = async (req, res) => {
     const refreshToken = await generateRefreshToken(email)
     res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
 
+    user.passwordHash = undefined
     //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(200, { accessToken, user: { email, username, fullName, _id } }, "Login Successful")
+    res.success(200, { accessToken, user }, "Login Successful")
 
 }
 
@@ -208,7 +209,7 @@ export const refreshTokenController: RequestHandler = async (req, res) => {
 
     if (!user) {
         res.clearCookie('refreshToken', cookies.REFRESH_COOKIE_OPTIONS)
-        res.fail(401, "USER_NOT_FOUND", "User does not exist")
+        return res.fail(401, "USER_NOT_FOUND", "User does not exist")
     }
 
     res.success(200, { accessToken, user })

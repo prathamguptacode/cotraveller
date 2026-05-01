@@ -1,0 +1,450 @@
+.wrapper {
+    max-width: 900px;
+    margin: auto;
+    min-height: 40rem;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: hsl(from var(--clr-bg) h s 18%);
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+    padding: 1.5rem 2.5rem;
+}
+
+.groupFormTitle {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.stepIndicator {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: var(--comment-font);
+}
+
+.groupForm1Content {
+    padding: 1rem 0;
+}
+
+.groupName,
+.groupDescription,
+.transport,
+.location,
+.people {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.groupNameInput:focus {
+    border-color: var(--primary);
+}
+
+.groupNameBox,
+.groupDescriptionBox {
+    margin: 0.5rem 0 1rem 0;
+}
+
+.error {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: rgb(234, 81, 81);
+    padding: 4px 0;
+}
+
+.groupNameInput,
+.descriptionInput {
+    margin: 0.4rem 0 0 0;
+    width: 100%;
+    background-color: hsl(from var(--clr-bg) h s 22%);
+    border: 1px solid var(--clr-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 15px;
+    outline: none;
+    color: var(--clr-font);
+    transition:
+        border 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.descriptionInput {
+    min-height: 300px;
+}
+
+.descriptionInput:focus {
+    border-color: var(--primary);
+}
+
+.btnbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.backBtn {
+    --clr-hover: hsl(from var(--clr-bg) h s 40%);
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border-radius: 6px;
+    background-color: hsl(from var(--clr-bg) h s 30%);
+    color: var(--clr-font);
+    font-weight: 400;
+    text-align: center;
+}
+
+.nextBtn {
+    --clr-disabled: hsl(from var(--clr-bg) h s 50%);
+    --clr-hover: var(--brighter-primary);
+    --clr-active: var(--primary-active);
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border-radius: 6px;
+    background-color: var(--primary);
+    color: var(--secondaryFont);
+    font-weight: 400;
+    text-align: center;
+}
+
+
+.dateSection {
+    display: flex;
+    padding: 0.8rem 0;
+    gap: 2rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.transportSection {
+    padding: 0.8rem 0;
+}
+
+.locationSelection {
+    padding: 0.8rem 0;
+}
+
+.peopleSelection {
+    padding: 0.8rem 0;
+    padding-bottom: 2rem;
+}
+
+select {
+    background-color: hsl(from var(--clr-bg) h s 22%);
+    color: var(--clr-font);
+    border-radius: 4px;
+    margin: 0.4rem 0;
+    padding: 1rem;
+    border-radius: 4px;
+    width: 100%;
+    border: 1px solid var(--clr-border);
+}
+
+.startDate,
+.endDate {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.datebox {
+    flex: 1;
+    width: 100%;
+}
+
+.dateInput {
+    background-color: hsl(from var(--clr-bg) h s 22%);
+    margin: 0.4rem 0;
+    padding: 1rem;
+    border-radius: 4px;
+    width: 100%;
+    border: 1px solid var(--clr-border);
+}
+
+.dateInputMui {
+    background-color: hsl(from var(--clr-bg) h s 22%);
+    width: 100%;
+}
+
+.groupForm3Content {
+    padding: 1rem 0;
+    border: 2px solid red;
+}
+
+.reviewSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+
+.reviewCard {
+    padding: 28px;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* spacing */
+.rowBetween {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* text */
+.label {
+    font-size: 14px;
+    color: #9ca3af;
+    margin-bottom: 6px;
+}
+
+.value {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 40px;
+}
+
+.note {
+    /* margin-top: 10px; */
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: hsl(from var(--clr-bg) h s 22%);
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.startOver {
+    text-align: center;
+    padding-top: 8px;
+}
+
+.startOverBtn {
+    color: hsl(from var(--primary) h s 65%);
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.startOverBtn:hover {
+    text-decoration: underline;
+}
+
+
+/* Status bar */
+
+.statusbar {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 1.4rem 0;
+
+    >*:last-child {
+        display: none;
+    }
+}
+
+.dot {
+    --clr-hover: var(--primary-hover);
+    --clr-active: var(--primary-active);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary);
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    color: var(--secondaryFont);
+    font-weight: 400;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.line {
+    height: 4px;
+    width: 6rem;
+    border-radius: 1rem;
+    background-color: var(--primary);
+    margin: 0 1rem;
+}
+
+.active {
+    outline: 4px solid hsl(from var(--primary) h s 35%);
+}
+
+.inactive {
+    --clr-hover: hsl(from var(--clr-bg) h s 42%);
+    --clr-active: hsl(from var(--clr-bg) h s 45%);
+    background-color: hsl(from var(--clr-bg) h s 40%);
+    color: var(--comment-font);
+}
+
+.textInactive {
+    color: var(--comment-font);
+}
+
+.transport {
+    padding-bottom: 0.4rem;
+}
+
+.modeBox {
+    width: 100%;
+    border: 1px solid var(--clr-border);
+    background-color: hsl(from var(--clr-bg) h s 22%);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 12px;
+    anchor-name: --modeBtn;
+}
+
+.modeBox:hover,
+.memberbox:hover,
+.loadingLocation:hover {
+    background-color: hsl(from var(--clr-bg) h s 22%);
+    border: 1px solid #ffffff;
+}
+
+.modeIcon {
+    padding: 18px;
+}
+
+.modeIcon:hover {
+    background-color: hsl(from var(--clr-bg) h s 29%);
+}
+
+.modeDrop:popover-open {
+    all: unset;
+    position-anchor: --modeBtn;
+    top: anchor(top);
+    left: anchor(left);
+    background-color: hsl(0, 0%, 24%);
+    border-radius: 8px;
+    width: anchor-size(width);
+    overflow: hidden;
+    height: 250px;
+    overflow-y: scroll;
+}
+
+.options {
+    width: 100%;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.options:hover {
+    background-color: hsl(0, 0%, 30%);
+}
+
+
+
+
+
+.memberbox {
+    border: 1px solid var(--clr-border);
+    background-color: hsl(from var(--clr-bg) h s 22%);
+    width: 100%;
+    display: flex;
+    gap: 4px;
+    border-radius: 4px;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+.memberMinus,
+.memberPlus {
+    all: unset;
+    flex-shrink: 0;
+    padding: 18px;
+    cursor: pointer;
+}
+
+.memberMinus,
+.memberPlus {
+    background-color: hsl(from var(--clr-bg) h s 29%);
+}
+
+.memberMinus:hover,
+.memberPlus:hover {
+    background-color: hsl(from var(--clr-bg) h s 35%);
+}
+
+.people {
+    padding-bottom: 0.4rem;
+}
+
+.location {
+    padding-bottom: 0.4rem;
+}
+
+.loadingLocation {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid var(--clr-border);
+    background-color: hsl(from var(--clr-bg) h s 22%);
+    border-radius: 4px;
+    padding: 18px;
+    cursor: not-allowed;
+}
+.upperNote{
+    text-align: center;
+}
+
+/* ### these just work but not are not good */
+@container (max-width: 820px){
+    .wrapper{
+        /* background-color: red; */
+        max-width: 700px;
+        padding: 1.5rem 2rem;
+    }
+}
+@container (max-width: 770px){
+    .wrapper{
+        max-width: 600px;
+        padding: 1.5rem 2rem;
+    }
+    .stepName{
+        display: none;
+    }
+    .line{
+        flex: 1;
+    }
+    .statusbar{
+        max-width: 600px;
+        margin: auto;
+        padding: 1rem;
+    }
+    .dateSection{
+        flex-direction: column;
+        gap: 1rem;
+        padding-bottom: 0;
+    }
+}
+@container (max-width: 770px){
+    .wrapper{
+        padding: 1rem 1.5rem;
+    }
+    .startOver{
+        display: none;
+    }
+    .note{
+        padding: 1rem 0.6rem;
+    }
+    .reviewCard{
+        padding: 1.5rem 0;
+    }
+}

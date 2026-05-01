@@ -68,22 +68,22 @@
 }
 
 .groupbtn {
+    --clr-disabled: var(--dialog-disabled);
+    --clr-font-disabled: var(--dialog-font-disabled);
+    --clr-active: var(--primary-active);
+
+
     background-color: var(--primary);
     color: var(--secondaryFont);
     border-radius: 10px;
     padding: 10px 20px;
-    font-weight: 500;
+    font-weight: 400;
     text-align: center;
     cursor: pointer;
 }
 
 .groupbtn:hover {
     background-color: var(--brighter-primary);
-}
-
-.requested {
-    background-color: grey !important;
-    pointer-events: none;
 }
 
 .line {
@@ -94,7 +94,7 @@
 
 
 @media (max-width:768px) {
-    .groupwrapper{
+    .groupwrapper {
         flex-direction: column;
         gap: 1.5rem;
         align-items: stretch;

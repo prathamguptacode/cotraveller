@@ -1,0 +1,124 @@
+.wrapper {
+    max-width: 1024px;
+    margin: auto;
+
+
+
+    >* {
+        margin-inline: 1rem;
+    }
+}
+
+.homeBtn {
+    border-radius: 10px;
+    padding: .5rem;
+    flex-shrink: 0;
+
+    &:hover {
+        background-color: var(--clr-bg-hover);
+    }
+}
+
+
+.banner {
+    max-width: 1248px;
+    margin-inline: auto;
+    margin-bottom: 44px;
+    min-height: 150px;
+    position: relative;
+}
+
+.bannerTitle {
+    font-size: 52px;
+    line-height: 64px;
+    letter-spacing: -1.5px;
+    text-align: center;
+    font-weight: 500;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+
+/* Bottom */
+
+.discoverbx {
+    display: flex;
+    gap: 12px;
+    margin-block: 2rem 4rem;
+    padding: 16px;
+    background-color: var(--discoverbg);
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+
+    >div {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px;
+    }
+}
+
+
+.discoverTitle {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.discoverContent {
+    font-size: 16px;
+    color: var(--dull-font);
+}
+
+.discoverBtn {
+    padding: 8px 28px;
+    border: 1px solid var(--clr-border);
+    border-radius: 48px;
+    color: var(--primary);
+    background-color: var(--clr-bg);
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+
+@container (max-width:768px) {
+
+    .discoverbx {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .discoverBtn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .banner {
+        margin-bottom: 0;
+    }
+
+    .bannerTitle {
+        font-family: Roboto;
+        font-weight: 400;
+        font-size: 48px;
+    }
+
+
+}
+
+@container (max-width:720px) {
+    .bannerTitle {
+        font-size: 36px;
+    }
+}
+
+
+@container(max-width:480px) {
+    .bannerTitle {
+        font-size: 32px;
+        /* line-height: 44px; */
+    }
+}

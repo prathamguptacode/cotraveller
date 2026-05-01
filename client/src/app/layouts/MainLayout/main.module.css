@@ -1,0 +1,32 @@
+.wrapper {
+    display: flex;
+    margin-top: 65px;
+}
+
+.heroWrapper {
+    flex-grow: 1;
+    margin-inline-start: auto;
+    container-type: inline-size;
+
+    height: calc(100vh - 65px);
+    height: calc(100dvh - 65px);
+
+
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+
+@media (max-width:768px) {
+    :not(:has([data-mobile-nav-hidden="true"])) {
+        .wrapper {
+            margin-bottom: 57px;
+        }
+
+        .heroWrapper {
+            height: calc(100vh - 65px - 57px);
+            height: calc(100dvh - 65px - 57px);
+        }
+    }
+
+}

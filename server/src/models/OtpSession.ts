@@ -35,12 +35,9 @@ const otpSessionSchema = new mongoose.Schema({
         required: true,
     },
 
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        required: true
-    }
 
+}, {
+    timestamps: true
 })
 otpSessionSchema.index({ createdAt: 1 }, { expireAfterSeconds: 5 * 60 })
 

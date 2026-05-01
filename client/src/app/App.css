@@ -1,0 +1,313 @@
+/* 1. Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after,
+input,
+button {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* 2. Remove default margin */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* 3. Enable keyword animations */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        interpolate-size: allow-keywords;
+    }
+}
+
+body {
+    /* 5. Improve text rendering */
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* 6. Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+/* 7. Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+/* 8. Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+}
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-wrap: balance;
+}
+
+input,
+button,
+a {
+    all: unset;
+    appearance: none;
+    box-sizing: border-box;
+}
+
+button,
+a {
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--clr-hover);
+    }
+
+    &:active {
+        background-color: var(--clr-active);
+    }
+
+
+    &:disabled {
+        cursor: not-allowed;
+        background-color: var(--clr-disabled);
+        color: var(--clr-font-disabled);
+
+        &:active,
+        &:hover {
+            cursor: not-allowed;
+            scale: 1;
+            background-color: var(--clr-disabled);
+        }
+    }
+}
+
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus-within,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: white;
+    caret-color: white;
+
+
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    /* Optional: Removes any default margin */
+}
+
+
+*:has(>svg),
+svg {
+    flex-shrink: 0;
+}
+
+
+
+#root {
+    margin: auto;
+}
+
+body {
+    margin: auto;
+    background-color: var(--clr-bg);
+    color: var(--clr-font);
+    font-family: Mulish, Roboto, sans-serif;
+    anchor-name: --body;
+}
+
+html {
+    anchor-name: --root;
+
+    &:has(dialog[open]) {
+        overflow: hidden;
+    }
+}
+
+
+:root {
+
+    --clr-border: hsl(0, 0%, 70%);
+    --clr-bg: hsl(0, 0%, 100%);
+
+
+    --clr-font: #202124;
+    --in-border: hsla(207, 5%, 33%, 0.9);
+    --clr-bg-hover: hsl(225, 4%, 92%);
+    --group-hover: hsl(225, 6%, 95%);
+    --secondary-bg: hsl(220, 3%, 97%);
+    --primary: #1A73E7;
+    --brighter-primary: #1E66C8;
+    --link-color: rgb(97, 129, 181);
+    --commentbg: hsl(225, 4%, 93%);
+    --dull-font: hsl(216, 12%, 34%);
+    --comment-font: hsl(216, 12%, 32%);
+    --secondaryFont: hsl(0, 0%, 99%);
+    --opt-hover: hsl(225, 2%, 90%);
+    --toast-bg: hsl(220, 3%, 95%);
+    --toast-color: #202124;
+    --commentSP: hsl(216, 12%, 28%);
+
+
+    --primary-darker: #1A73E7;
+    --secondary-bg-darker: hsl(220, 3%, 95%);
+    --secondary-bg-darkest: hsl(220, 3%, 90%);
+    --clr-non-complementary-font: hsl(216, 3%, 95%);
+    --clr-complementary-bg-400: hsl(216, 3%, 15%);
+    --clr-non-complementary-bg-800: hsl(0, 0%, 90%);
+    --sidebar-bg: hsl(0, 6%, 95%);
+    --sidebar-bg-hover: hsl(206, 6%, 75%);
+    --sidebar-anchor-active: hsl(214, 81%, 50%);
+    --sidebar-button-hover: hsl(225, 4%, 60%);
+    --discoverbg: rgba(232, 240, 254, 0.5);
+
+    /* dialog */
+    --dialog-border: hsl(0, 0%, 70%);
+    --dialog-dark: #e9ecef;
+    --dialog-hover: #dbdee1;
+    --dialog-darker: hsl(0, 0%, 100%);
+
+}
+
+:root.dark {
+
+
+    /* basic colors */
+    --primary-hover: hsl(217, 89%, 80%);
+    --primary-active: hsl(217, 89%, 72%);
+
+    --red-destructive: lab(63.7053% 60.745 31.3109);
+
+    --bg-invert: hsl(0, 0%, 95%);
+    --bg-invert-hover: hsl(0, 0%, 90%);
+    /* Old colors */
+
+    --clr-border: hsl(213, 5%, 39%);
+    --in-border: hsla(207, 5%, 77%, 0.6);
+
+    --clr-bg-hover: hsl(225, 4%, 20%);
+
+    --group-hover: hsl(225, 6%, 18%);
+
+    --clr-bg: #202124;
+    /* Let --clr-bg be in hex form and = #202124 */
+
+    --secondary-bg: hsl(225, 4%, 22%);
+    --primary: hsl(217, 89%, 76%);
+    /* #669df7 */
+
+    --brighter-primary: hsl(217, 90%, 80%);
+    --link-color: #8ab4f8;
+    --commentbg: hsl(225, 4%, 20%);
+    --clr-font: hsl(216, 12%, 92%);
+
+    --dull-font: hsl(217, 41%, 78%);
+    --comment-font: hsl(216, 12%, 72%);
+
+    --secondaryFont: hsl(225, 6%, 13%);
+    --opt-hover: hsl(225, 2%, 38%);
+
+    --toast-bg: hsl(220, 3%, 19%);
+    --toast-color: hsl(0, 0%, 100%);
+
+    --commentSP: hsl(216, 12%, 92%);
+
+    /* Old colors end */
+
+
+    /* auth page color */
+    --primary-darker: hsl(217, 94%, 53%);
+    --secondary-bg-lighter: hsl(220, 3%, 75%);
+    --expansion-bg: hsl(210, 4%, 9%);
+    --secondary-bg-darker: hsl(220, 3%, 9%);
+    --secondary-bg-darkest: hsl(220, 3%, 6%);
+    --clr-non-complementary-font: hsl(225, 6%, 13%);
+    --clr-non-complementary-bg-800: hsl(0, 0%, 10%);
+    --clr-complementary-bg-400: hsl(216, 3%, 85%);
+
+    /*homepage sidebar */
+    --sidebar-bg: hsl(220, 3%, 19%);
+    --sidebar-bg-hover: var(--clr-bg);
+    --sidebar-bg-active: hsl(204, 5%, 19%);
+    --sidebar-anchor-active: hsl(217, 89%, 67%);
+    --sidebar-button-hover: hsl(225, 4%, 20%);
+    --discoverbg: hsla(217, 89%, 76%, 0.12);
+
+    /* sidebar-v2 */
+    --sidebar-v2-bg: hsl(210, 4%, 9%);
+    --sidebar-v2-bg-hover: hsl(210, 4%, 15%);
+    --sidebar-v2-bg-active: hsl(210, 4%, 18%);
+    --sidebar-v2-border: hsl(210, 4%, 16%);
+    --sidebar-v2-bg-600: hsl(225, 6%, 13%);
+    --sidebar-v2-font: hsl(0, 0%, 100%);
+
+    /* chats */
+    --chats-font-muted: hsl(200, 11%, 72%);
+    --chats-font-muted-600: hsl(200, 11%, 52%);
+    --chats-bg: hsl(220, 3%, 7%);
+    --chats-header-bg: hsl(210, 4%, 16%);
+    --chats-bg-hover: hsl(210, 4%, 22%);
+    --chats-bg-active: hsl(210, 4%, 28%);
+    --chats-border: hsl(210, 4%, 16%);
+    --chats-popover-bg: hsl(217, 15%, 14%);
+    --chats-popover-shadow: hsl(0, 0%, 5%);
+    --chats-popover-font-hover: hsl(0, 0%, 100%);
+
+    /* dialog */
+    --dialog-border: hsl(225, 6%, 28%);
+    --dialog-border-darker: hsl(225, 6%, 18%);
+    --dialog-dark: hsl(210, 4%, 19%);
+    --dialog-hover: hsl(210, 4%, 22%);
+    --dialog-active: hsl(210, 4%, 25%);
+    --dialog-disabled: hsl(210, 4%, 50%);
+    --dialog-font-disabled: hsl(210, 4%, 20%);
+    --dialog-darker: hsl(210, 4%, 9%);
+    --dialog-font-muted: lab(66.128% -.0000298023 .0000119209);
+    --dialog-bg-muted: hsl(210, 4%, 12%);
+
+    /* suggestion */
+    --suggestionbox: hsl(0, 0%, 22%);
+    --suggestionSecondoryfont: rgb(157, 155, 155);
+    --suggestionHover: hsl(0, 0%, 32%);
+    /* navbar */
+    --nav-neutral-hover: hsl(225, 4%, 20%);
+    --nav-neutral-active: hsl(225, 4%, 25%);
+
+    /* group */
+    --group-neutral-muted: hsl(208, 5%, 72%);
+    --group-neutral-hover: hsl(0, 0%, 25%);
+    --group-neutral-disabled: hsl(225, 6%, 18%);
+}
+
+.disabledBtn {
+    pointer-events: none;
+    opacity: .7;
+}

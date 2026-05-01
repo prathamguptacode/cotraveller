@@ -1,21 +1,22 @@
 import { RequestHandler } from "express"
-import Group from "../models/groupSchema"
+import Group from "../models/Group"
 import User from "../models/User"
+import JoinRequest from "@/models/JoinRequest"
+import cloudinary from "@/config/cloudinary"
+import env from "@/config/env"
+import fs from 'fs/promises'
 
 export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
     const user = req.user
+
     const groups = await User.aggregate<{ title: string, _id: string, lastMessage?: { author: string, text: string, createdAt: Date } }>([
         {
             $match: { _id: user._id }
         },
         {
             $project: {
-                _id: 0,
                 memberGroup: 1
             }
-        },
-        {
-            $unwind: '$memberGroup'
         },
         {
             $lookup: {
@@ -30,7 +31,8 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
                 memberGroup: {
                     title: 1,
                     _id: 1,
-                    messages: 1
+                    messages: 1,
+                    avatar: 1
                 }
             }
         },
@@ -39,56 +41,105 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
         },
         {
             $lookup: {
-                from: 'messages',
-                let: { roomId: '$memberGroup._id' },
+                from: 'conversation_records',
+                let: { groupId: '$memberGroup._id', userId: '$_id' },
                 pipeline: [
                     {
-                        $match: { $expr: { $eq: ['$roomId', '$$roomId'] } }
-                    },
-
-                    {
-                        $sort: { createdAt: -1 }
-                    },
-                    {
-                        $limit: 1
-                    },
-                    {
-                        $lookup: {
-                            from: 'users',
-                            localField: 'author',
-                            foreignField: '_id',
-                            as: 'author'
+                        $match: {
+                            $and: [{ $expr: { $eq: ['$memberId', '$$userId'] } }, { $expr: { $eq: ['$roomId', '$$groupId'] } }]
                         }
                     },
-                    {
-                        $project: {
-                            author: '$author.fullName',
-                            text: 1,
-                            createdAt: 1,
-                            _id: 0
-                        }
-                    },
-                    {
-                        $unwind: '$author'
-                    }
-
                 ],
-                as: 'lastMessage'
+                as: 'conversationRecord'
             }
         },
         {
             $unwind: {
-                path: '$lastMessage',
+                path: '$conversationRecord',
                 preserveNullAndEmptyArrays: true
             }
         },
         {
-            $replaceRoot: { newRoot: { $mergeObjects: ['$memberGroup', '$$ROOT'] } }
+            $lookup: {
+                from: 'messages',
+                let: { roomId: '$memberGroup._id', lastReadAt: '$conversationRecord.lastReadAt' },
+                pipeline: [
+                    {
+                        $match: { $expr: { $eq: ['$roomId', '$$roomId'] } }
+                    },
+                    {
+                        $facet: {
+                            unreadMessages: [
+                                {
+                                    $match: { $expr: { $gt: ['$createdAt', '$$lastReadAt'] } },
+                                },
+                                {
+                                    $count: 'unreadMessagesCount'
+                                }
+                            ],
+                            lastMessage: [
+                                {
+                                    $sort: { createdAt: -1 }
+                                },
+                                {
+                                    $limit: 1
+                                },
+                                {
+                                    $lookup: {
+                                        from: 'users',
+                                        localField: 'author',
+                                        foreignField: '_id',
+                                        as: 'author'
+                                    }
+                                },
+                                {
+                                    $project: {
+                                        author: '$author.fullName',
+                                        text: 1,
+                                        createdAt: 1,
+                                        _id: 0
+                                    }
+                                },
+                                {
+                                    $unwind: '$author'
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: '$unreadMessages',
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: '$lastMessage',
+                            preserveNullAndEmptyArrays: true
+                        }
+                    }
+
+
+                ],
+                as: 'lastMessageAndStats'
+            }
+        },
+        {
+            $unwind: {
+                path: '$lastMessageAndStats',
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $replaceWith: { $mergeObjects: ['$memberGroup', '$lastMessageAndStats'] }
         },
         {
             $project: {
-                memberGroup: 0,
-                messages: 0,
+                unreadMessagesCount: { $ifNull: ['$unreadMessages.unreadMessagesCount', 0] },
+                _id: 1,
+                title: 1,
+                lastMessage: 1,
+                avatar:1
             }
         },
         {
@@ -100,109 +151,75 @@ export const fetchJoinedGroupsController: RequestHandler = async (req, res) => {
 
 export const fetchIncomingRequestsController: RequestHandler = async (req, res) => {
     const user = req.user
-    const inbox = await User.aggregate([
-        {
-            $match: { _id: user._id }
-        },
 
+    const requests = await JoinRequest.aggregate([
         {
-            $project: {
-                _id: 0,
-                memberGroup: 1,
+            $match: {
+                groupId: { $in: user.groups }
             }
         },
         {
             $lookup: {
-                from: 'groups',
-                let: { ids: '$memberGroup' },
+                from: 'users',
+                let: { requesterId: '$requesterId' },
                 pipeline: [
                     {
-                        $match: { $expr: { $in: ['$_id', '$$ids'] } }
+                        $match: { $expr: { $eq: ['$_id', '$$requesterId'] } }
                     },
                     {
                         $project: {
-                            title: 1,
-                            requests: 1,
+                            fullName: 1,
+                            avatar: 1,
+                            email: 1,
                             createdAt: 1,
-                        }
-                    },
-                    {
-                        $lookup: {
-                            from: 'users',
-                            let: { ids: '$requests' },
-                            pipeline: [
-                                {
-                                    $match: { $expr: { $in: ['$_id', '$$ids'] } }
-                                },
-                                {
-                                    $project: {
-                                        fullName: 1,
-                                    }
-                                }
-                            ],
-                            as: 'requestee'
-                        }
-                    },
-                    {
-                        $unwind: '$requestee'
-                    },
-                    {
-                        $sort: { _id: 1, createdAt: -1 }
-                    },
-                    {
-                        $project: {
-                            createdAt: 0,
-                            requests: 0,
+                            username: 1,
+                            memberGroup: 1
                         }
                     }
                 ],
-                as: 'groups'
-            }
-        },
-        {
-            $project: {
-                groups: 1,
-            }
-        }
-    ])
-    res.success(200, { groups: inbox[0].groups })
-
-}
-
-// ###CHANGE all necessary shit to ACID instead of one by one
-export const fetchOutgoingRequestsController: RequestHandler = async (req, res) => {
-    const user = req.user
-    const outbox = await User.aggregate([
-        {
-            $match: { _id: user._id }
-        },
-        {
-            $project: {
-                requests: 1
+                as: 'requester'
             }
         },
         {
             $lookup: {
                 from: 'groups',
-                let: { requests: '$requests' },
+                let: { groupId: '$groupId' },
                 pipeline: [
                     {
-                        $match: { $expr: { $in: ['$_id', '$$requests'] } }
+                        $match: { $expr: { $eq: ['$_id', '$$groupId'] } }
                     },
                     {
                         $project: {
                             title: 1,
-                            memberNumber: 1,
+                            members: '$member',
                         }
                     }
                 ],
-                as: 'groups'
+                as: 'group'
             }
+        },
+        {
+            $unwind: '$requester'
+        },
+        {
+            $unwind: '$group'
+        },
+        {
+            $sort: { createdAt: -1 }
         }
     ])
+    res.success(200, { requests })
 
-    res.success(200, { groups: outbox[0].groups })
 }
+
+export const fetchInboxStatusController: RequestHandler = async (req, res) => {
+    const user = req.user
+
+    const groupJoinRequestsCount = await JoinRequest.countDocuments({ groupId: { $in: user.groups } })
+
+    res.success(200, { groupJoinRequestsCount })
+}
+
 
 export const deleteOutgoingRequestController: RequestHandler = async (req, res) => {
     const user = req.user
@@ -218,5 +235,61 @@ export const deleteOutgoingRequestController: RequestHandler = async (req, res) 
 }
 
 
+export const uploadAvatarController: RequestHandler = async (req, res) => {
+    const file = req.file
+    const user = req.user
+    if (!file) return res.fail(400, "BAD_REQUEST", "File is invalid/empty")
+
+    let options: {} | {
+        public_id: string,
+        invalidate: true,
+        overwrite: true
+    } = {}
+
+    if (user.avatar.publicId) options = {
+        public_id: user.avatar.publicId,
+        invalidate: true,
+        overwrite: true
+    }
+    try {
+        const { public_id: publicId, version } = await cloudinary.uploader.upload(file.path, {
+            asset_folder: env.MODE,
+            use_filename: true,
+            unique_filename: true,
+            resource_type: 'auto',
+            ...options
+
+        })
+
+        await User.updateOne({ _id: user._id }, { $set: { avatar: { publicId, version } } })
+        return res.success(201, { publicId, version }, "User Avatar upload successful")
+
+    } catch (error) {
+        console.error("Error uploading user avatar to cloudinary", error)
+        return res.fail()
+    } finally {
+        try {
+            await fs.unlink(file.path)
+        } catch (error) {
+            console.error("File was not unlinked")
+        }
+    }
 
 
+
+}
+
+
+
+export const removeAvatarController: RequestHandler = async (req, res) => {
+    const { publicId } = req.user.avatar
+    if (!publicId) return res.fail(404, "RESOURCE_NOT_FOUND", "You do not have an avatar")
+
+    const result = await cloudinary.uploader.destroy(publicId, {
+        invalidate: true,
+    })
+
+    await User.updateOne({ _id: req.user._id }, { $set: { avatar: { publicId: '', version: 0 } } })
+
+    res.success(204, { result }, "Removal successful")
+}

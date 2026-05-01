@@ -1,40 +1,62 @@
 import express from 'express'
 const router = express.Router()
-import { addGroup, viewRequest, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup } from '../controllers/groupController'
+import { addGroup, acceptIncomingRequestController, declineIncomingRequestController, groupnumber, editGroup, addComment, fetchGroupComments, deleteGroupComment, toggleLikeOnGroupComment, fetchGroupJoinRequests, leaveGroupController, uploadAvatarController, removeAvatarController } from '../controllers/groupController'
 import asyncHandler from '../middlewares/asyncHandler'
-import { viewGroup } from '../controllers/groupController'
+import { fetchGroupInfo } from '../controllers/groupController'
 import { viewGroupByFilter } from '../controllers/groupController'
 import { addRequest } from '../controllers/groupController'
-import { verifyAccessToken } from '../middlewares/authMiddleware'
-
-//should have middleware
-router.post('/addgroup', verifyAccessToken, asyncHandler(addGroup))
-
-router.get('/viewgroup', asyncHandler(viewGroup))//we never have to use this route
-
-router.post('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))//no middleware required
-
-//adding people to group logic
-//so the logic goes (like) first sees the post and (like) one so they request to join group
-//after this reequest comes to members (or owner) of group
-//if they accecpt the request then walah user is added as member and they all can talk now
-//then group people can talk from socket io
-
-router.get('/getnumbers', groupnumber)
+import { authMiddleware } from '../middlewares/authMiddleware'
+import Group from '@/models/Group'
+import { isObjectIdOrHexString } from 'mongoose'
+import { checkMagicBytes, checkMulterUploadPath, multerUploadImage } from '@/middlewares/multer'
 
 
-router.use(verifyAccessToken)
 
-router.post('/addrequest', asyncHandler(addRequest))
+router.post('/', authMiddleware, asyncHandler(addGroup))
 
-router.get('/viewrequest', asyncHandler(viewRequest))// this is for member to see request
+router.get('/viewgroupbyfilter', asyncHandler(viewGroupByFilter))
+
+router.get('/live', groupnumber)
+
+router.get('/:groupId', asyncHandler(fetchGroupInfo))
+
+router.get('/:groupId/comments', asyncHandler(fetchGroupComments))
+
+router.get('/:groupId/requests', asyncHandler(fetchGroupJoinRequests))
 
 
+
+router.use(authMiddleware)
+
+
+router.patch('/:groupId', asyncHandler(editGroup))
+router.route('/:groupId/avatar')
+    .patch(asyncHandler(checkMulterUploadPath), multerUploadImage.single('group-avatar'), asyncHandler(checkMagicBytes), asyncHandler(uploadAvatarController))
+    .delete(asyncHandler(removeAvatarController))
+router.delete('/:groupId/members/me', asyncHandler(leaveGroupController))
+
+
+router.post('/:groupId/comments', asyncHandler(addComment))
+router.delete('/:groupId/comments/:commentId', asyncHandler(deleteGroupComment))
+router.patch('/:groupId/comments/:commentId/likes', asyncHandler(toggleLikeOnGroupComment))
+
+
+router.post('/:groupId/requests', asyncHandler(addRequest))
 router.post('/:groupId/requests/:requestId', asyncHandler(acceptIncomingRequestController))
-
 router.delete('/:groupId/requests/:requestId', asyncHandler(declineIncomingRequestController))
 
-router.post('/editgroup', asyncHandler(editGroup))
+
+router.param('groupId', async (req, res, next, groupId) => {
+    if (!isObjectIdOrHexString(groupId)) return
+    try {
+        const group = await Group.findById(groupId)
+        if (!group) return res.fail(404, "GROUP_NOT_FOUND", "The group does not exist")
+        next()
+    } catch (error) {
+        console.error(error)
+        return res.fail(500, "INTERNAL_ERROR", "Something went wrong !")
+    }
+})
 
 
 export default router

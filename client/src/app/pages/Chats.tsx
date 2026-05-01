@@ -1,0 +1,27 @@
+import styles from '@/features/chats/chats.module.css'
+import ChatArea from '@/features/chats/components/ChatArea'
+import { Suspense } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
+import ThreeDotLoader from '@/components/Loaders/ThreeDotLoader'
+import NotFound from './Extras/NotFound'
+import { useParams } from 'react-router-dom'
+
+
+const Chats = () => {
+    const { groupId } = useParams() as { groupId: string }
+    return (
+        <>
+            <div data-mobile-nav-hidden='true' className={styles.wrapper}>
+                <ErrorBoundary resetKeys={[groupId]} fallback={<div className={styles.chatAreaWrapper} style={{ overflow: 'hidden' }}><NotFound /></div>}>
+                    <Suspense key={groupId} fallback={<div className={styles.chatAreaWrapper}><ThreeDotLoader /></div>}>
+                        <ChatArea />
+                    </Suspense>
+                </ErrorBoundary>
+            </div >
+        </>
+
+    )
+}
+
+export default Chats
+

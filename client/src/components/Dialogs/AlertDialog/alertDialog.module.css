@@ -1,0 +1,83 @@
+.dialog {
+    anchor-name: --alert-dialog;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+
+    margin: 0;
+    outline: none;
+    border: 1px solid var(--dialog-border-darker);
+    border-radius: 15px;
+
+    background-color: var(--dialog-darker);
+    color: var(--clr-font);
+
+    width: 384px;
+    max-width: 384px;
+
+    &::backdrop {
+        backdrop-filter: brightness(.75);
+    }
+
+}
+
+
+.dialogContentWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    padding: 1rem;
+}
+
+.dialogHeading {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--clr-font);
+}
+
+
+.dialogContent {
+    font-size: 14px;
+    color: var(--dialog-font-muted);
+}
+
+.dialogButtons {
+    background-color: var(--dialog-bg-muted);
+    border-top: .75px solid var(--dialog-border);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem;
+    gap: .5rem;
+}
+
+.dialogButton {
+    padding: .5em 1em;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 50px;
+    transition: all .15s linear;
+
+    &:active {
+        scale: .98;
+    }
+}
+
+.cancelButton {
+    --clr-hover: var(--dialog-dark);
+    border: .75px solid var(--dialog-border);
+}
+
+.confirmButton {
+    --clr-hover: var(--bg-invert-hover);
+    --clr-active: var(--bg-invert);
+    --clr-disabled: var(--bg-invert);
+    --clr-font-disabled: var(--secondaryFont);
+    background-color: var(--bg-invert);
+    color: var(--secondaryFont);
+
+    &:disabled {
+        opacity: .5;
+    }
+}

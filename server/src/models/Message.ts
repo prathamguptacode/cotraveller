@@ -6,20 +6,19 @@ const messageSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
     text: {
         type: String,
         required: true
     },
+    
     //groupId is the roomId
     roomId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Group",
         required: true
-    }
+    },
+}, {
+    timestamps: true
 })
 
 export type MessageType = HydratedDocument<mongoose.InferSchemaType<typeof messageSchema>>

@@ -9,6 +9,8 @@ const feedbackSchema = new mongoose.Schema({
     story: {
         type: String
     }
+}, {
+    timestamps: true
 })
 
 

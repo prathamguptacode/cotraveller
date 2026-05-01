@@ -1,0 +1,58 @@
+.wrapper {
+    padding-bottom: 10rem;
+    color: var(--clr-font);
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-block-end: .5rem;
+
+}
+
+.qbox {
+    border-bottom: .5px solid var(--clr-border);
+    padding: 1em;
+    cursor: pointer;
+}
+
+.question {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.ans {
+    overflow: hidden;
+    transition: all 0.4s ease;
+    height: 0px;
+    white-space: pre-line;
+    line-height: 1.5;
+}
+
+.arrowbx {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.arrow {
+    padding: 8px;
+    border-radius: 26px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.arrow:hover {
+    background-color: var(--clr-bg-hover);
+}
+
+.open {
+    .ans {
+        height: auto;
+        margin-block: 1rem;
+    }
+
+    .arrow {
+        rotate: 180deg;
+    }
+}

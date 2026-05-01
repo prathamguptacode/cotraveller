@@ -1,9 +1,14 @@
-import axios, { AxiosError } from 'axios'
+import axios, { type AxiosRequestConfig } from 'axios'
 import { useToken } from '../hooks/useToken'
-import type { ApiError, ApiSuccess } from '@/types/api.types'
+import type { ApiSuccess } from '@/types/api.types'
+
+import { toast } from 'sonner'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL + "/api"
-export const api = axios.create({
+
+
+
+export const rawAxios = axios.create({
     baseURL,
     withCredentials: true,
     //###LATER withXSRF token wth???
@@ -14,19 +19,26 @@ export const unAuthApi = axios.create({
     withCredentials: true
 })
 
-api.interceptors.request.use(config => {
+rawAxios.interceptors.request.use(config => {
     const { accessToken } = useToken()
     config.headers["authorization"] = `Bearer ${accessToken}`
     return config
 })
 
-api.interceptors.response.use(res => {
-    return res
+rawAxios.interceptors.response.use(res => {
+    const response = {
+        status: res.status,
+        success: true,
+        data: res.data.data,
+        message: res.data.message
+    }
+    return response as never
 },
     async err => {
         const { updateAccessToken } = useToken()
         //Copying original Request for retrying incase of expired accessToken(just once)
         const originalRequest = err.config
+
 
         //Adding a new retriedOnce property to err object, if it does not exist, i.e. request hasn't already been retried once
         //Also therefore we enter the if statement only if token had expired gracefully and request hasn't been retried
@@ -38,18 +50,23 @@ api.interceptors.response.use(res => {
 
                 updateAccessToken(accessToken)
                 originalRequest.headers['authorization'] = `Bearer ${accessToken}`
-                return api(originalRequest)
+                return rawAxios(originalRequest)
 
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
                 console.warn("Failed to refresh token")
             }
         }
         else if (err.status === 401) {
             console.warn("ERROR:401:UNAUTHORIZED, Logging out")
+            toast.error("Unauthorized", {
+                description: "Logging out..",
+                duration: 1500
+            })
             return unAuthApi.post('/auth/logout')
         }
-        else if (err.status === 500) {
-            console.error("ERROR:500:Something went wrong!")
+        else if (err.status >= 500) {
+            console.warn('ERROR:500:INTERNAL_ERROR, Something went wrong !')
         }
         return Promise.reject(err)
     }
@@ -57,35 +74,32 @@ api.interceptors.response.use(res => {
 
 
 
-
-
-type ApiMethod = 'get' | 'post' | 'delete' | 'patch' | 'put'
-
-export const callAuthApi = async<T>(method: ApiMethod, route: string, body = {}): Promise<ApiSuccess<T> | ApiError> => {
-    try {
-        const { status, data } = await api[method]<{ success: true, data: T, message: string }>(route, body)
-        return {
-            status,
-            data: {
-                success: true,
-                data: data.data,
-                message: data.message
-            }
-        }
-    } catch (error) {
-        console.error(error)
-        if (error instanceof AxiosError && error.response) {
-            const { status, data } = error.response
-            return {
-                status,
-                data: {
-                    success: false,
-                    code: data.code,
-                    message: data.message
-                }
-            }
-
-        }
-        return { status: 500, data: { success: false, code: "INTERNAL_ERROR", message: "Something went wrong !" } }
-    }
+type ApiAxiosInstance = {
+    get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiSuccess<T>>
+    post<T>(
+        url: string,
+        body?: unknown,
+        config?: AxiosRequestConfig
+    ): Promise<ApiSuccess<T>>
+    put<T>(
+        url: string,
+        body?: unknown,
+        config?: AxiosRequestConfig
+    ): Promise<ApiSuccess<T>>
+    put<T>(
+        url: string,
+        body?: unknown,
+        config?: AxiosRequestConfig
+    ): Promise<ApiSuccess<T>>,
+    patch<T>(
+        url: string,
+        body?: unknown,
+        config?: AxiosRequestConfig
+    ): Promise<ApiSuccess<T>>,
+    delete<T>(
+        url: string,
+        config?: AxiosRequestConfig
+    ): Promise<ApiSuccess<T>>,
 }
+
+export const api = rawAxios as ApiAxiosInstance

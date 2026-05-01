@@ -1,17 +1,22 @@
 import express from 'express'
-import  asyncHandler  from '../middlewares/asyncHandler'
-import { deleteOutgoingRequestController, fetchIncomingRequestsController, fetchJoinedGroupsController, fetchOutgoingRequestsController } from '../controllers/userController'
-import { verifyAccessToken } from '../middlewares/authMiddleware'
+import asyncHandler from '../middlewares/asyncHandler'
+import { deleteOutgoingRequestController, fetchInboxStatusController, fetchIncomingRequestsController, fetchJoinedGroupsController, removeAvatarController, uploadAvatarController } from '../controllers/userController'
+import { authMiddleware } from '../middlewares/authMiddleware'
+import { checkMagicBytes, checkMulterUploadPath, multerUploadImage } from '@/middlewares/multer'
 
 const router = express.Router()
 
-router.use(verifyAccessToken)
+router.use(authMiddleware)
 
 router.get('/groups', asyncHandler(fetchJoinedGroupsController))
 
 router.get('/inbox', asyncHandler(fetchIncomingRequestsController))
 
-router.get('/outbox', asyncHandler(fetchOutgoingRequestsController))
+router.get('/inbox/status',asyncHandler(fetchInboxStatusController))
+
+router.route('/avatar')
+    .patch(asyncHandler(checkMulterUploadPath), multerUploadImage.single('user-avatar'), asyncHandler(checkMagicBytes), asyncHandler(uploadAvatarController))
+    .delete(asyncHandler(removeAvatarController))
 
 router.delete('/requests/:requestId', asyncHandler(deleteOutgoingRequestController))
 
