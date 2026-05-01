@@ -11,7 +11,7 @@ export const groupForm2Schema = z.object({
     travelTime: z.string().min(1, 'Travel time is required'),
     mode: z.string().min(1, 'Transport is required'),
     intialLocation: z.string().min(1, 'Initial location is required'),
-    memberNumber: z.coerce.number().min(1, 'Number of people is required'),
+    memberNumber: z.number().min(2),
 })
 
 const allowedTags = ["no alcohol", "girls only", "budget friendly", "pet friendly"]

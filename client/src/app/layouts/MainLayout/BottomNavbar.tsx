@@ -55,8 +55,7 @@ const BottomNavbar = () => {
           if (!target || !('nodeType' in target)) {
             throw new Error("Not a Node")
           }
-        } catch (e) {
-          console.log(e)
+        } catch {
           return
         }
 

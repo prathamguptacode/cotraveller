@@ -17,15 +17,17 @@ function LiveGroups() {
             if (element._id == 'Taxi') {
               setTaxiNum(element.count);
             }
-            if (element._id == 'Railway') {
+            if (element._id == 'Train') {
               setRailNum(element.count);
             }
-            if (element._id == 'Airplane') {
+            if (element._id == 'Flight') {
               setAirNum(element.count);
             }
           });
         }
-      } catch {}
+      } catch {
+        return
+      }
     })();
   });
 

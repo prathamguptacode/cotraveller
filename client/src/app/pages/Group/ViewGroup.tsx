@@ -49,7 +49,7 @@ function ViewGroup() {
     const timeQ = query.get("time")
     const validateQuery = querySchema.safeParse({ location: locationQ, date: dateQ, members: membersQ, mode: modeQ, tags: tagsQ, time: timeQ })
 
-    const { data: groups, isLoading, isFetching, isError, refetch } = useQuery({
+    const { data: groups, isFetching, isError, refetch } = useQuery({
         queryKey: ["groups", location, date],
         queryFn: () => {
             let url = `groups/viewgroupbyfilter?intialLocation=${location}&travelDate=${date}`;
@@ -72,7 +72,6 @@ function ViewGroup() {
                 const text = `&travelTime=${validateQuery.data.time}`
                 url = url.concat(text)
             }
-            console.log(url)
             return api.get<Groups>(url)
         },
         select(data) {
