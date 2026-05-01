@@ -145,6 +145,7 @@ select {
 
 .datebox {
     flex: 1;
+    width: 100%;
 }
 
 .dateInput {
@@ -398,4 +399,52 @@ select {
     border-radius: 4px;
     padding: 18px;
     cursor: not-allowed;
+}
+.upperNote{
+    text-align: center;
+}
+
+/* ### these just work but not are not good */
+@container (max-width: 820px){
+    .wrapper{
+        /* background-color: red; */
+        max-width: 700px;
+        padding: 1.5rem 2rem;
+    }
+}
+@container (max-width: 770px){
+    .wrapper{
+        max-width: 600px;
+        padding: 1.5rem 2rem;
+    }
+    .stepName{
+        display: none;
+    }
+    .line{
+        flex: 1;
+    }
+    .statusbar{
+        max-width: 600px;
+        margin: auto;
+        padding: 1rem;
+    }
+    .dateSection{
+        flex-direction: column;
+        gap: 1rem;
+        padding-bottom: 0;
+    }
+}
+@container (max-width: 770px){
+    .wrapper{
+        padding: 1rem 1.5rem;
+    }
+    .startOver{
+        display: none;
+    }
+    .note{
+        padding: 1rem 0.6rem;
+    }
+    .reviewCard{
+        padding: 1.5rem 0;
+    }
 }

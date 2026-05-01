@@ -4,6 +4,7 @@ import { useGroupForm } from '../hooks/useGroupForm'
 import Chip from '@mui/material/Chip'
 import { HandCoins, PawPrint, Venus, WineOff } from 'lucide-react'
 import { useState } from 'react'
+import { Controller } from 'react-hook-form'
 
 type GroupFormReviewProps = {
   startOver: () => void
@@ -11,7 +12,7 @@ type GroupFormReviewProps = {
 
 const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
 
-  const { watch } = useGroupForm()
+  const { watch, control } = useGroupForm()
 
   const date = watch('travelDate') + 'T' + watch('travelTime')
   const Acdate = new Date(date);
@@ -24,13 +25,6 @@ const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit'
-  })
-
-  const [tags, setTags] = useState({
-    noalcohol: false,
-    girlsonly: false,
-    budgetfriendly: false,
-    petfriendly: true
   })
 
   return (
@@ -92,26 +86,72 @@ const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
 
       <div>
         <div className={mystyle.value}>
+          <Controller control={control} name='tags' defaultValue={[]}
+            render={({ field: { onChange, value } }) => (
+              (value) ? (<Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
 
-          <Stack direction="row" spacing={1} useFlexGap sx={{ flexWrap: 'wrap' }}>
+                <Chip
+                  onClick={() =>
+                    value.includes("no alcohol")
+                      ? onChange(value.filter(v => v !== "no alcohol"))
+                      : onChange([...value, "no alcohol"])
+                  }
+                  sx={{ cursor: "pointer", padding: "8px" }}
+                  label="No Alcohol"
+                  variant={value.includes("no alcohol") ? "filled" : "outlined"}
+                  color="primary"
+                  icon={<WineOff />}
+                />
 
-            <Chip onClick={() => tags.noalcohol ? setTags({ ...tags, noalcohol: false }) : setTags({ ...tags, noalcohol: true })} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="No Alcohol" variant={tags.noalcohol ? "filled" : "outlined"} color="primary" icon={<WineOff />} />
+                <Chip
+                  onClick={() =>
+                    value.includes("girls only")
+                      ? onChange(value.filter(v => v !== "girls only"))
+                      : onChange([...value, "girls only"])
+                  }
+                  sx={{ cursor: "pointer", padding: "8px" }}
+                  label="Girls Only"
+                  variant={value.includes("girls only") ? "filled" : "outlined"}
+                  color="primary"
+                  icon={<Venus />}
+                />
 
-            <Chip onClick={() => tags.girlsonly ? setTags({ ...tags, girlsonly: false }) : setTags({ ...tags, girlsonly: true })} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="Girls Only" variant={tags.girlsonly ? "filled" : "outlined"} color="primary" icon={<Venus />} />
+                <Chip
+                  onClick={() =>
+                    value.includes("budget friendly")
+                      ? onChange(value.filter(v => v !== "budget friendly"))
+                      : onChange([...value, "budget friendly"])
+                  }
+                  sx={{ cursor: "pointer", padding: "8px" }}
+                  label="Budget Friendly"
+                  variant={value.includes("budget friendly") ? "filled" : "outlined"}
+                  color="primary"
+                  icon={<HandCoins />}
+                />
 
-            <Chip onClick={() => tags.budgetfriendly ? setTags({ ...tags, budgetfriendly: false }) : setTags({ ...tags, budgetfriendly: true })} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="Budget Friendly" variant={tags.budgetfriendly ? "filled" : "outlined"} color="primary" icon={<HandCoins />} />
+                <Chip
+                  onClick={() =>
+                    value.includes("pet friendly")
+                      ? onChange(value.filter(v => v !== "pet friendly"))
+                      : onChange([...value, "pet friendly"])
+                  }
+                  sx={{ cursor: "pointer", padding: "8px" }}
+                  label="Pet Friendly"
+                  variant={value.includes("pet friendly") ? "filled" : "outlined"}
+                  color="primary"
+                  icon={<PawPrint />}
+                />
 
-            <Chip onClick={() => tags.petfriendly ? setTags({ ...tags, petfriendly: false }) : setTags({ ...tags, petfriendly: true })} sx={{ "&:hover": { cursor: "pointer", }, padding: "8px" }} label="Pet Friendly" variant={tags.petfriendly ? "filled" : "outlined"} color="primary" icon={<PawPrint />} />
-
-          </Stack>
-
-
+              </Stack>) : <div></div>
+            )} />
         </div>
       </div>
 
       <div className={mystyle.note}>
-        Once created, your group will be visible to other travelers.
-        They can join and chat with you to coordinate the trip!
+        <div className={mystyle.upperNote}>
+          Once created, your group will be visible to other travelers.
+          They can join and chat with you to coordinate the trip!
+        </div>
         <div className={mystyle.startOver}>
           Something not right?{' '}
           <button
