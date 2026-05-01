@@ -47,7 +47,7 @@ const StepIndicator = ({ forStep, currentStep, handleBack, handleNext, stepName 
       <button onClick={handleSwitchStep} className={clsx(mystyle.dot, currentStep < forStep && mystyle.inactive, currentStep == forStep && mystyle.active)}>
         {forStep + 1}
       </button>
-      <span>{stepName}</span>
+      <span className={mystyle.stepName}>{stepName}</span>
       <div className={clsx(mystyle.line, currentStep <= forStep && mystyle.inactive)}></div>
     </>
 

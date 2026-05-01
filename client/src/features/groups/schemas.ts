@@ -14,4 +14,9 @@ export const groupForm2Schema = z.object({
     memberNumber: z.coerce.number().min(1, 'Number of people is required'),
 })
 
-export const groupFormSchema = z.object({ ...groupForm1Schema.shape, ...groupForm2Schema.shape })
+const allowedTags = ["no alcohol", "girls only", "budget friendly", "pet friendly"]
+export const groupForm3Schema = z.object({
+    tags: z.array(z.enum(allowedTags)).max(4).optional(),
+})
+
+export const groupFormSchema = z.object({ ...groupForm1Schema.shape, ...groupForm2Schema.shape, ...groupForm3Schema.shape })
