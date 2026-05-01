@@ -80,12 +80,12 @@ export const editGroup: RequestHandler = async (req, res) => {
     const parsedData = GroupSchema.safeParse(req.body)
     if (!parsedData.success) return res.fail(400, "INPUT_ERROR", "Invalid input data")
 
-    const { title, content, memberNumber, mode, travelDate, intialLocation } = parsedData.data
+    const { title, content, memberNumber, mode, travelDate, intialLocation, tags } = parsedData.data
 
     //telling mongo that date formate is ist
     const istDate = moment.tz(travelDate, "Asia/Kolkata").toDate();
 
-    await Group.updateOne({ _id: group }, { title, content, memberNumber, mode, travelDate: istDate, intialLocation, })
+    await Group.updateOne({ _id: group }, { title, content, memberNumber, mode, travelDate: istDate, intialLocation, tags })
     res.success(200)
 }
 
