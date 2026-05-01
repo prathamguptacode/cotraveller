@@ -38,12 +38,12 @@ const groupSchema = new mongoose.Schema({
     },
 
     //###REMOVE Will be removed after migration is complete on production
-    requests: {
-        type: [Schema.Types.ObjectId],
-        ref: 'User',
-        default: []
-        //should be unique
-    },
+    // requests: {
+    //     type: [Schema.Types.ObjectId],
+    //     ref: 'User',
+    //     default: []
+    //     //should be unique
+    // },
 
     //Stores a ref to JoinRequest Schema
     incomingRequests: {
