@@ -77,6 +77,7 @@ const GroupInfoHero = () => {
         mutationFn: (formData: FormData) => api.patch<{ publicId: string, version: number }>(`/groups/${groupId}/avatar`, formData),
         onSuccess: () => {
             queryClient.refetchQueries({ queryKey: ['groups', groupId], exact: true })
+            queryClient.refetchQueries({ queryKey: ['groups'], exact: true })
             toast.success(`Photo ${group.avatar.publicId ? 'Changed' : 'Added'}`)
         },
         onError: (error) => {
@@ -95,6 +96,7 @@ const GroupInfoHero = () => {
         mutationFn: () => api.delete(`/groups/${groupId}/avatar`),
         onSuccess: () => {
             queryClient.refetchQueries({ queryKey: ['groups', groupId], exact: true })
+            queryClient.refetchQueries({ queryKey: ['groups'], exact: true })
             toast.success('Removal successful')
         },
         onError: (error) => {
@@ -122,7 +124,7 @@ const GroupInfoHero = () => {
         }
 
         closeDialog(avatarDialogRef)
-        
+
         const formData = new FormData()
         formData.append('group-avatar', file)
         uploadAvatarMutate(formData)
