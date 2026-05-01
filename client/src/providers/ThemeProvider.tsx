@@ -3,20 +3,22 @@ import { ThemeContext, type Theme } from '@/hooks/useTheme'
 
 const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const [theme, setTheme] = useState<Theme>(() => {
-        const savedTheme = localStorage.getItem('theme')
-        if (savedTheme === 'dark') {
-            document.documentElement.classList.add(savedTheme)
-            return savedTheme
-        }
+        // const savedTheme = localStorage.getItem('theme')
+        // if (savedTheme === 'dark') {
+        //     document.documentElement.classList.add(savedTheme)
+        //     return savedTheme
+        // }
 
-        else if (savedTheme === 'light') return savedTheme
-        const newTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-        localStorage.setItem('theme', newTheme)
-        if (newTheme === 'dark') {
-            document.documentElement.classList.add(newTheme)
-            return newTheme
-        }
-        return newTheme
+        // else if (savedTheme === 'light') return savedTheme
+        // const newTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        // localStorage.setItem('theme', newTheme)
+        // if (newTheme === 'dark') {
+        //     document.documentElement.classList.add(newTheme)
+        //     return newTheme
+        // }
+        // return newTheme
+        document.documentElement.classList.add('dark')
+        return 'dark'
     })
 
     const toggleTheme = () => {
