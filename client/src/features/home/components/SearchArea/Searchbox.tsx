@@ -74,9 +74,18 @@ function Searchbox({ dLocation, dDate }: { dLocation: string | null, dDate: stri
                             {
                                 (screenWidth > 590) ?
 
-                                    <DatePicker disablePast defaultValue={dayjs(defaultDate)} format='DD/MM/YYYY' label='Departure' sx={{ width: 1 }} onChange={e => dateSet(e)} /> : <DatePicker slotProps={{
-                                        field: { openPickerButtonPosition: 'start' }
-                                    }} disablePast defaultValue={dayjs(defaultDate)} format='DD/MM/YYYY' label='Departure' sx={{ width: 1 }} onChange={e => dateSet(e)} />
+                                    <DatePicker disablePast defaultValue={dayjs(defaultDate)} format='DD/MM/YYYY' label='Departure' sx={{ width: 1 }} onChange={e => dateSet(e)} /> : <DatePicker
+                                        slotProps={{
+                                            field: { openPickerButtonPosition: 'start' },
+                                            textField: {
+                                                sx: {
+                                                    '& .MuiInputAdornment-root': {
+                                                        marginLeft: 1,
+                                                    },
+                                                },
+                                            },
+                                        }}
+                                        disablePast defaultValue={dayjs(defaultDate)} format='DD/MM/YYYY' label='Departure' sx={{ width: 1 }} onChange={e => dateSet(e)} />
                             }
                         </DemoContainer>
 

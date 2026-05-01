@@ -180,3 +180,9 @@ ul {
     flex: 1;
 
 }
+
+@media (max-width:590px) {
+    .locationcamp {
+        padding: 18px 1rem;
+    }
+}

@@ -95,10 +95,7 @@ function ViewGroup() {
     return (
         <div className={mystyle.wrapper}>
             <Searchbox dLocation={location} dDate={date} />
-            {
-                isFetching ? <LoadingPage /> : null
-            }
-            {isLoading ? <LoadingPage /> :
+            {isFetching ? <LoadingPage /> :
                 <div>
                     {
                         groups && groups.length > 0 ? groups.map(group => <Group group={group} />) : <NoGroup />
