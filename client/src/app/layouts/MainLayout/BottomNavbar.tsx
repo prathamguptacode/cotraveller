@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef, type JSX } from 'react'
 import styles from './sidebar.module.css'
 import type { SidebarTab } from './types'
-import { Home, Inbox, MessageCircle, Search, Users } from 'lucide-react'
+import { Home, Inbox, ListFilter, MessageCircle, Search, Users } from 'lucide-react'
 import { useMainLayoutContext } from './useMainLayout'
 import { Link, useLocation } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -10,19 +10,34 @@ import { useAuth } from '@/hooks/useAuth'
 import SidebarChatsPreview from '@/features/chats/components/SidebarChatsPreview'
 import SidebarInboxPreview from '@/features/inbox/SidebarInboxPreview'
 import clsx from 'clsx'
+import FilterSidebar from '@/features/filter/FilterSidebar'
 
-
-const bottomNavbarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
-  { name: 'Chats', icon: <MessageCircle /> },
-  { name: 'Groups', icon: <Users /> },
-  { name: 'Inbox', icon: <Inbox /> },
-  { name: 'Search', icon: <Search /> },
-]
 
 const BottomNavbar = () => {
   const { setSidebarIsHidden, setCurrentSidebarTab, currentSidebarTab, sidebarIsHidden, hamburgerRef, notifications } = useMainLayoutContext()
   const { user } = useAuth()
   const location = useLocation()
+
+  const bottomNavbarTabs: { name: SidebarTab, icon: JSX.Element }[] = [
+    { name: 'Chats', icon: <MessageCircle /> },
+    { name: 'Groups', icon: <Users /> },
+    { name: 'Inbox', icon: <Inbox /> },
+    { name: 'Search', icon: <Search /> },
+  ]
+  if (location.pathname == "/viewgroup") {
+    bottomNavbarTabs.push({
+      name: 'Filter', icon: <ListFilter />
+    })
+  }
+  useEffect(() => {
+    if (location.pathname == "/viewgroup") {
+      setSidebarIsHidden(false);
+      setCurrentSidebarTab('Filter');
+    }
+    else if (currentSidebarTab == 'Filter') {
+      setCurrentSidebarTab('Chats')
+    }
+  }, [location.pathname])
 
   const navRef = useRef<HTMLElement>(null)
 
@@ -90,7 +105,7 @@ const BottomNavbar = () => {
             <Suspense key={currentSidebarTab} fallback={<FallbackWrapper />}>
               {
                 currentSidebarTab == 'Chats' ? <SidebarChatsPreview /> :
-                  currentSidebarTab == 'Inbox' ? <SidebarInboxPreview /> :
+                  currentSidebarTab == 'Inbox' ? <SidebarInboxPreview /> : currentSidebarTab == 'Filter' ? <FilterSidebar /> :
                     <FallbackWrapper>Coming Soon !</FallbackWrapper>
               }
 

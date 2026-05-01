@@ -3,7 +3,6 @@ import mystyle from '../groupForm.module.css'
 import { useGroupForm } from '../hooks/useGroupForm'
 import Chip from '@mui/material/Chip'
 import { HandCoins, PawPrint, Venus, WineOff } from 'lucide-react'
-import { useState } from 'react'
 import { Controller } from 'react-hook-form'
 
 type GroupFormReviewProps = {
@@ -12,7 +11,7 @@ type GroupFormReviewProps = {
 
 const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
 
-  const { watch, control } = useGroupForm()
+  const { watch, control, formState:{errors} } = useGroupForm()
 
   const date = watch('travelDate') + 'T' + watch('travelTime')
   const Acdate = new Date(date);
@@ -144,6 +143,9 @@ const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
 
               </Stack>) : <div></div>
             )} />
+          <div className={mystyle.error}>
+            {errors.title?.message}
+          </div>
         </div>
       </div>
 
