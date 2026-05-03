@@ -48,7 +48,9 @@ const SidebarChatsPreview = () => {
         else setNotifications(prev => ({ ...prev, Chats: false }))
     }, [groups, setNotifications])
 
-
+    const Currentdate = new Date()
+    const defaultDate = `${Currentdate.getFullYear()}-${(Currentdate.getMonth() + 1).toString().padStart(2, "0")}-${Currentdate.getDate().toString().padStart(2, "0")}`;
+    const discoverURL = `/viewgroup?date=${defaultDate}`
 
     return (
         groups.length == 0 ?
@@ -56,8 +58,7 @@ const SidebarChatsPreview = () => {
                 {/* ###LATER Replace this fallback */}
                 <MountainSnow size={48} />
                 Find your first group now!
-                <Link to={`/viewgroup?q=VIT%20Chennai&mode=Airplane&lowerT=2025-12-20T00:00&upperT=2025-12-20T23:59&d=20&m=December&y=2025`
-                } className={styles.redirectButton} > Go</Link>
+                <Link to={discoverURL} className={styles.redirectButton} > Go</Link>
             </FallbackWrapper > :
             <div className={styles.list}>
                 {

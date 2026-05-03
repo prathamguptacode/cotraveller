@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import styles from './sidebar.module.css'
-import { Compass, Home, Inbox, MessageCircle, Search, Users } from 'lucide-react'
+import { Compass, GlobeLock, Home, Inbox, MessageCircle, Search, Users } from 'lucide-react'
 import { MdOutlineFeedback } from 'react-icons/md'
 import { Suspense, useEffect, useRef, type JSX } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -119,7 +119,12 @@ const Sidebar = () => {
                             }
                         </Suspense>
                     </ErrorBoundary> :
-                        <FallbackWrapper>Login to view</FallbackWrapper>
+                        <FallbackWrapper>
+                            <div className={styles.fallbackLogintoView}>
+                                <GlobeLock />
+                                Login to access
+                            </div>
+                        </FallbackWrapper>
                     }
                 </div>
             </div>

@@ -89,7 +89,6 @@ function ViewGroup() {
         }
     }, [query])
     if (!validateQuery.success) {
-        console.log(validateQuery.error)
         return <Navigate to={'/error'} />
     }
     if (isError) {
@@ -102,7 +101,7 @@ function ViewGroup() {
             {isFetching ? <LoadingPage /> :
                 <div>
                     {
-                        groups && groups.length > 0 ? groups.map(group => <Group group={group} />) : <NoGroup />
+                        groups && groups.length > 0 ? groups.map(group => <Group group={group} key={group._id} />) : <NoGroup />
                     }
                 </div>
             }

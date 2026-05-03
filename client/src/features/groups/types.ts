@@ -51,7 +51,8 @@ export type Group = {
     avatar: {
         publicId: string,
         version: number
-    }
+    },
+    tags: string[]
 }
 
 

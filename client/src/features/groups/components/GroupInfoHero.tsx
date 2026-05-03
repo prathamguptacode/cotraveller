@@ -186,20 +186,17 @@ const GroupInfoHero = () => {
 
 
                     <div className={styles.descriptionWrapper}>
-                        <div className={styles.tags}>
-                            <span className={styles.tag}>
-                                Boys Only
-                            </span>
-                            <span className={styles.tag}>
-                                No Alchohol
-                            </span>
-                            <span className={styles.tag}>
-                                No Loud Music
-                            </span>
-                            <span className={styles.tag}>
-                                Long Drive
-                            </span>
-                        </div>
+                        {
+                            group.tags && (group.tags.length > 0) &&
+                            <div className={styles.tags}>
+                                {group.tags.map((e) => {
+                                    return <span className={styles.tag}>
+                                        {e}
+                                    </span>
+                                })}
+                            </div>
+                        }
+
                         <ExpandableText text={group.content} inputId='toggleMoreDescription' className={styles.description} />
                     </div>
                     <div className={styles.groupInteractionButtons}>
