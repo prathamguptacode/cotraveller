@@ -27,7 +27,7 @@ type Groups = {
 }
 
 const querySchema = z.object({
-    location: z.string(),
+    location: z.string().nullable(),
     date: z.string(),
     members: z.coerce.number().refine(val => (val >= 2 && val <= 5) || val == 32).nullable(),
     mode: z.enum(["Train", "Flight", "Taxi", "Car", "Bike"]).nullable(),
@@ -52,7 +52,11 @@ function ViewGroup() {
     const { data: groups, isFetching, isError, refetch } = useQuery({
         queryKey: ["groups", location, date],
         queryFn: () => {
-            let url = `groups/viewgroupbyfilter?intialLocation=${location}&travelDate=${date}`;
+            let url = `groups/viewgroupbyfilter?travelDate=${date}`;
+            if (validateQuery.data?.location) {
+                const text = `&intialLocation=${validateQuery.data.location}`
+                url = url.concat(text)
+            }
             if (validateQuery.data?.members) {
                 const text = `&memberNumber=${validateQuery.data.members}`
                 url = url.concat(text)
@@ -85,6 +89,7 @@ function ViewGroup() {
         }
     }, [query])
     if (!validateQuery.success) {
+        console.log(validateQuery.error)
         return <Navigate to={'/error'} />
     }
     if (isError) {
