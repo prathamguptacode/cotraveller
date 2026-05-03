@@ -82,7 +82,7 @@ const BottomNavbar = () => {
 
   return (
     <nav ref={navRef} className={styles.bottomNavbar}>
-      <Link onClick={() => setSidebarIsHidden(true)} to={'/'}><Home /></Link>
+      <Link onClick={() => setSidebarIsHidden(true)} to={'/'} aria-label='home'><Home /></Link>
       {bottomNavbarTabs.map(tab => {
         const hasNotifications = (tab.name == 'Chats' || tab.name == 'Inbox') && notifications[tab.name]
         return (
