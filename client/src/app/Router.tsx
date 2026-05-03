@@ -1,20 +1,25 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
 import ProtectedRoutes from './routes/Protected.Routes'
 import AntiProtectedRoutes from './routes/AntiProtected.Routes'
-import Home from './pages/Home'
-import ViewGroup from './pages/Group/ViewGroup'
 import AuthLayout from './layouts/Auth/AuthLayout'
-import Signup from './pages/Signup'
-import Login from './pages/Login'
-import VerifyOTP from './pages/VerifyOTP'
-import CreateGroup from './pages/CreateGroup'
 import MainLayout from './layouts/MainLayout/MainLayout'
-import SuccessPage from './pages/Extras/SuccessPage'
-import Chats from './pages/Chats'
 import NotFound from './pages/Extras/NotFound'
-import FeedbackPage from './pages/Feedback/FeedbackPage'
-import EditGroup from './pages/EditGroup'
-import GroupInfo from './pages/GroupInfo'
+import LoadingPage from './pages/Extras/LoadingPage'
+
+
+const Home = lazy(() => import("./pages/Home"))
+const ViewGroup = lazy(() => import("./pages/Group/ViewGroup"))
+const Signup = lazy(() => import("./pages/Signup"))
+const Login = lazy(() => import("./pages/Login"))
+const VerifyOTP = lazy(() => import("./pages/VerifyOTP"))
+const CreateGroup = lazy(() => import("./pages/CreateGroup"))
+const SuccessPage = lazy(() => import("./pages/Extras/SuccessPage"))
+const Chats = lazy(() => import("./pages/Chats"))
+const FeedbackPage = lazy(() => import("./pages/Feedback/FeedbackPage"))
+const EditGroup = lazy(() => import("./pages/EditGroup"))
+const GroupInfo = lazy(() => import("./pages/GroupInfo"))
+
 
 
 
@@ -28,22 +33,22 @@ const Router = () => {
             <Routes>
 
                 <Route path='/' element={<MainLayout />}>
-                    <Route index element={<Home />} />
-                    <Route path='viewgroup' element={<ViewGroup />} />
+                    <Route index element={<Suspense fallback={<LoadingPage />}><Home /></Suspense>} />
+                    <Route path='viewgroup' element={<Suspense fallback={<LoadingPage />}><ViewGroup /></Suspense>} />
 
                     <Route path='/groups'>
                         <Route path=':groupId'>
-                            <Route index element={<GroupInfo />} />
+                            <Route index element={<Suspense fallback={<LoadingPage />}><GroupInfo /></Suspense>} />
 
                             <Route element={<ProtectedRoutes />}>
-                                <Route path='edit' element={<EditGroup />} />
-                                <Route path='chats' element={<Chats />} />
+                                <Route path='edit' element={<Suspense fallback={<LoadingPage />}><EditGroup /></Suspense>} />
+                                <Route path='chats' element={<Suspense fallback={<LoadingPage />}><Chats /></Suspense>} />
                             </Route>
                         </Route>
 
                         <Route element={<ProtectedRoutes />}>
-                            <Route path='create' element={<CreateGroup />} />
-                            <Route path='success' element={<SuccessPage />} />
+                            <Route path='create' element={<Suspense fallback={<LoadingPage />}><CreateGroup /></Suspense>} />
+                            <Route path='success' element={<Suspense fallback={<LoadingPage />}><SuccessPage /></Suspense>} />
                         </Route>
                     </Route>
                 </Route>
@@ -54,13 +59,13 @@ const Router = () => {
 
                 <Route element={<AntiProtectedRoutes />} >
                     <Route element={<AuthLayout />} >
-                        <Route path='/signup' element={<Signup />} />
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/signup/verify' element={<VerifyOTP />} />
+                        <Route path='/signup' element={<Suspense fallback={<LoadingPage />}><Signup /></Suspense>} />
+                        <Route path='/login' element={<Suspense fallback={<LoadingPage />}><Login /></Suspense>} />
+                        <Route path='/signup/verify' element={<Suspense fallback={<LoadingPage />}><VerifyOTP /></Suspense>} />
                     </Route>
                 </Route>
 
-                <Route path='/feedback' element={<FeedbackPage />} />
+                <Route path='/feedback' element={<Suspense fallback={<LoadingPage />}><FeedbackPage /></Suspense>} />
                 <Route path='*' element={<NotFound />} />
 
             </Routes>
