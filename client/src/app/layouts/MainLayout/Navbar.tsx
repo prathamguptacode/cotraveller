@@ -105,7 +105,7 @@ Navbar.Hamburger = NavbarHamburger
 
 const NavbarTitle = () => {
     return (
-        <Link to={'/'} className={mystyle.logo}>Cotraveller</Link>
+        <Link to={'/'} className={mystyle.logo} aria-label='home'>Cotraveller</Link>
     )
 }
 Navbar.Title = NavbarTitle
@@ -117,7 +117,7 @@ Navbar.ThemeButton = NavbarThemeButton
 const NavbarLoginButton = () => {
     const { user } = useAuth()
 
-    return !user && <Link to={'/login'} className={mystyle.navbtn}>Log in</Link>
+    return !user && <Link to={'/login'} aria-label='log in' className={mystyle.navbtn}>Log in</Link>
 
 }
 Navbar.LoginButton = NavbarLoginButton

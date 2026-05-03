@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import styles from './sidebar.module.css'
-import { Compass, Home, Inbox, MessageCircle, Search, Settings, Users } from 'lucide-react'
+import { Compass, Home, Inbox, MessageCircle, Search, Users } from 'lucide-react'
 import { MdOutlineFeedback } from 'react-icons/md'
 import { Suspense, useEffect, useRef, type JSX } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -87,7 +87,7 @@ const Sidebar = () => {
         <div ref={sidebarsRef} className={clsx(styles.sidebarsWrapper, !sidebarIsHidden && styles.visibleCtxSidebar)} >
             <div className={styles.primarySidebar}>
                 <div className={styles.primarySidebarList}>
-                    <Link to={'/'}><Home /></Link>
+                    <Link aria-label='home' to={'/'}><Home /></Link>
                     {sidebarTabs.map(sidebarTab => {
                         const hasNotifications = (sidebarTab.name == 'Chats' || sidebarTab.name == 'Inbox') && notifications[sidebarTab.name]
                         return (
@@ -99,8 +99,8 @@ const Sidebar = () => {
                     })}
                 </div>
                 <div className={styles.primarySidebarList}>
-                    <Link to={'#'}><Settings /></Link>
-                    <Link to={'/feedback'}><MdOutlineFeedback /></Link>
+                    {/* <Link to={'#'}><Settings /></Link> */}
+                    <Link aria-label='feedback' to={'/feedback'}><MdOutlineFeedback /></Link>
                     <LogOutButton />
                 </div>
 
