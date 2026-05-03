@@ -48,8 +48,6 @@ function Searchbox({ dLocation, dDate }: { dLocation: string | null, dDate: stri
 
     const screenWidth = screen.width;
 
-    // ###closing the location box 
-
     return (
         <>
             <div className={mystyle.searchbox}>
@@ -59,12 +57,6 @@ function Searchbox({ dLocation, dDate }: { dLocation: string | null, dDate: stri
                         Loading...
                     </div>)
                 }
-                {/* <div className={mystyle.dateIn}>
-                    <div>
-                        Departure
-                    </div>
-                    <input className={mystyle.dateInput} type="date" defaultValue={defaultDate} onChange={(e) => setdate(e.target.value)} />
-                </div> */}
                 <div className={mystyle.test}>
 
 

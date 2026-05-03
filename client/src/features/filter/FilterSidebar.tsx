@@ -16,7 +16,7 @@ import { z } from 'zod'
 import dayjs from 'dayjs';
 
 const querySchema = z.object({
-  location: z.string(),
+  location: z.string().nullable(),
   date: z.string(),
   members: z.coerce.number().refine(val => (val >= 2 && val <= 5) || val == 32).nullable(),
   mode: z.enum(["Train", "Flight", "Taxi", "Car", "Bike"]).nullable(),

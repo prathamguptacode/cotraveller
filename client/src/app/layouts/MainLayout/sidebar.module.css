@@ -214,6 +214,11 @@
         }
     }
 
+    .fallbackLogintoView{
+        display: flex;
+        gap: 0.5rem;
+    }
+
 
     @media(max-width:1200px) {
         .sidebarsWrapper {
