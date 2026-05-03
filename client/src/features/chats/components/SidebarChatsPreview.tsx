@@ -48,9 +48,10 @@ const SidebarChatsPreview = () => {
         else setNotifications(prev => ({ ...prev, Chats: false }))
     }, [groups, setNotifications])
 
-    const Currentdate = new Date()
-    const defaultDate = `${Currentdate.getFullYear()}-${(Currentdate.getMonth() + 1).toString().padStart(2, "0")}-${Currentdate.getDate().toString().padStart(2, "0")}`;
-    const discoverURL = `/viewgroup?date=${defaultDate}`
+    // const Currentdate = new Date()
+    // const defaultDate = `${Currentdate.getFullYear()}-${(Currentdate.getMonth() + 1).toString().padStart(2, "0")}-${Currentdate.getDate().toString().padStart(2, "0")}`;
+    // const discoverURL = `/viewgroup?date=${defaultDate}`
+    const discoverURL = `/explore`;
 
     return (
         groups.length == 0 ?

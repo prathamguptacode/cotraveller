@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef, type JSX } from 'react'
 import styles from './sidebar.module.css'
 import type { SidebarTab } from './types'
-import { Home, Inbox, ListFilter, MessageCircle, Search, Users } from 'lucide-react'
+import { Compass, Home, Inbox, ListFilter, MessageCircle, Search, Users } from 'lucide-react'
 import { useMainLayoutContext } from './useMainLayout'
 import { Link, useLocation } from 'react-router-dom'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -92,6 +92,7 @@ const BottomNavbar = () => {
           }}>{tab.icon}</button>
         )
       })}
+      <Link to={'/explore'} aria-label='explore'><Compass /></Link>
 
 
       <div className={clsx(styles.mobileNavigationPanel, !sidebarIsHidden && styles.visibleMobileNavPanel)}>

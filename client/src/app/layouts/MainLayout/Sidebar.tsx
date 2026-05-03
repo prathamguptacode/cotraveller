@@ -26,7 +26,6 @@ const Sidebar = () => {
         { name: 'Chats', icon: <MessageCircle /> },
         { name: 'Groups', icon: <Users /> },
         { name: 'Inbox', icon: <Inbox /> },
-        { name: 'Explore', icon: <Compass /> },
         { name: 'Search', icon: <Search /> },
     ]
 
@@ -88,6 +87,7 @@ const Sidebar = () => {
             <div className={styles.primarySidebar}>
                 <div className={styles.primarySidebarList}>
                     <Link aria-label='home' to={'/'}><Home /></Link>
+
                     {sidebarTabs.map(sidebarTab => {
                         const hasNotifications = (sidebarTab.name == 'Chats' || sidebarTab.name == 'Inbox') && notifications[sidebarTab.name]
                         return (
@@ -97,6 +97,8 @@ const Sidebar = () => {
                             }}>{sidebarTab.icon}</button>
                         )
                     })}
+
+                    <Link aria-label='explore' to={'/explore'}><Compass /></Link>
                 </div>
                 <div className={styles.primarySidebarList}>
                     {/* <Link to={'#'}><Settings /></Link> */}
