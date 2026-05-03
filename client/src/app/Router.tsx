@@ -19,6 +19,7 @@ const Chats = lazy(() => import("./pages/Chats"))
 const FeedbackPage = lazy(() => import("./pages/Feedback/FeedbackPage"))
 const EditGroup = lazy(() => import("./pages/EditGroup"))
 const GroupInfo = lazy(() => import("./pages/GroupInfo"))
+const Explore = lazy(() => import("./pages/Explore/Explore"))
 
 
 
@@ -35,6 +36,7 @@ const Router = () => {
                 <Route path='/' element={<MainLayout />}>
                     <Route index element={<Suspense fallback={<LoadingPage />}><Home /></Suspense>} />
                     <Route path='viewgroup' element={<Suspense fallback={<LoadingPage />}><ViewGroup /></Suspense>} />
+                    <Route path='explore' element={<Suspense fallback={<LoadingPage />}><Explore /></Suspense>} />
 
                     <Route path='/groups'>
                         <Route path=':groupId'>
