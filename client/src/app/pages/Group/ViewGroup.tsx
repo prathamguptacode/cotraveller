@@ -89,7 +89,6 @@ function ViewGroup() {
         }
     }, [query])
     if (!validateQuery.success) {
-        console.log(validateQuery.error)
         return <Navigate to={'/error'} />
     }
     if (isError) {

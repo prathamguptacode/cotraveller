@@ -17,7 +17,7 @@ const EventSourceProvider = ({ children }: { children: ReactNode }) => {
     })
 
     useEffect(() => {
-        eventSource.addEventListener('open', () => console.log('Connected to SSE'))
+        eventSource.addEventListener('open', () => { return })
         return () => eventSource.close()
     }, [])
 
