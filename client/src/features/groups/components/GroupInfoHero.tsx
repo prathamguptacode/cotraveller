@@ -132,8 +132,6 @@ const GroupInfoHero = () => {
 
     const isUpdatingAvatar = isUploadingAvatar || isRemovingAvatar
 
-    console.log(group.tags)
-
     return (
         <div data-sidebar-type='overlay' className={styles.wrapper}>
             <div className={styles.main}>
