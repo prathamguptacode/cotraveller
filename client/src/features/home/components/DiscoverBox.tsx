@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom'
 
 function DiscoverBox() {
 
-  const discoverURL = '/viewgroup?q=VIT%20Chennai&mode=Airplane&lowerT=2025-12-20T00:00&upperT=2025-12-20T23:59&d=20&m=December&y=2025'
+  const Currentdate = new Date()
+  const defaultDate = `${Currentdate.getFullYear()}-${(Currentdate.getMonth() + 1).toString().padStart(2, "0")}-${Currentdate.getDate().toString().padStart(2, "0")}`;
+  const discoverURL = `/viewgroup?date=${defaultDate}`
 
   return (
     <div className={mystyle.discoverbx}>
