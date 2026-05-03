@@ -24,11 +24,9 @@ const userSchema = new mongoose.Schema({
         type: {
             publicId: {
                 type: String,
-                required: true
             },
             version: {
                 type: Number,
-                required: true
             },
             _id: false
         },

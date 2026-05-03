@@ -14,8 +14,8 @@ declare global {
                 username: string,
                 groups: Types.ObjectId[],
                 avatar: {
-                    publicId: string,
-                    version: number
+                    publicId?: string | null | undefined,
+                    version?: number | null | undefined
                 },
             },
         }

@@ -67,7 +67,8 @@ const groupSchema = new mongoose.Schema({
     avatar: {
         type: {
             publicId: String,
-            version: Number
+            version: Number,
+            _id: false
         },
         default: {
             publicId: '',
