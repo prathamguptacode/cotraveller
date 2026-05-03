@@ -22,7 +22,7 @@ const BottomNavbar = () => {
     { name: 'Chats', icon: <MessageCircle /> },
     { name: 'Groups', icon: <Users /> },
     { name: 'Inbox', icon: <Inbox /> },
-    { name: 'Search', icon: <Search /> },
+    // { name: 'Search', icon: <Search /> },
   ]
   if (location.pathname == "/viewgroup") {
     bottomNavbarTabs.push({
