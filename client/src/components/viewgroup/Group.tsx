@@ -1,7 +1,7 @@
 import mystyle from './Group.module.css'
 import { api } from '@/api/axios';
 import { useAuth } from '@/hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { normalizeError } from '@/utils/normalizeError';
@@ -58,7 +58,10 @@ function Group({ group }: GroupProps) {
 
     const hasRequested = joinRequests.some(request => request.requesterId == user?._id)
 
-
+    const navigate = useNavigate();
+    const navLogin = () => {
+        return navigate('/login')
+    }
 
     return (
         <div className={mystyle.linewrapper}>
@@ -75,7 +78,7 @@ function Group({ group }: GroupProps) {
                     {/* <div className={mystyle.comments}>{commentNum ? commentNum : "0"} {commentNum == 1 ? 'comment' : 'comments'}</div> */}
                 </div>
                 <div className={mystyle.btnbox}>
-                    <button aria-label='Send Request' onClick={() => user && sendRequest()} className={mystyle.groupbtn} disabled={isSendingRequest || hasRequested}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
+                    <button aria-label='Send Request' onClick={() => user ? sendRequest() : navLogin()} className={mystyle.groupbtn} disabled={isSendingRequest || hasRequested}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
                     <Link to={`/groups/${groupId}`} aria-label='More info' className={mystyle.groupbtn}>More info</Link>
                 </div>
             </div>

@@ -1,6 +1,4 @@
-.groupwrapper:hover {
-    background-color: var(--group-hover);
-}
+
 
 .groupwrapper {
     margin: 10px auto;
@@ -98,5 +96,17 @@
         flex-direction: column;
         gap: 1.5rem;
         align-items: stretch;
+    }
+}
+
+@media (hover: none) {
+    .groupwrapper:hover {
+        /* background-color: var(--group-hover); */
+    }
+}
+
+@media (hover: hover) {
+    .groupwrapper:hover {
+        background-color: var(--group-hover);
     }
 }
