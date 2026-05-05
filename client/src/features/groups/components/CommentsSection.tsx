@@ -62,7 +62,7 @@ const CommentsSection = () => {
             <div className={styles.commentInputArea}>
 
                 <AvatarWrapper avatarURL={avatarURL} className={clsx(styles.avatarWrapper, (user && !avatarURL) && styles.emptyAvatar)}>
-                    {user ? avatarURL ? <img src={avatarURL} alt="user-avatar" /> : user?.fullName.charAt(0) : <User2 />}
+                    {user ? avatarURL ? <img src={avatarURL} alt="user-avatar" /> : user?.fullName.charAt(0).toUpperCase() : <User2 />}
                 </AvatarWrapper>
 
                 <div className={styles.commentInputWrapper}>

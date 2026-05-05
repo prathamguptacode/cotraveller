@@ -149,7 +149,7 @@ const NavbarProfileButton = () => {
 
 
     const avatarURL = user && getImgURL(user.avatar, 400)
-    const firstLetter = user?.fullName.charAt(0)
+    const firstLetter = user?.fullName.charAt(0).toUpperCase()
 
 
 

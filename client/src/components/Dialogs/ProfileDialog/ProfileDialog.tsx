@@ -27,7 +27,7 @@ const ProfileDialog = ({ user, className, children, avatarClassName }: ProfileDi
 
 
     const avatarURL = user && getImgURL(user.avatar, 400)
-    const firstLetter = user?.fullName.charAt(0)
+    const firstLetter = user?.fullName.charAt(0).toUpperCase()
 
 
     const toggleDialog = () => {
@@ -77,7 +77,7 @@ const ProfileDialog = ({ user, className, children, avatarClassName }: ProfileDi
                     </button>
                     <div className={styles.profileArea}>
                         <div className={styles.profileHeader}>
-                            <Avatar avatar={user?.avatar ?? { publicId: '', version: 0 }} alt='user-avatar' imgSize={400} title={'goga'} className={styles.avatarWrapper} />
+                            <Avatar avatar={user?.avatar ?? { publicId: '', version: 0 }} alt='user-avatar' imgSize={400} title={user.fullName} className={styles.avatarWrapper} />
                             <div className={styles.profileHeaderDetails}>
                                 <h2>{user.username}</h2>
                                 <span>{user.fullName}</span>
