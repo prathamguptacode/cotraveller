@@ -11,7 +11,7 @@ type GroupFormReviewProps = {
 
 const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
 
-  const { watch, control, formState:{errors} } = useGroupForm()
+  const { watch, control, formState: { errors } } = useGroupForm()
 
   const date = watch('travelDate') + 'T' + watch('travelTime')
   const Acdate = new Date(date);
@@ -28,6 +28,14 @@ const GroupFormReview = ({ startOver }: GroupFormReviewProps) => {
 
   return (
     <div className={mystyle.reviewCard}>
+      <div>
+        <div className={mystyle.groupFormTitle}>
+          Review your group
+        </div>
+        <div className={mystyle.stepIndicator}>
+          Step 3: Check the details for your group
+        </div>
+      </div>
       <div className={mystyle.rowBetween}>
         <div>
           <div className={mystyle.label}>Group Name</div>
