@@ -131,6 +131,7 @@ const GroupInfoHero = () => {
     }
 
     const isUpdatingAvatar = isUploadingAvatar || isRemovingAvatar
+    const isMember = group.member.some(member => member._id == user?._id)
 
     return (
         <div data-sidebar-type='overlay' className={styles.wrapper}>
@@ -139,7 +140,9 @@ const GroupInfoHero = () => {
 
                     <div className={styles.header}>
                         <AvatarWrapper asChild avatarURL={''} className={styles.avatarWrapper}>
-                            <button onClick={() => openDialog(avatarDialogRef)} >
+                            <button onClick={() => {
+                                if (isMember) openDialog(avatarDialogRef)
+                            }}>
                                 {avatarURL ? <img src={avatarURL} alt="group-avatar" /> : firstLetter}
                                 {isUpdatingAvatar &&
                                     <div className={styles.spinnerWrapper}>
