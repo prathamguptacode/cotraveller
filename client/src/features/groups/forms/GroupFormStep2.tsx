@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 import { LuChevronDown, LuMinus, LuPlus } from 'react-icons/lu';
 import { Car, Footprints, Motorbike, Plane } from 'lucide-react';
 import { IoMdTrain } from "react-icons/io";
@@ -26,14 +26,14 @@ const GroupFormStep2 = () => {
 
     const { formState: { errors }, control } = useGroupForm()
 
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const myDateHtml = `${year}-${month}-${day}`;
-    const hour = date.getHours().toString().padStart(2, '0');
-    const time = date.getMinutes().toString().padStart(2, '0');
-    const myTimeHtml = `${hour}:${time}`
+    // const date = new Date();
+    // const year = date.getFullYear();
+    // const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    // const day = date.getDate().toString().padStart(2, '0');
+    // const myDateHtml = `${year}-${month}-${day}`;
+    // const hour = date.getHours().toString().padStart(2, '0');
+    // const time = date.getMinutes().toString().padStart(2, '0');
+    // const myTimeHtml = `${hour}:${time}`
 
     const pageUrl = useLocation();
 
@@ -54,23 +54,24 @@ const GroupFormStep2 = () => {
                         <Controller
                             control={control}
                             name="travelDate"
-                            defaultValue={myDateHtml}
-                            render={({ field: { onChange, value } }) => (
+                            // defaultValue={myDateHtml}
+                            render={({ field: { onChange, } }) => (
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DemoContainer components={['DatePicker']} sx={{ p: '0.4rem 0', overflow: 'visible', width: 1 }}>
                                         {/* ###bad logic but solve the problem */}
                                         <div className={mystyle.dateInputMui}>
                                             {
                                                 (pageUrl.pathname == '/groups/create') ?
-                                                    <DatePicker disablePast format='DD/MM/YYYY' defaultValue={dayjs(value)} sx={{ width: 1 }} onChange={(e) => {
-                                                        if (e) {
-                                                            onChange(`${e.year()}-${(e.month() + 1).toString().padStart(2, "0")}-${e.date().toString().padStart(2, "0")}`)
-                                                        }
-                                                    }} /> : <DatePicker format='DD/MM/YYYY' defaultValue={dayjs(value)} sx={{ width: 1 }} onChange={(e) => {
-                                                        if (e) {
-                                                            onChange(`${e.year()}-${(e.month() + 1).toString().padStart(2, "0")}-${e.date().toString().padStart(2, "0")}`)
-                                                        }
-                                                    }} />
+                                                    <DatePicker disablePast format='DD/MM/YYYY'
+                                                        sx={{ width: 1 }} onChange={(e) => {
+                                                            if (e) {
+                                                                onChange(`${e.year()}-${(e.month() + 1).toString().padStart(2, "0")}-${e.date().toString().padStart(2, "0")}`)
+                                                            }
+                                                        }} /> : <DatePicker format='DD/MM/YYYY' sx={{ width: 1 }} onChange={(e) => {
+                                                            if (e) {
+                                                                onChange(`${e.year()}-${(e.month() + 1).toString().padStart(2, "0")}-${e.date().toString().padStart(2, "0")}`)
+                                                            }
+                                                        }} />
                                             }
                                         </div>
                                     </DemoContainer>
@@ -86,12 +87,12 @@ const GroupFormStep2 = () => {
                         {/* <input type="time" id="endDate" className={mystyle.dateInput} defaultValue={myTimeHtml} {...register('travelTime')} /> */}
                         <Controller control={control}
                             name="travelTime"
-                            defaultValue={myTimeHtml}
-                            render={({ field: { onChange, value } }) => (
+                            // defaultValue={myTimeHtml}
+                            render={({ field: { onChange, } }) => (
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DemoContainer components={['TimePicker']} sx={{ p: '0.4rem 0', overflow: 'visible', width: 1 }}>
                                         <div className={mystyle.dateInputMui}>
-                                            <TimePicker defaultValue={dayjs(value, "HH:mm")} sx={{ width: 1 }} onChange={(e) => {
+                                            <TimePicker sx={{ width: 1 }} onChange={(e) => {
                                                 if (e) {
                                                     onChange(`${e.hour().toString().padStart(2, "0")}:${e.minute().toString().padStart(2, "0")}`)
                                                 }
