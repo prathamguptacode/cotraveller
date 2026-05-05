@@ -1,25 +1,35 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { lazy, Suspense } from 'react'
+import { Suspense } from 'react'
 import ProtectedRoutes from './routes/Protected.Routes'
 import AntiProtectedRoutes from './routes/AntiProtected.Routes'
 import AuthLayout from './layouts/Auth/AuthLayout'
 import MainLayout from './layouts/MainLayout/MainLayout'
 import NotFound from './pages/Extras/NotFound'
 import LoadingPage from './pages/Extras/LoadingPage'
+import Login from './pages/Login'
+import Home from './pages/Home'
+import ViewGroup from './pages/Group/ViewGroup'
+import Signup from './pages/Signup'
+import VerifyOTP from './pages/VerifyOTP'
+import CreateGroup from './pages/CreateGroup'
+import SuccessPage from './pages/Extras/SuccessPage'
+import Chats from './pages/Chats'
+import FeedbackPage from './pages/Feedback/FeedbackPage'
+import EditGroup from './pages/EditGroup'
+import GroupInfo from './pages/GroupInfo'
+import Explore from './pages/Explore/Explore'
 
-
-const Home = lazy(() => import("./pages/Home"))
-const ViewGroup = lazy(() => import("./pages/Group/ViewGroup"))
-const Signup = lazy(() => import("./pages/Signup"))
-const Login = lazy(() => import("./pages/Login"))
-const VerifyOTP = lazy(() => import("./pages/VerifyOTP"))
-const CreateGroup = lazy(() => import("./pages/CreateGroup"))
-const SuccessPage = lazy(() => import("./pages/Extras/SuccessPage"))
-const Chats = lazy(() => import("./pages/Chats"))
-const FeedbackPage = lazy(() => import("./pages/Feedback/FeedbackPage"))
-const EditGroup = lazy(() => import("./pages/EditGroup"))
-const GroupInfo = lazy(() => import("./pages/GroupInfo"))
-const Explore = lazy(() => import("./pages/Explore/Explore"))
+// const Home = lazy(() => import("./pages/Home"))
+// const ViewGroup = lazy(() => import("./pages/Group/ViewGroup"))
+// const Signup = lazy(() => import("./pages/Signup"))
+// const VerifyOTP = lazy(() => import("./pages/VerifyOTP"))
+// const CreateGroup = lazy(() => import("./pages/CreateGroup"))
+// const SuccessPage = lazy(() => import("./pages/Extras/SuccessPage"))
+// const Chats = lazy(() => import("./pages/Chats"))
+// const FeedbackPage = lazy(() => import("./pages/Feedback/FeedbackPage"))
+// const EditGroup = lazy(() => import("./pages/EditGroup"))
+// const GroupInfo = lazy(() => import("./pages/GroupInfo"))
+// const Explore = lazy(() => import("./pages/Explore/Explore"))
 
 
 
@@ -62,7 +72,7 @@ const Router = () => {
                 <Route element={<AntiProtectedRoutes />} >
                     <Route element={<AuthLayout />} >
                         <Route path='/signup' element={<Suspense fallback={<LoadingPage />}><Signup /></Suspense>} />
-                        <Route path='/login' element={<Suspense fallback={<LoadingPage />}><Login /></Suspense>} />
+                        <Route path='/login' element={<Login />} />
                         <Route path='/signup/verify' element={<Suspense fallback={<LoadingPage />}><VerifyOTP /></Suspense>} />
                     </Route>
                 </Route>
