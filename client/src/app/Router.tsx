@@ -6,12 +6,12 @@ import AuthLayout from './layouts/Auth/AuthLayout'
 import MainLayout from './layouts/MainLayout/MainLayout'
 import NotFound from './pages/Extras/NotFound'
 import LoadingPage from './pages/Extras/LoadingPage'
+import Login from './pages/Login'
 
 
 const Home = lazy(() => import("./pages/Home"))
 const ViewGroup = lazy(() => import("./pages/Group/ViewGroup"))
 const Signup = lazy(() => import("./pages/Signup"))
-const Login = lazy(() => import("./pages/Login"))
 const VerifyOTP = lazy(() => import("./pages/VerifyOTP"))
 const CreateGroup = lazy(() => import("./pages/CreateGroup"))
 const SuccessPage = lazy(() => import("./pages/Extras/SuccessPage"))
@@ -62,7 +62,7 @@ const Router = () => {
                 <Route element={<AntiProtectedRoutes />} >
                     <Route element={<AuthLayout />} >
                         <Route path='/signup' element={<Suspense fallback={<LoadingPage />}><Signup /></Suspense>} />
-                        <Route path='/login' element={<Suspense fallback={<LoadingPage />}><Login /></Suspense>} />
+                        <Route path='/login' element={<Login />} />
                         <Route path='/signup/verify' element={<Suspense fallback={<LoadingPage />}><VerifyOTP /></Suspense>} />
                     </Route>
                 </Route>
