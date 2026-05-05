@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { lazy, Suspense } from 'react'
+import { Suspense } from 'react'
 import ProtectedRoutes from './routes/Protected.Routes'
 import AntiProtectedRoutes from './routes/AntiProtected.Routes'
 import AuthLayout from './layouts/Auth/AuthLayout'
