@@ -32,7 +32,7 @@ const ShareMenuPopover = ({ title, shareURL = new URL(location.pathname, locatio
             </header>
             <div className={styles.shareOptions}>
                 <div>
-                    <WhatsappShareButton aria-label='share link to Whatsapp' url={shareURL}>
+                    <WhatsappShareButton title="Hey! I have a trip planned on Cotraveller, want to join me to my next trip?" separator={"\n \n"} aria-label='share link to Whatsapp' url={shareURL}>
                         <WhatsappIcon />
                     </WhatsappShareButton>
                     Whatsapp
