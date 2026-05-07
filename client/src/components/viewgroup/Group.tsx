@@ -8,14 +8,15 @@ import { normalizeError } from '@/utils/normalizeError';
 
 type GroupProps = {
     group: {
-        _id: string;
-        title: string;
-        content: string;
+        _id: string,
+        title: string,
+        content: string,
         ownerPop: {
-            fullName: string;
-        };
-        travelDate: string;
-        incomingRequests: string[];
+            fullName: string,
+        },
+        member: string[]
+        travelDate: string,
+        incomingRequests: string[],
     };
 };
 
@@ -26,6 +27,7 @@ type JoinRequest = {
 }
 
 function Group({ group }: GroupProps) {
+    console.log(group)
     const { title, content, travelDate, _id: groupId } = group
     const members = group.ownerPop.fullName; //###FIX this , why is value of members = owner's name?
     // const timeInd = new Date(travelDate).toLocaleTimeString("en-IN", {
@@ -74,15 +76,16 @@ function Group({ group }: GroupProps) {
                     </div>
                     <div className={mystyle.title}>{title}</div>
                     <div className={mystyle.content}>{content}</div>
-                    <div className={mystyle.time}>{new Intl.DateTimeFormat('en-gb',{
-                        dateStyle:'medium',
-                        timeStyle:'short',
-                        hour12:true,
+                    <div className={mystyle.time}>{new Intl.DateTimeFormat('en-gb', {
+                        dateStyle: 'medium',
+                        timeStyle: 'short',
+                        hour12: true,
                     }).format(new Date(travelDate))}</div>
-                    {/* <div className={mystyle.comments}>{commentNum ? commentNum : "0"} {commentNum == 1 ? 'comment' : 'comments'}</div> */}
                 </div>
                 <div className={mystyle.btnbox}>
-                    <button aria-label='Send Request' onClick={() => user ? sendRequest() : navLogin()} className={mystyle.groupbtn} disabled={isSendingRequest || hasRequested}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>
+                    {group.member.includes(user?._id ?? '') ?
+                        <Link to={`/groups/${group._id}/chats`} className={mystyle.groupbtn}> Chat now </Link>
+                        : <button aria-label='Send Request' onClick={() => user ? sendRequest() : navLogin()} className={mystyle.groupbtn} disabled={isSendingRequest || hasRequested}>{hasRequested ? 'Request Sent' : 'Send Request'}</button>}
                     <Link to={`/groups/${groupId}`} aria-label='More info' className={mystyle.groupbtn}>More info</Link>
                 </div>
             </div>

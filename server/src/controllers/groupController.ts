@@ -196,6 +196,7 @@ export const viewGroupByFilter: RequestHandler = async (req, res) => {
                 ownerPop: {
                     fullName: 1
                 },
+                member:1,
                 title: 1,
                 _id: 1,
                 content: 1,

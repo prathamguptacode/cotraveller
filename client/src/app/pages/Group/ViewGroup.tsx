@@ -17,6 +17,7 @@ type GroupT = {
     memberNumber: number,
     travelDate: string,
     incomingRequests: string[],
+    member:string[],
     ownerPop: {
         fullName: string
     }
