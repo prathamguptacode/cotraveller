@@ -105,7 +105,7 @@ Navbar.Hamburger = NavbarHamburger
 
 const NavbarTitle = () => {
     return (
-        <Link to={'/'} className={mystyle.logo} aria-label='home'>Cotraveller</Link>
+        <Link to={'/home'} className={mystyle.logo} aria-label='home'>Cotraveller</Link>
     )
 }
 Navbar.Title = NavbarTitle

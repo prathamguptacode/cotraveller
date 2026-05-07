@@ -51,7 +51,7 @@ const SidebarChatsPreview = () => {
     // const Currentdate = new Date()
     // const defaultDate = `${Currentdate.getFullYear()}-${(Currentdate.getMonth() + 1).toString().padStart(2, "0")}-${Currentdate.getDate().toString().padStart(2, "0")}`;
     // const discoverURL = `/viewgroup?date=${defaultDate}`
-    const discoverURL = `/explore`;
+    const discoverURL = `/`;
 
     return (
         groups.length == 0 ?

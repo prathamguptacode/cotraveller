@@ -86,7 +86,7 @@ const Sidebar = () => {
         <div ref={sidebarsRef} className={clsx(styles.sidebarsWrapper, !sidebarIsHidden && styles.visibleCtxSidebar)} >
             <div className={styles.primarySidebar}>
                 <div className={styles.primarySidebarList}>
-                    <Link aria-label='home' to={'/'}><Home /></Link>
+                    <Link aria-label='home' to={'/home'}><Home /></Link>
 
                     {sidebarTabs.map(sidebarTab => {
                         const hasNotifications = (sidebarTab.name == 'Chats' || sidebarTab.name == 'Inbox') && notifications[sidebarTab.name]
@@ -98,7 +98,7 @@ const Sidebar = () => {
                         )
                     })}
 
-                    <Link aria-label='explore' to={'/explore'}><Compass /></Link>
+                    <Link aria-label='explore' to={'/'}><Compass /></Link>
                 </div>
                 <div className={styles.primarySidebarList}>
                     {/* <Link to={'#'}><Settings /></Link> */}

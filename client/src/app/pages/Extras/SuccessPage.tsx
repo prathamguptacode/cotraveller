@@ -19,11 +19,11 @@ function SuccessPage() {
             <div className={mystyle.conbx}>
                 <h2 className={mystyle.title}>Your travel group is ready!</h2>
                 <p className={mystyle.con}>Get ready for the perfect people to join your journey.</p>
-                <Link to={'/'} className={mystyle.homebtn} >Back to Home</Link>
+                <Link to={'/home'} className={mystyle.homebtn} >Back to Home</Link>
             </div>
         </div>
     </div> :
-        <Navigate to={'/'} replace />
+        <Navigate to={'/home'} replace />
 
 }
 

@@ -44,9 +44,9 @@ const Router = () => {
             <Routes>
 
                 <Route path='/' element={<MainLayout />}>
-                    <Route index element={<Suspense fallback={<LoadingPage />}><Home /></Suspense>} />
+                    <Route path='/home' element={<Suspense fallback={<LoadingPage />}><Home /></Suspense>} />
                     <Route path='viewgroup' element={<Suspense fallback={<LoadingPage />}><ViewGroup /></Suspense>} />
-                    <Route path='explore' element={<Suspense fallback={<LoadingPage />}><Explore /></Suspense>} />
+                    <Route index element={<Suspense fallback={<LoadingPage />}><Explore /></Suspense>} />
 
                     <Route path='/groups'>
                         <Route path=':groupId'>

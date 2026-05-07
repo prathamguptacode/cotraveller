@@ -17,7 +17,7 @@ function NotFound() {
                         <p className={mystyle.con}>
                             Lost ?  That's fine, but you might need some cotravellers on the way.
                         </p>
-                        <Link className={mystyle.backBtn} to={'/'}>Go back</Link>
+                        <Link className={mystyle.backBtn} to={'/home'}>Go back</Link>
                     </div>
                 </div>
             </div>

@@ -77,7 +77,7 @@ const VerifyOTPForm = () => {
             <ResendOTPButton />
         </>
         :
-        <Navigate to={'/'} />
+        <Navigate to={'/home'} />
 
 }
 
