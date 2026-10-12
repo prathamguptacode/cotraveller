@@ -1,5 +1,6 @@
 import express from "express"
 import env from "./config/env"
+import http from 'http'
 import cors from "cors"
 import cookieParser from "cookie-parser"
 
@@ -9,10 +10,17 @@ import responseHandler from "./middlewares/responseHandler"
 
 import helloRoutes from '@/routes/helloRoutes'
 import authRoutes from '@/routes/authRoutes'
+import initializeWebSocket from "./socket"
 
 await connectToMongoDB()
 
-const app = express();
+const app = express()
+const server = http.createServer(app)
+
+
+// Initialize Web-Socket connection
+initializeWebSocket(server)
+
 
 app.use(express.json())
 app.use(cors({
@@ -32,6 +40,6 @@ app.use('/api/auth', authRoutes)
 app.use(errorHandler)
 
 
-app.listen(env.PORT, () => {
+server.listen(env.PORT, () => {
   console.log(`just cotraveller server listening on port ${env.PORT}`);
 });
