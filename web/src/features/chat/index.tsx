@@ -1,11 +1,10 @@
 import { useAuth } from "@/hooks/useAuth"
-import { useSuspenseInfiniteQuery } from "@tanstack/react-query"
-import { messagesInfiniteQueryOptions } from "./queries"
 
 import styles from './chat.module.css'
 import clsx from "clsx"
 import { useChatRoom } from "./hooks/useChatRoom"
 import { useScrollAnchor } from "./hooks/useScrollAnchor"
+import { useInfinitePagination } from "./hooks/useInfinitePagination"
 
 
 
@@ -13,10 +12,14 @@ import { useScrollAnchor } from "./hooks/useScrollAnchor"
 const ChatPage = ({ roomId }: { roomId: string }) => {
     const { user } = useAuth()
     const { composeMessage, text, setText } = useChatRoom(roomId)
-    const { data: { messages } } = useSuspenseInfiniteQuery(messagesInfiniteQueryOptions(roomId))
+
+
+    // Non-damped infinite reverse scrolling and pagination
+    const { messages, containerRef } = useInfinitePagination(roomId)
 
     // Scroll Anchor
     const { anchorRef } = useScrollAnchor({ messages })
+
 
 
 
@@ -27,8 +30,7 @@ const ChatPage = ({ roomId }: { roomId: string }) => {
             <button onClick={composeMessage}>SEND</button>
 
 
-            <div className={styles.messages}>
-                <div aria-hidden></div>
+            <div ref={containerRef} className={styles.messages}>
                 {messages.map((message) => {
                     const isMyMessage = message.author._id == user?._id
 
