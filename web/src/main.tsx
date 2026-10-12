@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import App from './app/App'
-import Providers from './app/Providers'
+import Providers from './app/providers'
+
 
 createRoot(document.getElementById('root')!).render(
     <Providers>

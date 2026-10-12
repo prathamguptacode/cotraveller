@@ -8,6 +8,7 @@ import errorHandler from "./middlewares/errorHandler"
 import responseHandler from "./middlewares/responseHandler"
 
 import helloRoutes from '@/routes/helloRoutes'
+import authRoutes from '@/routes/authRoutes'
 
 await connectToMongoDB()
 
@@ -24,6 +25,7 @@ app.use(responseHandler)
 
 
 app.use('/api', helloRoutes)
+app.use('/api/auth', authRoutes)
 
 
 
