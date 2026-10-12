@@ -2,11 +2,15 @@ import express from "express"
 import env from "./config/env"
 import cors from "cors"
 import cookieParser from "cookie-parser"
-import connectDB from "./config/mongoConnect"
+
+import connectToMongoDB from "./config/mongoDB"
 import errorHandler from "./middlewares/errorHandler"
 import responseHandler from "./middlewares/responseHandler"
 
-await connectDB()
+import helloRoutes from '@/routes/helloRoutes'
+import authRoutes from '@/routes/authRoutes'
+
+await connectToMongoDB()
 
 const app = express();
 
@@ -18,12 +22,16 @@ app.use(cors({
 app.use(cookieParser())
 app.use(responseHandler)
 
-app.get('/', (req, res) => {
-  res.send('Hello World! Welcome to just cotraveller yc addition');
-});
+
+
+app.use('/api', helloRoutes)
+app.use('/api/auth', authRoutes)
+
+
 
 app.use(errorHandler)
-const port = env.PORT;
-app.listen(port, () => {
-  console.log(`just cotraveller server listening on port ${port}`);
+
+
+app.listen(env.PORT, () => {
+  console.log(`just cotraveller server listening on port ${env.PORT}`);
 });
