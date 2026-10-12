@@ -54,7 +54,7 @@ const initializeWebSocket = (server: http.Server) => {
 
 
     io.on('connection', (socket) => {
-        console.log(`New joining, total clients = ${io.engine.clientsCount}`)
+        console.log(`New joining, ${socket.id} total clients = ${io.engine.clientsCount}`)
 
 
         // Chat logic

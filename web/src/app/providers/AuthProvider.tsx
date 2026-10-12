@@ -18,7 +18,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     })
     useEffect(() => {
         refreshMutation.mutate()
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
