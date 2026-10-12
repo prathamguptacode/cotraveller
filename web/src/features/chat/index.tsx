@@ -5,6 +5,7 @@ import { messagesInfiniteQueryOptions } from "./queries"
 import styles from './chat.module.css'
 import clsx from "clsx"
 import { useChatRoom } from "./hooks/useChatRoom"
+import { useScrollAnchor } from "./hooks/useScrollAnchor"
 
 
 
@@ -14,6 +15,8 @@ const ChatPage = ({ roomId }: { roomId: string }) => {
     const { composeMessage, text, setText } = useChatRoom(roomId)
     const { data: { messages } } = useSuspenseInfiniteQuery(messagesInfiniteQueryOptions(roomId))
 
+    // Scroll Anchor
+    const { anchorRef } = useScrollAnchor({ messages })
 
 
 
@@ -35,6 +38,7 @@ const ChatPage = ({ roomId }: { roomId: string }) => {
                         </div>
                     )
                 })}
+                <div ref={anchorRef} aria-hidden></div>
             </div>
         </div>
     )
