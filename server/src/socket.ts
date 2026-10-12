@@ -22,7 +22,7 @@ type ClientToServerEvents = {
     'room:leave': ({ roomId }: { roomId: string }) => void,
 
 
-    'chat:message-create': (args: ChatMessageEvent) => void,
+    'chat:message-create': (args: ChatMessageEvent, cb: any) => void,
 
     'chat:last-read-at-update': (args: ChatStatusEvent) => void,
 
@@ -74,16 +74,19 @@ const initializeWebSocket = (server: http.Server) => {
 
 
         // Create Message
-        socket.on('chat:message-create', async ({ roomId, userId, text }) => {
+        socket.on('chat:message-create', async ({ roomId, userId, text }, cb) => {
             try {
-                const chatMessage = await ChatMessage.create({ roomId, text, author: userId })
+                const baseChatMessage = await ChatMessage.create({ roomId, text, author: userId })
                 const conversationRecord = await ConversationRecord.findOneAndUpdate({ member: userId, roomId },
                     { $set: { lastReadAt: new Date() } },
                     { upsert: true, setDefaultsOnInsert: true }
                 )
 
+                const chatMessage = await baseChatMessage.populate('author')
+
                 // Send the new message to all room members
                 socket.to(roomId).emit('chat:message-created', { chatMessage, conversationRecord })
+                cb({ success: true, chatMessage })
             } catch (error) {
                 console.error("Error creating message", error)
             }

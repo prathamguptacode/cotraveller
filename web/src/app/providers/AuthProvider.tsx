@@ -18,6 +18,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     })
     useEffect(() => {
         refreshMutation.mutate()
+        
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -30,9 +31,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider value={value} >
-            {children}
-        </AuthContext.Provider>
+        !refreshMutation.data?.data.user ? <>Loading</> :
+            <AuthContext.Provider value={value} >
+                {children}
+            </AuthContext.Provider>
     )
 }
 

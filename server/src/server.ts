@@ -10,6 +10,8 @@ import responseHandler from "./middlewares/responseHandler"
 
 import helloRoutes from '@/routes/helloRoutes'
 import authRoutes from '@/routes/authRoutes'
+import chatRoutes from '@/routes/chatRoutes'
+
 import initializeWebSocket from "./socket"
 
 await connectToMongoDB()
@@ -34,6 +36,7 @@ app.use(responseHandler)
 
 app.use('/api', helloRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/chats', chatRoutes)
 
 
 
