@@ -1,11 +1,22 @@
 import 'dotenv/config'
-import * as z from 'zod'
+import { z } from 'zod'
 
 
 const EnvSchema = z.object({
-    PORT: z.coerce.number().int().min(1000).default(8080),
-    MONGO_URI: z.string(),
+    // Basic
+    PORT: z.coerce.number().int().positive().max(65535).default(8080),
     CLIENT_URL: z.string(),
+    NODE_ENV: z.enum(['development', 'production']),
+
+    // Database
+    MONGO_URI: z.string(),
+
+    // Cloudinary
+    CLOUDINARY_URL: z.string(),
+
+    // JWT Tokens
+    ACCESS_TOKEN_SECRET: z.string(),
+    REFRESH_TOKEN_SECRET: z.string(),
 })
 
 const parsedData = EnvSchema.safeParse(process.env)

@@ -1,0 +1,22 @@
+{
+  "name": "cotraveller",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "web": "cd web && clear && clear && npm run dev",
+    "server": "cd server && clear && clear && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prathamguptacode/cotraveller.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/prathamguptacode/cotraveller/issues"
+  },
+  "homepage": "https://github.com/prathamguptacode/cotraveller#readme"
+}
