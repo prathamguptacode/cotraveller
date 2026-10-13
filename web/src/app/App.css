@@ -81,3 +81,11 @@ button,
 a {
     cursor: pointer;
 }
+
+
+
+/* temperary changes to prevent my retina buring */
+body {
+    background-color: #1C1C1C;
+    color: #ffffffdd;
+}

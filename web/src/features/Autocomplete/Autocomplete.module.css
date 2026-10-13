@@ -1,0 +1,16 @@
+.wrapper {
+  display: flex;
+  gap: 18px;
+  margin: 12px auto;
+  max-width: 50%;
+}
+
+.wrapper>button {
+  background-color: pink;
+}
+
+.wrapper>input {
+  border: 2px solid cyan;
+  color: whitesmoke;
+  flex: 1;
+}
