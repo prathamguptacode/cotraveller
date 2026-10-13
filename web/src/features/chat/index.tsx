@@ -10,8 +10,8 @@ const ChatPage = ({ roomId }: { roomId: string }) => {
     return (
         <div>
             <div> Room ID:{roomId} </div>
-            <MessageComposer roomId={roomId} />
             <ChatMessages roomId={roomId} />
+            <MessageComposer roomId={roomId} />
         </div>
     )
 }

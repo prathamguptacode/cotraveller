@@ -2,22 +2,25 @@ import { AuthContext, type AuthContextValue } from '@/hooks/useAuth'
 import { api } from '@/lib/axios'
 import { type AuthContextUser } from '@/types/auth.types'
 import { getToken } from '@/utils/getToken'
-import { useMutation } from '@tanstack/react-query'
 import { useEffect, useState, type ReactNode } from 'react'
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, updateUser] = useState<AuthContextUser>(null)
     const { accessToken, updateAccessToken } = getToken()
+    const [loading, setLoading] = useState(true)
 
-    const refreshMutation = useMutation({
-        mutationFn: () => api.post<{ user: Exclude<AuthContextUser, null>, accessToken: string }>('/auth/refresh'),
-        onSuccess: ({ data }) => {
-            updateAccessToken(data.accessToken)
-            updateUser(data.user)
-        }
-    })
+    // ###LATER try finding why there are multiple unwanted re-renders
+
     useEffect(() => {
-        refreshMutation.mutate()
+        api.post<{ accessToken: string, user: Exclude<AuthContextUser, null> }>('/auth/refresh').then((response) => {
+            const { accessToken, user } = response.data
+            updateAccessToken(accessToken)
+            updateUser(user)
+        }).catch((err) => {
+            console.error("error refreshing", err)
+        }).finally(() => {
+            setLoading(false)
+        })
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -31,7 +34,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return (
-        !refreshMutation.data?.data.user ? <>Loading</> :
+        loading ? <>Loading</> :
             <AuthContext.Provider value={value} >
                 {children}
             </AuthContext.Provider>
