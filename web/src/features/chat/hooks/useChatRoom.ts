@@ -41,8 +41,10 @@ export const useChatRoom = (roomId: string) => {
     }
 
 
-    // Receive Message
+    // Receive Message and update read status if window is focused
     useEffect(() => {
+        if (!user) return
+
         const receiveMessage = (data: { chatMessage: Message }) => {
             queryClient.setQueryData<InfiniteData<ApiSuccess<{ messages: Message[] }>>>(['chats', roomId], (prev) => {
                 if (!prev) return prev
@@ -51,14 +53,44 @@ export const useChatRoom = (roomId: string) => {
                 return { ...prev, pages: [{ ...prev.pages[0], data: { ...prev.pages[0].data, messages } }, ...prev.pages.slice(1)] }
             })
             if (!document.hasFocus()) return
+
+            // If focused, then request read status update
+            socket.emit('chat:last-read-at-update', { roomId, userId: user._id })
+        }
+
+
+
+        const updateReadStatus = () => {
+            queryClient.invalidateQueries({ queryKey: ['chats', 'conversation-records', roomId], exact: true })
         }
 
         socket.on('chat:message-created', receiveMessage as (args: unknown) => void)
+        socket.on('chat:last-read-at-updated', updateReadStatus as (args: unknown) => void)
 
         return () => {
             socket.off('chat:message-created', receiveMessage as (args: unknown) => void)
+            socket.off('chat:last-read-at-updated', updateReadStatus as (args: unknown) => void)
         }
-    }, [socket, roomId, queryClient])
+    }, [socket, roomId, queryClient, user])
+
+
+    // On Focus in/out, update read status
+    useEffect(() => {
+        if (!user) return
+
+        const handler = () => {
+            socket.emit('chat:last-read-at-update', { roomId, userId: user?._id })
+        }
+
+        window.addEventListener('focus', handler)
+        window.addEventListener('focusout', handler)
+
+        return () => {
+            window.removeEventListener('focus', handler)
+            window.removeEventListener('focusout', handler)
+        }
+    }, [roomId, socket, user])
+
 
 
     return { composeMessage, text, setText }

@@ -14,7 +14,7 @@ const ChatMessages = ({ roomId }: ChatMessagesProps) => {
     const { user } = useAuth()
 
     // Non-damped infinite reverse scrolling and pagination
-    const { messages, containerRef } = useInfinitePagination(roomId)
+    const { messages, containerRef, conversationRecords } = useInfinitePagination(roomId)
 
     // Scroll Anchor
     const { anchorRef } = useScrollAnchor({ messages })
@@ -27,6 +27,15 @@ const ChatMessages = ({ roomId }: ChatMessagesProps) => {
                 return (
                     <div key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
                         {message.text}
+                        {message.author._id === user?._id && <div>Read: {conversationRecords.map(record => {
+                            if (record.member === user?._id) return
+                            return (
+                                <div>
+                                    <div>Member: {record.member}</div>
+                                    <div>Seen? : {new Date(record.lastReadAt).getTime() >= new Date(message.createdAt).getTime() ? 'Yes' : 'No'}</div>
+                                </div>
+                            )
+                        })}</div>}
                     </div>
                 )
             })}

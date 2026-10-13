@@ -1,4 +1,5 @@
 import ChatMessage from "@/models/ChatMessage";
+import ConversationRecord from "@/models/ConversationRecord";
 import { RequestHandler } from "express";
 import mongoose from "mongoose";
 import { z } from 'zod'
@@ -67,4 +68,20 @@ export const fetchChatMessages: RequestHandler = async (req, res) => {
 
     res.success(200, { messages, pagination: { hasNextPage, nextCursor } })
 
+}
+
+
+const FetchConversationRecordsSchema = z.object({
+    roomId: z.string()
+})
+
+export const fetchConversationRecords: RequestHandler = async (req, res) => {
+    const parsedData = FetchConversationRecordsSchema.safeParse(req.query)
+    if (!parsedData.success) return res.fail(400, "BAD_REQUEST", "Invalid params")
+
+    const { roomId } = parsedData.data
+
+    const conversationRecords = await ConversationRecord.find({ roomId })
+
+    return res.success(200, { conversationRecords })
 }
