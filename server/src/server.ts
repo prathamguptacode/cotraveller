@@ -11,6 +11,7 @@ import responseHandler from "./middlewares/responseHandler"
 import helloRoutes from '@/routes/helloRoutes'
 import authRoutes from '@/routes/authRoutes'
 import chatRoutes from '@/routes/chatRoutes'
+import userRoutes from '@/routes/userRoutes'
 
 import initializeWebSocket from "./socket"
 
@@ -37,6 +38,7 @@ app.use(responseHandler)
 app.use('/api', helloRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/chats', chatRoutes)
+app.use('/api/users', userRoutes)
 
 
 
