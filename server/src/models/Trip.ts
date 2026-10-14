@@ -8,6 +8,17 @@ const tripSchema = new mongoose.Schema({
   description: {
     type: String
   },
+  members: {
+    type: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }]
+  },
+  admin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
   avatar: {
     type: {
       publicId: {
