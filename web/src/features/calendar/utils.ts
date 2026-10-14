@@ -1,4 +1,4 @@
-const WEEK_DAYS = {
+export const WEEK_DAYS = {
     SUNDAY: 0,
     MONDAY: 1,
     TUESDAY: 2,
@@ -21,12 +21,12 @@ export const getIncrementedDate = (previousDate: Date, { year = 0, month = 0, da
 
 const getLastDateOfMonth = (currentDate: Date) => {
     const lastDate = getIncrementedDate(currentDate, { month: 1, date: -currentDate.getDate() })
-    
+
     return lastDate
 }
 
 
-export const getCalendarMonthDates = (currentDate: Date) => {
+export const getCalendarMonth = (currentDate: Date) => {
     const dates = []
 
     // Check if last day of previous month was a saturday
@@ -57,5 +57,8 @@ export const getCalendarMonthDates = (currentDate: Date) => {
         dates.push(date)
     }
 
-    return dates
+    const weeks = Array.from(Array(totalWeeks), (_, i) => i + 1)
+    const month = currentDate.getMonth()
+
+    return { dates, weeks, month }
 }

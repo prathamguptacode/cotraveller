@@ -1,15 +1,9 @@
-import styles from './calendar.module.css'
+import MonthCalendarGrid from './components/MonthCalendarGrid'
 
 
 const Calendar = () => {
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.monthCalendarGrid}>
-                
-
-            </div>
-
-        </div>
+        <MonthCalendarGrid />
     )
 }
 

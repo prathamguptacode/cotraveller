@@ -81,3 +81,9 @@ button,
 a {
     cursor: pointer;
 }
+
+
+body {
+    margin: auto;
+    font-family: "Google Sans", Helvetica, sans-serif;
+}
