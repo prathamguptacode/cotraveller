@@ -53,27 +53,42 @@ body {
 .datesRow {
     flex: 1;
     display: flex;
+    flex-direction: column;
+
+    position: relative;
 
     &:not(:last-child) {
         border-bottom: 1px solid var(--grid-border);
     }
 }
 
-.dateCell {
-    min-width: 0;
-    flex: 1;
+/* Row borders */
+.rowOverlayCells {
+    position: absolute;
+    pointer-events: none;
+    inset: 0;
 
     display: flex;
-    flex-direction: column;
+}
 
-    padding-top: .5rem;
+.rowOverlayCell {
+    flex: 1;
 
     &:not(:last-child) {
         border-right: 1px solid var(--grid-border);
     }
 }
 
+/* --- */
+
+.dates {
+    display: flex;
+}
+
+
 .dateWrapper {
+    flex: 1;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -112,11 +127,18 @@ body {
 }
 
 
+
+
 /* Events */
 
 .eventsSection {
     flex: 1;
-    outline: 1px solid rebeccapurple;
+    display: flex;
+}
+
+.eventsCell {
+    flex: 1;
+
 }
 
 .eventTile {
@@ -129,15 +151,14 @@ body {
     font-weight: 500;
     padding-inline: .5rem;
 
-    background-color: var(--default-event);
-    color: black;
+    color: var(--text-muted);
     border-radius: 6px;
     height: 20px;
 
     display: flex;
     align-items: center;
     gap: .25rem;
-    
+
 
     /* ###TEMP */
     margin-block-end: .25rem;
@@ -149,9 +170,10 @@ body {
 
 }
 
-.allDayEvent{
-    background-color: inherit;
-    color: var(--text-muted);
+.allDayEvent {
+    background-color: var(--default-event);
+    color: black;
+
 }
 
 .eventColorCircle {

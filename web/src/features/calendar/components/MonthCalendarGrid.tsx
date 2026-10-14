@@ -24,12 +24,44 @@ const MonthCalendarGrid = () => {
                     const startDateIndex = (week - 1) * 7
                     return (
                         <div key={week} className={styles.datesRow}>
-                            {dates.slice(startDateIndex, startDateIndex + 7).map(date => {
-                                return (
-                                    <DateCell key={date.getDate()} month={month} date={date} />
-                                )
-                            })}
+                            <div aria-hidden className={styles.rowOverlayCells}>
+                                {dates.slice(startDateIndex, startDateIndex + 7).map(date => {
+                                    return (
+                                        <div key={date.getDate()} className={styles.rowOverlayCell}>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                            <div className={styles.dates}>
+                                {dates.slice(startDateIndex, startDateIndex + 7).map(date => {
+                                    const numericDate = date.getDate()
+                                    const isMonthStart = numericDate === 1
 
+                                    return (
+                                        <div className={styles.dateWrapper}>
+                                            <Link to={'/'} className={
+                                                clsx(
+                                                    styles.date,
+                                                    month === date.getMonth() && styles.currentMonthDate,
+                                                    isMonthStart && styles.monthStartDate
+                                                )}>
+                                                {numericDate} {isMonthStart && date.toLocaleDateString('default', { month: 'short' })}
+                                            </Link>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                            <section className={styles.eventsSection}>
+                                {dates.slice(startDateIndex, startDateIndex + 7).map(date => {
+                                    return (
+                                        <div className={styles.eventsCell} key={date.getDate()}>
+                                            <Event isAllDay />
+                                            <Event isAllDay />
+                                            <Event />
+                                        </div>
+                                    )
+                                })}
+                            </section>
                         </div>
                     )
                 })}
@@ -42,34 +74,7 @@ const MonthCalendarGrid = () => {
 export default MonthCalendarGrid
 
 
-type DateCellProps = {
-    date: Date,
-    month: number
-}
 
-const DateCell = ({ date, month }: DateCellProps) => {
-    const numericDate = date.getDate()
-    const isMonthStart = numericDate === 1
-    return (
-        <div className={styles.dateCell}>
-            <div className={styles.dateWrapper}>
-                <Link to={'/'} className={
-                    clsx(
-                        styles.date,
-                        month === date.getMonth() && styles.currentMonthDate,
-                        isMonthStart && styles.monthStartDate
-                    )}>
-                    {numericDate} {isMonthStart && date.toLocaleDateString('default', { month: 'short' })}
-                </Link>
-            </div>
-            <section className={styles.eventsSection}>
-                <Event isAllDay={true} />
-                <Event />
-                <Event />
-            </section>
-        </div>
-    )
-}
 
 type EventProps = {
     isAllDay?: boolean
@@ -81,7 +86,7 @@ const Event = ({ isAllDay }: EventProps) => {
     return (
         <div className={styles.eventTile}>
             <button className={clsx(styles.event, isAllDay && styles.allDayEvent)}>
-                {isAllDay &&
+                {!isAllDay &&
                     <>
                         <div className={styles.eventColorCircle}></div>
                         <span>5:30 pm</span>
