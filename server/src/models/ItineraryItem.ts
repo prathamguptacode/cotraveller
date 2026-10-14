@@ -25,11 +25,11 @@ const itineraryItemSchema = new mongoose.Schema({
     required: true
   },
   time: {
-    type: Date
+    type: Date,
+    required: true
   },
   destination: {
-    type: pointSchema,
-    // required: true
+    type: pointSchema
   },
 })
 

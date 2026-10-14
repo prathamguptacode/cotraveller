@@ -25,7 +25,8 @@ const tripSchema = new mongoose.Schema({
   },
   itineraryItems: {
     type: [Schema.Types.ObjectId],
-    ref: "ItineraryItem"
+    ref: "ItineraryItem",
+    default: []
   }
 }, { timestamps: true })
 
