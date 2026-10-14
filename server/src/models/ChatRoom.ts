@@ -3,7 +3,7 @@ import mongoose, { HydratedDocument } from 'mongoose'
 const chatRoomSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ["DM", "Trip"],
+        enum: ["DM", "TRIP"],
         required: true
     },
     dm: {

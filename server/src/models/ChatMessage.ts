@@ -11,7 +11,7 @@ const chatMessageSchema = new mongoose.Schema({
         required: true
     },
     room: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "ChatRoom",
         required: true
     }

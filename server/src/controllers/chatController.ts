@@ -1,5 +1,4 @@
 import ChatMessage from "@/models/ChatMessage";
-import ChatRoom from "@/models/ChatRoom";
 import ConversationRecord from "@/models/ConversationRecord";
 import { RequestHandler } from "express";
 import mongoose from "mongoose";
@@ -85,22 +84,4 @@ export const fetchConversationRecords: RequestHandler = async (req, res) => {
     const conversationRecords = await ConversationRecord.find({ roomId })
 
     return res.success(200, { conversationRecords })
-}
-
-// ###TEMP DEV ONLY ROUTE
-export const createChatRoom: RequestHandler = async (req, res) => {
-    const { userId } = req.body as { userId: string }
-    const { userId: receiverId } = req.params as { userId: string }
-
-    const participants = [receiverId, userId]
-
-    const chatRoom = await ChatRoom.create({
-        type: "DM",
-        dm: {
-            participants,
-            key: participants.sort().join('|')
-        }
-    })
-
-    return res.success(201, { chatRoom })
 }
