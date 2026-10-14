@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType, Schema } from "mongoose";
 
 const tripSchema = new mongoose.Schema({
   name: {
@@ -30,5 +30,5 @@ const tripSchema = new mongoose.Schema({
   }
 }, { timestamps: true })
 
-
-export default mongoose.model("Trip", tripSchema)
+export type TripModel = HydratedDocument<InferSchemaType<typeof tripSchema>>
+export default mongoose.model<TripModel>("Trip", tripSchema)

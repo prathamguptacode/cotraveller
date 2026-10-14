@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
 
 
 const pointSchema = new mongoose.Schema({
@@ -33,5 +33,5 @@ const itineraryItemSchema = new mongoose.Schema({
   },
 })
 
-
-export default mongoose.model("ItineraryItem", itineraryItemSchema)
+export type ItineraryItemModel = HydratedDocument<InferSchemaType<typeof itineraryItemSchema>>
+export default mongoose.model<ItineraryItemModel>("ItineraryItem", itineraryItemSchema, 'itinerary_items')
