@@ -6,8 +6,9 @@ const conversationRecordSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-    roomId: {
+    room: {
         type: String,
+        ref: "ChatRoom",
         required: true
     },
     lastReadAt: {
@@ -18,7 +19,7 @@ const conversationRecordSchema = new mongoose.Schema({
     timestamps: true
 })
 
-conversationRecordSchema.index({ roomId: 1, member: 1 }, { unique: true })
+conversationRecordSchema.index({ room: 1, member: 1 }, { unique: true })
 
 export type ConversationRecordModel = HydratedDocument<mongoose.InferSchemaType<typeof conversationRecordSchema>>
 export default mongoose.model<ConversationRecordModel>('conversationRecord', conversationRecordSchema, 'conversation_records')
