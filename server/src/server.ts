@@ -9,6 +9,7 @@ import responseHandler from "./middlewares/responseHandler"
 
 import helloRoutes from '@/routes/helloRoutes'
 import authRoutes from '@/routes/authRoutes'
+import tripRoutes from "@/routes/tripRoutes"
 
 await connectToMongoDB()
 
@@ -26,6 +27,7 @@ app.use(responseHandler)
 
 app.use('/api', helloRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/trip', tripRoutes)
 
 
 
