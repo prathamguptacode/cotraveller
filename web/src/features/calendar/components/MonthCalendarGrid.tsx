@@ -62,7 +62,33 @@ const DateCell = ({ date, month }: DateCellProps) => {
                     {numericDate} {isMonthStart && date.toLocaleDateString('default', { month: 'short' })}
                 </Link>
             </div>
+            <section className={styles.eventsSection}>
+                <Event isAllDay={true} />
+                <Event />
+                <Event />
+            </section>
+        </div>
+    )
+}
 
+type EventProps = {
+    isAllDay?: boolean
+}
+
+
+const Event = ({ isAllDay }: EventProps) => {
+
+    return (
+        <div className={styles.eventTile}>
+            <button className={clsx(styles.event, isAllDay && styles.allDayEvent)}>
+                {isAllDay &&
+                    <>
+                        <div className={styles.eventColorCircle}></div>
+                        <span>5:30 pm</span>
+                    </>
+                }
+                <span className={styles.eventName}>Birthday Celebration</span>
+            </button>
         </div>
     )
 }
