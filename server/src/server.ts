@@ -16,8 +16,10 @@ import devRoutes from '@/routes/devRoutes'
 import tripRoutes from "@/routes/tripRoutes"
 
 import initializeWebSocket from "./socket"
+import { checkMulterUploadPath } from "./middlewares/multerUpload"
 
 await connectToMongoDB()
+await checkMulterUploadPath()
 
 const app = express()
 const server = http.createServer(app)

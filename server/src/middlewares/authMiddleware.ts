@@ -1,6 +1,6 @@
 import env from "@/config/env"
 import { AuthTokenPayload } from "@/types/types"
-import { generateUint8Array } from "@/utils/generateAuthTokens"
+import { generateUint8Array } from "@/utils/generateJWTs"
 import { RequestHandler } from "express"
 import { jwtVerify } from "jose"
 import { JOSEError, JWTExpired } from "jose/errors"

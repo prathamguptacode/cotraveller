@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-
+// ###LATER 
 const userSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -19,7 +19,18 @@ const userSchema = new mongoose.Schema({
     fullName: {
         type: String,
         // required: true,
-    }
+    },
+    avatar: {
+        type: {
+            publicId: String,
+            version: Number,
+            _id: false
+        },
+        default: {
+            publicId: '',
+            version: 0
+        },
+    },
 }, {
     timestamps: true
 })

@@ -1,4 +1,12 @@
+import fs from 'fs'
 import multer from "multer"
+
+
+
+export const checkMulterUploadPath = async () => {
+  await fs.promises.mkdir('uploads', { recursive: true })
+}
+
 
 const storage = multer.diskStorage(
   {

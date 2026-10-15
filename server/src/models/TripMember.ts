@@ -1,6 +1,6 @@
 import mongoose, { HydratedDocument, InferSchemaType, Schema } from "mongoose";
 
-const tripUserRelSchema = new mongoose.Schema({
+const tripMemberSchema = new mongoose.Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -22,6 +22,6 @@ const tripUserRelSchema = new mongoose.Schema({
   }
 }, { timestamps: true })
 
-tripUserRelSchema.index({ user: 1, trip: 1 }, { unique: true })
-export type TripMemberModel = HydratedDocument<InferSchemaType<typeof tripUserRelSchema>>
-export default mongoose.model("TripUserRel", tripUserRelSchema)
+tripMemberSchema.index({ user: 1, trip: 1 }, { unique: true })
+export type TripMemberModel = HydratedDocument<InferSchemaType<typeof tripMemberSchema>>
+export default mongoose.model("tripMember", tripMemberSchema, 'trip_members')
