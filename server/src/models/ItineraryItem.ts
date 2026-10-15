@@ -1,4 +1,4 @@
-import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType, Schema } from "mongoose";
 
 
 const pointSchema = new mongoose.Schema({
@@ -24,13 +24,34 @@ const itineraryItemSchema = new mongoose.Schema({
     type: pointSchema,
     required: true
   },
-  time: {
+  startTime: {
     type: Date,
     required: true
+  },
+  endTime: {
+    type: Date,
   },
   destination: {
     type: pointSchema
   },
+  isFullDay: {
+    type: Boolean,
+    default: true
+  },
+  searchVariables: {
+    type: {
+      city: String,
+      state: String,
+      country: String,
+      _id: false
+    },
+    required: true
+  },
+  tripId: {
+    type: Schema.Types.ObjectId,
+    ref: "Trip",
+    required: true
+  }
 })
 
 export type ItineraryItemModel = HydratedDocument<InferSchemaType<typeof itineraryItemSchema>>

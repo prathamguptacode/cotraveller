@@ -16,8 +16,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
             const { accessToken, user } = response.data
             updateAccessToken(accessToken)
             updateUser(user)
-        }).catch((err) => {
-            console.error("error refreshing", err)
+        }).catch(() => {
         }).finally(() => {
             setLoading(false)
         })

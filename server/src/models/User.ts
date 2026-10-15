@@ -1,7 +1,7 @@
-import { HydratedDocument, InferSchemaType, model, Schema } from "mongoose";
+import mongoose from 'mongoose'
 
-
-const userSchema = new Schema({
+// ###LATER 
+const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
@@ -13,16 +13,27 @@ const userSchema = new Schema({
     },
     username: {
         type: String,
-        required: true,
-        unique: true
+        // required: true,
+        // unique: true
     },
     fullName: {
         type: String,
-        required: true,
-    }
+        // required: true,
+    },
+    avatar: {
+        type: {
+            publicId: String,
+            version: Number,
+            _id: false
+        },
+        default: {
+            publicId: '',
+            version: 0
+        },
+    },
 }, {
     timestamps: true
 })
 
-export type UserModel = HydratedDocument<InferSchemaType<typeof userSchema>>
-export default model<UserModel>('User', userSchema)
+export type UserModel = mongoose.HydratedDocument<mongoose.InferSchemaType<typeof userSchema>>
+export default mongoose.model<UserModel>('User', userSchema)
