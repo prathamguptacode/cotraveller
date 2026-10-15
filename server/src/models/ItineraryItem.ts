@@ -1,4 +1,4 @@
-import mongoose, { HydratedDocument, InferSchemaType } from "mongoose";
+import mongoose, { HydratedDocument, InferSchemaType, Schema } from "mongoose";
 
 
 const pointSchema = new mongoose.Schema({
@@ -45,6 +45,11 @@ const itineraryItemSchema = new mongoose.Schema({
       country: String,
       _id: false
     },
+    required: true
+  },
+  tripId: {
+    type: Schema.Types.ObjectId,
+    ref: "Trip",
     required: true
   }
 })

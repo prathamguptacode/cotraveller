@@ -9,6 +9,7 @@ import { generateInviteToken, generateUint8Array } from "@/utils/generateAuthTok
 import { jwtVerify } from "jose";
 import env from "@/config/env";
 import { JOSEError, JWTExpired } from "jose/errors";
+import { count } from "console";
 
 const createTripValidator = z.object({
   name: z.string(),
@@ -20,7 +21,7 @@ const createTripAvatarValidator = z.object({
 const tripDetailsValidator = z.object({
   tripId: z.string()
 })
-const tripIternaryValidator = z.object({
+const tripItirnaryValidator = z.object({
   tripId: z.string(),
   name: z.string(),
   origin: z.array(z.number()).length(2),
@@ -30,9 +31,9 @@ const tripIternaryValidator = z.object({
   isFullDay: z.boolean().default(true),
   searchVariables: z.object({ city: z.string(), state: z.string(), country: z.string() })
 })
-const editIternaryValidator = z.object({
+const editItirnaryValidator = z.object({
   tripId: z.string(),
-  iternaryId: z.string(),
+  itirnaryId: z.string(),
   name: z.string(),
   origin: z.array(z.number()).length(2),
   startTime: z.iso.datetime(),
@@ -127,7 +128,7 @@ export async function tripDetails(req: Request, res: Response) {
 
 export async function addItineraryItem(req: Request, res: Response) {
   const userId = req.user._id
-  const data = tripIternaryValidator.safeParse(req.body)
+  const data = tripItirnaryValidator.safeParse(req.body)
   if (!data.success) {
     return res.fail(400, "INVALID BODY")
   }
@@ -136,7 +137,8 @@ export async function addItineraryItem(req: Request, res: Response) {
   if (relation == null) {
     return res.fail(403, "NOT MEMBER")
   }
-  const newIternaryItem = new Itinerary({
+  const newItineraryItem = new Itinerary({
+    tripId,
     name: data.data.name,
     origin: {
       type: "Point",
@@ -151,14 +153,14 @@ export async function addItineraryItem(req: Request, res: Response) {
     isFullDay: data.data.isFullDay,
     searchVariables: data.data.searchVariables
   })
-  await newIternaryItem.save()
-  await Trip.updateOne({ _id: tripId }, { $push: { itineraryItems: newIternaryItem._id } })
-  res.success(201, { iternary: newIternaryItem })
+  await newItineraryItem.save()
+  await Trip.updateOne({ _id: tripId }, { $push: { itineraryItems: newItineraryItem._id } })
+  res.success(201, { newItineraryItem })
 }
 
 export async function editItineraryItems(req: Request, res: Response) {
   const userId = req.user._id
-  const data = editIternaryValidator.safeParse(req.body)
+  const data = editItirnaryValidator.safeParse(req.body)
   if (!data.success) {
     return res.fail(400, "INVALID BODY")
   }
@@ -167,7 +169,7 @@ export async function editItineraryItems(req: Request, res: Response) {
   if (relation == null) {
     return res.fail(403, "NOT MEMBER")
   }
-  await Itinerary.updateOne({ _id: data.data.iternaryId }, {
+  await Itinerary.updateOne({ _id: data.data.itirnaryId }, {
     name: data.data.name,
     origin: {
       type: "Point",
@@ -231,3 +233,41 @@ export async function tripInvite(req: Request, res: Response) {
     return res.fail()
   }
 }
+
+export async function searchTrip(req: Request, res: Response) {
+  const data = z.object({ query: z.string() }).safeParse({ query: req.params.query })
+  if (!data.success) {
+    return res.fail(400, "INVALID")
+  }
+  const query = data.data.query
+  const trips = await Itinerary.aggregate([
+    { $match: { "searchVariables.city": query } },
+    {
+      $group: {
+        _id: "$tripId",
+        searchScoreMatch: { $sum: 1 },
+      }
+    },
+    {
+      $sort: {
+        searchScoreMatch: -1,
+      }
+    },
+    {
+      $lookup: {
+        from: "trips",
+        localField: "_id",
+        foreignField: "_id",
+        as: "trip",
+        pipeline: [
+          { $project: { name: 1 } }
+        ]
+      }
+    },
+    {
+      $unwind: "$trip"
+    },
+  ])
+  res.success(200, trips)
+}
+

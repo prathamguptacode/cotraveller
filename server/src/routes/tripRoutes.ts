@@ -1,4 +1,4 @@
-import { addItineraryItem, createTrip, createTripAvatar, createTripInvite, editItineraryItems, tripDetails, tripInvite, viewTrips } from "@/controllers/tripController"
+import { addItineraryItem, createTrip, createTripAvatar, createTripInvite, editItineraryItems, tripDetails, tripInvite, viewTrips, searchTrip } from "@/controllers/tripController"
 import authMiddleware from "@/middlewares/authMiddleware"
 import express from "express"
 import upload from "@/middlewares/multerUpload"
@@ -6,6 +6,7 @@ import upload from "@/middlewares/multerUpload"
 const router = express.Router()
 
 router.get('/info/:tripid', tripDetails)
+router.get('/search/:query', searchTrip)
 router.use(authMiddleware)
 router.post("/", createTrip)
 router.get("/", viewTrips)
