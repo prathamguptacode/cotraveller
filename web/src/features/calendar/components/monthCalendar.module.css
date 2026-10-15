@@ -8,6 +8,7 @@ body {
     --text-muted: #c4c7c5;
     --text: #e3e3e3;
     --grid: #131314;
+    --default-event-hover: hsl(205, 60%, 45%);
     width: 90vw;
     height: 800px;
     background-color: var(--grid);
@@ -83,6 +84,7 @@ body {
 
 .dates {
     display: flex;
+    position: relative;
 }
 
 
@@ -152,9 +154,12 @@ body {
 
 .event {
     width: 100%;
+
     font-size: 12px;
     font-weight: 500;
+
     padding-inline: .5rem;
+    margin-block-end: 2px;
 
     color: var(--text-muted);
     border-radius: 6px;
@@ -164,18 +169,26 @@ body {
     align-items: center;
     gap: .25rem;
 
+    position: relative;
+    transition: all .15s linear;
 
-    /* ###TEMP */
-    margin-block-end: .25rem;
+    &:hover {
+        background-color: hsl(from var(--grid) h s 20);
+    }
 
     >*:not(.eventName) {
         flex-shrink: 0;
     }
 }
 
+
 .multiDayEvent {
     background-color: var(--default-event);
     color: black;
+
+    &:hover {
+        background-color: var(--default-event-hover);
+    }
 }
 
 .eventColorCircle {
