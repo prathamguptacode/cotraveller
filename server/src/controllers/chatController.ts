@@ -22,6 +22,9 @@ export const fetchChatMessages: RequestHandler = async (req, res) => {
 
     const { limit, roomId } = parsedData.data
 
+    // Check if user is part of room
+    if (!await ConversationRecord.exists({ room: roomId, member: req.user._id })) return res.fail(403, "FORBIDDEN", "You cannot access this")
+
     // Refining cursor
     let cursor = parsedData.data.cursor as string | undefined
     if (parsedData.data.cursor === 'default') cursor = undefined
@@ -30,7 +33,7 @@ export const fetchChatMessages: RequestHandler = async (req, res) => {
 
     const messages = await ChatMessage.aggregate([
         {
-            $match: { roomId, _id: { $lt: new mongoose.Types.ObjectId(cursor) } }
+            $match: { room: new mongoose.Types.ObjectId(roomId), _id: { $lt: new mongoose.Types.ObjectId(cursor) } }
         },
         {
             $sort: { createdAt: -1 }
@@ -81,7 +84,7 @@ export const fetchConversationRecords: RequestHandler = async (req, res) => {
 
     const { roomId } = parsedData.data
 
-    const conversationRecords = await ConversationRecord.find({ roomId })
+    const conversationRecords = await ConversationRecord.find({ room: roomId })
 
     return res.success(200, { conversationRecords })
 }

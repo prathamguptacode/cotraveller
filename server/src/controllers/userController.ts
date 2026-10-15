@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 // There will definetly be more conversation-records as compared to chat-rooms, so lets go..
 export const fetchDMChats: RequestHandler = async (req, res) => {
-    const userId = new mongoose.Types.ObjectId(req.body.userId)
+    const userId = new mongoose.Types.ObjectId(req.user._id)
 
     const chats = await ChatRoom.aggregate([
         // Get all DM ChatRooms with user as participant
@@ -69,10 +69,10 @@ export const fetchDMChats: RequestHandler = async (req, res) => {
 }
 
 
-export const fetchTripChats: RequestHandler = async (req, res) => {
-    const userId = new mongoose.Types.ObjectId(req.body.userId)
+export const fetchUserTrips: RequestHandler = async (req, res) => {
+    const userId = new mongoose.Types.ObjectId(req.user._id)
 
-    const chats = await ConversationRecord.aggregate([
+    const trips = await ConversationRecord.aggregate([
         // Get all conversationRecords of user
         {
             $match: { member: userId }
@@ -117,6 +117,7 @@ export const fetchTripChats: RequestHandler = async (req, res) => {
                         $project: {
                             lastMessage: 1,
                             trip: {
+                                _id: '$trip._id',
                                 name: '$trip.name',
                                 avatar: '$trip.avatar'
                             }
@@ -134,9 +135,12 @@ export const fetchTripChats: RequestHandler = async (req, res) => {
                 trip: '$room.trip',
                 lastMessage: '$room.lastMessage',
             }
-        }
+        },
+        {
+            $replaceWith: { $mergeObjects: ['$trip', '$lastMessage'] }
+        },
 
     ])
 
-    return res.success(200, { chats })
+    return res.success(200, { trips })
 }

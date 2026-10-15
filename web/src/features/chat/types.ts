@@ -10,7 +10,6 @@ export type Message = {
 
 export type ConversationRecord = {
     member: string,
-    roomId: string,
     lastReadAt: string
 }
 

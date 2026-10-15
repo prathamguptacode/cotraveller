@@ -2,11 +2,7 @@ import { useSuspenseInfiniteQuery, useSuspenseQuery } from "@tanstack/react-quer
 import { messagesInfiniteQueryOptions } from "../queries"
 import { useEffect, useRef } from "react"
 import { api } from "@/lib/axios"
-
-type ConversationRecord = {
-    member: string,
-    lastReadAt: string
-}
+import type { ConversationRecord } from "../types"
 
 
 export const useInfinitePagination = (roomId: string) => {

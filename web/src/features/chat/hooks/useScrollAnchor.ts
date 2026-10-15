@@ -20,7 +20,7 @@ export const useScrollAnchor = ({ messages }: { messages: Message[] }) => {
 
 
         observer.observe(anchor)
-        console.log('Observing anchor')
+
 
         return () => observer.disconnect()
     }, [])

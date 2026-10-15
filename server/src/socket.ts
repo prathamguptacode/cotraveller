@@ -3,6 +3,7 @@ import http from 'http'
 import env from "@/config/env"
 import ChatMessage from "./models/ChatMessage"
 import ConversationRecord from "./models/ConversationRecord"
+import ChatRoom from "./models/ChatRoom"
 
 
 type ChatMessageEvent = {
@@ -18,7 +19,7 @@ type ChatStatusEvent = {
 
 
 type ClientToServerEvents = {
-    'room:join': ({ roomId }: { roomId: string }) => void,
+    'room:join': ({ roomId, userId }: { roomId: string, userId: string }) => void,
     'room:leave': ({ roomId }: { roomId: string }) => void,
 
 
@@ -54,14 +55,15 @@ const initializeWebSocket = (server: http.Server) => {
 
 
     io.on('connection', (socket) => {
-        console.log(`New joining, ${socket.id} total clients = ${io.engine.clientsCount}`)
+        console.log(`New socket connection, ${socket.id} total clients = ${io.engine.clientsCount}`)
 
 
         // Chat logic
 
 
         // Join Room
-        socket.on('room:join', ({ roomId }) => {
+        socket.on('room:join', async ({ roomId, userId }) => {
+            if (!await ConversationRecord.exists({ room: roomId, member: userId })) return
             socket.join(roomId)
             console.log(socket.id, 'has joined,', roomId)
         })
@@ -76,16 +78,23 @@ const initializeWebSocket = (server: http.Server) => {
         // Create Message
         socket.on('chat:message-create', async ({ roomId, userId, text }, cb) => {
             try {
-                const baseChatMessage = await ChatMessage.create({ roomId, text, author: userId })
-                const conversationRecord = await ConversationRecord.findOneAndUpdate({ member: userId, roomId },
-                    { $set: { lastReadAt: new Date() } },
-                    { upsert: true, setDefaultsOnInsert: true }
-                )
+                const baseChatMessage = await ChatMessage.create({ room: roomId, text, author: userId })
 
-                const chatMessage = await baseChatMessage.populate('author')
+                const conversationRecordPromise = ConversationRecord.updateOne(
+                    { member: userId, room: roomId },
+                    { $set: { lastReadAt: new Date() } }
+                )
+                const chatMessagePromise = baseChatMessage.populate('author')
+                const chatRoomPromise = ChatRoom.updateOne({ _id: roomId }, { $set: { lastMessage: baseChatMessage._id } })
+
+                const [conversationRecord, chatMessage] = await Promise.all([
+                    conversationRecordPromise,
+                    chatMessagePromise,
+                    chatRoomPromise
+                ])
 
                 // Send the new message to all room members
-                socket.to(roomId).emit('chat:message-created', { chatMessage, conversationRecord })
+                socket.to(roomId).emit('chat:message-created', { conversationRecord, chatMessage })
                 cb({ success: true, chatMessage })
             } catch (error) {
                 console.error("Error creating message", error)
@@ -95,10 +104,10 @@ const initializeWebSocket = (server: http.Server) => {
         // Mark message as read
         socket.on('chat:last-read-at-update', async ({ roomId, userId }) => {
             try {
-                const conversationRecord = await ConversationRecord.findOneAndUpdate({ roomId, member: userId },
+                const conversationRecord = await ConversationRecord.findOneAndUpdate({ room: roomId, member: userId },
                     { $set: { lastReadAt: new Date() } },
-                    { upsert: true, setDefaultsOnInsert: true, returnDocument: 'after' })
-
+                    { returnDocument: 'after' }
+                )
                 // Send the updated status to all room members
                 socket.to(roomId).emit('chat:last-read-at-updated', { conversationRecord })
             } catch (error) {

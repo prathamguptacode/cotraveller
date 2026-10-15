@@ -16,7 +16,7 @@ type ChatStatusEvent = {
 
 
 type ClientToServerEvents = {
-    'room:join': ({ roomId }: { roomId: string }) => void,
+    'room:join': ({ roomId, userId }: { roomId: string, userId: string }) => void,
     'room:leave': ({ roomId }: { roomId: string }) => void,
 
 

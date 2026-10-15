@@ -10,7 +10,7 @@ const Router = () => {
             <Routes>
                 <Route index element={<Home />} />
                 <Route element={<ProtectedRoutes />}>
-                    <Route path="/users/:userId" element={<DM />} />
+                    <Route path="/rooms/:roomId" element={<DM />} />
                 </Route>
             </Routes>
         </BrowserRouter>

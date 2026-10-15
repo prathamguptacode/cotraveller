@@ -16,11 +16,13 @@ export const useChatRoom = (roomId: string) => {
 
     // Join and Leave Room
     useEffect(() => {
-        socket.emit('room:join', { roomId })
+        if (!user) return
+
+        socket.emit('room:join', { roomId, userId: user?._id })
         return () => {
             socket.emit('room:leave', { roomId })
         }
-    }, [socket, roomId])
+    }, [socket, roomId, user])
 
 
     // Create and send Message
