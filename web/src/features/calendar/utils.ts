@@ -9,11 +9,13 @@ export const WEEK_DAYS = {
 } as const
 
 
-export const getIncrementedDate = (previousDate: Date, { year = 0, month = 0, date = 0 }) => {
+export const getIncrementedDate = (previousDate: Date, { year = 0, month = 0, date = 0, hour = 0, minute = 0 }) => {
     const incrementedDate = new Date(
         previousDate.getFullYear() + year,
         previousDate.getMonth() + month,
-        previousDate.getDate() + date
+        previousDate.getDate() + date,
+        previousDate.getHours() + hour,
+        previousDate.getMinutes() + minute
     )
 
     return incrementedDate
@@ -61,4 +63,11 @@ export const getCalendarMonth = (currentDate: Date) => {
     const month = currentDate.getMonth()
 
     return { dates, weeks, month }
+}
+
+export const getWeekSaturdayDate = (currentDate: Date) => {
+    const weekDay = currentDate.getDay()
+    const delta = WEEK_DAYS.SATURDAY - weekDay
+
+    return getIncrementedDate(currentDate, { date: delta })
 }

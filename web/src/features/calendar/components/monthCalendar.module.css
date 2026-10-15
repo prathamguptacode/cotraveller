@@ -134,6 +134,7 @@ body {
 .eventsSection {
     flex: 1;
     display: flex;
+    position: relative;
 }
 
 .eventsCell {
@@ -143,6 +144,10 @@ body {
 
 .eventTile {
     padding-inline-end: .5rem;
+
+    &:has(.multiDayEvent) {
+        position: absolute;
+    }
 }
 
 .event {
@@ -166,14 +171,11 @@ body {
     >*:not(.eventName) {
         flex-shrink: 0;
     }
-
-
 }
 
-.allDayEvent {
+.multiDayEvent {
     background-color: var(--default-event);
     color: black;
-
 }
 
 .eventColorCircle {
