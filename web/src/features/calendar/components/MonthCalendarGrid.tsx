@@ -19,15 +19,20 @@ const events: Event[] = [
     },
     {
         startTime: new Date(),
-        endTime: getIncrementedDate(new Date(), { date: 1900 }),
-        name: "Class",
+        endTime: getIncrementedDate(new Date(), { date: 17 }),
+        name: "Navratri",
+    },
+    {
+        startTime: new Date(),
+        endTime: getIncrementedDate(new Date(), { hour: 1 }),
+        name: "MAI-101",
     }
 ]
 
-console.log(events[1].endTime)
 
 const MonthCalendarGrid = () => {
-    const { dates, weeks, month } = getCalendarMonth(new Date())
+    const { dates, weeks, month } = getCalendarMonth(getIncrementedDate(new Date(), { month: 0 }))
+
 
     return (
         <div className={styles.wrapper}>
@@ -81,7 +86,7 @@ const MonthCalendarGrid = () => {
                                                 const endDateString = event.endTime.toLocaleDateString()
                                                 const cellDateString = date.toLocaleDateString()
 
-                                                const occursToday = startDateString <= cellDateString && cellDateString <= endDateString
+                                                const occursToday = new Date(startDateString).getTime() <= new Date(cellDateString).getTime() && new Date(cellDateString).getTime() <= new Date(endDateString).getTime()
                                                 const isMultiDay = startDateString !== endDateString
 
                                                 if (!occursToday) return
@@ -98,7 +103,7 @@ const MonthCalendarGrid = () => {
 
                                                     let width = 100 / 7
                                                     const weekSaturdayDateString = getWeekSaturdayDate(date).toLocaleDateString()
-                                                    if (weekSaturdayDateString >= endDateString) {
+                                                    if (new Date(weekSaturdayDateString).getTime() >= new Date(endDateString).getTime()) {
                                                         width *= (event.endTime.getDay() - event.startTime.getDay() + 1)
                                                     }
                                                     else width *= (WEEK_DAYS.SATURDAY - event.startTime.getDay() + 1)
@@ -114,7 +119,7 @@ const MonthCalendarGrid = () => {
                                                 if (isMultiDay && WEEK_DAYS.SUNDAY === date.getDay()) {
                                                     let width = 100 / 7
                                                     const weekSaturdayDateString = getWeekSaturdayDate(date).toLocaleDateString()
-                                                    if (weekSaturdayDateString >= endDateString) {
+                                                    if (new Date(weekSaturdayDateString).getTime() >= new Date(endDateString).getTime()) {
                                                         width *= (event.endTime.getDay() - WEEK_DAYS.SUNDAY + 1)
                                                     }
                                                     else width *= (WEEK_DAYS.SATURDAY - WEEK_DAYS.SUNDAY + 1)
