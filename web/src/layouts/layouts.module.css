@@ -1,9 +1,9 @@
 /* Layout */
 .layout {
     height: 100vh;
-    background-color: black;
-    color: white;
-
+    height: 100dvh;
+    background-color: hsl(228, 22%, 5%);
+    color: hsl(0, 0%, 96%);
     display: flex;
 }
 
