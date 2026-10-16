@@ -7,6 +7,10 @@
     display: flex;
 }
 
+.content {
+    flex: 1;
+}
+
 /* NavigationRail */
 .navRail {
     flex-shrink: 0;
