@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from "react"
 import type { Message } from "../types"
 import { useAuth } from "@/hooks/useAuth"
 
-export const useScrollAnchor = ({ messages }: { messages: Message[] }) => {
+export const useScrollAnchor = (lastMessage: Message) => {
     const anchorRef = useRef<HTMLDivElement>(null)
     const [isAnchored, setIsAnchored] = useState(false)
     const { user } = useAuth()
+
 
     useEffect(() => {
         // Initial anchoring
@@ -28,7 +29,6 @@ export const useScrollAnchor = ({ messages }: { messages: Message[] }) => {
 
     useEffect(() => {
         const anchor = anchorRef.current
-        const lastMessage = messages[messages.length - 1]
         if (!anchor || !lastMessage) return
 
 
@@ -38,9 +38,9 @@ export const useScrollAnchor = ({ messages }: { messages: Message[] }) => {
             anchor.scrollIntoView({ behavior: 'smooth' })
             // Observer takes care of isAnchored state
         }
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [messages])
+    }, [lastMessage])
 
 
 

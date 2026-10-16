@@ -17,7 +17,7 @@ const ChatMessages = ({ roomId }: ChatMessagesProps) => {
     const { messages, containerRef, conversationRecords } = useInfinitePagination(roomId)
 
     // Scroll Anchor
-    const { anchorRef } = useScrollAnchor({ messages })
+    const { anchorRef } = useScrollAnchor(messages[messages.length - 1])
 
 
     return (
