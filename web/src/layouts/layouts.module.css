@@ -1,0 +1,103 @@
+/* Layout */
+.layout {
+    height: 100vh;
+    background-color: black;
+    color: white;
+
+    display: flex;
+}
+
+.content {
+    flex: 1;
+}
+
+/* NavigationRail */
+.navRail {
+    flex-shrink: 0;
+    width: 72px;
+    padding-block: 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    border-right: 1px solid hsl(0 0% 10%);
+}
+
+
+
+.railItems {
+    display: flex;
+    flex-direction: column;
+
+    gap: .5rem;
+}
+
+.railItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+
+    svg {
+        --size: 24px;
+        width: var(--size);
+        height: var(--size);
+    }
+
+    >* {
+        padding: .75rem;
+    }
+
+}
+
+
+.railItem:not([data-item='logo']) {
+    &::before {
+        --border-radius: 4px;
+        content: '';
+        width: 3.5px;
+        height: 35%;
+
+        position: absolute;
+        left: 0;
+
+        background-color: white;
+        border-top-right-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+
+        scale: .5;
+        opacity: 0;
+        transition: all 300ms ease-out;
+    }
+
+    &:hover::before {
+        scale: 1;
+        opacity: 1;
+    }
+}
+
+.railItem:has(.activeLink)::before {
+    opacity: 1;
+    scale: 1;
+    height: 75%;
+    --border-radius: 8px;
+}
+
+
+
+.imageWrapper {
+    display: block;
+    --size: 24px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    overflow: hidden;
+
+    >img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
