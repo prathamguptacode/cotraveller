@@ -57,7 +57,7 @@ const NavigationRail = () => {
                 <div className={styles.railItem}>
                     <NavLink end className={({ isActive }) => {
                         return clsx(isActive && styles.activeLink)
-                    }} to={'/dms'}>
+                    }} to={'/direct'}>
                         <span>
                             <ChatTeardropIcon />
                         </span>
