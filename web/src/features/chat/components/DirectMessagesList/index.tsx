@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import styles from '../chat.module.css'
+import styles from './styles.module.css'
 import leon from '@/assets/leon.jpeg'
 import { NavLink } from "react-router-dom"
 import clsx from "clsx"

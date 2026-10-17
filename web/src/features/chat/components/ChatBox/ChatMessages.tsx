@@ -1,8 +1,8 @@
-import { useInfinitePagination } from "../hooks/useInfinitePagination"
-import { useScrollAnchor } from "../hooks/useScrollAnchor"
+import { useInfinitePagination } from "@/features/chat/hooks/useInfinitePagination"
+import { useScrollAnchor } from "@/features/chat/hooks/useScrollAnchor"
 import { useAuth } from "@/hooks/useAuth"
 
-import styles from '../chat.module.css'
+import styles from './styles.module.css'
 import clsx from "clsx"
 
 
