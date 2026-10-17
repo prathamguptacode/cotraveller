@@ -12,7 +12,6 @@ import helloRoutes from '@/routes/helloRoutes'
 import authRoutes from '@/routes/authRoutes'
 import chatRoutes from '@/routes/chatRoutes'
 import userRoutes from '@/routes/userRoutes'
-import devRoutes from '@/routes/devRoutes'
 import tripRoutes from "@/routes/tripRoutes"
 
 import initializeWebSocket from "./socket"
@@ -43,7 +42,6 @@ app.use('/api', helloRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/chats', chatRoutes)
 app.use('/api/users', userRoutes)
-if (env.NODE_ENV === 'development') app.use('/api/dev', devRoutes)
 app.use('/api/trip', tripRoutes)
 
 
