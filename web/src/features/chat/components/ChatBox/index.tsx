@@ -1,5 +1,6 @@
 import ChatMessages from './ChatMessages'
 import MessageComposer from './MessageComposer'
+import styles from './styles.module.css'
 
 type ChatBoxProps = {
     roomId: string
@@ -8,7 +9,7 @@ type ChatBoxProps = {
 const ChatBox = ({ roomId }: ChatBoxProps) => {
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             <ChatMessages roomId={roomId} />
             <MessageComposer roomId={roomId} />
         </div>

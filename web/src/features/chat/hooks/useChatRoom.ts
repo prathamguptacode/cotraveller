@@ -29,7 +29,9 @@ export const useChatRoom = (roomId: string) => {
     const composeMessage = () => {
         if (!user) return
 
-        socket.emit('chat:message-create', { roomId, text, userId: user._id }, (res: { success: boolean, chatMessage: Message }) => {
+        const trimmedText = text.replace(/^\s+|\s+$/g, '')
+
+        socket.emit('chat:message-create', { roomId, text: trimmedText, userId: user._id }, (res: { success: boolean, chatMessage: Message }) => {
             if (!res.success) return console.error("something went wrong!")
 
             queryClient.setQueryData<InfiniteData<ApiSuccess<{ messages: Message[] }>>>(['chats', roomId], (prev) => {

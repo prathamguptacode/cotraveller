@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import type { Message } from "../types"
 import { useAuth } from "@/hooks/useAuth"
 
-export const useScrollAnchor = (lastMessage: Message) => {
+export const useScrollAnchor = ({ lastMessage, roomId }: { lastMessage: Message, roomId: string }) => {
     const anchorRef = useRef<HTMLDivElement>(null)
     const [isAnchored, setIsAnchored] = useState(false)
     const { user } = useAuth()
@@ -24,7 +24,7 @@ export const useScrollAnchor = (lastMessage: Message) => {
 
 
         return () => observer.disconnect()
-    }, [])
+    }, [roomId])
 
 
     useEffect(() => {

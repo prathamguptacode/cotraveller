@@ -1,11 +1,13 @@
 import { useSuspenseInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query"
 import { messagesInfiniteQueryOptions } from "../queries"
-import { useEffect, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { api } from "@/lib/axios"
 import type { ConversationRecord } from "../types"
+import { useAuth } from "@/hooks/useAuth"
 
 
 export const useInfinitePagination = (roomId: string) => {
+    const { user } = useAuth()
     const { data: { messages }, hasNextPage, isFetchingNextPage, fetchNextPage } = useSuspenseInfiniteQuery(messagesInfiniteQueryOptions(roomId))
 
     const { data: conversationRecords } = useSuspenseQuery({
@@ -36,5 +38,15 @@ export const useInfinitePagination = (roomId: string) => {
 
     }, [hasNextPage, fetchNextPage, isFetchingNextPage])
 
-    return { messages, containerRef, conversationRecords }
+
+    const lastReadByEveryoneAt = useMemo(() => {
+        let temp = Infinity
+        conversationRecords.forEach(record => {
+            const readAt = new Date(record.lastReadAt).getTime()
+            if (record.member != user?._id) temp = Math.min(readAt, temp)
+        })
+        return temp
+    }, [conversationRecords, user])
+
+    return { messages, containerRef, lastReadByEveryoneAt }
 }
