@@ -47,7 +47,24 @@
 
 
 
-/* Direct Messages List */
+/* Direct Messages */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+}
+
+.listHeader {
+    padding-inline: 1.5rem;
+}
+
+.listHeading {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+/* DM List */
 .list {
     display: flex;
     flex-direction: column;

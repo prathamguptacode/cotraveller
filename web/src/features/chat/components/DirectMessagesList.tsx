@@ -26,7 +26,12 @@ const DirectMessagesList = () => {
 
   return (
 
-    <div>
+    <section className={styles.wrapper}>
+      <header className={styles.listHeader}>
+        <h2 className={styles.listHeading}>
+          Direct Messages
+        </h2>
+      </header>
       <div className={styles.list}>
         {
           chats.map(chat => {
@@ -57,7 +62,7 @@ const DirectMessagesList = () => {
           })
         }
       </div>
-    </div>
+    </section>
   )
 }
 
