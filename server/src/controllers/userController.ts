@@ -147,6 +147,29 @@ export const fetchUserTrips: RequestHandler = async (req, res) => {
     return res.success(200, { trips })
 }
 
+const FetchChatRoomSchema = z.object({
+    userId: z.string().refine(id => isObjectIdOrHexString(id))
+})
+
+export const fetchChatRoom: RequestHandler = async (req, res) => {
+    const currentUserId = req.user._id
+
+    const parsedData = CreateChatRoomSchema.safeParse(req.params)
+    if (!parsedData.success) return res.fail(400, "BAD_REQUEST", "Invalid params")
+
+    const user = await User.findById(parsedData.data.userId)
+    if (!user) return res.fail(404, "USER_NOT_FOUND", "User does not exist")
+
+    const participants = [currentUserId, user.id]
+    const dmKey = participants.sort().join('|')
+
+    const chatRoom = await ChatRoom.findOne({ type: 'DM', 'dm.key': dmKey })
+    if (!chatRoom) return res.fail(404, "CHAT_NOT_FOUND", "Chat does not exist")
+
+    return res.success(200, { chatRoom, user })
+
+}
+
 const CreateChatRoomSchema = z.object({
     userId: z.string().refine(id => isObjectIdOrHexString(id))
 })
@@ -163,18 +186,10 @@ export const createChatRoom: RequestHandler = async (req, res) => {
     const participants = [currentUserId, user.id]
     const dmKey = participants.sort().join('|')
 
-    const chatRoom = await ChatRoom.findOneAndUpdate(
-        { type: 'DM', 'dm.key': dmKey },
-        { $setOnInsert: { type: 'DM', dm: { participants, key: dmKey } } },
-        { upsert: true, returnDocument: 'after' }
-    )
+    const chatRoom = await ChatRoom.create({ type: 'DM', dm: { participants, key: dmKey } })
 
     await Promise.all(participants.map(member => {
-        return ConversationRecord.findOneAndUpdate(
-            { room: chatRoom._id },
-            { $setOnInsert: { room: chatRoom._id, member } },
-            { upsert: true }
-        )
+        return ConversationRecord.create({ room: chatRoom._id, member })
     }))
 
 
