@@ -1,7 +1,13 @@
 import styles from './styles.module.css'
 import leon from '@/assets/leon.jpeg'
 
-const DirectMessageChatHeader = () => {
+type DirectMessageChatHeaderProps = {
+    user: {
+        email: string
+    }
+}
+
+const DirectMessageChatHeader = ({ user }: DirectMessageChatHeaderProps) => {
 
     return (
         <div className={styles.chatHeader}>
@@ -9,7 +15,7 @@ const DirectMessageChatHeader = () => {
                 <img src={leon} alt="display-picture" />
             </div>
             <h2 className={styles.headerName}>
-                Shubham Panjiyara
+                {user.email}
             </h2>
         </div>
     )

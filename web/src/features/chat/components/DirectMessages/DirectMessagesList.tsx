@@ -8,6 +8,7 @@ import clsx from "clsx"
 type Chat = {
   _id: string, //roomId
   receiver: {
+    _id: string,
     email: string
   },
   lastMessage?: {
@@ -36,7 +37,7 @@ const DirectMessagesList = () => {
         {
           chats.map(chat => {
             return (
-              <NavLink to={`/direct/${chat._id}`} key={chat._id} className={({ isActive }) => {
+              <NavLink to={`/direct/${chat.receiver._id}`} key={chat._id} className={({ isActive }) => {
                 return clsx(styles.listItem, isActive && styles.activeItem)
               }}>
                 <div className={styles.imageWrapper}>

@@ -175,6 +175,7 @@ const CreateChatRoomSchema = z.object({
 })
 
 export const createChatRoom: RequestHandler = async (req, res) => {
+    console.log(req.params.userId)
     const currentUserId = req.user._id
 
     const parsedData = CreateChatRoomSchema.safeParse(req.params)
