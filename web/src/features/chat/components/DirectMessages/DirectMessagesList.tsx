@@ -12,7 +12,12 @@ type Chat = {
     email: string
   },
   lastMessage?: {
-    text: string
+    text: string,
+    author: {
+      _id: string,
+      email: string,
+    },
+    createdAt: string
   }
 
 }
@@ -26,7 +31,6 @@ const DirectMessagesList = () => {
 
 
   return (
-
     <section className={styles.wrapper}>
       <header className={styles.listHeader}>
         <h2 className={styles.listHeading}>
@@ -46,16 +50,18 @@ const DirectMessagesList = () => {
                 <div className={styles.itemContentWrapper}>
                   <div className={styles.itemContent}>
                     <span className={styles.title}>
-                      Leon S. Kennedy
+                      {chat.receiver.email}
                     </span>
-                    <span className={styles.description}>
-                      Roost, I have secured baby eagle. How is it going over there ?
-                    </span>
+                    {chat.lastMessage &&
+                      <span className={styles.description}>
+                        {chat.lastMessage.text}
+                      </span>}
                   </div>
                   <div className={styles.extraItemContent}>
-                    <span>
-                      11:40 AM
-                    </span>
+                    {chat.lastMessage &&
+                      <span>
+                        {new Date(chat.lastMessage.createdAt).toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit', hour12: true })}
+                      </span>}
                   </div>
                 </div>
               </NavLink>

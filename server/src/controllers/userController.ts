@@ -24,6 +24,19 @@ export const fetchDMChats: RequestHandler = async (req, res) => {
                 from: 'chat_messages',
                 localField: 'lastMessage',
                 foreignField: '_id',
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'author',
+                            foreignField: '_id',
+                            as: 'author'
+                        }
+                    },
+                    {
+                        $unwind: '$author'
+                    }
+                ],
                 as: 'lastMessage'
             }
         },
