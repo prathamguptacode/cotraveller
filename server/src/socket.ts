@@ -77,8 +77,9 @@ const initializeWebSocket = (server: http.Server) => {
 
         // Create Message
         socket.on('chat:message-create', async ({ roomId, userId, text }, cb) => {
+            const trimmedText = text.replace(/^\s+|\s+$/g, '')
             try {
-                const baseChatMessage = await ChatMessage.create({ room: roomId, text, author: userId })
+                const baseChatMessage = await ChatMessage.create({ room: roomId, text: trimmedText, author: userId })
 
                 const conversationRecordPromise = ConversationRecord.updateOne(
                     { member: userId, room: roomId },
