@@ -76,3 +76,12 @@
         background-color: hsl(217, 63%, 45%);
     }
 }
+
+
+
+/* Direct Message Page */
+.chatBoxWrapper{
+    height: stretch;
+    display: flex;
+    flex-direction: column;
+}

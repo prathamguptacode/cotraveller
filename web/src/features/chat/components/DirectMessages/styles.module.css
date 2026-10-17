@@ -1,5 +1,4 @@
-
-/* Direct Messages */
+/* Direct Messages List */
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -15,8 +14,6 @@
     font-weight: 700;
 }
 
-
-/* DM List */
 .list {
     display: flex;
     flex-direction: column;
@@ -99,4 +96,22 @@
         height: 100%;
         object-fit: cover;
     }
+}
+
+
+
+/* Direct Message Chat Header */
+.chatHeader {
+    border-bottom: 1px solid hsl(0 0% 15%);
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 1rem;
+}
+
+.headerName {
+    font-size: 16px;
+    font-weight: 600;
 }

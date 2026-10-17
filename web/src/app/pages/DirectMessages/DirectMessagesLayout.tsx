@@ -1,4 +1,4 @@
-import DirectMessagesList from "@/features/chat/components/DirectMessagesList"
+import DirectMessagesList from "@/features/chat/components/DirectMessages/DirectMessagesList"
 import styles from './styles.module.css'
 import { Outlet } from "react-router-dom"
 
