@@ -1,7 +1,7 @@
 import { GlobeIcon, IslandIcon } from "@phosphor-icons/react"
-import mystyle from "./Search.module.css"
+import mystyle from "./search.module.css"
 
-function SearchMainContent() {
+function SearchIndexPage() {
   return (
     <div className={mystyle.mainBox}>
       <div>
@@ -17,4 +17,4 @@ function SearchMainContent() {
   )
 }
 
-export default SearchMainContent
+export default SearchIndexPage

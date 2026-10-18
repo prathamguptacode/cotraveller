@@ -1,6 +1,6 @@
-import mystyle from "./Search.module.css"
-import SearchSidebar from "@/app/pages/Search/SearchSidebar"
-import SearchMainContent from "./SearchMainContent"
+import mystyle from "./search.module.css"
+import SearchArea from "@/features/search/components/SearchArea"
+import { Outlet } from "react-router-dom"
 
 function SearchLayout() {
 
@@ -8,10 +8,10 @@ function SearchLayout() {
   return (
     <div className={mystyle.searchLayout}>
       <div className={mystyle.searchSidebar}>
-        <SearchSidebar />
+        <SearchArea />
       </div>
       <div className={mystyle.searchMainContent}>
-        <SearchMainContent />
+        <Outlet />
       </div>
     </div>
   )

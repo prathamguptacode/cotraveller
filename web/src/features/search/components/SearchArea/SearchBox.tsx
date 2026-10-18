@@ -1,18 +1,18 @@
 import { MagnifyingGlassIcon, MapPinIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { useDebounce } from '@/hooks/useDebounce'
-import { useAnimatedPlaceholder } from '../hooks/useAnimatedPlaceHolder'
+import { useAnimatedPlaceholder } from '@/features/search/hooks/useAnimatedPlaceholder'
 import { useMapsLibrary } from '@vis.gl/react-google-maps'
 import { useAutocompleteSuggestions } from '@/hooks/useAutoCompleteSuggestions'
 import { useNavigate } from 'react-router-dom'
 
-import styles from '../styles.module.css'
+import styles from './styles.module.css'
 
 
 
 const SearchBox = () => {
     const [searchQuery, setSearchQuery] = useState('')
-    const debouncedSearchQuery = useDebounce(searchQuery)
+    const debouncedSearchQuery = useDebounce(searchQuery, 100)
     const inputRef = useAnimatedPlaceholder()
 
     const resetSearchQuery = () => setSearchQuery('')
@@ -63,7 +63,7 @@ function SearchSuggestions({ debouncedSearchQuery, resetSearchQuery }: SearchSug
 
         const city = place.addressComponents && place.addressComponents[0].longText
         const placeId = suggestion.placePrediction.placeId
-        if (city && placeId) return navigate(`/results/${city}/${placeId}`)
+        if (city && placeId) return navigate(`${city}/${placeId}`)
     }
 
 

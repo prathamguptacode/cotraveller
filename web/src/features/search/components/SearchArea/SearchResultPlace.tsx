@@ -1,8 +1,9 @@
 import { Map, useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
-import styles from '../styles.module.css'
 import { useEffect, useState } from 'react';
 import { useCarousel } from '@/hooks/useCarousel';
 import { CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react';
+
+import styles from './styles.module.css'
 
 
 type SearchResultPlaceProps = {
