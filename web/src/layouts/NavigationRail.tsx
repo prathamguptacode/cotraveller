@@ -27,15 +27,15 @@ const NavigationRail = () => {
                         </span>
                     </NavLink>
                 </div>
-                {/* <div className={styles.railItem}> */}
-                {/*     <NavLink end className={({ isActive }) => { */}
-                {/*         return clsx(isActive && styles.activeLink) */}
-                {/*     }} to={'/trips'}> */}
-                {/*         <span> */}
-                {/*             <UsersThreeIcon /> */}
-                {/*         </span> */}
-                {/*     </NavLink> */}
-                {/* </div> */}
+                <div className={styles.railItem}>
+                    <NavLink end className={({ isActive }) => {
+                        return clsx(isActive && styles.activeLink)
+                    }} to={'/trips'}>
+                        <span>
+                            <UsersThreeIcon />
+                        </span>
+                    </NavLink>
+                </div>
                 <div className={styles.railItem}>
                     <NavLink end className={({ isActive }) => {
                         return clsx(isActive && styles.activeLink)

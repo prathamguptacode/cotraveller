@@ -7,6 +7,8 @@ import DirectMessagesPage from "./pages/DirectMessages/DirectMessagesPage"
 import DirectMessagePage from "./pages/DirectMessages/DirectMessagePage"
 import SearchLayout from "./pages/Search/SearchLayout"
 import ResultsLayout from "./pages/Results/ResultsLayout"
+import TripsLayout from "./pages/Trips/TripsLayout"
+import TripsMainContent from "./pages/Trips/TripsMainContent"
 
 
 const Router = () => {
@@ -17,9 +19,10 @@ const Router = () => {
                     <Route index element={<Home />} />
 
                     {/* Replace Home element with Trip Layout Below with outlet inside to render blank or index page */}
-                    <Route path="/trips" element={<Home />}>
+                    <Route path="/trips" element={<TripsLayout />}>
+                        <Route index element={<>cotraveller</>} />
                         <Route path=":tripId">
-                            <Route index />
+                            <Route index element={<TripsMainContent />} />
                             <Route path="chats" />
                         </Route>
                         <Route path="create" element={<Home />} />

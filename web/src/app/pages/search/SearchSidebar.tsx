@@ -64,7 +64,9 @@ function SearchSidebar() {
     }
     searchInRef.current.placeholder += placeHolderText[pos].charAt(i)
     i++;
-    setTimeout(() => dynamicPlaceholder(pos), speed)
+    await new Promise((resolve) => setTimeout(resolve, speed));
+    dynamicPlaceholder(pos)
+    // setTimeout(() => dynamicPlaceholder(pos), speed)
   }
 
   useEffect(() => {

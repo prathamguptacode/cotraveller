@@ -3,7 +3,7 @@ import mystyle from "./Results.module.css"
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Map, useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useAutocompleteSuggestions } from "@/hooks/autocomplete";
-import { ArrowLeftIcon, ArrowRightIcon, MagnifyingGlassIcon, MapPinIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, MapPinIcon } from "@phosphor-icons/react";
 import useEmblaCarousel from 'embla-carousel-react'
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react/dist/ssr";
 
@@ -193,6 +193,7 @@ function PlaceInfo({ city, placeId }: { city: string, placeId: string }) {
             gestureHandling={'greedy'}
             disableDefaultUI={true}
             defaultCenter={{ lat: loc.location.lat(), lng: loc.location.lng() }}
+            key={placeId}
           />
           : null
       }
