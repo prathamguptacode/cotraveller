@@ -65,7 +65,7 @@ export async function createTrip(req: Request, res: Response) {
 
 export async function createTripAvatar(req: Request, res: Response) {
   if (!req.file) return res.fail(400, "FILE_NOT_FOUND")
-  
+
   const data = CreateTripAvatarValidator.safeParse(req.params)
   if (!data.success) {
     await fs.unlink(req.file.path)
@@ -125,7 +125,10 @@ export async function tripDetails(req: Request, res: Response) {
 
   const tripId = data.data.tripId
   const trip = await Trip.findById(tripId)
-  res.success(200, { trip })
+
+  const members = await TripUserRel.find({ trip: tripId }).populate("user", "email").select("user")
+
+  res.success(200, { trip, members })
 }
 
 export async function addItineraryItem(req: Request, res: Response) {

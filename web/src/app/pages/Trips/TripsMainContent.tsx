@@ -1,10 +1,24 @@
-import { Plus, WarningIcon } from "@phosphor-icons/react"
+import { MapPinIcon, Plus } from "@phosphor-icons/react"
 import mystyle from "./Trips.module.css"
 import { api } from "@/lib/axios"
-import { CalendarIcon } from "@phosphor-icons/react/dist/ssr"
+import { CalendarIcon, ChatTeardropIcon } from "@phosphor-icons/react/dist/ssr"
 import { useQuery } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
 import { Map } from "@vis.gl/react-google-maps"
+import { useState } from "react"
+import dayjs, { Dayjs } from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+
+type tripDetailT = {
+  trip: {
+    name: string,
+  },
+  members: { user: { email: string } }[]
+}
 
 function TripsMainContent() {
 
@@ -14,7 +28,7 @@ function TripsMainContent() {
 
   const { isPending, data, error } = useQuery({
     queryKey: ["trips", tripId],
-    queryFn: () => api.get(`/trip/${tripId}`)
+    queryFn: () => api.get<tripDetailT>(`/trip/${tripId}`)
   })
 
   if (isPending) {
@@ -32,12 +46,18 @@ function TripsMainContent() {
           <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/8f/b2/89/photo0jpg.jpg?w=1200&h=1200&s=1" alt="trip photo" width="50px" height="50px" />
         </div>
         <div className={mystyle.tripInfo}>
-          <div>Trip name</div>
-          <div>Pratham, Shubham, Anushka, Money</div>
+          <div>{data.data.trip.name}</div>
+          <div>
+            {
+              data.data.members.map((e, i) => {
+                return <span key={i}>{e.user.email} {i < data.data.members.length - 1 ? ", " : null}</span>
+              })
+            }
+          </div>
         </div>
         <div className={mystyle.iconBox}>
           <div><CalendarIcon size={28} /> </div>
-          <div><WarningIcon size={28} /> </div>
+          <div><ChatTeardropIcon size={28} /> </div>
         </div>
       </div>
       <div className={mystyle.content}>
@@ -50,7 +70,8 @@ function TripsMainContent() {
           />
         </div>
         <div className={mystyle.iternaryBox}>
-          <button className={mystyle.addBtn}><Plus size={24} /> </button>
+          <button className={mystyle.addBtn} popoverTarget="addIternaryBox"><Plus size={24} /> </button>
+          <AddIternaryBox />
           <IternaryItem title="Great Harry Poter House" description="go there and have fun" date="12 November 5:00pm" hasNext={true} />
 
           <IternaryItem title="Great Harry Poter House" description="go there and have fun" date="12 November 5:00pm" hasNext={true} />
@@ -95,5 +116,40 @@ function IternaryItem({ title, description, date, hasNext, placeId }: { title: s
           <div className={mystyle.stick} /> : null
       }
     </div>
+  </div>
+}
+
+
+function AddIternaryBox() {
+
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+      primary: { main: `hsl(217, 63%, 55%)` }
+    },
+  });
+
+  const [input, setInput] = useState("")
+  const [value, setValue] = useState<Dayjs | null>(dayjs());
+
+
+  return <div id="addIternaryBox" className={mystyle.addIternaryBox} popover="auto">
+    <div className={mystyle.boxTitle}>
+      Add Iternary Item
+    </div>
+    <div>
+      <div className={mystyle.searchBox}>
+        <MapPinIcon size={22} />
+        <input placeholder="Tokyo" value={input} onChange={e => setInput(e.currentTarget.value)} />
+      </div>
+    </div>
+    <div >
+      <ThemeProvider theme={darkTheme}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateCalendar className={mystyle.calBox} value={value} onChange={(newValue) => setValue(newValue)} />
+        </LocalizationProvider>
+      </ThemeProvider>
+    </div>
+    <button className={mystyle.submitBtn}>Add to iternary</button>
   </div>
 }
