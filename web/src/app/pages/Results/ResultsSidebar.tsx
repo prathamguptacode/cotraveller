@@ -1,49 +1,47 @@
 import { useNavigate, useParams, } from "react-router-dom";
 import mystyle from "./Results.module.css"
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Map, useMapsLibrary } from "@vis.gl/react-google-maps";
+import { Map, useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useAutocompleteSuggestions } from "@/hooks/autocomplete";
-import { ArrowLeftIcon, ArrowRightIcon, MagnifyingGlassIcon, MapPinIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, MapPinIcon } from "@phosphor-icons/react";
 import useEmblaCarousel from 'embla-carousel-react'
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react/dist/ssr";
 
-const placeHolderText = ["Search for Tokyo", "Search for Monoco", "Search for California", "Search for Germany"]
+const placeHolderText = ["Tokyo", "Monoco", "California", "Germany"]
 
 function ResultsSidebar() {
-
   const navigate = useNavigate()
-
   const searchInRef = useRef<HTMLInputElement>(null)
-  let i = 0;
-  const speed = 100;
-  const [pos, setPos] = useState(0)
-
-  async function dynamicPlaceholder(pos: number) {
-    if (!searchInRef.current) return
-    if (i === placeHolderText[pos].length) {
-      i = 0;
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      searchInRef.current.placeholder = ""
-      if (pos === placeHolderText.length - 1) {
-        setPos(0)
-      } else {
-        setPos(pos + 1)
-      }
-      return
-    }
-    searchInRef.current.placeholder += placeHolderText[pos].charAt(i)
-    i++;
-    setTimeout(() => dynamicPlaceholder(pos), speed)
-  }
 
   useEffect(() => {
-    dynamicPlaceholder(pos)
-  }, [pos])
+    let i = 0
+    let pos = 0
+
+    async function dynamicPlaceholder() {
+      if (!searchInRef.current) return
+      if (i === placeHolderText[pos].length) {
+        i = 0;
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        searchInRef.current.placeholder = "Search for "
+        if (pos === placeHolderText.length - 1) {
+          pos = 0
+        } else {
+          pos++
+        }
+        return dynamicPlaceholder()
+      }
+      searchInRef.current.placeholder += placeHolderText[pos].charAt(i)
+      i++;
+      setTimeout(() => dynamicPlaceholder(), 100)
+    }
+
+    dynamicPlaceholder()
+  }, [])
 
 
 
   const [input, setInput] = useState("")
-  const { isLoading, suggestions, resetSession } = useAutocompleteSuggestions(input, {
+  const { suggestions, resetSession } = useAutocompleteSuggestions(input, {
     includedPrimaryTypes: ["locality"]
   })
   const places = useMapsLibrary('places');
@@ -67,12 +65,11 @@ function ResultsSidebar() {
         return navigate(`/results/${city}/${placeId}`)
       }
     },
-    [places, resetSession,]
-  );
+    [navigate, places, resetSession]
+  )
 
-  const params = useParams()
-  const city = params.city
-  const placeId = params.placeId
+  const { city, placeId } = useParams()
+
 
 
 
@@ -80,11 +77,11 @@ function ResultsSidebar() {
     <div>
       <div className={mystyle.searchBox}>
         <MagnifyingGlassIcon size={22} />
-        <input ref={searchInRef} value={input} onChange={e => setInput(e.currentTarget.value)} />
+        <input placeholder="Search for " ref={searchInRef} value={input} onChange={e => setInput(e.currentTarget.value)} />
       </div>
       <LocationOption suggestions={suggestions} handleClick={handleSuggestionClick} />
       {
-        (city != undefined && placeId != undefined && city != "" && placeId != "") ? <PlaceInfo city={city} placeId={placeId} /> : null
+        (city && placeId) && <PlaceInfo placeId={placeId} />
       }
     </div>
   )
@@ -93,41 +90,42 @@ function ResultsSidebar() {
 export default ResultsSidebar
 
 
-
-function LocationOption({ suggestions, handleClick, }: { suggestions: google.maps.places.AutocompleteSuggestion[], handleClick: (suggestion: google.maps.places.AutocompleteSuggestion) => Promise<void>, }) {
-
-  if (suggestions.length === 0) {
-    return
-  }
-
-  return <div className={mystyle.optionBox}>
-    {
-      suggestions.map(suggestion => <button key={suggestion.placePrediction?.placeId} className={mystyle.option} onClick={() => handleClick(suggestion)}>
-        <div className={mystyle.iconWrapper}>
-          <MapPinIcon weight="fill" size={20} />
-        </div>
-        <div>
-          <div>
-            {suggestion.placePrediction?.text.text}
-          </div>
-        </div>
-      </button>
-      )
-    }
-  </div>
+type LocationOptionProps = {
+  suggestions: google.maps.places.AutocompleteSuggestion[],
+  handleClick: (suggestion: google.maps.places.AutocompleteSuggestion) => Promise<void>
 }
 
 
+function LocationOption({ suggestions, handleClick }: LocationOptionProps) {
 
-function PlaceInfo({ city, placeId }: { city: string, placeId: string }) {
+  return !!suggestions.length && (
+    <div className={mystyle.optionBox}>
+      {
+        suggestions.map(suggestion => <button key={suggestion.placePrediction?.placeId} className={mystyle.option} onClick={() => handleClick(suggestion)}>
+          <div className={mystyle.iconWrapper}>
+            <MapPinIcon weight="fill" size={20} />
+          </div>
+          <div>
+            <div>
+              {suggestion.placePrediction?.text.text}
+            </div>
+          </div>
+        </button>
+        )
+      }
+    </div>
+  )
+}
+
+const mapId = import.meta.env.VITE_MAP_ID
+
+function PlaceInfo({ placeId }: { placeId: string }) {
 
   const places = useMapsLibrary('places');
   const [loc, setLoc] = useState<google.maps.places.Place | null>(null)
 
   useEffect(() => {
-    if (!places) {
-      return
-    }
+    if (!places) return
 
     (async () => {
       const place = new google.maps.places.Place({ id: placeId })
@@ -140,23 +138,23 @@ function PlaceInfo({ city, placeId }: { city: string, placeId: string }) {
   }, [placeId, places])
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
+
   function next() {
-    if (emblaApi) {
-      emblaApi.scrollNext()
-    }
+    emblaApi?.scrollNext()
   }
   function prev() {
-    if (emblaApi) {
-      emblaApi.scrollPrev()
-    }
+    emblaApi?.scrollPrev()
   }
 
-  const mapId = import.meta.env.VITE_MAP_ID
 
-  return <div className={mystyle.placeInfo}>
-    {
-      (loc && loc.formattedAddress && loc.formattedAddress.split(",").length >= 2) ?
-        (
+
+
+
+
+  return (
+    <div className={mystyle.placeInfo}>
+      {
+        (loc && loc.formattedAddress && loc.formattedAddress.split(",").length >= 2) && (
           <div className={mystyle.locDescription}>
             <div>{loc.formattedAddress.split(",")[0]}</div>
             <div>
@@ -165,38 +163,55 @@ function PlaceInfo({ city, placeId }: { city: string, placeId: string }) {
             </div>
           </div>
         )
-        : null
-    }
+      }
 
-    <div>
-      <div className={mystyle.imgBox} ref={emblaRef}>
-        <div className={mystyle.embla__container}>
-          {
-            loc?.photos?.map(e => {
-              return <div className={mystyle.embla__slide}>
-                <img src={e.getURI({ maxWidth: 422, maxHeight: 750 })} alt="city photos" width="100%" />
-              </div>
-            })
-          }
+      <div>
+        <div className={mystyle.imgBox} ref={emblaRef}>
+          <div className={mystyle.embla__container}>
+            {
+              loc?.photos?.map((e, i) => {
+                return <div key={i} className={mystyle.embla__slide}>
+                  <img src={e.getURI({ maxWidth: 422, maxHeight: 750 })} alt="city photos" width="100%" />
+                </div>
+              })
+            }
+          </div>
+          <button className={mystyle.prev} onClick={prev}><CaretLeftIcon size={20} /> </button>
+          <button className={mystyle.next} onClick={next}><CaretRightIcon size={20} /> </button>
         </div>
-        <button className={mystyle.prev} onClick={prev}><CaretLeftIcon size={20} /> </button>
-        <button className={mystyle.next} onClick={next}><CaretRightIcon size={20} /> </button>
       </div>
-    </div>
 
-    <div className={mystyle.mapWrapper}>
-      {
-        (loc?.location?.lat() && loc?.location?.lng()) ?
+      <div className={mystyle.mapWrapper}>
+        {
+          (loc?.location?.lat() && loc?.location?.lng()) &&
           <Map
             defaultZoom={11}
             mapId={mapId}
             gestureHandling={'greedy'}
             disableDefaultUI={true}
-            defaultCenter={{ lat: loc.location.lat(), lng: loc.location.lng() }}
-          />
-          : null
-      }
-    </div>
+            defaultCenter={{ lat: loc.location.lat(), lng: loc.location.lng() }}>
+            <MapController loc={loc} />
+          </Map>
+        }
+      </div>
 
-  </div>
+    </div>
+  )
+}
+
+type MapControllerProps = {
+  loc: google.maps.places.Place | null
+}
+
+const MapController = ({ loc }: MapControllerProps) => {
+  const map = useMap()
+
+  useEffect(() => {
+    if (!map || !loc?.location?.lat() || !loc.location?.lng()) return
+    map.panTo({ lat: loc.location.lat(), lng: loc.location.lng() })
+    map.setZoom(11)
+
+  }, [loc, map])
+
+  return null
 }
