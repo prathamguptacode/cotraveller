@@ -11,7 +11,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // ###LATER try finding why there are multiple unwanted re-renders : Current Reasoning was SuspenseQuery not having suspense boundary
     useEffect(() => {
-        api.post<{ accessToken: string, user: Exclude<AuthContextUser, null> }>('/auth/refresh').then((response) => {
+        api.post<{ accessToken: string, user: Exclude<AuthContextUser, null> }>('/auth/refresh', {}, {
+            headers: {
+                'X-Requested-With': true
+            }
+        }).then((response) => {
             const { accessToken, user } = response.data
             updateAccessToken(accessToken)
             updateUser(user)
@@ -32,9 +36,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return (
         loading ? <>Loading</> :
-        <AuthContext.Provider value={value} >
-            {children}
-        </AuthContext.Provider>
+            <AuthContext.Provider value={value} >
+                {children}
+            </AuthContext.Provider>
     )
 }
 

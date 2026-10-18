@@ -84,7 +84,14 @@ export const login: RequestHandler = async (req, res) => {
 
 export const refreshToken: RequestHandler = async (req, res) => {
     const refreshToken = req.cookies?.refreshToken
-    if (!refreshToken) return res.fail(403, "TOKEN_NOT_FOUND", "Refresh token was missing")
+    if (!refreshToken) return res.fail(401, "REFRESH_TOKEN_NOT_FOUND", "Refresh token was missing")
+
+    // Basic Anti-CSRF
+    const csrfHeader = req.headers['x-requested-with']
+    if (!csrfHeader) {
+        res.clearCookie('refreshToken', REFRESH_COOKIE_OPTIONS)
+        return res.fail(401, "UNAUTHORIZED_ORIGIN")
+    }
 
 
     try {
