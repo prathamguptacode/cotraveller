@@ -1,7 +1,9 @@
 import ChatRoom from "@/models/ChatRoom";
 import ConversationRecord from "@/models/ConversationRecord";
+import User from "@/models/User";
 import { RequestHandler } from "express";
-import mongoose from "mongoose";
+import mongoose, { isObjectIdOrHexString } from "mongoose";
+import { z } from 'zod'
 
 // There will definetly be more conversation-records as compared to chat-rooms, so lets go..
 export const fetchDMChats: RequestHandler = async (req, res) => {
@@ -22,6 +24,19 @@ export const fetchDMChats: RequestHandler = async (req, res) => {
                 from: 'chat_messages',
                 localField: 'lastMessage',
                 foreignField: '_id',
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'author',
+                            foreignField: '_id',
+                            as: 'author'
+                        }
+                    },
+                    {
+                        $unwind: '$author'
+                    }
+                ],
                 as: 'lastMessage'
             }
         },
@@ -143,4 +158,54 @@ export const fetchUserTrips: RequestHandler = async (req, res) => {
     ])
 
     return res.success(200, { trips })
+}
+
+const FetchChatRoomSchema = z.object({
+    userId: z.string().refine(id => isObjectIdOrHexString(id))
+})
+
+export const fetchChatRoom: RequestHandler = async (req, res) => {
+    const currentUserId = req.user._id
+
+    const parsedData = CreateChatRoomSchema.safeParse(req.params)
+    if (!parsedData.success) return res.fail(400, "BAD_REQUEST", "Invalid params")
+
+    const user = await User.findById(parsedData.data.userId)
+    if (!user) return res.fail(404, "USER_NOT_FOUND", "User does not exist")
+
+    const participants = [currentUserId, user.id]
+    const dmKey = participants.sort().join('|')
+
+    const chatRoom = await ChatRoom.findOne({ type: 'DM', 'dm.key': dmKey })
+    if (!chatRoom) return res.fail(404, "CHAT_NOT_FOUND", "Chat does not exist")
+
+    return res.success(200, { chatRoom, user })
+
+}
+
+const CreateChatRoomSchema = z.object({
+    userId: z.string().refine(id => isObjectIdOrHexString(id))
+})
+
+export const createChatRoom: RequestHandler = async (req, res) => {
+    console.log(req.params.userId)
+    const currentUserId = req.user._id
+
+    const parsedData = CreateChatRoomSchema.safeParse(req.params)
+    if (!parsedData.success) return res.fail(400, "BAD_REQUEST", "Invalid params")
+
+    const user = await User.findById(parsedData.data.userId)
+    if (!user) return res.fail(404, "USER_NOT_FOUND", "User does not exist")
+
+    const participants = [currentUserId, user.id]
+    const dmKey = participants.sort().join('|')
+
+    const chatRoom = await ChatRoom.create({ type: 'DM', dm: { participants, key: dmKey } })
+
+    await Promise.all(participants.map(member => {
+        return ConversationRecord.create({ room: chatRoom._id, member })
+    }))
+
+
+    return res.success(201, { chatRoom, user })
 }

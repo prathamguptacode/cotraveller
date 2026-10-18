@@ -32,7 +32,7 @@ const Router = () => {
                     <Route element={<ProtectedRoutes />}>
                         <Route path="/direct" element={<DirectMessagesLayout />} >
                             <Route index element={<DirectMessagesPage />} />
-                            <Route path=":roomId" element={<DirectMessagePage />} />
+                            <Route path=":userId" element={<DirectMessagePage />} />
                         </Route>
                     </Route>
 

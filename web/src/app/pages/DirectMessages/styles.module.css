@@ -11,6 +11,7 @@
     height: 100vh;
     height: 100dvh;
     flex: 0 0 400px;
+    max-width: 400px;
 
     padding-top: 36px;
     border-right: 1px solid hsl(0, 0%, 10%);
@@ -74,4 +75,13 @@
     &:hover {
         background-color: hsl(217, 63%, 45%);
     }
+}
+
+
+
+/* Direct Message Page */
+.chatBoxWrapper{
+    height: stretch;
+    display: flex;
+    flex-direction: column;
 }

@@ -18,7 +18,7 @@ export const useChatRoom = (roomId: string) => {
     useEffect(() => {
         if (!user) return
 
-        socket.emit('room:join', { roomId, userId: user?._id })
+        socket.emit('room:join', { roomId })
         return () => {
             socket.emit('room:leave', { roomId })
         }
@@ -29,7 +29,9 @@ export const useChatRoom = (roomId: string) => {
     const composeMessage = () => {
         if (!user) return
 
-        socket.emit('chat:message-create', { roomId, text, userId: user._id }, (res: { success: boolean, chatMessage: Message }) => {
+        const trimmedText = text.replace(/^\s+|\s+$/g, '')
+
+        socket.emit('chat:message-create', { roomId, text: trimmedText }, (res: { success: boolean, chatMessage: Message }) => {
             if (!res.success) return console.error("something went wrong!")
 
             queryClient.setQueryData<InfiniteData<ApiSuccess<{ messages: Message[] }>>>(['chats', roomId], (prev) => {
@@ -57,7 +59,7 @@ export const useChatRoom = (roomId: string) => {
             if (!document.hasFocus()) return
 
             // If focused, then request read status update
-            socket.emit('chat:last-read-at-update', { roomId, userId: user._id })
+            socket.emit('chat:last-read-at-update', { roomId })
         }
 
 
@@ -81,7 +83,7 @@ export const useChatRoom = (roomId: string) => {
         if (!user) return
 
         const handler = () => {
-            socket.emit('chat:last-read-at-update', { roomId, userId: user?._id })
+            socket.emit('chat:last-read-at-update', { roomId })
         }
 
         window.addEventListener('focus', handler)

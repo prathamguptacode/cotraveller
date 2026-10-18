@@ -10,4 +10,13 @@ declare global {
     }
 }
 
+declare module 'socket.io' {
+    interface Socket {
+        session: {
+            userId: string,
+            expiry: number
+        }
+    }
+}
+
 export { }

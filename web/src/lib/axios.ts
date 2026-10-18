@@ -37,7 +37,11 @@ rawAxios.interceptors.response.use(res => {
 
         if (err.response?.data?.code === "ACCESS_TOKEN_EXPIRED" && !originalRequest.retriedOnce) {
             try {
-                const response = await unAuthApi.post('/auth/refresh')
+                const response = await unAuthApi.post('/auth/refresh', {}, {
+                    headers: {
+                        ' X-Requested-With': true
+                    }
+                })
                 const accessToken = response.data?.data?.accessToken
                 if (!accessToken) return console.warn("New access token was not received")
 
