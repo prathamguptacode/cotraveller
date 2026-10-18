@@ -5,18 +5,16 @@ import type { Socket } from "socket.io-client"
 
 type ChatMessageEvent = {
     roomId: string,
-    userId: string,
     text: string
 }
 
 type ChatStatusEvent = {
-    roomId: string,
-    userId: string
+    roomId: string
 }
 
 
-type ClientToServerEvents = {
-    'room:join': ({ roomId, userId }: { roomId: string, userId: string }) => void,
+export type ClientToServerEvents = {
+    'room:join': ({ roomId }: { roomId: string }) => void,
     'room:leave': ({ roomId }: { roomId: string }) => void,
 
 
@@ -28,7 +26,7 @@ type ClientToServerEvents = {
     // 'chat:typing-end': () => void
 }
 
-type ServerToClientEvents = {
+export type ServerToClientEvents = {
     // 'room:user-joined': ({ roomId, userId }: { roomId: string, userId: string }) => void,
     // 'room:user-left': ({ roomId, userId }: { roomId: string, userId: string }) => void,
 

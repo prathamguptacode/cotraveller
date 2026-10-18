@@ -1,5 +1,5 @@
 import ChatBox from "@/features/chat/components/ChatBox"
-import { useNavigate, useParams } from "react-router-dom"
+import { Navigate, useNavigate, useParams } from "react-router-dom"
 import styles from './styles.module.css'
 import DirectMessageChatHeader from "@/features/chat/components/DirectMessages/DirectMessageChatHeader"
 import { useMutation, useQuery } from "@tanstack/react-query"
@@ -38,12 +38,12 @@ const DirectMessagePage = () => {
   if (query.error) {
     const err = normalizeError(query.error)
     if (err.code === "CHAT_NOT_FOUND") mutation.mutate(userId)
-    else return navigate('/')
+    else return <Navigate to={'/'} />
   }
   if (query.isPending || (query.error && mutation.isPending)) return
 
   const finalData = !query.error ? query.data : mutation.isSuccess && mutation.data.data
-  if (!finalData) return navigate('/')
+  if (!finalData) return <Navigate to={'/'} />
 
 
 
