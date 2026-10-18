@@ -5,8 +5,8 @@ import MainLayout from "@/layouts/MainLayout"
 import DirectMessagesLayout from "./pages/DirectMessages/DirectMessagesLayout"
 import DirectMessagesPage from "./pages/DirectMessages/DirectMessagesPage"
 import DirectMessagePage from "./pages/DirectMessages/DirectMessagePage"
-import SearchLayout from "./pages/search/SearchLayout"
-import SearchMainContent from "./pages/search/SearchMainContent"
+import SearchLayout from "./pages/Search/SearchLayout"
+import ResultsLayout from "./pages/Results/ResultsLayout"
 
 
 const Router = () => {
@@ -25,9 +25,9 @@ const Router = () => {
                         <Route path="create" element={<Home />} />
                     </Route>
 
-                    <Route path="/search" element={<SearchLayout />}>
-                        <Route index element={<SearchMainContent />} />
-                    </Route>
+                    <Route path="/search" element={<SearchLayout />} />
+
+                    <Route path="/results/:city/:placeId" element={<ResultsLayout />} />
 
                     <Route element={<ProtectedRoutes />}>
                         <Route path="/direct" element={<DirectMessagesLayout />} >

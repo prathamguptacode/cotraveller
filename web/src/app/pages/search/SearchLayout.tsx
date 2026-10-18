@@ -1,15 +1,17 @@
-import { Outlet } from "react-router-dom"
-import SearchSidebar from "./SearchSidebar"
 import mystyle from "./Search.module.css"
+import SearchSidebar from "@/app/pages/Search/SearchSidebar"
+import SearchMainContent from "./SearchMainContent"
 
 function SearchLayout() {
+
+
   return (
     <div className={mystyle.searchLayout}>
       <div className={mystyle.searchSidebar}>
         <SearchSidebar />
       </div>
       <div className={mystyle.searchMainContent}>
-        <Outlet />
+        <SearchMainContent />
       </div>
     </div>
   )
