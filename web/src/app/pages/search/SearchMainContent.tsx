@@ -1,4 +1,4 @@
-import { Globe, IslandIcon } from "@phosphor-icons/react"
+import { GlobeIcon, IslandIcon } from "@phosphor-icons/react"
 import mystyle from "./Search.module.css"
 
 function SearchMainContent() {
@@ -10,7 +10,7 @@ function SearchMainContent() {
       <div>Cotraveller</div>
       <div>"Travel far enough, you meet yourself." - David Mitchell</div>
       <div className={mystyle.featureBox}>
-        <Globe size={14} />
+        <GlobeIcon size={14} />
         Organise, invite and discover trips
       </div>
     </div>

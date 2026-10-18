@@ -1,8 +1,9 @@
 Layout has Sidebar
 
 Sidebar contains 
-1. SearchBox
-2. SearchResult Location Info
-3. Search Result Trips
-4. SearchHistory
+1. SearchBox - DONE
+2. SearchResult Location Info - DONE
+3. SearchHistory - DONE
+
+4. Search Result Trips
 5. Index for empty search ( like on chats )

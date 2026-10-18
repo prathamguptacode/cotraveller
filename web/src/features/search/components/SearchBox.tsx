@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useAnimatedPlaceholder } from '../hooks/useAnimatedPlaceHolder'
 import { useMapsLibrary } from '@vis.gl/react-google-maps'
-import { useAutocompleteSuggestions } from '@/hooks/autocomplete'
+import { useAutocompleteSuggestions } from '@/hooks/useAutoCompleteSuggestions'
 import { useNavigate } from 'react-router-dom'
 
 import styles from '../styles.module.css'
