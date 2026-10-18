@@ -1,0 +1,145 @@
+.resultsLayout {
+  display: flex;
+}
+
+.resultsSidebar {
+  height: 100vh;
+  flex: 0 0 400px;
+
+  border-right: 1px solid hsl(0, 0%, 10%);
+  padding: 0 12px;
+  padding-top: 34px;
+
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+}
+
+.searchMainContent {
+  flex: 1;
+}
+
+
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 2px solid hsl(0, 0%, 12%);
+  padding: 0.5rem 0.75rem;
+  anchor-name: --searchBox;
+}
+
+.searchBox>input {
+  flex: 1;
+
+  &::placeholder {
+    color: hsl(0, 0%, 60%);
+  }
+}
+
+
+.optionBox {
+  position: absolute;
+  z-index: 100;
+  position-anchor: --searchBox;
+  position-area: bottom;
+  width: anchor-size(width);
+  background-color: hsl(228, 22%, 8%);
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  padding: 4px 0;
+  padding-left: 8px;
+  cursor: pointer;
+  z-index: 150;
+
+
+  &:hover {
+    background-color: hsl(228, 22%, 12%);
+  }
+}
+
+.iconWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+}
+
+
+
+.placeInfo {
+  margin-top: 2rem;
+}
+
+
+.locDescription>div:nth-child(1) {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.imgBox {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  margin: 32px 0;
+  border-radius: 8px;
+}
+
+.imgBox img {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.embla__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+}
+
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.next {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translate(0%, -50%);
+  z-index: 10;
+  padding: 4px;
+  background-color: hsl(0, 0%, 12%, 20%);
+  border-radius: 8px;
+}
+
+.prev {
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  transform: translate(0%, -50%);
+  z-index: 10;
+  padding: 4px;
+  background-color: hsl(0, 0%, 12%, 20%);
+  border-radius: 8px;
+}
+
+.mapWrapper {
+  height: 250px;
+  overflow: hidden;
+  border-radius: 8px;
+}

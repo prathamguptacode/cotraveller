@@ -1,0 +1,8 @@
+Layout has Sidebar
+
+Sidebar contains 
+1. SearchBox
+2. SearchResult Location Info
+3. Search Result Trips
+4. SearchHistory
+5. Index for empty search ( like on chats )
