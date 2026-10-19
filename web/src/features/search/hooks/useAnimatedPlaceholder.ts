@@ -27,7 +27,9 @@ export const useAnimatedPlaceholder = () => {
             setTimeout(() => dynamicPlaceholder(), 120)
         }
 
-        dynamicPlaceholder()
+        // Conditional env based animation for personal preference
+        if (import.meta.env.VITE_ANIMATIONS_DISABLED !== 'true') dynamicPlaceholder()
+        else if (ref.current?.placeholder) ref.current.placeholder += placeHolderText[0]
     }, [])
 
     return ref

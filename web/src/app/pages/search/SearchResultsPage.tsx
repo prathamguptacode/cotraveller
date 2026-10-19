@@ -1,10 +1,9 @@
+import SearchResults from "@/features/search/components/SearchResults"
 
 
 const SearchResultsPage = () => {
   return (
-    <div>
-      Results over here pls
-    </div>
+    <SearchResults />
   )
 }
 

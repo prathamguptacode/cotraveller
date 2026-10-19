@@ -5,5 +5,5 @@ Sidebar contains
 2. SearchResult Location Info - DONE
 3. SearchHistory - DONE
 
-4. Search Result Trips
+4. Search Result Trips - DONE
 5. Index for empty search ( like on chats )
