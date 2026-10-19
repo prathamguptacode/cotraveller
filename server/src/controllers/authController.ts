@@ -2,7 +2,7 @@ import env from "@/config/env"
 import { REFRESH_COOKIE_OPTIONS } from "@/lib/cookies"
 import User from "@/models/User"
 import { AuthTokenPayload } from "@/types/types"
-import { generateAccessToken, generateRefreshToken, generateUint8Array } from "@/utils/generateAuthTokens"
+import { generateAccessToken, generateRefreshToken, generateUint8Array } from "@/utils/generateJWTs"
 import { RequestHandler } from "express"
 import { jwtVerify } from "jose"
 import { JOSEError, JWTExpired } from "jose/errors"
@@ -84,7 +84,14 @@ export const login: RequestHandler = async (req, res) => {
 
 export const refreshToken: RequestHandler = async (req, res) => {
     const refreshToken = req.cookies?.refreshToken
-    if (!refreshToken) return res.fail(403, "TOKEN_NOT_FOUND", "Refresh token was missing")
+    if (!refreshToken) return res.fail(401, "REFRESH_TOKEN_NOT_FOUND", "Refresh token was missing")
+
+    // Basic Anti-CSRF
+    const csrfHeader = req.headers['x-requested-with']
+    if (!csrfHeader) {
+        res.clearCookie('refreshToken', REFRESH_COOKIE_OPTIONS)
+        return res.fail(401, "UNAUTHORIZED_ORIGIN")
+    }
 
 
     try {

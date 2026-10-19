@@ -35,3 +35,18 @@ export const generateRefreshToken = async (payload: AuthTokenPayload) => {
         throw error
     }
 }
+
+
+export const generateInviteToken = async (payload: { tripId: string }) => {
+    try {
+        const inviteToken = await new jose.SignJWT(payload)
+            .setProtectedHeader({ alg: 'HS256' })
+            .setExpirationTime('1d')
+            .sign(generateUint8Array(env.INVITE_TOKEN_SECRET))
+
+        return inviteToken
+    } catch (error) {
+        console.error("Could not generate invite token", error)
+        throw error
+    }
+}
