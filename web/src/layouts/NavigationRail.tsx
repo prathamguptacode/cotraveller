@@ -8,7 +8,6 @@ const NavigationRail = () => {
     return (
         <nav className={styles.navRail}>
             <div className={styles.railItems}>
-
                 <NavLink data-item='logo' className={styles.railItem} to={'/'}>
                     <span>
                         <IslandIcon />

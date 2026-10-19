@@ -3,7 +3,7 @@ import mystyle from "./styles.module.css"
 
 function SearchIndexPage() {
   return (
-    <div className={mystyle.mainBox}>
+    <div data-mobile-visible={false} className={mystyle.mainBox}>
       <div>
         <IslandIcon size={80} />
       </div>

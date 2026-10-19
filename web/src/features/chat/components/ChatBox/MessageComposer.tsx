@@ -21,7 +21,7 @@ const MessageComposer = ({ roomId }: MessageComposerProps) => {
                         composeMessage()
                     }} onChange={(e) => setText(e.target.value)} value={text} />
                 </div>
-                <button aria-hidden={!text} aria-label='Send Message' onClick={composeMessage} className={styles.sendButton}>
+                <button aria-hidden={!text && !window.matchMedia('(max-width:960px)').matches} aria-label='Send Message' onClick={composeMessage} className={styles.sendButton}>
                     <PaperPlaneTiltIcon weight='bold' size={20} />
                 </button>
             </div>

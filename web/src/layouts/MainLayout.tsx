@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import styles from './layouts.module.css'
 import NavigationRail from './NavigationRail'
+import BottomNavbar from './BottomNavbar'
 
 const MainLayout = () => {
     return (
@@ -9,6 +10,7 @@ const MainLayout = () => {
             <div className={styles.content}>
                 <Outlet />
             </div>
+            <BottomNavbar />
         </div>
     )
 }
