@@ -1,0 +1,83 @@
+import { MagnifyingGlassIcon, MapPinIcon } from '@phosphor-icons/react'
+import { useState } from 'react'
+import { useDebounce } from '@/hooks/useDebounce'
+import { useAnimatedPlaceholder } from '@/features/search/hooks/useAnimatedPlaceholder'
+import { useMapsLibrary } from '@vis.gl/react-google-maps'
+import { useAutocompleteSuggestions } from '@/hooks/useAutoCompleteSuggestions'
+import { useNavigate } from 'react-router-dom'
+
+import styles from './styles.module.css'
+
+
+
+const SearchBox = () => {
+    const [searchQuery, setSearchQuery] = useState('')
+    const debouncedSearchQuery = useDebounce(searchQuery, 100)
+    const inputRef = useAnimatedPlaceholder()
+
+
+    return (
+        <>
+            <div className={styles.searchBox}>
+                <MagnifyingGlassIcon size={24} />
+                <input placeholder="Search for " ref={inputRef} value={searchQuery} onChange={e => setSearchQuery(e.currentTarget.value)} />
+            </div>
+            <SearchSuggestions debouncedSearchQuery={debouncedSearchQuery} />
+        </>
+
+    )
+}
+
+export default SearchBox
+
+
+
+
+type SearchSuggestions = {
+    debouncedSearchQuery: string
+}
+
+function SearchSuggestions({ debouncedSearchQuery }: SearchSuggestions) {
+    const navigate = useNavigate()
+    const places = useMapsLibrary('places');
+    const { suggestions, resetSession } = useAutocompleteSuggestions(debouncedSearchQuery, {
+        includedPrimaryTypes: ["locality"]
+    })
+
+    const handleSuggestionClick = async (suggestion: google.maps.places.AutocompleteSuggestion) => {
+        if (!places || !suggestion.placePrediction) return
+
+        const place = suggestion.placePrediction.toPlace()
+        await place.fetchFields({
+            fields: [
+                "addressComponents"
+            ]
+        })
+        // calling fetchFields invalidates the session-token, so we now have to call
+        // resetSession() so a new one gets created for further search
+        resetSession()
+
+        const city = place.addressComponents && place.addressComponents[0].longText
+        const placeId = suggestion.placePrediction.placeId
+        if (city && placeId) return navigate(`${city}/${placeId}`)
+    }
+
+
+
+    return !!suggestions.length && (
+        <div className={styles.optionBox}>
+            {
+                suggestions.map(suggestion => <button key={suggestion.placePrediction?.placeId} className={styles.option} onClick={() => handleSuggestionClick(suggestion)}>
+                    <div className={styles.iconWrapper}>
+                        <MapPinIcon weight="fill" size={20} />
+                    </div>
+                    <span className={styles.suggestionText}>
+                        {suggestion.placePrediction?.text.text}
+                    </span>
+                </button>
+                )
+            }
+        </div >
+    )
+}
+

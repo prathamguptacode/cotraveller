@@ -1,0 +1,45 @@
+.searchLayout {
+  display: flex;
+  height: 100%;
+}
+
+.searchSidebar {
+  height: 100vh;
+  flex: 0 0 425px;
+
+  border-right: 1px solid hsl(0, 0%, 15%);
+  padding: 1rem .5rem;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.searchMainContent {
+  flex: 1;
+}
+
+.mainBox {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.mainBox>div:nth-child(2) {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.featureBox {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
