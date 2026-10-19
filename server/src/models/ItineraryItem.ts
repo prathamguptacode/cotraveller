@@ -41,7 +41,6 @@ const itineraryItemSchema = new mongoose.Schema({
   searchVariables: {
     type: {
       city: String,
-      state: String,
       country: String,
       _id: false
     },
@@ -50,6 +49,10 @@ const itineraryItemSchema = new mongoose.Schema({
   tripId: {
     type: Schema.Types.ObjectId,
     ref: "Trip",
+    required: true
+  },
+  placeId: {
+    type: String,
     required: true
   }
 })
