@@ -7,8 +7,7 @@ import clsx from 'clsx'
 const NavigationRail = () => {
     return (
         <nav className={styles.navRail}>
-            <div className={styles.railItems}>
-
+            <div data-mobile-view={false} className={styles.railItems}>
                 <NavLink data-item='logo' className={styles.railItem} to={'/'}>
                     <span>
                         <IslandIcon />
