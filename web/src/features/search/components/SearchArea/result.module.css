@@ -8,10 +8,10 @@
 
 .carousel {
     position: relative;
-    overflow: hidden;
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
-
+   
+  overflow: hidden;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
 
     &:hover {
         .carouselButton {

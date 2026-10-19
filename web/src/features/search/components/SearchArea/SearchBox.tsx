@@ -71,15 +71,13 @@ function SearchSuggestions({ debouncedSearchQuery }: SearchSuggestions) {
                     <div className={styles.iconWrapper}>
                         <MapPinIcon weight="fill" size={20} />
                     </div>
-                    <div>
-                        <div>
-                            {suggestion.placePrediction?.text.text}
-                        </div>
-                    </div>
+                    <span className={styles.suggestionText}>
+                        {suggestion.placePrediction?.text.text}
+                    </span>
                 </button>
                 )
             }
-        </div>
+        </div >
     )
 }
 
