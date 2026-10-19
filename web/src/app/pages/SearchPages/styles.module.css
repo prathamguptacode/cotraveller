@@ -10,9 +10,6 @@
 
   border-right: 1px solid hsl(0, 0%, 15%);
   padding: 1rem .5rem;
-
-  overflow-y: auto;
-  overscroll-behavior: contain;
 }
 
 .mainWrapper {
