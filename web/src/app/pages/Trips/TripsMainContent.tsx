@@ -4,7 +4,7 @@ import { api } from "@/lib/axios"
 import { CalendarIcon, ChatTeardropIcon } from "@phosphor-icons/react/dist/ssr"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useNavigate, useParams } from "react-router-dom"
-import { Map, useMapsLibrary } from "@vis.gl/react-google-maps"
+import { AdvancedMarker, Map, useMapsLibrary } from "@vis.gl/react-google-maps"
 import { useCallback, useEffect, useState } from "react"
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,6 +12,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAutocompleteSuggestions } from "@/hooks/useAutoCompleteSuggestions"
+// import { RoutesApi } from "@/features/mapRoutes/RoutesApi"
+// import Routes from "@/features/mapRoutes/Routes"
 
 type itineraryItem = {
   name: string,
@@ -54,6 +56,39 @@ function TripsMainContent() {
     return navigate("/")
   }
 
+  // const key = import.meta.env.VITE_MAP_API
+  // const apiClient = new RoutesApi(key)
+  // const routeOptions = {
+  //   computeAlternativeRoutes: false,
+  //   units: 'METRIC',
+  //   // intermediates: data.data.trip.itineraryItems.filter((e, i) => {
+  //   //   if (i == 0) return false
+  //   //   if (i == data.data.trip.itineraryItems.length - 1) return false
+  //   //   return true
+  //   // }).map((e) => {
+  //   //   return { location: { latLng: { longitude: e.origin.coordinates[0], latitude: e.origin.coordinates[1] } } }
+  //   // })
+  // };
+  //
+  //
+  // const originM = {
+  //   lng: data.data.trip.itineraryItems[0].origin.coordinates[1],
+  //   lat: data.data.trip.itineraryItems[0].origin.coordinates[0]
+  // }
+  //
+  //
+  // const destinationM = { lng: data.data.trip.itineraryItems[data.data.trip.itineraryItems.length - 1].origin.coordinates[1], lat: data.data.trip.itineraryItems[data.data.trip.itineraryItems.length - 1].origin.coordinates[0] }
+  //
+
+  // console.log("orgin", originM)
+  // console.log("destination", destinationM)
+
+
+
+
+
+
+
   return (
     <div className={mystyle.wrapper}>
       <div className={mystyle.topBar}>
@@ -82,7 +117,21 @@ function TripsMainContent() {
             mapId={mapId}
             gestureHandling={'greedy'}
             disableDefaultUI={true}
-          />
+          >
+            {/* <Routes */}
+            {/*   apiClient={apiClient} */}
+            {/*   origin={{ lng: data.data.trip.itineraryItems[0].origin.coordinates[1], lat: data.data.trip.itineraryItems[0].origin.coordinates[0] }} */}
+            {/*   destination={{ lng: data.data.trip.itineraryItems[data.data.trip.itineraryItems.length - 1].origin.coordinates[1], lat: data.data.trip.itineraryItems[data.data.trip.itineraryItems.length - 1].origin.coordinates[0] }} */}
+            {/*   routeOptions={routeOptions} */}
+            {/* /> */}
+
+            {
+              data.data.trip.itineraryItems.map(e => {
+                return <AdvancedMarker position={{ lat: e.origin.coordinates[0], lng: e.origin.coordinates[1] }}></AdvancedMarker>
+              })
+            }
+
+          </Map>
         </div>
         <div className={mystyle.iternaryBox}>
           <button className={mystyle.addBtn} popoverTarget="addIternaryBox"><Plus size={24} /> </button>
@@ -117,7 +166,7 @@ function IternaryItem({ title, description, date, hasNext, placeId }: { title: s
       })
       setPlace(place)
     })()
-  }, [places, place])
+  }, [places])
 
 
 
@@ -158,7 +207,7 @@ function AddIternaryBox({ tripId }: { tripId: string }) {
 
   const mutation = useMutation({
     mutationKey: [tripId, "add iternary"],
-    mutationFn: (e: { name: string, orgin: number[], startTime: string, placeId: string, searchVariables: { city: string, country: string } }) => api.post(`/ trip / ${tripId}/itinerary`, e)
+    mutationFn: (e: { name: string, origin: number[], startTime: string, placeId: string, searchVariables: { city: string, country: string } }) => api.post(`/trip/${tripId}/itinerary`, e)
   })
 
   const handleClick = async () => {
@@ -188,7 +237,7 @@ function AddIternaryBox({ tripId }: { tripId: string }) {
     if (!value) return
     const body = {
       name,
-      orgin: [loc.location.lat(), loc.location.lng()],
+      origin: [loc.location.lat(), loc.location.lng()],
       startTime: value.toISOString(),
       placeId: loc.id,
       searchVariables: { city, country }
