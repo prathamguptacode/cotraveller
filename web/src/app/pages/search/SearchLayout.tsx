@@ -1,4 +1,4 @@
-import mystyle from "./search.module.css"
+import mystyle from "./styles.module.css"
 import SearchArea from "@/features/search/components/SearchArea"
 import { Outlet } from "react-router-dom"
 

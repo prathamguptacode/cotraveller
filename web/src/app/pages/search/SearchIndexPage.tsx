@@ -1,5 +1,5 @@
 import { GlobeIcon, IslandIcon } from "@phosphor-icons/react"
-import mystyle from "./search.module.css"
+import mystyle from "./styles.module.css"
 
 function SearchIndexPage() {
   return (
