@@ -6,7 +6,7 @@ import avatar from '@/assets/leon.jpeg'
 
 const BottomNavbar = () => {
     return (
-        <nav className={styles.bottomNavbar}>
+        <nav data-mobile-nav className={styles.bottomNavbar}>
             <NavLink className={({ isActive }) => {
                 return clsx(isActive && styles.bottomNavActiveLink, styles.bottomNavItem)
             }} to={'/trips'}>

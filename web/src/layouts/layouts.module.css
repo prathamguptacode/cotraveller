@@ -155,4 +155,11 @@
     .bottomNavbar {
         display: flex;
     }
+
+
+    :root:has([data-mobile-nav-visible='false']) {
+        .bottomNavbar {
+            display: none;
+        }
+    }
 }

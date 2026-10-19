@@ -78,8 +78,32 @@
 
 
 /* Direct Message Page */
-.chatBoxWrapper{
+.chatBoxWrapper {
     height: stretch;
     display: flex;
     flex-direction: column;
+}
+
+
+@media (max-width:768px) {
+    .wrapper {
+        display: none;
+    }
+
+    .layout:has([data-mobile-visible='false']) {
+        .mainWrapper {
+            display: none;
+        }
+
+        .sidebar {
+            flex: 1;
+            max-width: unset;
+        }
+    }
+
+    .layout:has([data-mobile-visible='true']) {
+        .sidebar {
+            display: none;
+        }
+    }
 }

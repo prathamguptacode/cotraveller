@@ -49,7 +49,7 @@ const DirectMessagePage = () => {
 
 
   return (
-    <div className={styles.chatBoxWrapper}>
+    <div data-mobile-nav-visible={false} data-mobile-visible={true} className={styles.chatBoxWrapper}>
       <DirectMessageChatHeader user={finalData.user} />
       <ChatBox roomId={finalData.chatRoom._id} />
     </div>
