@@ -6,12 +6,13 @@ function SearchLayout() {
 
 
   return (
-    <div className={mystyle.searchLayout}>
-      <div className={mystyle.searchSidebar}>
+    <div className={mystyle.layout}>
+      <aside className={mystyle.sidebar}>
         <SearchArea />
-      </div>
-      <div className={mystyle.searchMainContent}>
+      </aside>
+      <div className={mystyle.mainWrapper}>
         <Outlet />
+        {/* <div data-mobile-visible={true}></div> */}
       </div>
     </div>
   )

@@ -6,8 +6,7 @@
 
 /* Sidebar */
 .sidebar {
-    height: 100vh;
-    height: 100dvh;
+    height: 100%;
     flex: 0 0 400px;
     max-width: 400px;
 
@@ -85,7 +84,7 @@
 }
 
 
-@media (max-width:768px) {
+@media (max-width:960px) {
     .wrapper {
         display: none;
     }

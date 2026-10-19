@@ -5,11 +5,11 @@ import MainLayout from "@/layouts/MainLayout"
 import DirectMessagesLayout from "./pages/DirectMessages/DirectMessagesLayout"
 import DirectMessagesPage from "./pages/DirectMessages/DirectMessagesPage"
 import DirectMessagePage from "./pages/DirectMessages/DirectMessagePage"
-import SearchLayout from "./pages/Search/SearchLayout"
+import SearchLayout from "./pages/SearchPages/SearchLayout"
 import TripsLayout from "./pages/Trips/TripsLayout"
 import TripsMainContent from "./pages/Trips/TripsMainContent"
-import SearchIndexPage from "./pages/Search/SearchIndexPage"
-import SearchResultsPage from "./pages/Search/SearchResultsPage"
+import SearchIndexPage from "./pages/SearchPages/SearchIndexPage"
+import SearchResultsPage from "./pages/SearchPages/SearchResultsPage"
 
 
 const Router = () => {

@@ -8,10 +8,10 @@
 
 .carousel {
     position: relative;
-   
-  overflow: hidden;
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
+
+    overflow: hidden;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
 
     &:hover {
         .carouselButton {
@@ -97,4 +97,18 @@
 
     border-radius: 20px;
     overflow: hidden;
+}
+
+@media (max-width:960px) {
+    .mapArea {
+        padding: 0;
+    }
+
+    .mapWrapper {
+        border-radius: 0;
+    }
+
+    .carousel {
+        border-radius: 0;
+    }
 }
