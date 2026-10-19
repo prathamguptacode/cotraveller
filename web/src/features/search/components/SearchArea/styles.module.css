@@ -1,40 +1,41 @@
-.resultsLayout {
-  display: flex;
+.searchArea {
+  position: relative;
+  padding: .5rem 1rem;
+
+  height: stretch;
 }
-
-.resultsSidebar {
-  height: 100vh;
-  flex: 0 0 400px;
-
-  border-right: 1px solid hsl(0, 0%, 10%);
-  padding: 0 12px;
-  padding-top: 34px;
-
-
-  overflow-y: auto;
-  overscroll-behavior: contain;
-
-}
-
-.searchMainContent {
-  flex: 1;
-}
-
-
 
 .searchBox {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: .5rem;
+
+  padding: 0.75rem 1rem;
+
+  border: 1px solid hsl(0, 0%, 10%);
+  border-radius: 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0px rgba(0, 0, 0, 0.02);
+
+  background-color: hsl(228 22% 8% / .8);
+  backdrop-filter: blur(5px);
   font-size: 14px;
-  border-radius: 8px;
-  border: 2px solid hsl(0, 0%, 12%);
-  padding: 0.5rem 0.75rem;
+
+  position: relative;
+  z-index: 1;
   anchor-name: --searchBox;
+
+
+  &:has(+.optionBox) {
+    border-radius: 16px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
 }
 
 .searchBox>input {
   flex: 1;
+  text-transform: capitalize;
 
   &::placeholder {
     color: hsl(0, 0%, 60%);
@@ -48,7 +49,8 @@
   position-anchor: --searchBox;
   position-area: bottom;
   width: anchor-size(width);
-  background-color: hsl(228, 22%, 8%);
+  background-color: hsl(228 22% 8% / .8);
+  backdrop-filter: blur(5px);
   padding: 12px 0;
   display: flex;
   flex-direction: column;
@@ -61,8 +63,7 @@
   align-items: center;
   gap: 4px;
   font-size: 14px;
-  padding: 4px 0;
-  padding-left: 8px;
+  padding: .25rem .5rem;
   cursor: pointer;
   z-index: 150;
 
@@ -73,6 +74,8 @@
 }
 
 .iconWrapper {
+  flex-shrink: 0;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,6 +83,13 @@
   width: 40px;
 }
 
+
+.suggestionText {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 
 .placeInfo {
@@ -142,4 +152,55 @@
   height: 250px;
   overflow: hidden;
   border-radius: 8px;
+}
+
+
+
+
+
+/* Search History */
+
+.historyBox {
+  margin-top: 2.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cityBox {
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16 / 9;
+}
+
+
+.cityBox img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  width: 100%;
+  padding: 8px;
+
+  background: rgba(46, 45, 45, 0.5);
+  background: linear-gradient(90deg, rgba(46, 45, 45, 0.5) 10%, rgba(255, 255, 255, 0) 100%);
+
+  >div:nth-child(1) {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  >div:nth-child(2) {
+    font-size: 14px;
+  }
 }

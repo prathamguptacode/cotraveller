@@ -28,7 +28,7 @@ const NavigationRail = () => {
                     </NavLink>
                 </div>
                 <div className={styles.railItem}>
-                    <NavLink end className={({ isActive }) => {
+                    <NavLink className={({ isActive }) => {
                         return clsx(isActive && styles.activeLink)
                     }} to={'/trips'}>
                         <span>
@@ -37,7 +37,7 @@ const NavigationRail = () => {
                     </NavLink>
                 </div>
                 <div className={styles.railItem}>
-                    <NavLink end className={({ isActive }) => {
+                    <NavLink className={({ isActive }) => {
                         return clsx(isActive && styles.activeLink)
                     }} to={'/search'}>
                         <span>
@@ -46,7 +46,7 @@ const NavigationRail = () => {
                     </NavLink>
                 </div>
                 <div className={styles.railItem}>
-                    <NavLink end className={({ isActive }) => {
+                    <NavLink className={({ isActive }) => {
                         return clsx(isActive && styles.activeLink)
                     }} to={'/trips/create'}>
                         <span>
@@ -55,7 +55,7 @@ const NavigationRail = () => {
                     </NavLink>
                 </div>
                 <div className={styles.railItem}>
-                    <NavLink end className={({ isActive }) => {
+                    <NavLink className={({ isActive }) => {
                         return clsx(isActive && styles.activeLink)
                     }} to={'/direct'}>
                         <span>
@@ -64,7 +64,7 @@ const NavigationRail = () => {
                     </NavLink>
                 </div>
                 <div className={styles.railItem}>
-                    <NavLink end className={({ isActive }) => {
+                    <NavLink className={({ isActive }) => {
                         return clsx(isActive && styles.activeLink)
                     }} to={'/me'}>
                         <span className={styles.imageWrapper}>
