@@ -65,7 +65,7 @@ const SearchResultPlace = ({ placeId }: SearchResultPlaceProps) => {
             </div>
 
             <div className={styles.mapArea}>
-                <h2 aria-hidden>
+                <h2 aria-hidden={true}>
                     Map
                 </h2>
                 <PlaceMap place={place} />
