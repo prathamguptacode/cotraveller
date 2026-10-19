@@ -92,10 +92,6 @@
     padding: 1rem 1.5rem;
 }
 
-[aria-hidden='true'] {
-    display: none;
-}
-
 .mapWrapper {
     flex: 1;
 
