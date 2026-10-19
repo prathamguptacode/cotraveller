@@ -3,12 +3,14 @@ import SearchBox from "@/features/search/components/SearchArea/SearchBox"
 import SearchResultPlace from "@/features/search/components/SearchArea/SearchResultPlace"
 import { useParams } from "react-router-dom"
 
+import styles from './styles.module.css'
+
 
 function SearchArea() {
   const { placeId } = useParams() as { placeId?: string }
 
   return (
-    <div>
+    <div className={styles.searchArea}>
       <SearchBox />
       {placeId ?
         <SearchResultPlace placeId={placeId} /> :

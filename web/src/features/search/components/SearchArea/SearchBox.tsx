@@ -15,8 +15,6 @@ const SearchBox = () => {
     const debouncedSearchQuery = useDebounce(searchQuery, 100)
     const inputRef = useAnimatedPlaceholder()
 
-    const resetSearchQuery = () => setSearchQuery('')
-
 
     return (
         <>
@@ -24,7 +22,7 @@ const SearchBox = () => {
                 <MagnifyingGlassIcon size={24} />
                 <input placeholder="Search for " ref={inputRef} value={searchQuery} onChange={e => setSearchQuery(e.currentTarget.value)} />
             </div>
-            <SearchSuggestions debouncedSearchQuery={debouncedSearchQuery} resetSearchQuery={resetSearchQuery} />
+            <SearchSuggestions debouncedSearchQuery={debouncedSearchQuery} />
         </>
 
     )
@@ -36,11 +34,10 @@ export default SearchBox
 
 
 type SearchSuggestions = {
-    debouncedSearchQuery: string,
-    resetSearchQuery: () => void
+    debouncedSearchQuery: string
 }
 
-function SearchSuggestions({ debouncedSearchQuery, resetSearchQuery }: SearchSuggestions) {
+function SearchSuggestions({ debouncedSearchQuery }: SearchSuggestions) {
     const navigate = useNavigate()
     const places = useMapsLibrary('places');
     const { suggestions, resetSession } = useAutocompleteSuggestions(debouncedSearchQuery, {
@@ -59,7 +56,6 @@ function SearchSuggestions({ debouncedSearchQuery, resetSearchQuery }: SearchSug
         // calling fetchFields invalidates the session-token, so we now have to call
         // resetSession() so a new one gets created for further search
         resetSession()
-        resetSearchQuery()
 
         const city = place.addressComponents && place.addressComponents[0].longText
         const placeId = suggestion.placePrediction.placeId

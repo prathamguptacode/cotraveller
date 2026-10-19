@@ -1,35 +1,28 @@
-.resultsLayout {
-  display: flex;
+.searchArea {
+  position: relative;
+  padding: .5rem 1rem;
+
+  height: stretch;
 }
-
-.resultsSidebar {
-  height: 100vh;
-  flex: 0 0 400px;
-
-  border-right: 1px solid hsl(0, 0%, 10%);
-  padding: 0 12px;
-  padding-top: 34px;
-
-
-  overflow-y: auto;
-  overscroll-behavior: contain;
-
-}
-
-.searchMainContent {
-  flex: 1;
-}
-
-
 
 .searchBox {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: .5rem;
+
   font-size: 14px;
-  border-radius: 8px;
-  border: 2px solid hsl(0, 0%, 12%);
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 1rem;
+
+  border: 1px solid hsl(0, 0%, 12%);
+  /* border-radius: 16px; */
+  border-radius: 50px;
+
+  background-color: hsl(228, 22%, 5%);
+  /* border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; */
+
+  position: relative;
+  z-index: 1;
   anchor-name: --searchBox;
 }
 
@@ -174,14 +167,14 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  
+
   display: flex;
   flex-direction: column;
   gap: 4px;
-  
+
   width: 100%;
   padding: 8px;
-  
+
   background: rgba(46, 45, 45, 0.5);
   background: linear-gradient(90deg, rgba(46, 45, 45, 0.5) 10%, rgba(255, 255, 255, 0) 100%);
 
