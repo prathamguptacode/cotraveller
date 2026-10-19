@@ -1,7 +1,6 @@
 import clsx from 'clsx'
 import { getCalendarMonth, getIncrementedDate, getWeekSaturdayDate, WEEK_DAYS } from '../utils'
 import styles from './monthCalendar.module.css'
-import { Link } from 'react-router-dom'
 
 const WEEK_DAYS_NAMES = Object.keys(WEEK_DAYS)
 
@@ -50,7 +49,7 @@ const MonthCalendarGrid = () => {
           const startDateIndex = (week - 1) * 7
           return (
             <div key={week} className={styles.datesRow}>
-              <div aria-hidden className={styles.rowOverlayCells}>
+              <div className={styles.rowOverlayCells}>
                 {dates.slice(startDateIndex, startDateIndex + 7).map(date => {
                   return (
                     <div key={date.getDate()} className={styles.rowOverlayCell}>
@@ -65,14 +64,14 @@ const MonthCalendarGrid = () => {
 
                   return (
                     <div className={styles.dateWrapper}>
-                      <Link to={'/'} className={
+                      <span className={
                         clsx(
                           styles.date,
                           month === date.getMonth() && styles.currentMonthDate,
                           isMonthStart && styles.monthStartDate
                         )}>
                         {numericDate} {isMonthStart && date.toLocaleDateString('default', { month: 'short' })}
-                      </Link>
+                      </span>
                     </div>
                   )
                 })}
@@ -163,17 +162,12 @@ type EventProps = Event & {
 }
 
 
-const Event = ({ isMultiDay, style, startTime, name }: EventProps) => {
+const Event = ({ isMultiDay, style,  name }: EventProps) => {
 
   return (
-    <div style={style} className={styles.eventTile}>
-      <button className={clsx(styles.event, isMultiDay && styles.multiDayEvent)}>
-        {!isMultiDay &&
-          <>
-            <div className={styles.eventColorCircle}></div>
-            <time dateTime={startTime.toISOString()}>{startTime.toLocaleString('default', { hour12: true, hour: 'numeric', minute: 'numeric' }).toLowerCase()}</time>
-          </>
-        }
+    <div data-multi-day-event={isMultiDay} style={style} className={styles.eventTile}>
+      <button className={styles.event}>
+        {/* <time dateTime={startTime.toISOString()}>{startTime.toLocaleString('default', { hour12: true, hour: 'numeric', minute: 'numeric' }).toLowerCase()}</time> */}
         <span className={styles.eventName}>{name}</span>
       </button>
     </div>

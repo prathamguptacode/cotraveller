@@ -1,9 +1,15 @@
 import MonthCalendarGrid from './components/MonthCalendarGrid'
+import styles from './styles.module.css'
 
 
 const Calendar = () => {
+
+
     return (
-        <MonthCalendarGrid />
+        <div className={styles.wrapper}>
+            <span>Calendar</span>
+            <MonthCalendarGrid />
+        </div>
     )
 }
 

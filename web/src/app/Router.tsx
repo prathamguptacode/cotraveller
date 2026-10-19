@@ -19,10 +19,11 @@ const Router = () => {
                     <Route index element={<Home />} />
 
                     {/* Replace Home element with Trip Layout Below with outlet inside to render blank or index page */}
-                    <Route path="/trips" element={<Home />}>
+                    <Route path="/trips">
                         <Route path=":tripId">
                             <Route index />
                             <Route path="chats" />
+                            <Route path="calendar" element={<Calendar />} />
                         </Route>
                         <Route path="create" element={<Home />} />
                     </Route>
