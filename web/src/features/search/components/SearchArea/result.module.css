@@ -95,20 +95,27 @@
 .mapWrapper {
     flex: 1;
 
-    border-radius: 20px;
+    border-radius: 24px;
     overflow: hidden;
 }
 
 @media (max-width:960px) {
-    .mapArea {
-        padding: 0;
+    .wrapper {
+        position: static;
+        flex: 1;
+        gap: 1rem;
     }
 
-    .mapWrapper {
-        border-radius: 0;
+    .content {
+        display: flex;
+        flex-direction: column-reverse;
     }
 
     .carousel {
-        border-radius: 0;
+        border-radius: 24px;
+    }
+
+    .mapArea {
+        padding: 0;
     }
 }

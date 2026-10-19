@@ -12,7 +12,6 @@ function SearchLayout() {
       </aside>
       <div className={mystyle.mainWrapper}>
         <Outlet />
-        {/* <div data-mobile-visible={true}></div> */}
       </div>
     </div>
   )

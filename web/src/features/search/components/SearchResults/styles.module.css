@@ -1,5 +1,6 @@
 .main {
     height: stretch;
+    position: relative;
     font-family: "Google Sans";
     display: flex;
     flex-direction: column;
@@ -173,7 +174,8 @@
 @media (max-width:768px) {
     .results {
         gap: 0;
-        padding: .5rem 0;
+        padding: 0;
+        padding-bottom: .5rem;
     }
 
     .result {

@@ -34,34 +34,37 @@ const SearchResultPlace = ({ placeId }: SearchResultPlaceProps) => {
 
     return (
         <div className={styles.wrapper}>
-            <div className={styles.carousel} ref={carouselRef}>
-                <button data-button='prev' className={styles.carouselButton} onClick={prev}>
-                    <CaretLeftIcon size={16} weight='bold' />
-                </button>
-                <div className={styles.imagesWrapper}>
-                    {
-                        place?.photos?.map((e, i) => {
-                            return (
-                                <div key={i} className={styles.imageWrapper}>
-                                    <img src={e.getURI({ maxWidth: 422, maxHeight: 750 })} alt="city photos" width="100%" />
-                                </div>
-                            )
-                        })
-                    }
+            <div className={styles.content}>
+                <div className={styles.carousel} ref={carouselRef}>
+                    <button data-button='prev' className={styles.carouselButton} onClick={prev}>
+                        <CaretLeftIcon size={16} weight='bold' />
+                    </button>
+                    <div className={styles.imagesWrapper}>
+                        {
+                            place?.photos?.map((e, i) => {
+                                return (
+                                    <div key={i} className={styles.imageWrapper}>
+                                        <img src={e.getURI({ maxWidth: 422, maxHeight: 750 })} alt="city photos" width="100%" />
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                    <button data-button='next' className={styles.carouselButton} onClick={next}>
+                        <CaretRightIcon size={16} weight='bold' />
+                    </button>
                 </div>
-                <button data-button='next' className={styles.carouselButton} onClick={next}>
-                    <CaretRightIcon size={16} weight='bold' />
-                </button>
-            </div>
 
 
-            <div className={styles.locationInfo}>
-                <h1 className={styles.city}>
-                    {place?.formattedAddress?.split(', ')[0]}
-                </h1>
-                <h2 className={styles.country}>
-                    {place?.formattedAddress?.split(', ')[1]}
-                </h2>
+                <div className={styles.locationInfo}>
+                    <h1 className={styles.city}>
+                        {place?.formattedAddress?.split(', ')[0]}
+                    </h1>
+                    <h2 className={styles.country}>
+                        {place?.formattedAddress?.split(', ')[1]}
+                    </h2>
+                </div>
+
             </div>
 
             <div className={styles.mapArea}>
