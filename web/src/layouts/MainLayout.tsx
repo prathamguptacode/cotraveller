@@ -6,7 +6,7 @@ import BottomNavbar from './BottomNavbar'
 const MainLayout = () => {
     return (
         <div className={styles.layout}>
-            <NavigationRail />
+            {/* <NavigationRail /> */}
             <div className={styles.content}>
                 <Outlet />
             </div>
