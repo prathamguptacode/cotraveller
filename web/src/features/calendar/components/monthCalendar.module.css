@@ -1,0 +1,217 @@
+.wrapper {
+    --grid-border: #333537;
+    --default-event: #4b99d2;
+    --text-muted: #c4c7c5;
+    --text: #e3e3e3;
+    --grid: #131314;
+    --default-event-hover: hsl(205, 60%, 45%);
+    width: 90vw;
+    height: 90%;
+    background-color: var(--grid);
+    margin-inline: auto;
+
+    border-radius: 24px;
+    border-inline: 1px solid var(--grid-border);
+    color: white;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.days {
+    display: flex;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.day {
+    flex: 1;
+    text-align: center;
+    padding: .5rem;
+    padding-bottom: 0;
+
+    &:not(:last-child) {
+        border-right: 1px solid var(--grid-border);
+    }
+}
+
+
+/* Dates */
+.datesGrid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.datesRow {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid var(--grid-border);
+    }
+}
+
+/* Row borders */
+.rowOverlayCells {
+    position: absolute;
+    pointer-events: none;
+    inset: 0;
+
+    display: flex;
+}
+
+.rowOverlayCell {
+    flex: 1;
+
+    &:not(:last-child) {
+        border-right: 1px solid var(--grid-border);
+    }
+}
+
+/* --- */
+
+.dates {
+    display: flex;
+    position: relative;
+}
+
+
+.dateWrapper {
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.date {
+    --size: 2ch;
+    box-sizing: content-box;
+    min-width: var(--size);
+    min-height: var(--size);
+    text-align: center;
+
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+
+    border-radius: 50%;
+    padding: .25rem;
+
+    transition: all 50ms linear;
+
+    &:hover {
+        background-color: hsl(from var(--grid) h s 25);
+        scale: 1.05;
+    }
+
+}
+
+.currentMonthDate {
+    color: var(--text);
+}
+
+.monthStartDate {
+    border-radius: 24px;
+    padding-inline: .5rem;
+}
+
+
+
+
+/* Events */
+
+.eventsSection {
+    flex: 1;
+    display: flex;
+    position: relative;
+
+}
+
+.eventsCell {
+    min-width: 0;
+    flex: 1;
+}
+
+.eventTile {
+    padding-inline-end: .5rem;
+
+    &[data-multi-day-event='true'] {
+        position: absolute;
+    }
+}
+
+.event {
+    width: 100%;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    padding-inline: .5rem;
+    margin-block-end: 2px;
+
+    background-color: var(--default-event);
+    color: black;
+    border-radius: 6px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+
+    position: relative;
+    transition: all .15s linear;
+
+    overflow: hidden;
+
+
+    &:hover {
+        background-color: var(--default-event-hover);
+
+    }
+
+    >*:not(.eventName) {
+        flex-shrink: 0;
+    }
+}
+
+.eventColorCircle {
+    --size: 8px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+
+    background-color: var(--default-event);
+    margin-right: .25rem;
+}
+
+.eventName {
+    white-space: nowrap;
+
+    overflow: hidden;
+}
+
+
+
+@media (max-width:768px) {
+    .datesRow {
+        font-size: 10px;
+    }
+
+    .eventTile {
+        padding-inline: 0;
+    }
+
+    .event {
+        padding-inline: .25rem;
+        border-radius: 4px;
+        font-size: 10px;
+    }
+}
