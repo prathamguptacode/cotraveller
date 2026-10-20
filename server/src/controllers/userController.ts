@@ -154,8 +154,13 @@ export const fetchUserTrips: RequestHandler = async (req, res) => {
             }
         },
         {
-            $replaceWith: { $mergeObjects: ['$trip', '$lastMessage'] }
+            $replaceWith: { $mergeObjects: ['$$ROOT', '$trip'] }
         },
+        {
+            $project: {
+                trip: 0
+            }
+        }
 
     ])
 

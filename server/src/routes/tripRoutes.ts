@@ -1,4 +1,4 @@
-import { addItineraryItem, createTrip, createTripAvatar, createTripInvite, editItineraryItems, tripDetails, tripInvite, searchTrips } from "@/controllers/tripController"
+import { addItineraryItem, createTrip, createTripAvatar, createTripInvite, editItineraryItems, tripDetails, tripInvite, searchTrips, fetchChatRoom } from "@/controllers/tripController"
 import authMiddleware from "@/middlewares/authMiddleware"
 import express from "express"
 import upload from "@/middlewares/multerUpload"
@@ -6,10 +6,12 @@ import asyncHandler from "@/middlewares/asyncHandler"
 
 const router = express.Router()
 
-router.get('/:tripId', tripDetails)
-router.get('/search', searchTrips)
+router.get('/:tripId', asyncHandler(tripDetails))
+router.get('/search', asyncHandler(searchTrips))
 
 router.use(authMiddleware)
+
+router.get('/:tripId/chats', asyncHandler(fetchChatRoom))
 
 router.route('/')
     .post(asyncHandler(createTrip))

@@ -2,7 +2,7 @@ import cloudinary from "@/config/cloudinary";
 import Trip from "@/models/Trip";
 import TripUserRel, { TripMemberModel } from "@/models/TripMember";
 import ItineraryItem from "@/models/ItineraryItem"
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import z from "zod";
 import fs from "fs/promises"
 import { generateInviteToken, generateUint8Array } from "@/utils/generateJWTs";
@@ -10,6 +10,10 @@ import { jwtVerify } from "jose";
 import env from "@/config/env";
 import { JOSEError, JWTExpired } from "jose/errors";
 import { UserModel } from "@/models/User";
+import { isObjectIdOrHexString } from "mongoose";
+import ChatRoom from "@/models/ChatRoom";
+import TripMember from "@/models/TripMember";
+import ConversationRecord from "@/models/ConversationRecord";
 
 const CreateTripValidator = z.object({
   name: z.string(),
@@ -60,7 +64,16 @@ export async function createTrip(req: Request, res: Response) {
     trip: newTrip._id,
     role: "ADMIN"
   })
-  await newTripUserRel.save()
+
+  // Creating chatRoom 
+  const [chatRoom] = await Promise.all([
+    ChatRoom.create({ type: 'TRIP', trip: newTrip._id }),
+    newTripUserRel.save()
+  ])
+
+  // Creating conversation record
+  await ConversationRecord.create({ room: chatRoom._id, member: userId })
+
   res.success(201, { tripId: newTrip._id })
 }
 
@@ -294,3 +307,22 @@ export async function searchTrips(req: Request, res: Response) {
   res.success(200, trips)
 }
 
+
+const FetchChatRoomSchema = z.object({
+  tripId: z.string().refine(id => isObjectIdOrHexString(id))
+})
+
+export const fetchChatRoom: RequestHandler = async (req, res) => {
+  const parsedData = FetchChatRoomSchema.safeParse(req.params)
+  if (!parsedData.success) return res.fail(400, "BAD_REQUEST", "Invalid params")
+
+  const { tripId } = parsedData.data
+  // Check if user is a trip member
+  const member = await TripMember.findOne({ trip: tripId, user: req.user._id }).populate('trip')
+  if (!member) return res.fail(403, "FORBIDDEN", "You cannot access that")
+
+  const chatRoom = await ChatRoom.findOne({ type: 'TRIP', trip: tripId })
+  if (!chatRoom) return res.fail(404, "CHAT_NOT_FOUND", "This shouln't be possible")
+
+  return res.success(200, { chatRoom, trip: member.trip })
+}

@@ -262,3 +262,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
+/* ChatBox */
+.chatBoxWrapper {
+  height: stretch;
+  display: flex;
+  flex-direction: column;
+}

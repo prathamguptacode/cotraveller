@@ -42,7 +42,7 @@ app.use('/api', helloRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/chats', chatRoutes)
 app.use('/api/users', userRoutes)
-app.use('/api/trip', tripRoutes)
+app.use('/api/trips', tripRoutes)
 
 
 

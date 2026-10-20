@@ -3,7 +3,7 @@ import mystyle from "./Trips.module.css"
 import { api } from "@/lib/axios"
 import { CalendarIcon, ChatTeardropIcon } from "@phosphor-icons/react/dist/ssr"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { useNavigate, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { AdvancedMarker, Map, useMapsLibrary } from "@vis.gl/react-google-maps"
 import { useCallback, useEffect, useState } from "react"
 import dayjs, { Dayjs } from 'dayjs';
@@ -41,7 +41,7 @@ function TripsMainContent() {
 
   const { isPending, data, error } = useQuery({
     queryKey: ["trips", tripId],
-    queryFn: () => api.get<tripDetailT>(`/trip/${tripId}`)
+    queryFn: () => api.get<tripDetailT>(`/trips/${tripId}`)
   })
 
   if (isPending) {
@@ -106,8 +106,12 @@ function TripsMainContent() {
           </div>
         </div>
         <div className={mystyle.iconBox}>
-          <div><CalendarIcon size={28} /> </div>
-          <div><ChatTeardropIcon size={28} /> </div>
+          <Link to={`/trips/${tripId}/calendar`}>
+            <CalendarIcon size={28} />
+          </Link>
+          <Link to={`/trips/${tripId}/chats`}>
+            <ChatTeardropIcon size={28} />
+          </Link>
         </div>
       </div>
       <div className={mystyle.content}>
@@ -207,7 +211,7 @@ function AddIternaryBox({ tripId }: { tripId: string }) {
 
   const mutation = useMutation({
     mutationKey: [tripId, "add iternary"],
-    mutationFn: (e: { name: string, origin: number[], startTime: string, placeId: string, searchVariables: { city: string, country: string } }) => api.post(`/trip/${tripId}/itinerary`, e)
+    mutationFn: (e: { name: string, origin: number[], startTime: string, placeId: string, searchVariables: { city: string, country: string } }) => api.post(`/trips/${tripId}/itinerary`, e)
   })
 
   const handleClick = async () => {
