@@ -1,9 +1,13 @@
 import SearchResults from "@/features/search/components/SearchResults"
+import styles from './styles.module.css'
 
 
 const SearchResultsPage = () => {
   return (
-    <SearchResults />
+    <div className={styles.searchResultsWrapper} data-mobile-visible={true}>
+      <SearchResults />
+    </div>
+
   )
 }
 

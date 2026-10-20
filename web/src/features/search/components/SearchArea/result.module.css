@@ -8,10 +8,10 @@
 
 .carousel {
     position: relative;
-   
-  overflow: hidden;
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
+
+    overflow: hidden;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
 
     &:hover {
         .carouselButton {
@@ -92,13 +92,30 @@
     padding: 1rem 1.5rem;
 }
 
-[aria-hidden] {
-    display: none;
-}
-
 .mapWrapper {
     flex: 1;
 
-    border-radius: 20px;
+    border-radius: 24px;
     overflow: hidden;
+}
+
+@media (max-width:960px) {
+    .wrapper {
+        position: static;
+        flex: 1;
+        gap: 1rem;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    .carousel {
+        border-radius: 24px;
+    }
+
+    .mapArea {
+        padding: 0;
+    }
 }

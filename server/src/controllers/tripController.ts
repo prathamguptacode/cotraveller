@@ -32,7 +32,8 @@ const TripItineraryValidator = z.object({
   endTime: z.iso.datetime().optional(),
   destination: z.array(z.number()).length(2).default([]),
   isFullDay: z.boolean().default(true),
-  searchVariables: z.object({ city: z.string(), state: z.string(), country: z.string() })
+  searchVariables: z.object({ city: z.string(), country: z.string() }),
+  placeId: z.string()
 })
 
 const EditItineraryValidator = z.object({
@@ -65,7 +66,7 @@ export async function createTrip(req: Request, res: Response) {
 
 export async function createTripAvatar(req: Request, res: Response) {
   if (!req.file) return res.fail(400, "FILE_NOT_FOUND")
-  
+
   const data = CreateTripAvatarValidator.safeParse(req.params)
   if (!data.success) {
     await fs.unlink(req.file.path)
@@ -124,8 +125,11 @@ export async function tripDetails(req: Request, res: Response) {
   if (!data.success) return res.fail(400, "INVALID_BODY")
 
   const tripId = data.data.tripId
-  const trip = await Trip.findById(tripId)
-  res.success(200, { trip })
+  const trip = await Trip.findById(tripId).populate("itineraryItems")
+
+  const members = await TripUserRel.find({ trip: tripId }).populate("user", "email").select("user")
+
+  res.success(200, { trip, members })
 }
 
 export async function addItineraryItem(req: Request, res: Response) {
@@ -138,7 +142,7 @@ export async function addItineraryItem(req: Request, res: Response) {
     return res.fail(400, "INVALID_BODY")
   }
 
-  const { tripId, name, origin, destination, isFullDay, startTime, endTime, searchVariables } = data.data
+  const { tripId, name, origin, destination, isFullDay, startTime, endTime, searchVariables, placeId } = data.data
 
   const relation = await TripUserRel.findOne({ trip: tripId, user: userId })
   if (!relation) return res.fail(403, "NOT_MEMBER")
@@ -157,7 +161,8 @@ export async function addItineraryItem(req: Request, res: Response) {
       coordinates: destination
     },
     isFullDay,
-    searchVariables
+    searchVariables,
+    placeId
   })
 
   await Promise.all([
@@ -177,7 +182,7 @@ export async function editItineraryItems(req: Request, res: Response) {
   })
   if (!data.success) return res.fail(400, "INVALID_BODY")
 
-  const { tripId, name, origin, destination, isFullDay, startTime, endTime, searchVariables } = data.data
+  const { tripId, name, origin, destination, isFullDay, startTime, endTime, searchVariables, placeId } = data.data
 
   const relation = await TripUserRel.findOne({ trip: tripId, user: userId })
   if (!relation) return res.fail(403, "NOT_MEMBER")
@@ -195,7 +200,8 @@ export async function editItineraryItems(req: Request, res: Response) {
       coordinates: destination
     },
     isFullDay,
-    searchVariables
+    searchVariables,
+    placeId
   })
   res.success()
 }

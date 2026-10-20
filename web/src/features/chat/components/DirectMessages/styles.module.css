@@ -28,7 +28,7 @@
 
 .listItem {
     flex-shrink: 0;
-    
+
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -125,4 +125,23 @@
 .headerName {
     font-size: 16px;
     font-weight: 600;
+}
+
+
+@media (max-width:960px) {
+    .listHeading{
+        font-weight: 400;
+    }
+    .chatHeader {
+        padding: .5rem;
+    }
+
+    .imageWrapper {
+        --size: 48px;
+    }
+
+    .headerName{
+        font-size: 14px;
+        font-weight: 400;
+    }
 }

@@ -3,6 +3,8 @@
   padding: .5rem 1rem;
 
   height: stretch;
+  display: flex;
+  flex-direction: column;
 }
 
 .searchBox {

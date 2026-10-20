@@ -96,6 +96,8 @@ export const fetchUserTrips: RequestHandler = async (req, res) => {
         {
             $lookup: {
                 from: 'chat_rooms',
+                localField: 'room',
+                foreignField: '_id',
                 pipeline: [
                     {
                         $match: { $expr: { $eq: ['$type', "TRIP"] } }
@@ -167,7 +169,7 @@ const FetchChatRoomSchema = z.object({
 export const fetchChatRoom: RequestHandler = async (req, res) => {
     const currentUserId = req.user._id
 
-    const parsedData = CreateChatRoomSchema.safeParse(req.params)
+    const parsedData = FetchChatRoomSchema.safeParse(req.params)
     if (!parsedData.success) return res.fail(400, "BAD_REQUEST", "Invalid params")
 
     const user = await User.findById(parsedData.data.userId)

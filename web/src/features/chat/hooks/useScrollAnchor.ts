@@ -12,6 +12,7 @@ export const useScrollAnchor = ({ lastMessage, roomId }: { lastMessage: Message,
         // Initial anchoring
         const anchor = anchorRef.current
         if (!anchor) return
+
         anchor.scrollIntoView({ behavior: 'instant' })
 
         const observer = new IntersectionObserver(entries => {

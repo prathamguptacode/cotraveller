@@ -28,11 +28,17 @@ const SearchResult = () => {
                 <img src="/tokyo.webp" alt="trip-display-picture" />
             </div>
             <div className={styles.content}>
-                <Link to={'/'}>
-                    <h3 className={styles.title}>
-                        Hill Top Swiss Cottage
-                    </h3>
-                </Link>
+                <div className={styles.contentTop}>
+                    <Link to={'/'}>
+                        <h3 className={styles.title}>
+                            Hill Top Swiss Cottage
+                        </h3>
+                    </Link>
+                    <div data-mobile-only={true} className={styles.dateInfo}>
+                        24 Aug - 1 Sep
+                    </div>
+                </div>
+
                 <div className={styles.lineBreak}></div>
                 <div className={styles.dateInfo}>
                     24 Aug - 1 Sep
@@ -44,12 +50,17 @@ const SearchResult = () => {
                     <div className={styles.tags}>
                         <div className={styles.tag}>
                             <span>
-                                2 days
+                                Tokyo, Japan
                             </span>
                         </div>
                         <div className={styles.tag}>
                             <span>
-                                Tokyo, Japan
+                                {members.length} travellers
+                            </span>
+                        </div>
+                        <div className={styles.tag}>
+                            <span>
+                                2 days
                             </span>
                         </div>
                     </div>

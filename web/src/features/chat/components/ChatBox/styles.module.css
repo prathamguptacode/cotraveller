@@ -167,3 +167,10 @@
         display: none;
     }
 }
+
+
+@media (max-width:960px) {
+    .inputAreaWrapper {
+        padding: .25rem;
+    }
+}

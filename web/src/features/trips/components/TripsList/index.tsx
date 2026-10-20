@@ -8,7 +8,7 @@ import { api } from '@/lib/axios'
 type Trip = {
     _id: string,
     name: string,
-    lastMessage: {
+    lastMessage?: {
         text: string,
         author: string,
         createdAt: string

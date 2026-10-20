@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 const DirectMessagesPage = () => {
   return (
-    <div className={styles.wrapper}>
+    <div data-mobile-visible={false} className={styles.wrapper}>
       <div className={styles.contentWrapper}>
         <ChatsCircleIcon size={128} weight='thin' />
         <div className={styles.content}>
