@@ -11,6 +11,7 @@ import TripsLayout from "./pages/Trips/TripsLayout"
 import TripsMainContent from "./pages/Trips/TripsMainContent"
 import SearchIndexPage from "./pages/Search/SearchIndexPage"
 import SearchResultsPage from "./pages/Search/SearchResultsPage"
+import TripChatPage from "./pages/Trips/TripChatPage"
 
 
 const Router = () => {
@@ -25,6 +26,7 @@ const Router = () => {
                         <Route index element={<>cotraveller</>} />
                         <Route path=":tripId">
                             <Route index element={<TripsMainContent />} />
+                            <Route path="chats" element={<TripChatPage />} />
                             <Route path="chats" />
                             <Route path="calendar" element={<Calendar />} />
                         </Route>
