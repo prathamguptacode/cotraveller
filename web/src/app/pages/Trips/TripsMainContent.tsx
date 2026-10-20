@@ -100,10 +100,10 @@ function TripsMainContent() {
           </div>
         </div>
         <div className={mystyle.iconBox}>
-          <Link to={`/trips/${tripId}/calendar`}>
+          <Link to={`/${tripId}/calendar`}>
             <CalendarIcon size={28} />
           </Link>
-          <Link to={`/trips/${tripId}/chats`}>
+          <Link to={`/${tripId}/chats`}>
             <ChatTeardropIcon size={28} />
           </Link>
         </div>

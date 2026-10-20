@@ -19,10 +19,10 @@ const TripChatHeader = ({ trip }: TripChatHeaderProps) => {
                 <div>{trip.name}</div>
             </div>
             <div className={mystyle.iconBox}>
-                <Link to={`/trips/${trip._id}/calendar`}>
+                <Link to={`/${trip._id}/calendar`}>
                     <CalendarIcon size={28} />
                 </Link>
-                <Link to={`/trips/${trip._id}/chats`}>
+                <Link to={`/${trip._id}/chats`}>
                     <ChatTeardropIcon size={28} />
                 </Link>
             </div>

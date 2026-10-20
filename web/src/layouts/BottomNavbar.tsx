@@ -9,7 +9,7 @@ const BottomNavbar = () => {
         <nav data-mobile-nav className={styles.bottomNavbar}>
             <NavLink className={({ isActive }) => {
                 return clsx(isActive && styles.bottomNavActiveLink, styles.bottomNavItem)
-            }} to={'/trips'}>
+            }} to={'/'}>
                 <span>
                     <UsersThreeIcon />
                 </span>
@@ -31,7 +31,7 @@ const BottomNavbar = () => {
 
             <NavLink className={({ isActive }) => {
                 return clsx(isActive && styles.bottomNavActiveLink, styles.bottomNavItem)
-            }} to={'/trips/create'}>
+            }} to={'/create'}>
                 <span>
                     <PlusIcon />
                 </span>

@@ -18,18 +18,9 @@ const NavigationRail = () => {
 
             <div className={styles.railItems}>
                 <div className={styles.railItem}>
-                    <NavLink end className={({ isActive }) => {
-                        return clsx(isActive && styles.activeLink)
-                    }} to={'/'}>
-                        <span>
-                            <HouseLineIcon />
-                        </span>
-                    </NavLink>
-                </div>
-                <div className={styles.railItem}>
                     <NavLink className={({ isActive }) => {
                         return clsx(isActive && styles.activeLink)
-                    }} to={'/trips'}>
+                    }} to={'/'}>
                         <span>
                             <UsersThreeIcon />
                         </span>
@@ -47,7 +38,7 @@ const NavigationRail = () => {
                 <div className={styles.railItem}>
                     <NavLink className={({ isActive }) => {
                         return clsx(isActive && styles.activeLink)
-                    }} to={'/trips/create'}>
+                    }} to={'/create'}>
                         <span>
                             <PlusIcon />
                         </span>

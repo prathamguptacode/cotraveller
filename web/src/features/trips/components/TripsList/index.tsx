@@ -51,7 +51,7 @@ type ListItem = {
 const ListItem = ({ trip }: ListItem) => {
 
     return (
-        <NavLink to={`/trips/${trip._id}`} className={({ isActive }) => {
+        <NavLink to={`/${trip._id}`} className={({ isActive }) => {
             return clsx(styles.listItem, isActive && styles.activeItem)
         }}>
             <div className={styles.imageWrapper}>

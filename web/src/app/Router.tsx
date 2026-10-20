@@ -19,10 +19,8 @@ const Router = () => {
         <BrowserRouter>
             <Routes>
                 <Route element={<MainLayout />}>
-                    <Route index element={<Home />} />
-
                     {/* Replace Home element with Trip Layout Below with outlet inside to render blank or index page */}
-                    <Route path="/trips" element={<TripsLayout />}>
+                    <Route path="/" element={<TripsLayout />}>
                         <Route index element={<>cotraveller</>} />
                         <Route path=":tripId">
                             <Route index element={<TripsMainContent />} />
