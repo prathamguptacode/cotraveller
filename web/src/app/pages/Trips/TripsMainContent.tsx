@@ -3,7 +3,7 @@ import mystyle from "./Trips.module.css"
 import { api } from "@/lib/axios"
 import { CalendarIcon, ChatTeardropIcon } from "@phosphor-icons/react/dist/ssr"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { AdvancedMarker, Map, useMapsLibrary } from "@vis.gl/react-google-maps"
 import { useCallback, useEffect, useState } from "react"
 import dayjs, { Dayjs } from 'dayjs';
@@ -31,12 +31,10 @@ type tripDetailT = {
   members: { user: { email: string } }[]
 }
 
-function TripsMainContent() {
+const mapId = import.meta.env.VITE_MAP_ID
 
-  const mapId = import.meta.env.VITE_MAP_ID
-  const params = useParams()
-  const tripId = params.tripId
-  const navigate = useNavigate()
+function TripsMainContent() {
+  const { tripId } = useParams() as { tripId: string }
 
 
   const { isPending, data, error } = useQuery({
@@ -50,10 +48,6 @@ function TripsMainContent() {
 
   if (error) {
     return <div>Something went wrong</div>
-  }
-
-  if (!tripId) {
-    return navigate("/")
   }
 
   // const key = import.meta.env.VITE_MAP_API
@@ -170,7 +164,7 @@ function IternaryItem({ title, description, date, hasNext, placeId }: { title: s
       })
       setPlace(place)
     })()
-  }, [places])
+  }, [places, placeId])
 
 
 
@@ -178,7 +172,7 @@ function IternaryItem({ title, description, date, hasNext, placeId }: { title: s
   return <div className={mystyle.wrap}>
     <div className={mystyle.IternaryItem}>
       <div className={mystyle.frame}>
-        <img src={place?.photos[0].getURI({ maxWidth: 150, maxHeight: 150 })} alt="iternary item photo" width="100px" height="100px" />
+        <img src={place?.photos && place.photos[0].getURI({ maxWidth: 150, maxHeight: 150 })} alt="iternary item photo" width="100px" height="100px" />
       </div>
       <div className={mystyle.con}>
         <div>{title}</div>
