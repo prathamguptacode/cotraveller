@@ -36,13 +36,9 @@ const NavigationRail = () => {
                     </NavLink>
                 </div>
                 <div className={styles.railItem}>
-                    <NavLink className={({ isActive }) => {
-                        return clsx(isActive && styles.activeLink)
-                    }} to={'/create'}>
-                        <span>
-                            <PlusIcon />
-                        </span>
-                    </NavLink>
+                    <button popoverTarget='addTrip'>
+                        <span><PlusIcon /></span>
+                    </button>
                 </div>
                 <div className={styles.railItem}>
                     <NavLink className={({ isActive }) => {
