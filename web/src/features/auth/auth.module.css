@@ -140,11 +140,10 @@
 
     width: max-content;
     padding: .5em 1.5em;
-    border: 1px solid hsl(0 0% 40%);
     border-radius: 8px;
 
 
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
     font-size: 14px;
 
     display: none;
@@ -210,4 +209,13 @@ svg {
         color: var(--font-neutral);
     }
 
+}
+
+/* Verify OTP */
+.footerText {
+    gap: .5rem;
+
+    >* {
+        display: inline;
+    }
 }

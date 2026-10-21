@@ -15,7 +15,7 @@ import TripChatPage from "./pages/Trips/TripChatPage"
 import AntiProtectedRoutes from "./guards/AntiProtected.Routes"
 import Signup from "./pages/Signup/Signup"
 import Login from "./pages/Login/Login"
-import VerifyOTP from "./pages/Auth/VerifyOTP"
+import VerifyOTP from "./pages/VerifyOTP/VerifyOTP"
 
 
 const Router = () => {
@@ -54,8 +54,8 @@ const Router = () => {
 
                 <Route element={<AntiProtectedRoutes />} >
                     <Route path='/signup' element={<Signup />} />
-                    <Route path='/login' element={<Login />} />
                     <Route path='/signup/verify' element={<VerifyOTP />} />
+                    <Route path='/login' element={<Login />} />
                 </Route>
 
             </Routes>

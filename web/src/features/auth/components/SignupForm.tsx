@@ -1,16 +1,16 @@
-import { AuthFormSchema } from '../../schema'
+import { AuthFormSchema } from '../schema'
 import { z } from 'zod'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import FormInput from '../FormInput'
-import styles from '../../auth.module.css'
+import FormInput from './FormInput'
+import styles from '../auth.module.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { normalizeError } from '@/utils/normalizeError'
 import SubmitButton from './SubmitButton'
-import GoogleButton from '../OAuthButtons/GoogleButton'
-import GithubButton from '../OAuthButtons/GithubButton'
+import GoogleButton from './OAuthButtons/GoogleButton'
+import GithubButton from './OAuthButtons/GithubButton'
 import { ArrowRightIcon } from '@phosphor-icons/react'
 
 
@@ -54,14 +54,14 @@ type SignupFormFields = z.infer<typeof SignupFormSchema>
 
 const SignupForm = () => {
     const navigate = useNavigate()
-    const { handleSubmit, register, setError, formState: { errors, isValid } } = useForm<SignupFormFields>({ resolver: zodResolver(SignupFormSchema) })
+    const { handleSubmit, register, setError, formState: { errors } } = useForm<SignupFormFields>({ resolver: zodResolver(SignupFormSchema) })
 
 
 
 
     const mutation = useMutation({
         mutationFn: (body: SignupFormFields) => api.post('/auth/signup', body),
-        onSuccess: () => navigate('/signup/verify', { state: { isAllowed: true } }),
+        onSuccess: (_, body) => navigate('/signup/verify', { state: { isAllowed: true, email: body.email } }),
         onError: (error: unknown) => {
             const { code, message } = normalizeError(error)
             if (code.includes('EMAIL')) return setError('email', { message })
@@ -88,7 +88,7 @@ const SignupForm = () => {
                 <FormInput<SignupFormFields> name='password' error={errors.password?.message} register={register} autoComplete='new-password' placeholder='Password' type='password' requirements={requirements.password} />
                 <FormInput<SignupFormFields> name='username' error={errors.username?.message} register={register} autoComplete='username' placeholder='Username' type='text' requirements={requirements.username} />
                 <FormInput<SignupFormFields> name='fullName' error={errors.fullName?.message} register={register} autoComplete='name' placeholder='Full name' type='text' requirements={requirements.fullName} />
-                <SubmitButton isValid={isValid} isPending={mutation.isPending}>Sign up</SubmitButton>
+                <SubmitButton isPending={mutation.isPending}>Sign up</SubmitButton>
             </form>
             <div className={styles.switchPage}>
                 <div className={styles.anchorWrapper}>

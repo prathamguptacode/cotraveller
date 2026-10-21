@@ -188,7 +188,6 @@ export const resendOTP: RequestHandler = async (req, res) => {
     const { otpToken } = req.cookies
     if (!otpToken) return res.redirect('/')
 
-
     try {
         const { payload: { authOTPSessionId } } = await jwtVerify<OTPTokenPayload>(otpToken, generateUint8Array(env.OTP_TOKEN_SECRET))
 
@@ -203,7 +202,7 @@ export const resendOTP: RequestHandler = async (req, res) => {
         const { lastSentAt, resendRequests, payload: { email } } = authOTPSession
 
         // Check if otp can be resent
-        if (resendRequests >= 3) return res.fail(429, "TOO_MANY_REQUESTS", "You have requested the maximum number of OTPs for the session.")
+        if (resendRequests >= 3) return res.fail(429, "TOO_MANY_REQUESTS", "You have requested the maximum number of OTPs for the session. Try signing up again.")
 
 
         // Check for resend cooldown expiry of 1m

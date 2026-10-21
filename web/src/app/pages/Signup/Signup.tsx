@@ -1,6 +1,7 @@
+import SignupForm from '@/features/auth/components/SignupForm'
 import styles from './styles.module.css'
 import { IslandIcon } from '@phosphor-icons/react'
-import SignupForm from '@/features/auth/components/Signup/SignupForm'
+
 
 const Login = () => {
     return (

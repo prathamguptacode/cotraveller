@@ -10,7 +10,7 @@ import type { AuthResponse } from '../types'
 import { useAuth } from '@/hooks/useAuth'
 import { Link, useNavigate } from 'react-router-dom'
 import { normalizeError } from '@/utils/normalizeError'
-import SubmitButton from './Signup/SubmitButton'
+import SubmitButton from './SubmitButton'
 import GoogleButton from './OAuthButtons/GoogleButton'
 import GithubButton from './OAuthButtons/GithubButton'
 
@@ -51,14 +51,14 @@ const LoginForm = () => {
         mutation.mutate(body)
     }
 
-    const { handleSubmit, setError, register, formState: { errors, isValid } } = useForm<LoginFormFields>({ resolver: zodResolver(LoginFormSchema) })
+    const { handleSubmit, setError, register, formState: { errors } } = useForm<LoginFormFields>({ resolver: zodResolver(LoginFormSchema) })
 
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className={styles.form} >
                 <FormInput<LoginFormFields> name='email' error={errors.email?.message} register={register} autoComplete='email' placeholder='Email address' type='email' />
                 <FormInput<LoginFormFields> name='password' error={errors.password?.message} register={register} autoComplete='current-password' placeholder='Password' type='password' requirements={requirements.password} />
-                <SubmitButton isValid={isValid} isPending={mutation.isPending}>Sign in</SubmitButton>
+                <SubmitButton  isPending={mutation.isPending}>Sign in</SubmitButton>
             </form>
             <div className={styles.lineBreakers}>
                 <div className={styles.lineBreaker}></div>
