@@ -8,9 +8,11 @@ import { useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import type { AuthResponse } from '../types'
 import { useAuth } from '@/hooks/useAuth'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { normalizeError } from '@/utils/normalizeError'
-import SubmitButton from './SubmitButton'
+import SubmitButton from './Signup/SubmitButton'
+import GoogleButton from './OAuthButtons/GoogleButton'
+import GithubButton from './OAuthButtons/GithubButton'
 
 const LoginFormSchema = AuthFormSchema
 
@@ -58,6 +60,22 @@ const LoginForm = () => {
                 <FormInput<LoginFormFields> name='password' error={errors.password?.message} register={register} autoComplete='current-password' placeholder='Password' type='password' requirements={requirements.password} />
                 <SubmitButton isValid={isValid} isPending={mutation.isPending}>Sign in</SubmitButton>
             </form>
+            <div className={styles.lineBreakers}>
+                <div className={styles.lineBreaker}></div>
+                or
+                <div className={styles.lineBreaker}></div>
+            </div>
+            <div className={styles.oAuthButtons}>
+                <GoogleButton />
+                <GithubButton />
+            </div>
+            <div className={styles.switchPage}>
+                <div className={styles.anchorWrapper}>
+                    <span>New to Cotraveller?</span>
+                    <Link to={'/signup'} className={styles.anchors}>Create an account</Link>
+                </div>
+                <Link to={'/login'} className={styles.anchors} >Forgot Password?</Link>
+            </div>
         </>
     )
 }

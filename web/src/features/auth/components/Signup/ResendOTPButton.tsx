@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import styles from '../auth.module.css'
+import styles from '../../auth.module.css'
 import { api } from '@/lib/axios'
 import clsx from 'clsx'
 

@@ -13,9 +13,8 @@ import SearchIndexPage from "./pages/Search/SearchIndexPage"
 import SearchResultsPage from "./pages/Search/SearchResultsPage"
 import TripChatPage from "./pages/Trips/TripChatPage"
 import AntiProtectedRoutes from "./guards/AntiProtected.Routes"
-import AuthLayout from "@/layouts/Auth/AuthLayout"
-import Signup from "./pages/Auth/Signup"
-import Login from "./pages/Auth/Login"
+import Signup from "./pages/Signup/Signup"
+import Login from "./pages/Login/Login"
 import VerifyOTP from "./pages/Auth/VerifyOTP"
 
 
@@ -54,11 +53,9 @@ const Router = () => {
                 </Route>
 
                 <Route element={<AntiProtectedRoutes />} >
-                    <Route element={<AuthLayout />} >
-                        <Route path='/signup' element={<Signup />} />
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/signup/verify' element={<VerifyOTP />} />
-                    </Route>
+                    <Route path='/signup' element={<Signup />} />
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/signup/verify' element={<VerifyOTP />} />
                 </Route>
 
             </Routes>

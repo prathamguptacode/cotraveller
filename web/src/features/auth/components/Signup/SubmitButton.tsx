@@ -1,4 +1,4 @@
-import styles from '../auth.module.css'
+import styles from '../../auth.module.css'
 
 type SubmitButtonProps = {
     isPending: boolean,
