@@ -1,30 +1,37 @@
 import env from "@/config/env"
-import { REFRESH_COOKIE_OPTIONS } from "@/lib/cookies"
+import { OTP_COOKIE_OPTIONS, REFRESH_COOKIE_OPTIONS } from "@/lib/cookies"
 import User from "@/models/User"
-import { AuthTokenPayload } from "@/types/types"
-import { generateAccessToken, generateRefreshToken, generateUint8Array } from "@/utils/generateJWTs"
+import { AuthTokenPayload, OTPTokenPayload } from "@/types/types"
+import { generateAccessToken, generateOTPToken, generateRefreshToken, generateUint8Array } from "@/utils/generateJWTs"
 import { RequestHandler } from "express"
 import { jwtVerify } from "jose"
 import { JOSEError, JWTExpired } from "jose/errors"
 import { z } from "zod"
 import * as argon2 from 'argon2'
+import AuthLimitSession from "@/models/AuthLimitSession"
+import AuthOTPSession from "@/models/AuthOTPSession"
+import { sendOtp } from "@/utils/nodemailer"
 
-// ###LATER Add trailing spaces and lowercase protection to email later
-// ###TEMPORARY , this logic for signup is temporary for early development
+
 const SignupBodySchema = z.object({
-    email: z.email(),
-    password: z.string()
+    email: z.email().trim().toLowerCase(),
+    password: z.string().trim().min(8).max(64).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/).describe("Must contain 8-64 characters with atleast 1 lower,uppercase letter and 1 speical char and 1 number"),
+    username: z.string().trim().min(4).max(16).regex(/^[a-zA-Z0-9]+(-?[a-zA-Z0-9])*$/).toLowerCase().describe("Cannot start or end with hyphen, can contain single hyphens. Alphanumeric"),
+    fullName: z.string().trim().min(1).max(32).optional().describe("Optional , but if there must be atleast 1 character long")
 })
 
 export const signup: RequestHandler = async (req, res) => {
     const parsedData = SignupBodySchema.safeParse(req.body)
     if (!parsedData.success) return res.fail(400, "BAD_REQUEST", "Invalid data")
 
-    const { email, password } = parsedData.data
+    const { email, password, username, fullName } = parsedData.data
 
 
     //Check if email already exists
     if (await User.exists({ email })) return res.fail(409, "EMAIL_TAKEN", "Email is already registered")
+
+    //Check if username is taken 
+    if (await User.exists({ username })) return res.fail(409, "USERNAME_TAKEN", "Username is already taken")
 
     //Hashing password
     const passwordHash = await argon2.hash(password, {
@@ -34,18 +41,182 @@ export const signup: RequestHandler = async (req, res) => {
         parallelism: 1
     })
 
-    // Creating user
-    const user = await User.create({ email, passwordHash })
+    //Creating and hashing a 8 digit otp
+    const otp = Math.floor((Math.random() * (1e8 - 1e7)) + 1e7)
+    const otpHash = await argon2.hash(otp.toString(), {
+        type: argon2.argon2id,
+        memoryCost: 64 * 1024,
+        timeCost: 3,
+        parallelism: 1,
+    })
+
+    //Creating new AuthLimit Session to limit email usage
+    const authLimitSession = await AuthLimitSession.findOne({ email })
+    if (authLimitSession && authLimitSession.attempts >= 5) return res.fail(429, "AUTH_LIMIT_REACHED", "You have exceeded the maximum number of signup attempts for this email. Please try again later")
+
+    let newAuthLimitSessionPromise
+    if (authLimitSession) {
+        authLimitSession.attempts += 1
+        newAuthLimitSessionPromise = authLimitSession.save()
+    }
+    else newAuthLimitSessionPromise = AuthLimitSession.create({ email })
+
+    // Create AuthOTPSession
+    const authOTPSessionPromise = AuthOTPSession.create({
+        otpHash, payload: { email, passwordHash, username, fullName }
+    })
+
+    const [authOTPSession] = await Promise.all([authOTPSessionPromise, newAuthLimitSessionPromise])
 
 
-    //Generating tokens, sending cookie and auth data
-    const accessToken = await generateAccessToken({ userId: user.id })
-    const refreshToken = await generateRefreshToken({ userId: user.id })
-    res.cookie('refreshToken', refreshToken, REFRESH_COOKIE_OPTIONS)
+    // Create a JWT storing the id of the authOTPSession
+    const otpToken = await generateOTPToken({ authOTPSessionId: authOTPSession.id })
 
-    user.passwordHash = undefined
-    //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
-    res.success(201, { user, accessToken }, "Signup Successful")
+
+
+    //Sending otp to the given email using nodemailer
+    sendOtp(email, otp)
+
+    //Sending a httpOnly cookie storing the otpToken for 15 mins
+    res.cookie('otpToken', otpToken, OTP_COOKIE_OPTIONS)
+
+    return res.success(200, "OK", "OTP sent to your email successfully")
+}
+
+
+const VerifyOTPSchema = z.object({
+    otp: z.coerce.number().int().min(1e7).max(1e8 - 1).describe("8 digit OTP")
+})
+
+
+export const verifyOTP: RequestHandler = async (req, res) => {
+    const parsedData = VerifyOTPSchema.safeParse(req.body)
+    if (!parsedData.success) return res.fail(400, "BAD_REQUEST", "Invalid data")
+
+
+    const { otpToken } = req.cookies
+    if (!otpToken) return res.redirect('/')
+
+    try {
+        const { payload: { authOTPSessionId } } = await jwtVerify<OTPTokenPayload>(otpToken, generateUint8Array(env.OTP_TOKEN_SECRET))
+
+        const authOTPSession = await AuthOTPSession.findById(authOTPSessionId)
+
+        if (!authOTPSession || new Date().getTime() >= authOTPSession.createdAt.getTime() + 15 * 60 * 1000) {
+            res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
+            return res.redirect('/')
+        }
+
+        // Session exists, lets check for expiry and attempts
+        const { otpHash, payload, incorrectAttempts, lastSentAt } = authOTPSession
+
+        // Check for attempts left
+        if (incorrectAttempts >= 3) return res.fail(429, "INCORRECT_ATTEMPTS_LIMIT", "Too many incorrect attempts, please request a new OTP")
+
+        // Check for expiry
+        if (new Date().getTime() >= lastSentAt.getTime() + 5 * 60 * 1000) return res.fail(410, "OTP_EXPIRED", "OTP has expired, please request a new one")
+
+
+        // Check if OTP is correct
+        if (!await argon2.verify(otpHash, parsedData.data.otp.toString())) {
+            authOTPSession.incorrectAttempts += 1
+            await authOTPSession.save()
+            return res.fail(400, "INCORRECT_OTP", "Entered OTP was incorrect")
+        }
+
+        // OTP is correct, finish things up
+
+        // Final check for pre-existing user conflicts
+        if (await User.exists({ $or: [{ email: payload.email }, { username: payload.username }] })) {
+            res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
+            return res.redirect('/')
+        }
+
+        // Create User ( DONT SPREAD THE PAYLOAD DIRECTLY, because its not a plain JSON but mongoose doc )
+        const { email, passwordHash, username, fullName } = payload
+        const user = await User.create({ email, passwordHash, username, fullName })
+
+
+        // Clear otpToken cookie
+        res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
+
+        // Creating AuthTokens
+        const [accessToken, refreshToken] = await Promise.all([
+            generateAccessToken({ userId: user.id }),
+            generateRefreshToken({ userId: user.id })
+        ])
+
+        res.cookie('refreshToken', refreshToken, REFRESH_COOKIE_OPTIONS)
+
+
+        return res.success(201, { user, accessToken })
+
+    } catch (error) {
+        if (error instanceof JOSEError) {
+            res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
+            return res.redirect('/')
+        }
+        throw error
+    }
+}
+
+
+export const resendOTP: RequestHandler = async (req, res) => {
+    const { otpToken } = req.cookies
+    if (!otpToken) return res.redirect('/')
+
+
+    try {
+        const { payload: { authOTPSessionId } } = await jwtVerify<OTPTokenPayload>(otpToken, generateUint8Array(env.OTP_TOKEN_SECRET))
+
+        const authOTPSession = await AuthOTPSession.findById(authOTPSessionId)
+
+        if (!authOTPSession || new Date().getTime() >= authOTPSession.createdAt.getTime() + 15 * 60 * 1000) {
+            res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
+            return res.redirect('/')
+        }
+
+        // Session exists, lets check for expiry and attempts
+        const { lastSentAt, resendRequests, payload: { email } } = authOTPSession
+
+        // Check if otp can be resent
+        if (resendRequests >= 3) return res.fail(429, "TOO_MANY_REQUESTS", "You have requested the maximum number of OTPs for the session.")
+
+
+        // Check for resend cooldown expiry of 1m
+        const remainingTime = (lastSentAt.getTime() + 1 * 60 * 1000) - new Date().getTime()
+        if (remainingTime >= 0) return res.fail(429, "TOO_MANY_REQUESTS", `Please wait for another ${Math.ceil(remainingTime / 1000)} seconds before requesting a new OTP`)
+
+
+        //Creating and hashing a new 8 digit otp
+        const otp = Math.floor((Math.random() * (1e8 - 1e7)) + 1e7)
+        const otpHash = await argon2.hash(otp.toString(), {
+            type: argon2.argon2id,
+            memoryCost: 64 * 1024,
+            timeCost: 3,
+            parallelism: 1,
+        })
+
+        // Update db with new OTP
+        authOTPSession.otpHash = otpHash
+        authOTPSession.lastSentAt = new Date()
+        authOTPSession.incorrectAttempts = 0
+        authOTPSession.resendRequests += 1
+
+        await authOTPSession.save()
+        //Send new otp
+        sendOtp(email, otp)
+
+        return res.success(200, "OK", "Fresh OTP sent to your email successfully")
+
+
+    } catch (error) {
+        if (error instanceof JOSEError) {
+            res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
+            return res.redirect('/')
+        }
+        throw error
+    }
 }
 
 
