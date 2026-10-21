@@ -1,0 +1,74 @@
+.wrapper:popover-open {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: hsl(0, 0%, 12%);
+  color: hsl(0, 0%, 96%);
+  border: 2px solid hsl(0, 0%, 15%);
+  border-radius: 8px;
+  min-height: 440px;
+  width: 350px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.heading {
+  font-size: 24px;
+  padding: 4px;
+}
+
+.nameBox {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background-color: hsl(0, 0%, 15%);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.nameBox input {
+  flex: 1;
+  height: 40px;
+}
+
+.descriptionBox {
+  background-color: hsl(0, 0%, 15%);
+  border-radius: 8px;
+  /* height: 62px; */
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.descriptionBox input {
+  flex: 1;
+  height: 54px;
+}
+
+
+
+.iconWrapper {
+  background-color: hsl(0, 0%, 18%);
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  background-color: hsl(217, 63%, 50%);
+  height: 40px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.iconWrapper {
+  cursor: pointer;
+}
