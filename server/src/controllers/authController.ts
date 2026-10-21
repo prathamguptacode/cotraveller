@@ -14,15 +14,38 @@ import { sendOtp } from "@/utils/nodemailer"
 
 
 const SignupBodySchema = z.object({
-    email: z.email().trim().toLowerCase(),
-    password: z.string().trim().min(8).max(64).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/).describe("Must contain 8-64 characters with atleast 1 lower,uppercase letter and 1 speical char and 1 number"),
-    username: z.string().trim().min(4).max(16).regex(/^[a-zA-Z0-9]+(-?[a-zA-Z0-9])*$/).toLowerCase().describe("Cannot start or end with hyphen, can contain single hyphens. Alphanumeric"),
-    fullName: z.string().trim().min(1).max(32).optional().describe("Optional , but if there must be atleast 1 character long")
+    email: z
+        .email({ message: "Email is invalid or already taken" })
+        .toLowerCase()
+        .trim(),
+    password: z.string()
+        .trim()
+        .min(8, { message: "Password is too short" })
+        .max(64, { message: "Password is too long" })
+        .regex(/[A-Z]/, { message: "Password needs an uppercase letter" })
+        .regex(/[a-z]/, { message: "Password needs a lowercase letter" })
+        .regex(/[0-9]/, { message: "Password needs a number" })
+        .regex(/[^A-Za-z0-9\s]/, { message: "Password needs a special character" }),
+    fullName: z.string()
+        .trim()
+        .transform(e => !e.length ? undefined : e)
+        .pipe(z.string()
+            .min(1, { error: "Name too short" })
+            .max(32, { error: "Name too long" })
+            .optional())
+        .describe("Optional , but if there must be atleast 1 character long"),
+    username: z
+        .string({ error: "Username too short" })
+        .trim()
+        .min(4, { error: "Username too short" })
+        .max(16, { error: "Username too long" })
+        .regex(/^[a-zA-Z0-9]+(-?[a-zA-Z0-9])*$/, { error: "Username may only contain alphanumeric characters or single hyphens, and cannot begin or end with a hyphen." })
+        .toLowerCase()
 })
 
 export const signup: RequestHandler = async (req, res) => {
     const parsedData = SignupBodySchema.safeParse(req.body)
-    if (!parsedData.success) return res.fail(400, "BAD_REQUEST", "Invalid data")
+    if (!parsedData.success) return res.fail(400, "BAD_REQUEST", parsedData.error.message)
 
     const { email, password, username, fullName } = parsedData.data
 
