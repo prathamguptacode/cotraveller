@@ -12,6 +12,10 @@ import TripsMainContent from "./pages/Trips/TripsMainContent"
 import SearchIndexPage from "./pages/Search/SearchIndexPage"
 import SearchResultsPage from "./pages/Search/SearchResultsPage"
 import TripChatPage from "./pages/Trips/TripChatPage"
+import AntiProtectedRoutes from "./guards/AntiProtected.Routes"
+import Signup from "./pages/Signup/Signup"
+import Login from "./pages/Login/Login"
+import VerifyOTP from "./pages/VerifyOTP/VerifyOTP"
 
 
 const Router = () => {
@@ -45,8 +49,15 @@ const Router = () => {
                         </Route>
                     </Route>
 
-                    <Route path="/me" element={<Home />} />
+                    {/* <Route path="/me" element={<Home />} /> */}
                 </Route>
+
+                <Route element={<AntiProtectedRoutes />} >
+                    <Route path='/signup' element={<Signup />} />
+                    <Route path='/signup/verify' element={<VerifyOTP />} />
+                    <Route path='/login' element={<Login />} />
+                </Route>
+
             </Routes>
         </BrowserRouter>
     )

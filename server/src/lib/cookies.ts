@@ -13,3 +13,11 @@ export const REFRESH_COOKIE_OPTIONS: CookieOptions = {
     secure: true,
     path: '/api/auth/refresh'
 }
+
+export const OTP_COOKIE_OPTIONS: CookieOptions = {
+    httpOnly: true,
+    maxAge: 15 * 60 * 1000, // 15m
+    sameSite: "lax",
+    secure: true,
+    path: '/api/auth/signup/'
+}

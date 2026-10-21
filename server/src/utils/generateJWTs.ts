@@ -1,5 +1,5 @@
 import env from '@/config/env'
-import { AuthTokenPayload } from '@/types/types'
+import { AuthTokenPayload, OTPTokenPayload } from '@/types/types'
 import * as jose from 'jose'
 
 const textEncoder = new TextEncoder()
@@ -45,6 +45,20 @@ export const generateInviteToken = async (payload: { tripId: string }) => {
             .sign(generateUint8Array(env.INVITE_TOKEN_SECRET))
 
         return inviteToken
+    } catch (error) {
+        console.error("Could not generate invite token", error)
+        throw error
+    }
+}
+
+
+export const generateOTPToken = async (payload: OTPTokenPayload) => {
+    try {
+        const otpToken = await new jose.SignJWT(payload)
+            .setProtectedHeader({ alg: 'HS256' })
+            .setExpirationTime('15m')
+            .sign(generateUint8Array(env.OTP_TOKEN_SECRET))
+        return otpToken
     } catch (error) {
         console.error("Could not generate invite token", error)
         throw error

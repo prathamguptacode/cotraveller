@@ -17,7 +17,12 @@ const EnvSchema = z.object({
     // JWT Tokens
     ACCESS_TOKEN_SECRET: z.string(),
     REFRESH_TOKEN_SECRET: z.string(),
-    INVITE_TOKEN_SECRET: z.string()
+    OTP_TOKEN_SECRET: z.string(),
+    INVITE_TOKEN_SECRET: z.string(),
+
+    // Gmail Credentials
+    EMAIL_ID: z.email(),
+    EMAIL_APP_PASSWORD: z.string()
 })
 
 const parsedData = EnvSchema.safeParse(process.env)
