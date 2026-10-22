@@ -13,6 +13,7 @@ import authRoutes from '@/routes/authRoutes'
 import chatRoutes from '@/routes/chatRoutes'
 import userRoutes from '@/routes/userRoutes'
 import tripRoutes from "@/routes/tripRoutes"
+import oauthRoutes from '@/routes/oauthRoutes'
 
 import initializeWebSocket from "./socket"
 import { checkMulterUploadPath } from "./middlewares/multerUpload"
@@ -43,6 +44,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/chats', chatRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/trips', tripRoutes)
+app.use('/api/oauth', oauthRoutes)
 
 
 

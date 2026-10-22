@@ -118,7 +118,7 @@ export const verifyOTP: RequestHandler = async (req, res) => {
 
 
     const { otpToken } = req.cookies
-    if (!otpToken) return res.redirect('/')
+    if (!otpToken) return res.redirect(env.CLIENT_URL)
 
     try {
         const { payload: { authOTPSessionId } } = await jwtVerify<OTPTokenPayload>(otpToken, generateUint8Array(env.OTP_TOKEN_SECRET))
@@ -127,7 +127,7 @@ export const verifyOTP: RequestHandler = async (req, res) => {
 
         if (!authOTPSession || new Date().getTime() >= authOTPSession.createdAt.getTime() + 15 * 60 * 1000) {
             res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
-            return res.redirect('/')
+            return res.redirect(env.CLIENT_URL)
         }
 
         // Session exists, lets check for expiry and attempts
@@ -152,7 +152,7 @@ export const verifyOTP: RequestHandler = async (req, res) => {
         // Final check for pre-existing user conflicts
         if (await User.exists({ $or: [{ email: payload.email }, { username: payload.username }] })) {
             res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
-            return res.redirect('/')
+            return res.redirect(env.CLIENT_URL)
         }
 
         // Create User ( DONT SPREAD THE PAYLOAD DIRECTLY, because its not a plain JSON but mongoose doc )
@@ -177,7 +177,7 @@ export const verifyOTP: RequestHandler = async (req, res) => {
     } catch (error) {
         if (error instanceof JOSEError) {
             res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
-            return res.redirect('/')
+            return res.redirect(env.CLIENT_URL)
         }
         throw error
     }
@@ -186,7 +186,7 @@ export const verifyOTP: RequestHandler = async (req, res) => {
 
 export const resendOTP: RequestHandler = async (req, res) => {
     const { otpToken } = req.cookies
-    if (!otpToken) return res.redirect('/')
+    if (!otpToken) return res.redirect(env.CLIENT_URL)
 
     try {
         const { payload: { authOTPSessionId } } = await jwtVerify<OTPTokenPayload>(otpToken, generateUint8Array(env.OTP_TOKEN_SECRET))
@@ -195,7 +195,7 @@ export const resendOTP: RequestHandler = async (req, res) => {
 
         if (!authOTPSession || new Date().getTime() >= authOTPSession.createdAt.getTime() + 15 * 60 * 1000) {
             res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
-            return res.redirect('/')
+            return res.redirect(env.CLIENT_URL)
         }
 
         // Session exists, lets check for expiry and attempts
@@ -235,7 +235,7 @@ export const resendOTP: RequestHandler = async (req, res) => {
     } catch (error) {
         if (error instanceof JOSEError) {
             res.clearCookie('otpToken', OTP_COOKIE_OPTIONS)
-            return res.redirect('/')
+            return res.redirect(env.CLIENT_URL)
         }
         throw error
     }
