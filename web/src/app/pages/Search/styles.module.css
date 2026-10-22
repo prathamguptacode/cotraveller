@@ -10,6 +10,7 @@
 
   border-right: 1px solid hsl(0, 0%, 15%);
   padding: 1rem .5rem;
+  overflow-y: auto;
 }
 
 .mainWrapper {
@@ -45,6 +46,7 @@
 .searchResultsWrapper {
   height: 100%;
 }
+
 
 @media (max-width:960px) {
   .wrapper {
