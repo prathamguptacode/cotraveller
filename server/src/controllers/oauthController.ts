@@ -24,15 +24,15 @@ export const redirectToGoogleOAuth: RequestHandler = (req, res) => {
     res.redirect(url.toString())
 }
 
-export const googleOAuthCallback: RequestHandler = async (req, res) => {
-    const Schema = z.object({
-        googleState: z.string(),
-        googleCodeVerifier: z.string(),
-        state: z.string(),
-        code: z.string()
-    })
+const GoogleOAuthCallbackSchema = z.object({
+    googleState: z.string(),
+    googleCodeVerifier: z.string(),
+    state: z.string(),
+    code: z.string()
+})
 
-    const parsedData = Schema.safeParse({
+export const googleOAuthCallback: RequestHandler = async (req, res) => {
+    const parsedData = GoogleOAuthCallbackSchema.safeParse({
         googleState: req.cookies?.googleState,
         googleCodeVerifier: req.cookies?.googleCodeVerifier,
         state: req.query?.state,
@@ -96,7 +96,7 @@ export const googleOAuthCallback: RequestHandler = async (req, res) => {
     const refreshToken = await generateRefreshToken({ userId: user.id })
     res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
     clearCookies()
-    res.redirect('/')
+    res.redirect(env.CLIENT_URL)
 }
 
 
@@ -110,14 +110,14 @@ export const redirectToGithubOAuth: RequestHandler = (req, res) => {
     res.redirect(url.toString())
 }
 
-export const githubOAuthCallback: RequestHandler = async (req, res) => {
-    const Schema = z.object({
-        state: z.string(),
-        code: z.string(),
-        githubState: z.string()
-    })
+const GithubOAuthCallbackSchema = z.object({
+    state: z.string(),
+    code: z.string(),
+    githubState: z.string()
+})
 
-    const parsedData = Schema.safeParse({
+export const githubOAuthCallback: RequestHandler = async (req, res) => {
+    const parsedData = GithubOAuthCallbackSchema.safeParse({
         state: req.query?.state,
         code: req.query?.code,
         githubState: req.cookies?.githubState
@@ -177,5 +177,5 @@ export const githubOAuthCallback: RequestHandler = async (req, res) => {
     const refreshToken = await generateRefreshToken({ userId: user.id })
     res.cookie('refreshToken', refreshToken, cookies.REFRESH_COOKIE_OPTIONS)
     clearCookies()
-    res.redirect('/')
+    res.redirect(env.CLIENT_URL)
 }
