@@ -1,0 +1,32 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    padding: .5rem;
+    height: 40px;
+
+    border: 1px solid hsl(0 0% 15%);
+    border-radius: 8px;
+
+    background-color: hsl(228, 22%, 20%);
+    color: hsl(0 0% 98%);
+    font-size: 14px;
+
+    transition: all .1s linear;
+
+    &:hover {
+        background-color: hsl(228, 22%, 18%);
+    }
+}
+
+.svg {
+    width: 18px;
+    height: 18px;
+}
+
+.gitSvg {
+    width: 20px;
+    height: 20px;
+}
