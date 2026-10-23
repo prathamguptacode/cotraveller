@@ -159,3 +159,9 @@
   right: 20px;
   z-index: 200;
 }
+
+.chatBoxWrapper {
+  height: stretch;
+  display: flex;
+  flex-direction: column;
+}
