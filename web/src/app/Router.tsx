@@ -1,7 +1,6 @@
 import Calendar from "@/features/calendar"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import ProtectedRoutes from "./guards/Protected.Routes"
-import Home from "./pages/Home"
 import MainLayout from "@/layouts/MainLayout"
 import DirectMessagesLayout from "./pages/DirectMessages/DirectMessagesLayout"
 import DirectMessagesPage from "./pages/DirectMessages/DirectMessagesPage"
@@ -25,14 +24,13 @@ const Router = () => {
                 <Route element={<MainLayout />}>
                     {/* Replace Home element with Trip Layout Below with outlet inside to render blank or index page */}
                     <Route path="/" element={<TripsLayout />}>
-                        <Route index element={<>cotraveller</>} />
+                        <Route index element={<SearchIndexPage />} />
                         <Route path=":tripId">
                             <Route index element={<TripsMainContent />} />
                             <Route path="chats" element={<TripChatPage />} />
                             <Route path="chats" />
                             <Route path="calendar" element={<Calendar />} />
                         </Route>
-                        <Route path="create" element={<Home />} />
                     </Route>
 
                     <Route path="/search" element={<SearchLayout />} >

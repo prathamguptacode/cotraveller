@@ -4,6 +4,7 @@ import leon from '@/assets/leon.jpeg'
 import clsx from 'clsx'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
+import { useAuth } from '@/hooks/useAuth'
 
 type Trip = {
     _id: string,
@@ -22,6 +23,22 @@ const TripsList = () => {
         queryFn: () => api.get<{ trips: Trip[] }>('/users/me/trips'),
         select: (res) => res.data.trips
     })
+
+    const { user } = useAuth()
+    if (!user) return (
+        <section className={styles.wrapper}>
+            <header className={styles.listHeader}>
+                <h2 className={styles.listHeading}>
+                    Trips
+                </h2>
+            </header>
+            {/* ###make design better */}
+            <div className={styles.sidebarSignin}>
+                <div>Log in to see and plan your trips</div>
+                <button>Log in</button>
+            </div>
+        </section>
+    )
 
 
     return (
