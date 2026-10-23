@@ -10,7 +10,7 @@ import { jwtVerify } from "jose";
 import env from "@/config/env";
 import { JOSEError, JWTExpired } from "jose/errors";
 import { UserModel } from "@/models/User";
-import { isObjectIdOrHexString } from "mongoose";
+import mongoose, { isObjectIdOrHexString, } from "mongoose";
 import ChatRoom from "@/models/ChatRoom";
 import TripMember from "@/models/TripMember";
 import ConversationRecord from "@/models/ConversationRecord";
@@ -138,7 +138,21 @@ export async function tripDetails(req: Request, res: Response) {
   if (!data.success) return res.fail(400, "INVALID_BODY")
 
   const tripId = data.data.tripId
-  const trip = await Trip.findById(tripId).populate("itineraryItems")
+  // const trip = await Trip.findById(tripId).populate("itineraryItems").sort("itineraryItems")
+
+  const tripPipe = await Trip.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(tripId) } },
+    {
+      $lookup: {
+        from: "itinerary_items",
+        localField: "itineraryItems",
+        foreignField: "_id",
+        pipeline: [{ $sort: { startTime: 1 } }],
+        as: "itineraryItems"
+      }
+    }
+  ])
+  const trip = tripPipe[0]
 
   const members = await TripUserRel.find({ trip: tripId }).populate("user", "email").select("user")
 

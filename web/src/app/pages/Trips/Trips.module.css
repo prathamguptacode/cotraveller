@@ -103,6 +103,9 @@
   height: 80px;
   width: 80px;
   z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .frame>img {
@@ -157,114 +160,6 @@
   z-index: 200;
 }
 
-.addIternaryBox:popover-open {
-  background-color: hsl(0, 0%, 12%);
-  color: hsl(0, 0%, 96%);
-  border: 2px solid hsl(0, 0%, 15%);
-  border-radius: 8px;
-  /* min-height: 500px; */
-  width: 350px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-
-.boxTitle {
-  font-size: 24px;
-  padding: 0 8px;
-}
-
-
-.searchBox {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  border-radius: 8px;
-  border: 2px solid hsl(0, 0%, 18%);
-  padding: 0.5rem 0.75rem;
-  anchor-name: --searchBox;
-  margin-top: 8px;
-}
-
-.searchBox>input {
-  flex: 1;
-
-  &::placeholder {
-    color: hsl(0, 0%, 72%);
-  }
-}
-
-
-.calBox {
-  margin: 0 !important;
-  max-height: 300px !important;
-}
-
-.submitBtn {
-  background-color: hsl(217, 63%, 50%);
-  height: 40px;
-  text-align: center;
-  border-radius: 8px;
-}
-
-.optionBox {
-  position: absolute;
-  z-index: 100;
-  position-anchor: --searchBox;
-  position-area: bottom;
-  width: anchor-size(width);
-  background-color: hsl(228 22% 8% / .8);
-  backdrop-filter: blur(5px);
-  padding: 12px 0;
-  display: flex;
-  flex-direction: column;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-
-.option {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 14px;
-  padding: .25rem .5rem;
-  cursor: pointer;
-  z-index: 150;
-
-
-  &:hover {
-    background-color: hsl(228, 22%, 12%);
-  }
-}
-
-.iconWrapper {
-  flex-shrink: 0;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  width: 40px;
-}
-
-
-.suggestionText {
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-
-/* ChatBox */
 .chatBoxWrapper {
   height: stretch;
   display: flex;
