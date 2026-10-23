@@ -1,18 +1,13 @@
-import { MapPinIcon, Plus } from "@phosphor-icons/react"
+import { Plus } from "@phosphor-icons/react"
 import mystyle from "./Trips.module.css"
 import { api } from "@/lib/axios"
 import { CalendarIcon, ChatTeardropIcon } from "@phosphor-icons/react/dist/ssr"
-import { useMutation, useQuery, type QueryObserverResult, type RefetchOptions } from "@tanstack/react-query"
-import { Link, useParams } from "react-router-dom"
+import { useQuery } from "@tanstack/react-query"
+import { data, Link, useParams } from "react-router-dom"
 import { AdvancedMarker, Map, useMapsLibrary } from "@vis.gl/react-google-maps"
-import { useCallback, useEffect, useState } from "react"
-import dayjs, { Dayjs } from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useAutocompleteSuggestions } from "@/hooks/useAutoCompleteSuggestions"
-import type { ApiSuccess } from "@/types/api.types"
+import { useEffect, useState } from "react"
+import { getImgURL } from "@/lib/cloudinary"
+import AddIternaryBox from "@/features/addIternary/AddIternary"
 
 type itineraryItem = {
   name: string,
@@ -22,9 +17,13 @@ type itineraryItem = {
   searchVariables: { city: string, country: string }
 }
 
-type tripDetailT = {
+export type tripDetailT = {
   trip: {
     name: string,
+    avatar: {
+      publicId: string,
+      version: number
+    },
     itineraryItems: itineraryItem[]
   },
   members: { user: { email: string } }[]
@@ -34,7 +33,6 @@ const mapId = import.meta.env.VITE_MAP_ID
 
 function TripsMainContent() {
   const { tripId } = useParams() as { tripId: string }
-
 
   const { isPending, data, error, refetch } = useQuery({
     queryKey: ["trips", tripId],
@@ -54,7 +52,7 @@ function TripsMainContent() {
     <div className={mystyle.wrapper}>
       <div className={mystyle.topBar}>
         <div className={mystyle.imgWrapper}>
-          <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/8f/b2/89/photo0jpg.jpg?w=1200&h=1200&s=1" alt="trip photo" width="50px" height="50px" />
+          <img src={(data.data.trip.avatar.publicId != "") ? getImgURL(data.data.trip.avatar, 200) : "tripIcon.webp"} alt="trip photo" width="50px" height="50px" />
         </div>
         <div className={mystyle.tripInfo}>
           <div>{data.data.trip.name}</div>
@@ -94,7 +92,7 @@ function TripsMainContent() {
           <button className={mystyle.addBtn} popoverTarget="addIternaryBox"><Plus size={24} /> </button>
           <AddIternaryBox tripId={tripId} refetch={refetch} isPending={isPending} />
           {
-            data.data.trip.itineraryItems.map((e, i) => <IternaryItem key={i} title={e.name} description={e.searchVariables.country} date={e.startTime} hasNext={i < data.data.trip.itineraryItems.length - 1} placeId={e.placeId} />)
+            data.data.trip.itineraryItems.map((e, i) => <IternaryItem key={i} title={e.name} description={`${e.searchVariables.city}, ${e.searchVariables.country}`} date={e.startTime} hasNext={i < data.data.trip.itineraryItems.length - 1} placeId={e.placeId} />)
           }
         </div>
       </div>
@@ -109,6 +107,7 @@ export default TripsMainContent
 function IternaryItem({ title, description, date, hasNext, placeId }: { title: string, description: string, date: string, hasNext: boolean, placeId?: string, }) {
 
   const strDate = new Date(date).toLocaleString("defautl", { day: "numeric", month: "long", year: "numeric" })
+
   const places = useMapsLibrary('places');
   const [place, setPlace] = useState<google.maps.places.Place | null>(null)
 
@@ -142,135 +141,5 @@ function IternaryItem({ title, description, date, hasNext, placeId }: { title: s
       }
     </div>
   </div>
-}
-
-
-function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetch: (options?: RefetchOptions) => Promise<QueryObserverResult<ApiSuccess<tripDetailT>, Error>>, isPending: boolean }) {
-
-  const darkTheme = createTheme({
-    palette: {
-      mode: 'dark',
-      primary: { main: `hsl(217, 63 %, 55 %)` }
-    },
-  });
-  const [input, setInput] = useState("")
-  const [query, setQuery] = useState("")
-  const [loc, setLoc] = useState<google.maps.places.Place | null>(null)
-  const [value, setValue] = useState<Dayjs | null>(dayjs());
-
-  const mutation = useMutation({
-    mutationKey: [tripId, "add iternary"],
-    mutationFn: (e: { name: string, origin: number[], startTime: string, placeId: string, searchVariables: { city: string, country: string } }) => api.post(`/trips/${tripId}/itinerary`, e),
-    onSuccess: async () => {
-      await refetch()
-      document.getElementById("addIternaryBox")?.hidePopover()
-    }
-  })
-
-  const handleClick = async () => {
-    if (!loc) return
-    const address = loc?.addressComponents
-    if (!address) return
-    let city
-    let country
-    address.forEach(e => {
-      if (e.types.includes("locality")) {
-        city = e.longText
-      }
-      if (e.types.includes("country")) {
-        country = e.longText
-      }
-    });
-    const name = loc.displayName;
-    if (!name) return
-    if (!loc.location) return
-    if (!city) {
-      city = name
-    }
-    if (!country) {
-      country = name
-    }
-    // ###not toaster
-    if (!value) return
-    const body = {
-      name,
-      origin: [loc.location.lat(), loc.location.lng()],
-      startTime: value.toISOString(),
-      placeId: loc.id,
-      searchVariables: { city, country }
-    }
-    mutation.mutate(body)
-  }
-
-  const { suggestions, resetSession } = useAutocompleteSuggestions(query)
-  const places = useMapsLibrary('places');
-  const handleSuggestionClick = useCallback(
-    async (suggestion: google.maps.places.AutocompleteSuggestion) => {
-      if (!places) return;
-      if (!suggestion.placePrediction) return;
-      const place = suggestion.placePrediction.toPlace();
-      await place.fetchFields({
-        fields: [
-          "addressComponents", "location", "displayName"
-        ]
-      });
-      setLoc(place)
-      setInput(place.displayName ? place.displayName : "")
-
-      setQuery("")
-      // calling fetchFields invalidates the session-token, so we now have to call
-      // resetSession() so a new one gets created for further search
-      resetSession();
-    },
-    [places, resetSession, setQuery]
-  );
-
-
-  return <div id="addIternaryBox" className={mystyle.addIternaryBox} popover="auto">
-    <div className={mystyle.boxTitle}>
-      Add Iternary Item
-    </div>
-    <div>
-      <div className={mystyle.searchBox}>
-        <MapPinIcon size={22} />
-        <input placeholder="Tokyo" value={input} onChange={e => { setInput(e.currentTarget.value); setQuery(e.currentTarget.value) }} />
-      </div>
-      <Suggestionbox suggestions={suggestions} handleSuggestionClick={handleSuggestionClick} />
-    </div>
-    <div >
-      <ThemeProvider theme={darkTheme}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateCalendar className={mystyle.calBox} value={value} onChange={(newValue) => setValue(newValue)} />
-        </LocalizationProvider>
-      </ThemeProvider>
-    </div>
-    <button onClick={handleClick} className={mystyle.submitBtn} disabled={isPending}>
-      {
-        mutation.isPending || isPending ? "loading" : "Add to iternary"
-      }
-    </button>
-  </div>
-}
-
-
-
-function Suggestionbox({ suggestions, handleSuggestionClick }: { suggestions: google.maps.places.AutocompleteSuggestion[], handleSuggestionClick: (suggestion: google.maps.places.AutocompleteSuggestion) => Promise<void>, }) {
-
-
-
-  if (suggestions.length < 1) return null
-  return <div className={mystyle.optionBox} >
-    {
-      suggestions.map(suggestion => <button key={suggestion.placePrediction?.placeId} className={mystyle.option} onClick={() => handleSuggestionClick(suggestion)}>
-        <div className={mystyle.iconWrapper}>
-          <MapPinIcon weight="fill" size={20} />
-        </div>
-        <span className={mystyle.suggestionText}>
-          {suggestion.placePrediction?.text.text}
-        </span>
-      </button>
-      )
-    }
-  </div >
 }
 
