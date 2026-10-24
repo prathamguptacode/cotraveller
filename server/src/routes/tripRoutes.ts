@@ -6,8 +6,8 @@ import asyncHandler from "@/middlewares/asyncHandler"
 
 const router = express.Router()
 
-router.get('/:tripId', asyncHandler(tripDetails))
 router.get('/search', asyncHandler(searchTrips))
+router.get('/:tripId', asyncHandler(tripDetails))
 
 router.use(authMiddleware)
 
