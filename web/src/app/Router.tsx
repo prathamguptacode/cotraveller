@@ -15,6 +15,7 @@ import AntiProtectedRoutes from "./guards/AntiProtected.Routes"
 import Signup from "./pages/Signup/Signup"
 import Login from "./pages/Login/Login"
 import VerifyOTP from "./pages/VerifyOTP/VerifyOTP"
+import InviteInfo from "./pages/Invite/InviteInfo"
 
 
 const Router = () => {
@@ -37,6 +38,9 @@ const Router = () => {
                         <Route index element={<SearchIndexPage />} />
                         <Route path=":city/:placeId" element={<SearchResultsPage />} />
                     </Route>
+
+
+                    <Route path="/invite/:tripId/:inviteToken" element={<InviteInfo />} />
 
 
 

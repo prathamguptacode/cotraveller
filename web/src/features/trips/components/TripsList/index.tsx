@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import styles from './styles.module.css'
 import leon from '@/assets/leon.jpeg'
 import clsx from 'clsx'
@@ -35,7 +35,7 @@ const TripsList = () => {
             {/* ###make design better */}
             <div className={styles.sidebarSignin}>
                 <div>Log in to see and plan your trips</div>
-                <button>Log in</button>
+                <Link to={"/login"} className={styles.loginBtn}>Log in</Link>
             </div>
         </section>
     )
