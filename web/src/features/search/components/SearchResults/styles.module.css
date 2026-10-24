@@ -32,10 +32,10 @@
 }
 
 .imageWrapper {
-    border-radius: 15px;
+    border-radius: 12px;
     overflow: hidden;
 
-    width: 240px;
+    width: 100px;
     aspect-ratio: 1;
 
     >img {
@@ -54,7 +54,7 @@
     display: flex;
     flex-direction: column;
     align-items: start;
-    gap: 1rem;
+    gap: 0.75rem;
 }
 
 .contentTop {
@@ -64,7 +64,7 @@
 }
 
 .title {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 500;
 }
 
@@ -81,6 +81,9 @@
     &[data-mobile-only='true'] {
         display: none;
     }
+
+    display: flex;
+    gap: 8px;
 }
 
 

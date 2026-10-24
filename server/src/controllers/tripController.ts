@@ -267,7 +267,7 @@ export async function tripInvite(req: Request, res: Response) {
 
     // Creating conversation record
     const chatRoom = await ChatRoom.findOne({ trip: tripId });
-    if(!chatRoom) return res.fail()
+    if (!chatRoom) return res.fail();
     await ConversationRecord.create({ room: chatRoom._id, member: userId });
 
     res.success(200, { tripId });
@@ -312,7 +312,30 @@ export async function searchTrips(req: Request, res: Response) {
         from: 'trips',
         localField: '_id',
         foreignField: '_id',
-        pipeline: [{ $project: { name: 1 } }],
+        pipeline: [
+          {
+            $lookup: {
+              from: 'itinerary_items',
+              localField: 'itineraryItems',
+              foreignField: '_id',
+              pipeline: [{ $sort: { startTime: 1 } }, { $project: { startTime: 1 } }],
+              as: 'itineraryItems',
+            },
+          },
+          {
+            $project: {
+              name: 1,
+              avatar: 1,
+              firstEvent: {
+                $first: '$itineraryItems',
+              },
+              lastEvent: {
+                $last: '$itineraryItems',
+              },
+              createdAt: 1,
+            },
+          },
+        ],
         as: 'trip',
       },
     },
@@ -320,6 +343,10 @@ export async function searchTrips(req: Request, res: Response) {
       $unwind: '$trip',
     },
   ]);
+  for (const e of trips) {
+    const members = await TripUserRel.find({ trip: e.trip._id });
+    e.trip.memberNumber = members.length;
+  }
   res.success(200, trips);
 }
 
