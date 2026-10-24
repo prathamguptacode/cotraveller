@@ -1,13 +1,14 @@
 import { Plus } from "@phosphor-icons/react"
 import mystyle from "./Trips.module.css"
 import { api } from "@/lib/axios"
-import { CalendarIcon, ChatTeardropIcon } from "@phosphor-icons/react/dist/ssr"
+import { CalendarIcon, ChatTeardropIcon, UserPlusIcon } from "@phosphor-icons/react/dist/ssr"
 import { useQuery } from "@tanstack/react-query"
 import { data, Link, useParams } from "react-router-dom"
 import { AdvancedMarker, Map, useMapsLibrary } from "@vis.gl/react-google-maps"
 import { useEffect, useState } from "react"
 import { getImgURL } from "@/lib/cloudinary"
 import AddIternaryBox from "@/features/addIternary/AddIternary"
+import InviteLinkBox from "@/features/inviteLinkBox/InviteLinkBox"
 
 type itineraryItem = {
   name: string,
@@ -29,6 +30,11 @@ export type tripDetailT = {
   members: { user: { email: string } }[]
 }
 
+type createInviteT = {
+  tripId: string,
+  inviteToken: string
+}
+
 const mapId = import.meta.env.VITE_MAP_ID
 
 function TripsMainContent() {
@@ -38,6 +44,15 @@ function TripsMainContent() {
     queryKey: ["trips", tripId],
     queryFn: () => api.get<tripDetailT>(`/trips/${tripId}`)
   })
+
+
+  const inviteQuery = useQuery({
+    enabled: false,
+    queryKey: ["inviteReq", tripId],
+    queryFn: () => api.get<createInviteT>(`/trips/${tripId}/invite`)
+  })
+
+
 
   if (isPending) {
     return <div>loading</div>
@@ -71,6 +86,8 @@ function TripsMainContent() {
           <Link to={`/${tripId}/chats`}>
             <ChatTeardropIcon size={28} />
           </Link>
+          {/* ###looks ugly restyle position */}
+          <button popoverTarget="linkBox" onClick={() => inviteQuery.refetch()}><UserPlusIcon size={28} /></button>
         </div>
       </div>
       <div className={mystyle.content}>
@@ -91,6 +108,7 @@ function TripsMainContent() {
         <div className={mystyle.iternaryBox}>
           <button className={mystyle.addBtn} popoverTarget="addIternaryBox"><Plus size={24} /> </button>
           <AddIternaryBox tripId={tripId} refetch={refetch} isPending={isPending} />
+          <InviteLinkBox tripId={tripId} tripName={data.data.trip.name} isLoading={inviteQuery.isPending} inviteToken={inviteQuery.data?.data.inviteToken} />
           {
             data.data.trip.itineraryItems.map((e, i) => <IternaryItem key={i} title={e.name} description={`${e.searchVariables.city}, ${e.searchVariables.country}`} date={e.startTime} hasNext={i < data.data.trip.itineraryItems.length - 1} placeId={e.placeId} />)
           }
