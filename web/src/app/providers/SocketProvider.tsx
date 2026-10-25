@@ -21,7 +21,7 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
 
     const { user, updateAccessToken, updateUser } = useAuth()
 
-    
+
     useEffect(() => {
         if (!user) return
 
@@ -70,6 +70,17 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user])
+
+    useEffect(() => {
+        if (!user || !socket) return
+
+        socket.emit('room:join', { roomId: `user-${user._id}` })
+
+        return () => {
+            socket.emit('room:leave', { roomId: `user-${user._id}` })
+        }
+    }, [socket, user])
+
 
 
     return (

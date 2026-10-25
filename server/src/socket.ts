@@ -7,6 +7,7 @@ import ChatRoom from "./models/ChatRoom"
 import { jwtVerify } from "jose"
 import { AuthTokenPayload } from "./types/types"
 import { generateUint8Array } from "./utils/generateJWTs"
+import TripMember from "./models/TripMember"
 
 
 type ChatMessageEvent = {
@@ -40,6 +41,10 @@ type ServerToClientEvents = {
     'chat:message-created': (args: any) => void,
 
     'chat:last-read-at-updated': (args: any) => void,
+
+    'trips-list:update': () => void,
+
+    'dms-list:update': () => void,
 
     // 'chat:typing-started': () => void,
     // 'chat:typing-ended': () => void
@@ -85,9 +90,19 @@ const initializeWebSocket = (server: http.Server) => {
 
         // Join Room
         socket.on('room:join', async ({ roomId }) => {
-            if (!await ConversationRecord.exists({ room: roomId, member: socket.session.userId })) return
-            socket.join(roomId)
-            console.log(socket.id, 'has joined,', roomId)
+            if (roomId.startsWith('user')) {
+                console.log('hi user')
+                return socket.join(`user-${socket.session.userId}`)
+            }
+
+            try {
+                if (!await ConversationRecord.exists({ room: roomId, member: socket.session.userId })) return
+                socket.join(roomId)
+                console.log(socket.id, 'has joined,', roomId)
+            } catch (error) {
+                console.error(error)
+            }
+
         })
 
         // Leave Room
@@ -109,9 +124,13 @@ const initializeWebSocket = (server: http.Server) => {
                     { $set: { lastReadAt: new Date() } }
                 )
                 const chatMessagePromise = baseChatMessage.populate('author')
-                const chatRoomPromise = ChatRoom.updateOne({ _id: roomId }, { $set: { lastMessage: baseChatMessage._id } })
+                const chatRoomPromise = ChatRoom.findOneAndUpdate(
+                    { _id: roomId },
+                    { $set: { lastMessage: baseChatMessage._id } },
+                    { returnDocument: 'after' }
+                )
 
-                const [conversationRecord, chatMessage] = await Promise.all([
+                const [conversationRecord, chatMessage, chatRoom] = await Promise.all([
                     conversationRecordPromise,
                     chatMessagePromise,
                     chatRoomPromise
@@ -120,6 +139,20 @@ const initializeWebSocket = (server: http.Server) => {
                 // Send the new message to all room members
                 socket.to(roomId).emit('chat:message-created', { conversationRecord, chatMessage })
                 cb({ success: true, chatMessage })
+
+                // Handles List updation
+                if (!chatRoom) return
+                if (chatRoom.type === 'TRIP') {
+                    const members = await TripMember.find().select('_id')
+                    members.forEach(member => {
+                        io.to(`user-${member._id}`).emit('trips-list:update')
+                    })
+                    return
+                }
+                chatRoom.dm?.participants.forEach(participant => {
+                    console.log('sending update to user', participant._id)
+                    io.to(`user-${participant._id}`).emit('dms-list:update')
+                })
             } catch (error) {
                 console.error("Error creating message", error)
             }

@@ -1,9 +1,11 @@
 import { api } from "@/lib/axios"
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import styles from './styles.module.css'
 import leon from '@/assets/leon.jpeg'
 import { NavLink } from "react-router-dom"
 import clsx from "clsx"
+import { useSocket } from "@/hooks/useSocket"
+import { useEffect } from "react"
 
 type Chat = {
   _id: string, //roomId
@@ -28,6 +30,24 @@ const DirectMessagesList = () => {
     queryFn: () => api.get<{ chats: Chat[] }>('/users/me/dms'),
     select: (res) => res.data.chats
   })
+
+  const socket = useSocket()
+  const queryClient = useQueryClient()
+
+
+  useEffect(() => {
+    const updateList = () => {
+      console.log('jhio')
+      queryClient.invalidateQueries({ queryKey: ['users', 'me', 'dms'], exact: true })
+    }
+
+    socket.on('dms-list:update', updateList)
+
+    return () => {
+      socket.off('dms-list:update', updateList)
+    }
+  }, [socket, queryClient])
+
 
 
   return (
