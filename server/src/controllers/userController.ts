@@ -9,74 +9,114 @@ import { z } from 'zod'
 export const fetchDMChats: RequestHandler = async (req, res) => {
     const userId = new mongoose.Types.ObjectId(req.user._id)
 
-    const chats = await ChatRoom.aggregate([
-        // Get all DM ChatRooms with user as participant
+    const chats = await ConversationRecord.aggregate([
         {
-            $match: {
-                type: "DM",
-                'dm.participants': userId
-            }
+            $match: { member: userId }
         },
-
-        // Fetch the last message and unwind
         {
             $lookup: {
-                from: 'chat_messages',
-                localField: 'lastMessage',
+                from: 'chat_rooms',
+                localField: 'room',
                 foreignField: '_id',
+                let: { userId },
                 pipeline: [
                     {
+                        $match: { $expr: { $eq: ['$type', "DM"] } }
+                    },
+                    // Fetch the last message and unwind
+                    {
                         $lookup: {
-                            from: 'users',
-                            localField: 'author',
+                            from: 'chat_messages',
+                            localField: 'lastMessage',
                             foreignField: '_id',
-                            as: 'author'
+                            pipeline: [
+                                {
+                                    $lookup: {
+                                        from: 'users',
+                                        localField: 'author',
+                                        foreignField: '_id',
+                                        pipeline: [
+                                            {
+                                                $project: {
+                                                    email: 1,
+                                                    avatar: 1
+                                                }
+                                            }
+                                        ],
+                                        as: 'author'
+                                    }
+                                },
+                                {
+                                    $unwind: '$author'
+                                }
+                            ],
+                            as: 'lastMessage'
                         }
                     },
                     {
-                        $unwind: '$author'
-                    }
-                ],
-                as: 'lastMessage'
-            }
-        },
-        {
-            $unwind: {
-                path: '$lastMessage',
-                preserveNullAndEmptyArrays: true
-            }
-        },
+                        $unwind: {
+                            path: '$lastMessage',
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
 
-        // Fetch the receiver's data
-        {
-            $lookup: {
-                from: 'users',
-                let: { participantIds: '$dm.participants', userId },
-                pipeline: [
-                    // Match the receiver and exclude the user
+                    // Fetch the receiver's data
                     {
-                        $match: {
-                            $expr: {
-                                $and: [
-                                    { $ne: ['$_id', '$$userId'] },
-                                    { $in: ['$_id', '$$participantIds'] }
-                                ]
-                            }
+                        $lookup: {
+                            from: 'users',
+                            let: { participantIds: '$dm.participants', userId: '$$userId' },
+                            pipeline: [
+                                // Match the receiver and exclude the user
+                                {
+                                    $match: {
+                                        $expr: {
+                                            $and: [
+                                                { $ne: ['$_id', '$$userId'] },
+                                                { $in: ['$_id', '$$participantIds'] }
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    $project: {
+                                        email: 1,
+                                        avatar: 1
+                                    }
+                                }
+                            ],
+                            as: 'receiver'
+                        }
+                    },
+                    {
+                        $unwind: '$receiver'
+                    },
+                    // Project
+                    {
+                        $project: {
+                            receiver: 1,
+                            lastMessage: 1,
                         }
                     }
                 ],
-                as: 'receiver'
+                as: 'room'
             }
         },
         {
-            $unwind: '$receiver'
+            $unwind: '$room'
         },
-        // Project
+        {
+            $replaceWith: { $mergeObjects: ['$$ROOT', '$room'] }
+        },
         {
             $project: {
-                receiver: 1,
-                lastMessage: 1,
-                createdAt: 1
+                room: 0,
+                member: 0,
+                updatedAt: 0
+            }
+        },
+        {
+            $sort: {
+                'lastMessage.createdAt': -1
             }
         }
     ])
@@ -122,6 +162,27 @@ export const fetchUserTrips: RequestHandler = async (req, res) => {
                             from: 'chat_messages',
                             localField: 'lastMessage',
                             foreignField: '_id',
+                            pipeline: [
+                                {
+                                    $lookup: {
+                                        from: 'users',
+                                        localField: 'author',
+                                        foreignField: '_id',
+                                        pipeline: [
+                                            {
+                                                $project: {
+                                                    email: 1,
+                                                    avatar: 1
+                                                }
+                                            }
+                                        ],
+                                        as: 'author'
+                                    }
+                                },
+                                {
+                                    $unwind: '$author'
+                                }
+                            ],
                             as: 'lastMessage'
                         }
                     },
@@ -153,6 +214,7 @@ export const fetchUserTrips: RequestHandler = async (req, res) => {
             $project: {
                 trip: '$room.trip',
                 lastMessage: '$room.lastMessage',
+                lastReadAt: 1
             }
         },
         {

@@ -84,6 +84,8 @@ export const useChatRoom = (roomId: string) => {
 
         const handler = () => {
             socket.emit('chat:last-read-at-update', { roomId })
+            queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
+            // Invalidates both trips and dms lists
         }
 
         window.addEventListener('focus', handler)
@@ -93,7 +95,7 @@ export const useChatRoom = (roomId: string) => {
             window.removeEventListener('focus', handler)
             window.removeEventListener('focusout', handler)
         }
-    }, [roomId, socket, user])
+    }, [roomId, socket, user, queryClient])
 
 
 

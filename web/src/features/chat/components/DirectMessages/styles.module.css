@@ -94,8 +94,20 @@
     flex-shrink: 0;
 
     display: flex;
-    align-items: start;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
 }
+
+.unreadIndicator {
+    --size: 6px;
+    width: var(--size);
+    height: var(--size);
+
+    background-color: hsl(209, 80%, 57%);
+    border-radius: 50%;
+}
+
 
 .imageWrapper {
     flex-shrink: 0;

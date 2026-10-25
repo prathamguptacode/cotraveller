@@ -1,9 +1,11 @@
 import { api } from "@/lib/axios"
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import styles from './styles.module.css'
 import leon from '@/assets/leon.jpeg'
 import { NavLink } from "react-router-dom"
 import clsx from "clsx"
+import { useSocket } from "@/hooks/useSocket"
+import { useEffect } from "react"
 
 type Chat = {
   _id: string, //roomId
@@ -19,15 +21,35 @@ type Chat = {
     },
     createdAt: string
   },
-  createdAt: string
+  createdAt: string,
+  lastReadAt: string
 }
 
 const DirectMessagesList = () => {
+  const socket = useSocket()
+  const queryClient = useQueryClient()
+
   const { data: chats } = useSuspenseQuery({
     queryKey: ['users', 'me', 'dms'],
     queryFn: () => api.get<{ chats: Chat[] }>('/users/me/dms'),
     select: (res) => res.data.chats
   })
+
+
+
+
+  useEffect(() => {
+    const updateList = () => {
+      queryClient.invalidateQueries({ queryKey: ['users', 'me', 'dms'], exact: true })
+    }
+
+    socket.on('dms-list:update', updateList)
+
+    return () => {
+      socket.off('dms-list:update', updateList)
+    }
+  }, [socket, queryClient])
+
 
 
   return (
@@ -40,6 +62,8 @@ const DirectMessagesList = () => {
       <div className={styles.list}>
         {
           chats.map(chat => {
+            const isUnread = chat.lastMessage && new Date(chat.lastMessage.createdAt).getTime() >= new Date(chat.lastReadAt).getTime()
+
             return (
               <NavLink to={`/direct/${chat.receiver._id}`} key={chat._id} className={({ isActive }) => {
                 return clsx(styles.listItem, isActive && styles.activeItem)
@@ -62,12 +86,23 @@ const DirectMessagesList = () => {
                     }
                   </div>
                   <div className={styles.extraItemContent}>
+
                     <span>
                       {chat.lastMessage ?
                         getFormattedTimeString(chat.lastMessage.createdAt) :
                         getFormattedTimeString(chat.createdAt)
                       }
                     </span>
+
+                    <span>
+                      {chat.lastMessage ?
+                        getFormattedTimeString(chat.lastMessage.createdAt) :
+                        getFormattedTimeString(chat.createdAt)
+                      }
+                    </span>
+                    {isUnread && <span className={styles.unreadIndicator}>
+                    </span>}
+
                   </div>
                 </div>
               </NavLink>
