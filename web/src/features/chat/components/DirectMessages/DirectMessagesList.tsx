@@ -25,14 +25,16 @@ type Chat = {
 }
 
 const DirectMessagesList = () => {
+  const socket = useSocket()
+  const queryClient = useQueryClient()
+
   const { data: chats } = useSuspenseQuery({
     queryKey: ['users', 'me', 'dms'],
     queryFn: () => api.get<{ chats: Chat[] }>('/users/me/dms'),
     select: (res) => res.data.chats
   })
 
-  const socket = useSocket()
-  const queryClient = useQueryClient()
+
 
 
   useEffect(() => {
