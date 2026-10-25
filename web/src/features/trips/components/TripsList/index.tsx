@@ -2,9 +2,11 @@ import { Link, NavLink } from 'react-router-dom'
 import styles from './styles.module.css'
 import leon from '@/assets/leon.jpeg'
 import clsx from 'clsx'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { useAuth } from '@/hooks/useAuth'
+import { useEffect } from 'react'
+import { useSocket } from '@/hooks/useSocket'
 
 type Trip = {
     _id: string,
@@ -13,7 +15,8 @@ type Trip = {
         text: string,
         author: string,
         createdAt: string
-    }
+    },
+    lastReadAt: string
 }
 
 
@@ -25,6 +28,21 @@ const TripsList = () => {
     })
 
     const { user } = useAuth()
+    const socket = useSocket()
+    const queryClient = useQueryClient()
+
+    useEffect(() => {
+        const updateList = () => {
+            queryClient.invalidateQueries({ queryKey: ['users', 'me', 'trips'], exact: true })
+        }
+
+        socket.on('trips-list:update', updateList)
+
+        return () => {
+            socket.off('trips-list:update', updateList)
+        }
+    }, [socket, queryClient])
+
     if (!user) return (
         <section className={styles.wrapper}>
             <header className={styles.listHeader}>
@@ -66,6 +84,7 @@ type ListItem = {
 }
 
 const ListItem = ({ trip }: ListItem) => {
+    const isUnread = trip.lastMessage && new Date(trip.lastMessage.createdAt).getTime() >= new Date(trip.lastReadAt).getTime()
 
     return (
         <NavLink to={`/${trip._id}`} className={({ isActive }) => {
@@ -89,6 +108,7 @@ const ListItem = ({ trip }: ListItem) => {
                         <span>
                             {new Date(trip.lastMessage.createdAt).toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit', hour12: true })}
                         </span>}
+                    {isUnread && <span className={styles.unreadIndicator}></span>}
                 </div>
             </div>
         </NavLink>

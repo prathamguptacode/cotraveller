@@ -35,6 +35,10 @@ export type ServerToClientEvents = {
 
     'chat:last-read-at-updated': (args: unknown) => void,
 
+    'trips-list:update': () => void,
+
+    'dms-list:update': () => void,
+
     // 'chat:typing-started': () => void,
     // 'chat:typing-ended': () => void
 }
