@@ -94,12 +94,7 @@ const DirectMessagesList = () => {
                       }
                     </span>
 
-                    <span>
-                      {chat.lastMessage ?
-                        getFormattedTimeString(chat.lastMessage.createdAt) :
-                        getFormattedTimeString(chat.createdAt)
-                      }
-                    </span>
+
                     {isUnread && <span className={styles.unreadIndicator}>
                     </span>}
 

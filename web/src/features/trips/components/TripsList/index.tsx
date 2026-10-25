@@ -118,13 +118,6 @@ const ListItem = ({ trip }: ListItem) => {
                         }
                     </span>
 
-
-                    <span>
-                        {trip.lastMessage ?
-                            getFormattedTimeString(trip.lastMessage.createdAt) :
-                            getFormattedTimeString(trip.createdAt)
-                        }
-                    </span>
                     {isUnread && <span className={styles.unreadIndicator}></span>}
 
                 </div>
