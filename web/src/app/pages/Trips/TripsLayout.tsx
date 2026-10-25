@@ -37,11 +37,11 @@ function TripsLayout() {
 
 
   return (
-    <div className={mystyle.tripsLayout}>
-      <aside className={mystyle.tripsSidebar}>
+    <div className={mystyle.layout}>
+      <aside className={mystyle.sidebar}>
         <TripsList />
       </aside>
-      <div className={mystyle.tripsMainContent}>
+      <div className={mystyle.mainWrapper}>
         <Outlet />
       </div>
     </div>

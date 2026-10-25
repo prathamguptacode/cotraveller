@@ -3,7 +3,7 @@ import mystyle from "./Trips.module.css"
 import { api } from "@/lib/axios"
 import { CalendarIcon, ChatTeardropIcon, UserPlusIcon } from "@phosphor-icons/react/dist/ssr"
 import { useQuery } from "@tanstack/react-query"
-import { data, Link, useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { AdvancedMarker, Map, useMapsLibrary } from "@vis.gl/react-google-maps"
 import { useEffect, useState } from "react"
 import { getImgURL } from "@/lib/cloudinary"
@@ -64,7 +64,7 @@ function TripsMainContent() {
 
 
   return (
-    <div className={mystyle.wrapper}>
+    <div data-mobile-visible={true} className={mystyle.wrapper}>
       <div className={mystyle.topBar}>
         <div className={mystyle.imgWrapper}>
           <img src={(data.data.trip.avatar.publicId != "") ? getImgURL(data.data.trip.avatar, 200) : "tripIcon.webp"} alt="trip photo" width="50px" height="50px" />

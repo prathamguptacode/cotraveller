@@ -1,9 +1,9 @@
-.tripsLayout {
+.layout {
   height: 100%;
   display: flex;
 }
 
-.tripsSidebar {
+.sidebar {
   height: 100vh;
   flex: 0 0 400px;
 
@@ -17,7 +17,7 @@
 
 }
 
-.tripsMainContent {
+.mainWrapper {
   flex: 1;
 }
 
@@ -164,4 +164,28 @@
   height: stretch;
   display: flex;
   flex-direction: column;
+}
+
+
+@media (max-width:960px) {
+  [data-mobile-visible='false'] {
+    display: none;
+  }
+
+  .layout:has([data-mobile-visible='false']) {
+    .mainWrapper {
+      display: none;
+    }
+
+    .sidebar {
+      flex: 1;
+      max-width: unset;
+    }
+  }
+
+  .layout:has([data-mobile-visible='true']) {
+    .sidebar {
+      display: none;
+    }
+  }
 }
