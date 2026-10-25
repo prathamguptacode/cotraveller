@@ -64,7 +64,7 @@ function TripsMainContent() {
 
 
   return (
-    <div className={mystyle.wrapper}>
+    <div data-mobile-visible={true} className={mystyle.wrapper}>
       <div className={mystyle.topBar}>
         <div className={mystyle.imgWrapper}>
           <img src={(data.data.trip.avatar.publicId != "") ? getImgURL(data.data.trip.avatar, 200) : "tripIcon.webp"} alt="trip photo" width="50px" height="50px" />

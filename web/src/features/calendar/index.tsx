@@ -29,7 +29,7 @@ const Calendar = () => {
     const events = data.itineraryItems
 
     return (
-        <div className={styles.wrapper}>
+        <div data-mobile-visible={true} className={styles.wrapper}>
             <MonthCalendarGrid events={events} />
         </div>
     )
