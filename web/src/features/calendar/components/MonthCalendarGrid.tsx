@@ -5,31 +5,16 @@ import styles from './monthCalendar.module.css'
 const WEEK_DAYS_NAMES = Object.keys(WEEK_DAYS)
 
 type Event = {
-  startTime: Date,
-  endTime: Date,
-  name: string,
+  startTime: string,
+  name: string
 }
 
-const events: Event[] = [
-  {
-    startTime: new Date(),
-    endTime: getIncrementedDate(new Date(), { date: 5, hour: -2 }),
-    name: "Train to Lucknow",
-  },
-  {
-    startTime: new Date(),
-    endTime: getIncrementedDate(new Date(), { date: 17 }),
-    name: "Navratri",
-  },
-  {
-    startTime: new Date(),
-    endTime: getIncrementedDate(new Date(), { hour: 1 }),
-    name: "MAI-101",
-  }
-]
+type MonthCalendarGridProps = {
+  events: Event[]
+}
 
 
-const MonthCalendarGrid = () => {
+const MonthCalendarGrid = ({ events }: MonthCalendarGridProps) => {
   const { dates, weeks, month } = getCalendarMonth(getIncrementedDate(new Date(), { month: 0 }))
 
 
@@ -81,8 +66,10 @@ const MonthCalendarGrid = () => {
                   return (
                     <div className={styles.eventsCell} key={date.getDate()}>
                       {events.map(event => {
-                        const startDateString = event.startTime.toLocaleDateString()
-                        const endDateString = event.endTime.toLocaleDateString()
+                        const startTime = new Date(event.startTime)
+                        const endTime = startTime
+                        const startDateString = startTime.toLocaleDateString()
+                        const endDateString = endTime.toLocaleDateString()
                         const cellDateString = date.toLocaleDateString()
 
                         const occursToday = new Date(startDateString).getTime() <= new Date(cellDateString).getTime() && new Date(cellDateString).getTime() <= new Date(endDateString).getTime()
@@ -92,7 +79,7 @@ const MonthCalendarGrid = () => {
 
                         if (!isMultiDay) {
                           return (
-                            <Event name={event.name} endTime={event.endTime} startTime={event.startTime} />
+                            <Event name={event.name} />
                           )
                         }
 
@@ -103,14 +90,14 @@ const MonthCalendarGrid = () => {
                           let width = 100 / 7
                           const weekSaturdayDateString = getWeekSaturdayDate(date).toLocaleDateString()
                           if (new Date(weekSaturdayDateString).getTime() >= new Date(endDateString).getTime()) {
-                            width *= (event.endTime.getDay() - event.startTime.getDay() + 1)
+                            width *= (endTime.getDay() - startTime.getDay() + 1)
                           }
-                          else width *= (WEEK_DAYS.SATURDAY - event.startTime.getDay() + 1)
+                          else width *= (WEEK_DAYS.SATURDAY - startTime.getDay() + 1)
 
                           return (
                             <>
-                              <Event style={{ left, width: `${width}%` }} name={event.name} endTime={event.endTime} startTime={event.startTime} isMultiDay={isMultiDay} />
-                              <Event style={{ visibility: 'hidden' }} name={event.name} endTime={event.endTime} startTime={event.startTime} />
+                              <Event style={{ left, width: `${width}%` }} name={event.name} isMultiDay={isMultiDay} />
+                              <Event style={{ visibility: 'hidden' }} name={event.name} />
                             </>
 
                           )
@@ -119,20 +106,20 @@ const MonthCalendarGrid = () => {
                           let width = 100 / 7
                           const weekSaturdayDateString = getWeekSaturdayDate(date).toLocaleDateString()
                           if (new Date(weekSaturdayDateString).getTime() >= new Date(endDateString).getTime()) {
-                            width *= (event.endTime.getDay() - WEEK_DAYS.SUNDAY + 1)
+                            width *= (endTime.getDay() - WEEK_DAYS.SUNDAY + 1)
                           }
                           else width *= (WEEK_DAYS.SATURDAY - WEEK_DAYS.SUNDAY + 1)
 
                           return (
                             <>
-                              <Event style={{ left: 0, width: `${width}%` }} name={event.name} endTime={event.endTime} startTime={event.startTime} isMultiDay={isMultiDay} />
-                              <Event style={{ visibility: 'hidden' }} name={event.name} endTime={event.endTime} startTime={event.startTime} />
+                              <Event style={{ left: 0, width: `${width}%` }} name={event.name} isMultiDay={isMultiDay} />
+                              <Event style={{ visibility: 'hidden' }} name={event.name} />
                             </>
                           )
                         }
                         if (isMultiDay) {
                           return (
-                            <Event style={{ visibility: 'hidden' }} name={event.name} endTime={event.endTime} startTime={event.startTime} />
+                            <Event style={{ visibility: 'hidden' }} name={event.name} />
                           )
                         }
 
@@ -156,13 +143,14 @@ export default MonthCalendarGrid
 
 
 
-type EventProps = Event & {
+type EventProps = {
   isMultiDay?: boolean,
-  style?: React.CSSProperties
+  style?: React.CSSProperties,
+  name: string
 }
 
 
-const Event = ({ isMultiDay, style,  name }: EventProps) => {
+const Event = ({ isMultiDay, style, name }: EventProps) => {
 
   return (
     <div data-multi-day-event={isMultiDay} style={style} className={styles.eventTile}>

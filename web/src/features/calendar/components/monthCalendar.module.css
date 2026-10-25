@@ -1,12 +1,13 @@
 .wrapper {
+    flex: 1;
+
     --grid-border: #333537;
     --default-event: #4b99d2;
     --text-muted: #c4c7c5;
     --text: #e3e3e3;
     --grid: #131314;
     --default-event-hover: hsl(205, 60%, 45%);
-    width: 90vw;
-    height: 90%;
+
     background-color: var(--grid);
     margin-inline: auto;
 
