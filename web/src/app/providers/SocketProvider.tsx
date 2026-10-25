@@ -25,6 +25,13 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (!user) return
 
+        const socketConnection = io(import.meta.env.VITE_API_BASE_URL, {
+            auth: {
+                token: getToken().accessToken
+            }
+        })
+        setSocket(socketConnection)
+
         // Request a new accessToken and reconnect/update Socket
         const refreshSocketSessionInterval = setInterval(() => {
             let newSocketConnection: Socket<ServerToClientEvents, ClientToServerEvents> | null = null

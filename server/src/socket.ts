@@ -64,6 +64,7 @@ const initializeWebSocket = (server: http.Server) => {
         const accessToken = socket.handshake.auth.token as unknown
         if (!accessToken || typeof accessToken !== 'string') return next(new Error("Access token was missing"))
 
+
         try {
             const { payload: { userId, exp } } = await jwtVerify<AuthTokenPayload>(accessToken, generateUint8Array(env.ACCESS_TOKEN_SECRET))
             if (!exp) return next(new Error("Invalid / expired access token"))
@@ -90,10 +91,8 @@ const initializeWebSocket = (server: http.Server) => {
 
         // Join Room
         socket.on('room:join', async ({ roomId }) => {
-            if (roomId.startsWith('user')) {
-                console.log('hi user')
-                return socket.join(`user-${socket.session.userId}`)
-            }
+            if (roomId.startsWith('user')) return socket.join(`user-${socket.session.userId}`)
+
 
             try {
                 if (!await ConversationRecord.exists({ room: roomId, member: socket.session.userId })) return
@@ -150,7 +149,6 @@ const initializeWebSocket = (server: http.Server) => {
                     return
                 }
                 chatRoom.dm?.participants.forEach(participant => {
-                    console.log('sending update to user', participant._id)
                     io.to(`user-${participant._id}`).emit('dms-list:update')
                 })
             } catch (error) {

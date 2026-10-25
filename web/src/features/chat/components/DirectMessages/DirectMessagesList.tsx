@@ -37,7 +37,6 @@ const DirectMessagesList = () => {
 
   useEffect(() => {
     const updateList = () => {
-      console.log('jhio')
       queryClient.invalidateQueries({ queryKey: ['users', 'me', 'dms'], exact: true })
     }
 

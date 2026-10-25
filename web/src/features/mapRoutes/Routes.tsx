@@ -30,7 +30,6 @@ const Route = (props: RouteProps) => {
 
   const [route, setRoute] = useState<any>(null);
 
-  console.log(route)
 
   const map = useMap();
   useEffect(() => {

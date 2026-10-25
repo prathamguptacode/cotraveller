@@ -113,6 +113,11 @@ export const fetchDMChats: RequestHandler = async (req, res) => {
                 member: 0,
                 updatedAt: 0
             }
+        },
+        {
+            $sort: {
+                'lastMessage.createdAt': -1
+            }
         }
     ])
 
