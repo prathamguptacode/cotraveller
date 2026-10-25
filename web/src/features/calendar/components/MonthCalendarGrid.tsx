@@ -1,6 +1,7 @@
 import clsx from 'clsx'
-import { getCalendarMonth, getIncrementedDate, getWeekSaturdayDate, WEEK_DAYS } from '../utils'
+import { getCalendarMonth, getWeekSaturdayDate, WEEK_DAYS } from '../utils'
 import styles from './monthCalendar.module.css'
+import { useMemo } from 'react'
 
 const WEEK_DAYS_NAMES = Object.keys(WEEK_DAYS)
 
@@ -15,7 +16,9 @@ type MonthCalendarGridProps = {
 
 
 const MonthCalendarGrid = ({ events }: MonthCalendarGridProps) => {
-  const { dates, weeks, month } = getCalendarMonth(getIncrementedDate(new Date(), { month: 0 }))
+  const { dates, weeks, month } = useMemo(() => {
+    return getCalendarMonth(events.length ? new Date(events[0].startTime) : new Date())
+  }, [events])
 
 
   return (
