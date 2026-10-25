@@ -19,7 +19,7 @@ type Chat = {
     },
     createdAt: string
   }
-
+  lastReadAt: string
 }
 
 const DirectMessagesList = () => {
@@ -40,6 +40,8 @@ const DirectMessagesList = () => {
       <div className={styles.list}>
         {
           chats.map(chat => {
+            const isUnread = chat.lastMessage && new Date(chat.lastMessage.createdAt).getTime() >= new Date(chat.lastReadAt).getTime()
+
             return (
               <NavLink to={`/direct/${chat.receiver._id}`} key={chat._id} className={({ isActive }) => {
                 return clsx(styles.listItem, isActive && styles.activeItem)
@@ -61,7 +63,10 @@ const DirectMessagesList = () => {
                     {chat.lastMessage &&
                       <span>
                         {new Date(chat.lastMessage.createdAt).toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit', hour12: true })}
-                      </span>}
+                      </span>
+                    }
+                    {isUnread && <span className={styles.unreadIndicator}>
+                    </span>}
                   </div>
                 </div>
               </NavLink>

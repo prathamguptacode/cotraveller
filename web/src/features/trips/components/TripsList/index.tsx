@@ -13,7 +13,8 @@ type Trip = {
         text: string,
         author: string,
         createdAt: string
-    }
+    },
+    lastReadAt: string
 }
 
 
@@ -66,6 +67,7 @@ type ListItem = {
 }
 
 const ListItem = ({ trip }: ListItem) => {
+    const isUnread = trip.lastMessage && new Date(trip.lastMessage.createdAt).getTime() >= new Date(trip.lastReadAt).getTime()
 
     return (
         <NavLink to={`/${trip._id}`} className={({ isActive }) => {
@@ -89,6 +91,7 @@ const ListItem = ({ trip }: ListItem) => {
                         <span>
                             {new Date(trip.lastMessage.createdAt).toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit', hour12: true })}
                         </span>}
+                    {isUnread && <span className={styles.unreadIndicator}></span>}
                 </div>
             </div>
         </NavLink>
