@@ -75,7 +75,8 @@ export const fetchDMChats: RequestHandler = async (req, res) => {
         {
             $project: {
                 receiver: 1,
-                lastMessage: 1
+                lastMessage: 1,
+                createdAt: 1
             }
         }
     ])
@@ -136,7 +137,8 @@ export const fetchUserTrips: RequestHandler = async (req, res) => {
                             trip: {
                                 _id: '$trip._id',
                                 name: '$trip.name',
-                                avatar: '$trip.avatar'
+                                avatar: '$trip.avatar',
+                                createdAt:'$trip.createdAt'
                             }
                         }
                     }

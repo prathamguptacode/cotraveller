@@ -10,7 +10,7 @@
     flex: 0 0 400px;
     max-width: 400px;
 
-    padding-top: 36px;
+    padding: 36px 12px 0;
     border-right: 1px solid hsl(0, 0%, 15%);
 }
 

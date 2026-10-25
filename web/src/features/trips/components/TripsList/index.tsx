@@ -13,7 +13,8 @@ type Trip = {
         text: string,
         author: string,
         createdAt: string
-    }
+    },
+    createdAt: string
 }
 
 
@@ -79,18 +80,36 @@ const ListItem = ({ trip }: ListItem) => {
                     <span className={styles.title}>
                         {trip.name}
                     </span>
-                    {trip.lastMessage &&
+                    {trip.lastMessage ?
                         <span className={styles.description}>
                             {trip.lastMessage.text}
-                        </span>}
+                        </span> :
+                        <span data-type='placeholder' className={styles.description}>
+                            .
+                        </span>
+                    }
                 </div>
                 <div className={styles.extraItemContent}>
-                    {trip.lastMessage &&
-                        <span>
-                            {new Date(trip.lastMessage.createdAt).toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit', hour12: true })}
-                        </span>}
+
+                    <span>
+                        {trip.lastMessage ?
+                            getFormattedTimeString(trip.lastMessage.createdAt) :
+                            getFormattedTimeString(trip.createdAt)
+                        }
+                    </span>
                 </div>
             </div>
         </NavLink>
     )
+}
+
+
+const getFormattedTimeString = (dateString: string) => {
+    const date = new Date(dateString)
+    const isToday = new Date().toLocaleDateString() === date.toLocaleDateString()
+    const formatted = isToday ?
+        date.toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit', hour12: true }) :
+        date.toLocaleDateString('default', { dateStyle: 'short' })
+
+    return formatted
 }

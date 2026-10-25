@@ -12,7 +12,7 @@
 
 .listHeading {
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 500;
 }
 
 .list {
@@ -34,7 +34,7 @@
     gap: 1rem;
 
     border-radius: 8px;
-    padding: .5rem 1.5rem;
+    padding: .5rem 1rem;
 
     transition: background-color 150ms ease-out, scale 150ms linear;
 
@@ -85,6 +85,11 @@
     text-overflow: ellipsis;
 }
 
+
+.description[data-type='placeholder'] {
+    visibility: hidden;
+}
+
 .extraItemContent {
     flex-shrink: 0;
 
@@ -129,9 +134,10 @@
 
 
 @media (max-width:960px) {
-    .listHeading{
+    .listHeading {
         font-weight: 400;
     }
+
     .chatHeader {
         padding: .5rem;
     }
@@ -140,7 +146,7 @@
         --size: 48px;
     }
 
-    .headerName{
+    .headerName {
         font-size: 14px;
         font-weight: 400;
     }
