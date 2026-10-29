@@ -16,11 +16,13 @@ import Signup from "./pages/Signup/Signup"
 import Login from "./pages/Login/Login"
 import VerifyOTP from "./pages/VerifyOTP/VerifyOTP"
 import InviteInfo from "./pages/Invite/InviteInfo"
+import Loadingbar from "./Loadingbar"
 
 
 const Router = () => {
     return (
         <BrowserRouter>
+            <Loadingbar />
             <Routes>
                 <Route element={<MainLayout />}>
                     {/* Replace Home element with Trip Layout Below with outlet inside to render blank or index page */}

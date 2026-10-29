@@ -4,6 +4,7 @@ import AuthProvider from './AuthProvider'
 import SocketProvider from './SocketProvider'
 import GoogleMapApi from './GoogleMapApi'
 import { CookiesProvider } from 'react-cookie';
+import { LoadingBarContainer } from "react-top-loading-bar";
 
 const Providers = ({ children }: { children: ReactNode }) => {
 
@@ -13,7 +14,9 @@ const Providers = ({ children }: { children: ReactNode }) => {
                 <GoogleMapApi>
                     <AuthProvider>
                         <SocketProvider>
-                            {children}
+                            <LoadingBarContainer props={{ color: `#2f6dd0`, height: 2, }}>
+                                {children}
+                            </LoadingBarContainer>
                         </SocketProvider>
                     </AuthProvider>
                 </GoogleMapApi>
