@@ -30,7 +30,9 @@
     "react-error-boundary": "^6.1.6",
     "react-hook-form": "^7.90.0",
     "react-router-dom": "^7.18.4",
+    "react-top-loading-bar": "^3.0.2",
     "socket.io-client": "^4.8.4",
+    "sonner": "^2.0.8",
     "zod": "^4.6.7"
   },
   "devDependencies": {

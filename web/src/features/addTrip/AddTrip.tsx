@@ -1,11 +1,13 @@
 import { CameraIcon, PlusIcon, XIcon } from "@phosphor-icons/react"
 import mystyle from "./style.module.css"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { api } from "@/lib/axios"
 import Dialog from "@/components/dialog/Dialog"
 import { useDialogContext } from "@/components/dialog/useDialogContext"
+import { toast } from "sonner"
+import clsx from "clsx"
 
 type resT = {
   tripId: string
@@ -31,33 +33,50 @@ export default AddTrip
 
 
 const Content = () => {
-  const nameRef = useRef<HTMLInputElement>(null)
-  const descriptionRef = useRef<HTMLTextAreaElement>(null)
+
+  const [name, setName] = useState("")
+  const [description, setDescription] = useState("")
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const { setIsOpen } = useDialogContext()
+  const { setIsOpen, isOpen } = useDialogContext()
 
   const mutation = useMutation({
     mutationKey: ["addTrip"],
-    mutationFn: (e: { name: string, description: string }) => api.post<resT>("/trips", e),
+    mutationFn: (e: { name: string, description?: string }) => api.post<resT>("/trips", e),
     onSuccess(data) {
       const tripId = data.data.tripId
       queryClient.invalidateQueries({ queryKey: ['users', 'me', 'trips'] })
       setIsOpen(false)
+      setName("")
+      setDescription("")
       return navigate(`/${tripId}`)
     },
+    onError: () => toast.error("Please try again later")
   })
 
+  const [nameErr, setNameErr] = useState(false)
+
   const handleSubmit = () => {
-    const name = nameRef.current?.value
-    const description = descriptionRef.current?.value
-
-    if (!name || !description) return
-
+    if (!name) {
+      setNameErr(true)
+      toast.error("Please give a name for your trip")
+      return
+    }
     mutation.mutate({ name, description })
   }
+
+  useEffect(() => {
+    if (name) {
+      setNameErr(false)
+    }
+    if (!isOpen) {
+      setNameErr(false)
+    }
+  }, [name, isOpen])
+
+
 
   return (
     <Dialog.Content asChild>
@@ -68,14 +87,14 @@ const Content = () => {
             <XIcon weight="bold" />
           </Dialog.Close>
         </header>
-        <div className={mystyle.nameBox}>
+        <div className={clsx(mystyle.nameBox, nameErr ? mystyle.nameBoxErr : null)}>
           <div className={mystyle.iconWrapper}>
             <CameraIcon size={22} />
           </div>
-          <input className={mystyle.name} placeholder="Trip Name" ref={nameRef} />
+          <input className={mystyle.name} placeholder="Trip Name" value={name} onChange={e => setName(e.target.value)} />
         </div>
         <div className={mystyle.descriptionBox}>
-          <textarea name="description" className={mystyle.description} placeholder="Description (optional)" ref={descriptionRef} />
+          <textarea name="description" className={mystyle.description} placeholder="Description (optional)" value={description} onChange={e => setDescription(e.target.value)} />
         </div>
         <button className={mystyle.btn} onClick={handleSubmit}>Create Trip</button>
       </div>
