@@ -99,8 +99,8 @@ function TripsMainContent() {
             disableDefaultUI={true}
           >
             {
-              data.data.trip.itineraryItems.map(e => {
-                return <AdvancedMarker position={{ lat: e.origin.coordinates[0], lng: e.origin.coordinates[1] }}></AdvancedMarker>
+              data.data.trip.itineraryItems.map((e, i) => {
+                return <AdvancedMarker key={i} position={{ lat: e.origin.coordinates[0], lng: e.origin.coordinates[1] }}></AdvancedMarker>
               })
             }
           </Map>

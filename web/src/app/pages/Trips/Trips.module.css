@@ -101,7 +101,7 @@
   border-radius: 8px;
   height: 80px;
   width: 80px;
-  z-index: 50;
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -188,7 +188,11 @@
     }
   }
 
+<<<<<<< HEAD
   .addBtn{
+=======
+  .addBtn {
+>>>>>>> main
     bottom: 80px;
   }
 }
