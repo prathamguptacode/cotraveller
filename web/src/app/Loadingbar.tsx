@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import useEffectAfterFirstRender from "@/hooks/useEffectAfterFirstRender";
+import { useState } from "react"
 import { useLocation } from "react-router-dom"
 import { useLoadingBar } from "react-top-loading-bar";
 
@@ -8,7 +9,8 @@ function Loadingbar() {
   const [prevLoc, setPrevLoc] = useState("")
   const { start, complete } = useLoadingBar()
 
-  useEffect(() => {
+
+  useEffectAfterFirstRender(() => {
     setPrevLoc(location.pathname)
     start()
     if (prevLoc === location.pathname) {
@@ -16,7 +18,7 @@ function Loadingbar() {
     }
   }, [location])
 
-  useEffect(() => {
+  useEffectAfterFirstRender(() => {
     complete()
   }, [prevLoc])
 
