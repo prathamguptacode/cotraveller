@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom'
 import styles from './layouts.module.css'
-import { ChatTeardropIcon, MagnifyingGlassIcon, PlusIcon, UsersThreeIcon } from '@phosphor-icons/react'
+import { ChatTeardropIcon, MagnifyingGlassIcon, UsersThreeIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
 import avatar from '@/assets/leon.jpeg'
+import AddTrip from '@/features/addTrip/AddTrip'
 
 const BottomNavbar = () => {
     return (
@@ -29,16 +30,10 @@ const BottomNavbar = () => {
                 </span>
             </NavLink>
 
-            <NavLink className={({ isActive }) => {
-                return clsx(isActive && styles.bottomNavActiveLink, styles.bottomNavItem)
-            }} to={'/create'}>
-                <span>
-                    <PlusIcon />
-                </span>
-                <span>
-                    Create
-                </span>
-            </NavLink>
+            <div className={styles.bottomNavItem} >
+                <AddTrip />
+                <span>Create</span>
+            </div>
 
             <NavLink className={({ isActive }) => {
                 return clsx(isActive && styles.bottomNavActiveLink, styles.bottomNavItem)

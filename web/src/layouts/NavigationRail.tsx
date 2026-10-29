@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom'
 import styles from './layouts.module.css'
-import { ChatTeardropIcon, HouseLineIcon, IslandIcon, MagnifyingGlassIcon, PlusIcon, UsersThreeIcon } from '@phosphor-icons/react'
+import { ChatTeardropIcon, IslandIcon, MagnifyingGlassIcon, UsersThreeIcon } from '@phosphor-icons/react'
 import avatar from '@/assets/leon.jpeg'
 import clsx from 'clsx'
+import AddTrip from '@/features/addTrip/AddTrip'
 
 const NavigationRail = () => {
     return (
@@ -36,9 +37,7 @@ const NavigationRail = () => {
                     </NavLink>
                 </div>
                 <div className={styles.railItem}>
-                    <button popoverTarget='addTrip'>
-                        <span><PlusIcon /></span>
-                    </button>
+                    <AddTrip />
                 </div>
                 <div className={styles.railItem}>
                     <NavLink className={({ isActive }) => {
