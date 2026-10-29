@@ -102,7 +102,7 @@
   border-radius: 8px;
   height: 80px;
   width: 80px;
-  z-index: 50;
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,7 +157,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 200;
+  z-index: 10;
 }
 
 .chatBoxWrapper {
@@ -187,5 +187,9 @@
     .sidebar {
       display: none;
     }
+  }
+
+  .addBtn {
+    bottom: 80px;
   }
 }

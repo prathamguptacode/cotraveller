@@ -119,7 +119,7 @@ function SearchSidebar() {
 function HistoryBox() {
 
   return <div className={mystyle.historyBox}>
-    {history.map(e => <CityBox url={e.url} city={e.city} country={e.country} />)}
+    {history.map((e, i) => <CityBox key={i} url={e.url} city={e.city} country={e.country} />)}
   </div>
 }
 

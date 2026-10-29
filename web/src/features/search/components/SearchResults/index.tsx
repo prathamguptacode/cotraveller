@@ -34,7 +34,7 @@ const SearchResults = () => {
         <main className={styles.main}>
             <section className={styles.results}>
                 {
-                    (data && data.data.length > 0) ? data?.data.map(e => <SearchResult city={city} key={e.trip._id} _id={e.trip._id} name={e.trip.name} avatar={e.trip.avatar} firstEvent={e.trip.firstEvent} lastEvent={e.trip.lastEvent} memberNumber={e.trip.memberNumber} />) : <div>No trip found</div>
+                    (data && data.data.length > 0) ? data.data.map(e => <SearchResult city={city} key={e.trip._id} _id={e.trip._id} name={e.trip.name} avatar={e.trip.avatar} firstEvent={e.trip.firstEvent} lastEvent={e.trip.lastEvent} memberNumber={e.trip.memberNumber} />) : <div>No trip found</div>
                 }
             </section>
         </main>
