@@ -14,6 +14,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { SignpostIcon } from "@phosphor-icons/react/dist/ssr";
+import { toast } from "sonner";
 
 
 
@@ -23,7 +24,7 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
   const darkTheme = createTheme({
     palette: {
       mode: 'dark',
-      primary: { main: `hsl(217, 63 %, 55 %)` }
+      primary: { main: "hsl(217, 63 %, 55 %)" }
     },
   });
   const [input, setInput] = useState("")
@@ -31,7 +32,7 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
   const [loc, setLoc] = useState<google.maps.places.Place | null>(null)
 
   const [event, setEvent] = useState("")
-  const [value, setValue] = useState<Dayjs | null>(dayjs());
+  const [value, setValue] = useState<Dayjs>(dayjs());
 
   const mutation = useMutation({
     mutationKey: [tripId, "add iternary"],
@@ -39,16 +40,25 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
     onSuccess: async () => {
       await refetch()
       document.getElementById("addIternaryBox")?.hidePopover()
-    }
+    },
+    onError: () => toast.error("Please try again later")
   })
+
+
 
   const handleClick = async () => {
 
     // user have not selected the date 
-    if (!value) return
+    if (!value) {
+      toast.error("Please select a date")
+      return
+    }
 
     // user has not clicked on any location
-    if (!loc) return
+    if (!loc) {
+      toast.error("Please select a location")
+      return
+    }
 
     //map error that its not giving address
     const address = loc.addressComponents
@@ -70,7 +80,10 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
     //filling that name field
     const name = event || loc.displayName;
     //map error that its not giving display name
-    if (!name) return
+    if (!name) {
+      toast.error("Please add event name")
+      return
+    }
 
     //map error that its not giving coordinates
     if (!loc.location) return
@@ -97,6 +110,8 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
 
     setEvent("")
   }
+
+
 
   const { suggestions, resetSession } = useAutocompleteSuggestions(query)
   const places = useMapsLibrary('places');
