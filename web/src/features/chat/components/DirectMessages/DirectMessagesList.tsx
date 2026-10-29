@@ -20,7 +20,8 @@ type Chat = {
       email: string,
     },
     createdAt: string
-  }
+  },
+  createdAt: string,
   lastReadAt: string
 }
 
@@ -75,19 +76,28 @@ const DirectMessagesList = () => {
                     <span className={styles.title}>
                       {chat.receiver.email}
                     </span>
-                    {chat.lastMessage &&
+                    {chat.lastMessage ?
                       <span className={styles.description}>
                         {chat.lastMessage.text}
-                      </span>}
-                  </div>
-                  <div className={styles.extraItemContent}>
-                    {chat.lastMessage &&
-                      <span>
-                        {new Date(chat.lastMessage.createdAt).toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit', hour12: true })}
+                      </span> :
+                      <span data-type='placeholder' className={styles.description}>
+                        .
                       </span>
                     }
+                  </div>
+                  <div className={styles.extraItemContent}>
+
+                    <span>
+                      {chat.lastMessage ?
+                        getFormattedTimeString(chat.lastMessage.createdAt) :
+                        getFormattedTimeString(chat.createdAt)
+                      }
+                    </span>
+
+
                     {isUnread && <span className={styles.unreadIndicator}>
                     </span>}
+
                   </div>
                 </div>
               </NavLink>
@@ -100,3 +110,14 @@ const DirectMessagesList = () => {
 }
 
 export default DirectMessagesList
+
+
+const getFormattedTimeString = (dateString: string) => {
+  const date = new Date(dateString)
+  const isToday = new Date().toLocaleDateString() === date.toLocaleDateString()
+  const formatted = isToday ?
+    date.toLocaleTimeString('default', { hour: '2-digit', minute: '2-digit', hour12: true }) :
+    date.toLocaleDateString('default', { dateStyle: 'short' })
+
+  return formatted
+}

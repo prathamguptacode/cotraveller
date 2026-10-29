@@ -51,7 +51,7 @@ const Router = () => {
                         </Route>
                     </Route>
 
-                    {/* <Route path="/me" element={<Home />} /> */}
+                    <Route path="/me" element={<div>Coming Soon...</div>} />
                 </Route>
 
                 <Route element={<AntiProtectedRoutes />} >

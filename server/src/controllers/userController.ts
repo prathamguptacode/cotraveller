@@ -198,7 +198,8 @@ export const fetchUserTrips: RequestHandler = async (req, res) => {
                             trip: {
                                 _id: '$trip._id',
                                 name: '$trip.name',
-                                avatar: '$trip.avatar'
+                                avatar: '$trip.avatar',
+                                createdAt:'$trip.createdAt'
                             }
                         }
                     }
