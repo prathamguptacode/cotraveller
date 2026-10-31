@@ -36,6 +36,8 @@ type createInviteT = {
   inviteToken: string
 }
 
+
+
 const mapId = import.meta.env.VITE_MAP_ID
 
 function TripsMainContent() {
@@ -94,7 +96,8 @@ function TripsMainContent() {
       <div className={mystyle.content}>
         <div>
           <Map
-            defaultZoom={11}
+            defaultZoom={5}
+            defaultCenter={data.data.trip.itineraryItems.length > 0 ? { lat: data.data.trip.itineraryItems[0].origin.coordinates[0], lng: data.data.trip.itineraryItems[0].origin.coordinates[1] } : undefined}
             mapId={mapId}
             gestureHandling={'greedy'}
             disableDefaultUI={true}
@@ -141,8 +144,6 @@ function IternaryItem({ title, description, date, hasNext, placeId }: { title: s
     })()
   }, [places, placeId])
 
-  console.log(place)
-  console.log(place?.photos)
 
 
   return <div className={mystyle.wrap}>
