@@ -48,7 +48,7 @@ const NavigationRail = () => {
                         </span>
                     </NavLink>
                 </div>
-                <div className={styles.railItem}>
+                {/* <div className={styles.railItem}>
                     <NavLink className={({ isActive }) => {
                         return clsx(isActive && styles.activeLink)
                     }} to={'/me'}>
@@ -56,7 +56,7 @@ const NavigationRail = () => {
                             <img src={avatar} alt="display-picture" />
                         </span>
                     </NavLink>
-                </div>
+                </div> */}
 
             </div>
         </nav >

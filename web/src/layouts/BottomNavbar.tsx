@@ -46,14 +46,14 @@ const BottomNavbar = () => {
                 </span>
             </NavLink>
 
-            <NavLink className={({ isActive }) => {
+            {/* <NavLink className={({ isActive }) => {
                 return clsx(isActive && styles.bottomNavActiveLink, styles.bottomNavItem)
             }} to={'/me'}>
                 <span className={styles.imageWrapper}>
                     <img src={avatar} alt="display-picture" />
                 </span>
                 <span>You</span>
-            </NavLink>
+            </NavLink> */}
 
         </nav >
     )

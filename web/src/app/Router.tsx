@@ -1,4 +1,3 @@
-import Calendar from "@/features/calendar"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import ProtectedRoutes from "./guards/Protected.Routes"
 import MainLayout from "@/layouts/MainLayout"
@@ -11,6 +10,7 @@ import TripsMainContent from "./pages/Trips/TripsMainContent"
 import SearchIndexPage from "./pages/Search/SearchIndexPage"
 import SearchResultsPage from "./pages/Search/SearchResultsPage"
 import TripChatPage from "./pages/Trips/TripChatPage"
+import Calendar from "@/features/calendar"
 import AntiProtectedRoutes from "./guards/AntiProtected.Routes"
 import Signup from "./pages/Signup/Signup"
 import Login from "./pages/Login/Login"
@@ -31,7 +31,6 @@ const Router = () => {
                         <Route path=":tripId">
                             <Route index element={<TripsMainContent />} />
                             <Route path="chats" element={<TripChatPage />} />
-                            <Route path="chats" />
                             <Route path="calendar" element={<Calendar />} />
                         </Route>
                     </Route>
