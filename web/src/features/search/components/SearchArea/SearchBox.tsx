@@ -12,7 +12,7 @@ import styles from './styles.module.css'
 
 const SearchBox = () => {
     const [searchQuery, setSearchQuery] = useState('')
-    const debouncedSearchQuery = useDebounce(searchQuery, 100)
+    const debouncedSearchQuery = useDebounce(searchQuery, 500)
     const inputRef = useAnimatedPlaceholder()
 
 

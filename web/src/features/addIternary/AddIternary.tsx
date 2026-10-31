@@ -7,13 +7,15 @@ import { useMutation, type QueryObserverResult, type RefetchOptions } from "@tan
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import mystyle from "./style.module.css"
 import { MapPinIcon } from "@phosphor-icons/react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { SignpostIcon } from "@phosphor-icons/react/dist/ssr";
+import { toast } from "sonner";
+import { useDebounce } from "@/hooks/useDebounce";
 
 
 
@@ -23,7 +25,7 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
   const darkTheme = createTheme({
     palette: {
       mode: 'dark',
-      primary: { main: `hsl(217, 63 %, 55 %)` }
+      primary: { main: "hsl(217, 63 %, 55 %)" }
     },
   });
   const [input, setInput] = useState("")
@@ -31,7 +33,7 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
   const [loc, setLoc] = useState<google.maps.places.Place | null>(null)
 
   const [event, setEvent] = useState("")
-  const [value, setValue] = useState<Dayjs | null>(dayjs());
+  const [value, setValue] = useState<Dayjs>(dayjs());
 
   const mutation = useMutation({
     mutationKey: [tripId, "add iternary"],
@@ -39,20 +41,32 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
     onSuccess: async () => {
       await refetch()
       document.getElementById("addIternaryBox")?.hidePopover()
-    }
+    },
+    onError: () => toast.error("Please try again later")
   })
+
+
 
   const handleClick = async () => {
 
     // user have not selected the date 
-    if (!value) return
+    if (!value) {
+      toast.error("Please select a date")
+      return
+    }
 
     // user has not clicked on any location
-    if (!loc) return
+    if (!loc) {
+      toast.error("Please select a location")
+      return
+    }
 
     //map error that its not giving address
     const address = loc.addressComponents
-    if (!address) return
+    if (!address) {
+      toast.error("Please try again later")
+      return
+    }
 
     //extracting city and country
     let city: string | null = null
@@ -70,10 +84,16 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
     //filling that name field
     const name = event || loc.displayName;
     //map error that its not giving display name
-    if (!name) return
+    if (!name) {
+      toast.error("Please add event name")
+      return
+    }
 
     //map error that its not giving coordinates
-    if (!loc.location) return
+    if (!loc.location) {
+      toast.error("Please try again later")
+      return
+    }
 
 
     //fallback if we did not find city and country
@@ -98,27 +118,27 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
     setEvent("")
   }
 
-  const { suggestions, resetSession } = useAutocompleteSuggestions(query)
+
+
+  const debouceQuery = useDebounce(query, 500)
+  const { suggestions, resetSession } = useAutocompleteSuggestions(debouceQuery)
   const places = useMapsLibrary('places');
-  const handleSuggestionClick = useCallback(
-    async (suggestion: google.maps.places.AutocompleteSuggestion) => {
-      if (!places) return;
-      if (!suggestion.placePrediction) return;
-      const place = suggestion.placePrediction.toPlace();
-      await place.fetchFields({
-        fields: [
-          "addressComponents", "location", "displayName"
-        ]
-      });
-      setLoc(place)
-      setInput(place.displayName ? place.displayName : "")
-      setQuery("")
-      // calling fetchFields invalidates the session-token, so we now have to call
-      // resetSession() so a new one gets created for further search
-      resetSession();
-    },
-    [places, resetSession, setQuery]
-  );
+  const handleSuggestionClick = async (suggestion: google.maps.places.AutocompleteSuggestion) => {
+    if (!places) return;
+    if (!suggestion.placePrediction) return;
+    const place = suggestion.placePrediction.toPlace();
+    await place.fetchFields({
+      fields: [
+        "addressComponents", "location", "displayName"
+      ]
+    });
+    setLoc(place)
+    setInput(place.displayName ? place.displayName : "")
+    setQuery("")
+    // calling fetchFields invalidates the session-token, so we now have to call
+    // resetSession() so a new one gets created for further search
+    resetSession();
+  }
 
 
   return <div id="addIternaryBox" className={mystyle.addIternaryBox} popover="auto">
@@ -173,3 +193,4 @@ function Suggestionbox({ suggestions, handleSuggestionClick }: { suggestions: go
     }
   </div >
 }
+

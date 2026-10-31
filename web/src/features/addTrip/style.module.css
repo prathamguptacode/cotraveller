@@ -44,6 +44,11 @@
   background-color: hsl(0, 0%, 15%);
   padding: .5rem .75rem;
   border-radius: 12px;
+  border: 2px solid transparent;
+}
+
+.nameBoxErr {
+  border: 2px solid #FF746C;
 }
 
 .name {

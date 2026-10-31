@@ -1,7 +1,7 @@
 import { Plus } from "@phosphor-icons/react"
 import mystyle from "./Trips.module.css"
 import { api } from "@/lib/axios"
-import { CalendarIcon, ChatTeardropIcon, UserPlusIcon } from "@phosphor-icons/react/dist/ssr"
+import { CalendarIcon, ChatTeardropIcon, UserCirclePlusIcon } from "@phosphor-icons/react/dist/ssr"
 import { useQuery } from "@tanstack/react-query"
 import { Link, useParams } from "react-router-dom"
 import { AdvancedMarker, Map, useMapsLibrary } from "@vis.gl/react-google-maps"
@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { getImgURL } from "@/lib/cloudinary"
 import AddIternaryBox from "@/features/addIternary/AddIternary"
 import InviteLinkBox from "@/features/inviteLinkBox/InviteLinkBox"
+
 
 type itineraryItem = {
   name: string,
@@ -87,7 +88,7 @@ function TripsMainContent() {
             <ChatTeardropIcon size={28} />
           </Link>
           {/* ###looks ugly restyle position */}
-          <button popoverTarget="linkBox" onClick={() => inviteQuery.refetch()}><UserPlusIcon size={28} /></button>
+          <button popoverTarget="linkBox" onClick={() => inviteQuery.refetch()}><UserCirclePlusIcon size={28} /></button>
         </div>
       </div>
       <div className={mystyle.content}>
@@ -100,7 +101,7 @@ function TripsMainContent() {
           >
             {
               data.data.trip.itineraryItems.map((e, i) => {
-                return <AdvancedMarker key={i} position={{ lat: e.origin.coordinates[0], lng: e.origin.coordinates[1] }}></AdvancedMarker>
+                return <AdvancedMarker key={i} position={{ lat: e.origin.coordinates[0], lng: e.origin.coordinates[1] }} />
               })
             }
           </Map>
@@ -140,11 +141,14 @@ function IternaryItem({ title, description, date, hasNext, placeId }: { title: s
     })()
   }, [places, placeId])
 
+  console.log(place)
+  console.log(place?.photos)
+
 
   return <div className={mystyle.wrap}>
     <div className={mystyle.IternaryItem}>
       <div className={mystyle.frame}>
-        <img src={place?.photos && place.photos[0].getURI({ maxWidth: 150, maxHeight: 150 })} alt="iternary item photo" width="100px" height="100px" />
+        <img src={(place?.photos && place.photos.length > 0) ? place.photos[0].getURI({ maxWidth: 150, maxHeight: 150 }) : ""} alt="item photo" width="100px" height="100px" />
       </div>
       <div className={mystyle.con}>
         <div>{title}</div>
@@ -153,10 +157,7 @@ function IternaryItem({ title, description, date, hasNext, placeId }: { title: s
       <div className={mystyle.date}>
         {strDate}
       </div>
-      {
-        hasNext ?
-          <div className={mystyle.stick} /> : null
-      }
+      {hasNext ? <div className={mystyle.stick} /> : null}
     </div>
   </div>
 }
