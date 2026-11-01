@@ -1,6 +1,5 @@
 import { Map, useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
 import { useEffect, useState } from 'react';
-import { useCarousel } from '@/hooks/useCarousel';
 import { CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react';
 
 import styles from './result.module.css'
@@ -15,7 +14,6 @@ const mapId = import.meta.env.VITE_MAP_ID
 const SearchResultPlace = ({ placeId }: SearchResultPlaceProps) => {
     const places = useMapsLibrary('places')
     const [place, setPlace] = useState<google.maps.places.Place | null>(null)
-    const { carouselRef, next, prev } = useCarousel()
 
     useEffect(() => {
         if (!places) return
@@ -31,26 +29,22 @@ const SearchResultPlace = ({ placeId }: SearchResultPlaceProps) => {
     }, [placeId, places])
 
 
-
     return (
         <div className={styles.wrapper}>
             <div className={styles.content}>
-                <div className={styles.carousel} ref={carouselRef}>
-                    <button data-button='prev' className={styles.carouselButton} onClick={prev}>
+                <div className={styles.carousel}>
+                    <button data-button='prev' className={styles.carouselButton}>
                         <CaretLeftIcon size={16} weight='bold' />
                     </button>
                     <div className={styles.imagesWrapper}>
                         {
-                            place?.photos?.map((e, i) => {
-                                return (
-                                    <div key={i} className={styles.imageWrapper}>
-                                        <img src={e.getURI({ maxWidth: 422, maxHeight: 750 })} alt="city photos" width="100%" />
-                                    </div>
-                                )
-                            })
+                            !!place?.photos?.length &&
+                            <div className={styles.imageWrapper}>
+                                <img src={place.photos[0].getURI({ maxWidth: 422, maxHeight: 750 })} alt="city photos" width="100%" />
+                            </div>
                         }
                     </div>
-                    <button data-button='next' className={styles.carouselButton} onClick={next}>
+                    <button data-button='next' className={styles.carouselButton}>
                         <CaretRightIcon size={16} weight='bold' />
                     </button>
                 </div>

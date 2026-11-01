@@ -55,11 +55,9 @@ const SearchResult = ({ _id, name, avatar, firstEvent, lastEvent, memberNumber, 
             </div>
             <div className={styles.content}>
                 <div className={styles.contentTop}>
-                    <Link to={`/${_id}`}>
-                        <h3 className={styles.title}>
-                            {name}
-                        </h3>
-                    </Link>
+                    <h3 className={styles.title}>
+                        {name}
+                    </h3>
                     <div data-mobile-only={true} className={styles.dateInfo}>
                         <span>{startT.toLocaleDateString("defautl", { day: "numeric", month: "long", year: "numeric" })}</span>
                         <span>-</span>
