@@ -1,7 +1,10 @@
 import { CopySimpleIcon } from "@phosphor-icons/react/dist/ssr"
 import style from "./style.module.css"
 
+
 function InviteLinkBox({ tripName, tripId, inviteToken, isLoading }: { tripName: string, tripId: string, inviteToken?: string, isLoading: boolean }) {
+
+
 
   if (isLoading) {
     return <div className={style.loadingWrap} id="linkBox" popover="auto">
@@ -9,7 +12,7 @@ function InviteLinkBox({ tripName, tripId, inviteToken, isLoading }: { tripName:
     </div>
   }
 
-  const url = `http://localhost:3000/invite/${tripId}/${inviteToken}`
+  const url = `${window.location.origin}/invite/${tripId}/${inviteToken}`
 
   return (
     <div className={style.linkBox} id="linkBox" popover="auto">
