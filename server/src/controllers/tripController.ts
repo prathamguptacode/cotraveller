@@ -101,10 +101,10 @@ export async function createTripAvatar(req: Request, res: Response) {
   let options:
     | {}
     | {
-        public_id: string;
-        invalidate: true;
-        overwrite: true;
-      } = {};
+      public_id: string;
+      invalidate: true;
+      overwrite: true;
+    } = {};
 
   if (user.avatar.publicId)
     options = {
@@ -137,7 +137,6 @@ export async function tripDetails(req: Request, res: Response) {
   if (!data.success) return res.fail(400, 'INVALID_BODY');
 
   const tripId = data.data.tripId;
-  // const trip = await Trip.findById(tripId).populate("itineraryItems").sort("itineraryItems")
 
   const tripPipe = await Trip.aggregate([
     { $match: { _id: new mongoose.Types.ObjectId(tripId) } },
@@ -153,7 +152,7 @@ export async function tripDetails(req: Request, res: Response) {
   ]);
   const trip = tripPipe[0];
 
-  const members = await TripUserRel.find({ trip: tripId }).populate('user', 'email').select('user');
+  const members = await TripUserRel.find({ trip: tripId }).populate('user', 'username').select('user');
 
   res.success(200, { trip, members });
 }
@@ -359,6 +358,7 @@ export const fetchChatRoom: RequestHandler = async (req, res) => {
   if (!parsedData.success) return res.fail(400, 'BAD_REQUEST', 'Invalid params');
 
   const { tripId } = parsedData.data;
+
   // Check if user is a trip member
   const member = await TripMember.findOne({ trip: tripId, user: req.user._id }).populate('trip');
   if (!member) return res.fail(403, 'FORBIDDEN', 'You cannot access that');
@@ -366,5 +366,7 @@ export const fetchChatRoom: RequestHandler = async (req, res) => {
   const chatRoom = await ChatRoom.findOne({ type: 'TRIP', trip: tripId });
   if (!chatRoom) return res.fail(404, 'CHAT_NOT_FOUND', "This shouln't be possible");
 
-  return res.success(200, { chatRoom, trip: member.trip });
+  const members = await TripMember.find({ trip: tripId }).populate('user', 'username');
+
+  return res.success(200, { chatRoom, trip: member.trip, members });
 };

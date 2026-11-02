@@ -34,7 +34,7 @@ const ChatMessages = ({ roomId }: ChatMessagesProps) => {
                 return (
                     <div data-special-bubble={isSpecialChatBubble} key={message._id} className={clsx(styles.message, isMyMessage && styles.myMessage)}>
                         {(!isMyMessage && !shouldHideName) && <div className={styles.messageAuthor}>
-                            {message.author.email}
+                            {message.author.username}
                         </div>}
                         <div className={styles.messageDetails}>
                             <div className={styles.messageText}>

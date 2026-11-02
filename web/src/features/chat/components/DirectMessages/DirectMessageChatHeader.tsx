@@ -3,7 +3,7 @@ import leon from '@/assets/leon.jpeg'
 
 type DirectMessageChatHeaderProps = {
     user: {
-        email: string
+        username: string
     }
 }
 
@@ -15,7 +15,7 @@ const DirectMessageChatHeader = ({ user }: DirectMessageChatHeaderProps) => {
                 <img src={leon} alt="display-picture" />
             </div>
             <h2 className={styles.headerName}>
-                {user.email}
+                {user.username}
             </h2>
         </div>
     )

@@ -51,7 +51,7 @@ export const fetchChatMessages: RequestHandler = async (req, res) => {
                     },
                     {
                         $project: {
-                            email: 1
+                            username:1
                         }
                     }
 

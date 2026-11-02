@@ -8,7 +8,7 @@ import { normalizeError } from "@/utils/normalizeError"
 
 type Payload = {
   user: {
-    email: string
+    username: string
   },
   chatRoom: {
     _id: string

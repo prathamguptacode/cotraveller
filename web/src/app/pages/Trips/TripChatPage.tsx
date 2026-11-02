@@ -9,7 +9,12 @@ type Payload = {
     trip: {
         _id: string,
         name: string
+        avatar: {
+            publicId: string,
+            version: number
+        }
     },
+    members: { user: { username: string } }[],
     chatRoom: {
         _id: string
     }
@@ -26,11 +31,11 @@ const TripChatPage = () => {
     if (isPending) return <div>Loading...</div>
     if (isError) return <Navigate to={'/'} />
 
-    const { trip, chatRoom } = data
+    const { trip, chatRoom, members } = data
 
     return (
         <div data-mobile-nav-visible={false} data-mobile-visible={true} className={styles.chatBoxWrapper}>
-            <TripChatHeader trip={trip} />
+            <TripChatHeader members={members} trip={trip} />
             <ChatBox roomId={chatRoom._id} />
         </div>
     )

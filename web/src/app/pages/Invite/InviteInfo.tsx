@@ -61,7 +61,7 @@ function InviteInfo() {
         <div className={style.message}>You are invited to join trip</div>
         <div className={style.tripName}>{data.data.trip.name}</div>
         <div className={style.memberBox}>
-          {data.data.members.map((e, i) => <div key={i}>{e.user.email}</div>)}
+          {data.data.members.map((e, i) => <div key={i}>{e.user.username}</div>)}
         </div>
         <button onClick={handleClick} className={style.joinBtn}>Join Now</button>
       </div>

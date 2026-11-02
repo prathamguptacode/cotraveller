@@ -11,13 +11,13 @@ type Chat = {
   _id: string, //roomId
   receiver: {
     _id: string,
-    email: string
+    username: string
   },
   lastMessage?: {
     text: string,
     author: {
       _id: string,
-      email: string,
+      username: string,
     },
     createdAt: string
   },
@@ -74,7 +74,7 @@ const DirectMessagesList = () => {
                 <div className={styles.itemContentWrapper}>
                   <div className={styles.itemContent}>
                     <span className={styles.title}>
-                      {chat.receiver.email}
+                      {chat.receiver.username}
                     </span>
                     {chat.lastMessage ?
                       <span className={styles.description}>

@@ -28,7 +28,7 @@ export type tripDetailT = {
     },
     itineraryItems: itineraryItem[]
   },
-  members: { user: { email: string } }[]
+  members: { user: { username: string } }[]
 }
 
 type createInviteT = {
@@ -65,19 +65,18 @@ function TripsMainContent() {
     return <div>Something went wrong</div>
   }
 
-
   return (
     <div data-mobile-visible={true} className={mystyle.wrapper}>
       <div className={mystyle.topBar}>
         <div className={mystyle.imgWrapper}>
-          <img src={(data.data.trip.avatar.publicId != "") ? getImgURL(data.data.trip.avatar, 200) : "tripIcon.webp"} alt="trip photo" width="50px" height="50px" />
+          <img src={getImgURL(data.data.trip.avatar, 200) || "tripIcon.webp"} alt="trip photo" width="50px" height="50px" />
         </div>
         <div className={mystyle.tripInfo}>
           <div>{data.data.trip.name}</div>
           <div>
             {
               data.data.members.map((e, i) => {
-                return <span key={i}>{e.user.email} {i < data.data.members.length - 1 ? ", " : null}</span>
+                return <span key={i}>{e.user.username} {i < data.data.members.length - 1 ? ", " : null}</span>
               })
             }
           </div>

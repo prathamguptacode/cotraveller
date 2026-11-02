@@ -38,7 +38,7 @@ export const fetchDMChats: RequestHandler = async (req, res) => {
                                         pipeline: [
                                             {
                                                 $project: {
-                                                    email: 1,
+                                                    username: 1,
                                                     avatar: 1
                                                 }
                                             }
@@ -79,7 +79,7 @@ export const fetchDMChats: RequestHandler = async (req, res) => {
                                 },
                                 {
                                     $project: {
-                                        email: 1,
+                                        username: 1,
                                         avatar: 1
                                     }
                                 }
@@ -171,7 +171,7 @@ export const fetchUserTrips: RequestHandler = async (req, res) => {
                                         pipeline: [
                                             {
                                                 $project: {
-                                                    email: 1,
+                                                    username: 1,
                                                     avatar: 1
                                                 }
                                             }
@@ -199,7 +199,7 @@ export const fetchUserTrips: RequestHandler = async (req, res) => {
                                 _id: '$trip._id',
                                 name: '$trip.name',
                                 avatar: '$trip.avatar',
-                                createdAt:'$trip.createdAt'
+                                createdAt: '$trip.createdAt'
                             }
                         }
                     }
@@ -259,7 +259,6 @@ const CreateChatRoomSchema = z.object({
 })
 
 export const createChatRoom: RequestHandler = async (req, res) => {
-    console.log(req.params.userId)
     const currentUserId = req.user._id
 
     const parsedData = CreateChatRoomSchema.safeParse(req.params)

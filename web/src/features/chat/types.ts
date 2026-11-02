@@ -2,7 +2,7 @@ export type Message = {
     _id: string,
     author: {
         _id: string,
-        email: string
+        username: string
     },
     text: string,
     createdAt: string

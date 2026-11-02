@@ -269,7 +269,7 @@ export const login: RequestHandler = async (req, res) => {
     res.cookie('refreshToken', refreshToken, REFRESH_COOKIE_OPTIONS)
 
     user.passwordHash = undefined
-    //###REMOVE/CHANGE LATER, send only basic, non-sensitive, required user data to frontend
+
     res.success(200, { accessToken, user }, "Login Successful")
 
 }
