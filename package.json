@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "web": "cd web && clear && clear && npm run dev",
-    "server": "cd server && clear && clear && npm run dev"
+    "server": "cd server && clear && clear && npm run dev",
+    "build": "cd web && npm run build && cd ../server && npm run build",
+    "start-pm2": "cd server && npm run start-pm2",
+    "terminate-pm2": "pm2 stop all && pm2 delete all && clear && clear",
+    "push": "bash cicd.sh"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 import { CameraIcon, PlusIcon, XIcon } from "@phosphor-icons/react"
 import mystyle from "./style.module.css"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { api } from "@/lib/axios"

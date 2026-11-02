@@ -14,7 +14,7 @@ function TripsLayout() {
 
   // ###checking invite token
   const navigate = useNavigate()
-  const [cookies, setCookie, removeCookie] = useCookies(['inviteToken'])
+  const [cookies, _setCookie, removeCookie] = useCookies(['inviteToken'])
 
   // ###no error handling
   const mutate = useMutation({

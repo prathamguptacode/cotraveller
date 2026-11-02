@@ -122,7 +122,9 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
 
   const debouceQuery = useDebounce(query, 500)
   const { suggestions, resetSession } = useAutocompleteSuggestions(debouceQuery)
-  const places = useMapsLibrary('places');
+  const places = useMapsLibrary('places')
+
+
   const handleSuggestionClick = async (suggestion: google.maps.places.AutocompleteSuggestion) => {
     if (!places) return;
     if (!suggestion.placePrediction) return;
@@ -159,7 +161,7 @@ function AddIternaryBox({ tripId, refetch, isPending }: { tripId: string, refetc
     <div >
       <ThemeProvider theme={darkTheme}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateCalendar className={mystyle.calBox} value={value} onChange={(newValue) => setValue(newValue)} />
+          <DateCalendar className={mystyle.calBox} value={value} onChange={(newValue) => setValue(newValue ?? dayjs())} />
         </LocalizationProvider>
       </ThemeProvider>
     </div>

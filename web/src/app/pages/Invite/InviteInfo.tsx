@@ -17,7 +17,7 @@ function InviteInfo() {
   const tripId = params.tripId as string
   const inviteToken = params.inviteToken as string
 
-  const [cookies, setCookie] = useCookies(['inviteToken'])
+  const [_cookies, setCookie] = useCookies(['inviteToken'])
 
   const { user } = useAuth()
 

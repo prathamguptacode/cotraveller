@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import styles from './layouts.module.css'
 import { ChatTeardropIcon, IslandIcon, MagnifyingGlassIcon, UsersThreeIcon } from '@phosphor-icons/react'
-import avatar from '@/assets/leon.jpeg'
 import clsx from 'clsx'
 import AddTrip from '@/features/addTrip/AddTrip'
 

@@ -2,7 +2,6 @@ import { NavLink } from 'react-router-dom'
 import styles from './layouts.module.css'
 import { ChatTeardropIcon, MagnifyingGlassIcon, UsersThreeIcon } from '@phosphor-icons/react'
 import clsx from 'clsx'
-import avatar from '@/assets/leon.jpeg'
 import AddTrip from '@/features/addTrip/AddTrip'
 
 const BottomNavbar = () => {
