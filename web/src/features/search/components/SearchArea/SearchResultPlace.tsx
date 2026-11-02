@@ -33,9 +33,6 @@ const SearchResultPlace = ({ placeId }: SearchResultPlaceProps) => {
         <div className={styles.wrapper}>
             <div className={styles.content}>
                 <div className={styles.carousel}>
-                    <button data-button='prev' className={styles.carouselButton}>
-                        <CaretLeftIcon size={16} weight='bold' />
-                    </button>
                     <div className={styles.imagesWrapper}>
                         {
                             !!place?.photos?.length &&
@@ -44,9 +41,6 @@ const SearchResultPlace = ({ placeId }: SearchResultPlaceProps) => {
                             </div>
                         }
                     </div>
-                    <button data-button='next' className={styles.carouselButton}>
-                        <CaretRightIcon size={16} weight='bold' />
-                    </button>
                 </div>
 
 
