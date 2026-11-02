@@ -1,6 +1,5 @@
 import { Map, useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
 import { useEffect, useState } from 'react';
-import { CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react';
 
 import styles from './result.module.css'
 
